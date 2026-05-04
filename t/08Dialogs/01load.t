@@ -4,26 +4,26 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Dialogs::Const', qw( bfDefault ); 
-  use_ok 'TV::Dialogs::Util', qw( hotKey );
-  use_ok 'TV::Dialogs::HistoryViewer::HistList';
-  use_ok 'TV::Dialogs::Dialog';
-  use_ok 'TV::Dialogs::Button';
-  use_ok 'TV::Dialogs::StaticText';
-  use_ok 'TV::Dialogs::ParamText';
-  use_ok 'TV::Dialogs::Label';
-  use_ok 'TV::Dialogs::InputLine';
-  use_ok 'TV::Dialogs::StrItem';
-  use_ok 'TV::Dialogs::Cluster';
-  use_ok 'TV::Dialogs::RadioButtons';
-  use_ok 'TV::Dialogs::CheckBoxes';
-  use_ok 'TV::Dialogs::MultiCheckBoxes';
-  use_ok 'TV::Dialogs::ListBox';
-  use_ok 'TV::Dialogs::HistInit';
-  use_ok 'TV::Dialogs::HistoryViewer';
-  use_ok 'TV::Dialogs::HistoryWindow';
-  use_ok 'TV::Dialogs::History';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Dialogs::Const', qw( bfDefault ); 
+  use_ok 'TUI::Dialogs::Util', qw( hotKey );
+  use_ok 'TUI::Dialogs::HistoryViewer::HistList';
+  use_ok 'TUI::Dialogs::Dialog';
+  use_ok 'TUI::Dialogs::Button';
+  use_ok 'TUI::Dialogs::StaticText';
+  use_ok 'TUI::Dialogs::ParamText';
+  use_ok 'TUI::Dialogs::Label';
+  use_ok 'TUI::Dialogs::InputLine';
+  use_ok 'TUI::Dialogs::StrItem';
+  use_ok 'TUI::Dialogs::Cluster';
+  use_ok 'TUI::Dialogs::RadioButtons';
+  use_ok 'TUI::Dialogs::CheckBoxes';
+  use_ok 'TUI::Dialogs::MultiCheckBoxes';
+  use_ok 'TUI::Dialogs::ListBox';
+  use_ok 'TUI::Dialogs::HistInit';
+  use_ok 'TUI::Dialogs::HistoryViewer';
+  use_ok 'TUI::Dialogs::HistoryWindow';
+  use_ok 'TUI::Dialogs::History';
 }
 
 isa_ok( TDialog->new( bounds => TRect->new(), title => 'title' ), TDialog );

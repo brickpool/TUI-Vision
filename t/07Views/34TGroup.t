@@ -5,14 +5,14 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Const', qw(
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Const', qw(
     cmReleasedFocus
     hcNoContext
     sfExposed
   );
-  use_ok 'TV::Views::Group';
+  use_ok 'TUI::Views::Group';
 }
 
 # Test object creations

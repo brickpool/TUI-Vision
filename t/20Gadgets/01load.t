@@ -4,12 +4,12 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Gadgets::Const';
-  use_ok 'TV::Gadgets::PrintConstants';
-  use_ok 'TV::Gadgets::EventViewer';
-  use_ok 'TV::Gadgets::HeapView';
-  use_ok 'TV::Gadgets::ClockView';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Gadgets::Const';
+  use_ok 'TUI::Gadgets::PrintConstants';
+  use_ok 'TUI::Gadgets::EventViewer';
+  use_ok 'TUI::Gadgets::HeapView';
+  use_ok 'TUI::Gadgets::ClockView';
 }
 
 isa_ok(

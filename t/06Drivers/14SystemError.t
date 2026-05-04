@@ -5,8 +5,8 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Drivers::HardwareInfo';
-  use_ok 'TV::Drivers::SystemError';
+  use_ok 'TUI::Drivers::HardwareInfo';
+  use_ok 'TUI::Drivers::SystemError';
 }
 
 # Test TSystemError
@@ -17,11 +17,11 @@ can_ok( $error, 'suspend' );
 
 # Test global variables
 ok(
-  defined( $TV::Drivers::SystemError::ctrlBreakHit ),
+  defined( $TUI::Drivers::SystemError::ctrlBreakHit ),
   'ctrlBreakHit is defined'
 );
 ok( 
-  defined( $TV::Drivers::SystemError::saveCtrlBreak ),
+  defined( $TUI::Drivers::SystemError::saveCtrlBreak ),
   'saveCtrlBreak is defined'
 );
 

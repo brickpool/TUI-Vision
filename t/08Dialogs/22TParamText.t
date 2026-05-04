@@ -5,8 +5,8 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Dialogs::ParamText';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Dialogs::ParamText';
 }
 
 my ( $bounds, $param_text );

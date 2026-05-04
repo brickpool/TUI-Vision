@@ -4,8 +4,8 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Point';
-  use_ok 'TV::Drivers::Event';
+  use_ok 'TUI::Objects::Point';
+  use_ok 'TUI::Drivers::Event';
 }
 
 use_ok 'MouseEventType';

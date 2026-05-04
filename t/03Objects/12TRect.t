@@ -4,8 +4,8 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Point';
-  use_ok 'TV::Objects::Rect';
+  use_ok 'TUI::Objects::Point';
+  use_ok 'TUI::Objects::Rect';
 }
 
 my $p1 = TPoint->new( x => 5,  y => 5 );

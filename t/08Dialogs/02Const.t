@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Dialogs::Const', qw( 
+  use_ok 'TUI::Dialogs::Const', qw( 
     :cpXXXX
     :bfXXXX
     :cmXXXX

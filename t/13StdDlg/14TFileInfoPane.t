@@ -5,18 +5,18 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::Group';
-  use_ok 'TV::StdDlg::FileInfoPane';
-  use_ok 'TV::StdDlg::FileCollection';   # incl. TSearchRec
-  require_ok 'TV::toolkit';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Group';
+  use_ok 'TUI::StdDlg::FileInfoPane';
+  use_ok 'TUI::StdDlg::FileCollection';   # incl. TSearchRec
+  require_ok 'TUI::toolkit';
 }
 
 BEGIN {
   package MyOwner;
-  use TV::Views::Group;
-  use TV::toolkit;
-  extends 'TV::Views::Group';
+  use TUI::Views::Group;
+  use TUI::toolkit;
+  extends 'TUI::Views::Group';
   has wildCard  => ( is => 'rw' );
   has directory => ( is => 'rw' );
   $INC{"MyOwner.pm"} = 1;
@@ -24,9 +24,9 @@ BEGIN {
 
 BEGIN {
   package MyFileInfoPane;
-  use TV::StdDlg::FileInfoPane;
-  use TV::toolkit;
-  extends 'TV::StdDlg::FileInfoPane';
+  use TUI::StdDlg::FileInfoPane;
+  use TUI::toolkit;
+  extends 'TUI::StdDlg::FileInfoPane';
   sub writeLine { }
   $INC{"MyFileInfoPane.pm"} = 1;
 }

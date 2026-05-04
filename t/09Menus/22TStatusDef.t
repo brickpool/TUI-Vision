@@ -5,12 +5,12 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Menus::StatusItem';
-  use_ok 'TV::Menus::StatusDef';
+  use_ok 'TUI::Menus::StatusItem';
+  use_ok 'TUI::Menus::StatusDef';
 }
 
-my $add_status_def = sub { goto &TV::Menus::StatusDef::_add_status_def };
-my $add_status_item = sub { goto &TV::Menus::StatusDef::_add_status_item };
+my $add_status_def = sub { goto &TUI::Menus::StatusDef::_add_status_def };
+my $add_status_item = sub { goto &TUI::Menus::StatusDef::_add_status_item };
 
 # Test object creation
 my $s1 = new_TStatusDef( 1, 1 );

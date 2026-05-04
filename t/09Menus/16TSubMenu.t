@@ -5,13 +5,13 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Menus::Menu';
-  use_ok 'TV::Menus::MenuItem';
-  use_ok 'TV::Menus::SubMenu';
+  use_ok 'TUI::Menus::Menu';
+  use_ok 'TUI::Menus::MenuItem';
+  use_ok 'TUI::Menus::SubMenu';
 }
 
-my $add_sub_menu = sub { goto &TV::Menus::SubMenu::_add_sub_menu };
-my $add_menu_item = sub { goto &TV::Menus::SubMenu::_add_menu_item };
+my $add_sub_menu = sub { goto &TUI::Menus::SubMenu::_add_sub_menu };
+my $add_menu_item = sub { goto &TUI::Menus::SubMenu::_add_menu_item };
 
 # Test object creation
 my $submenu1 = new_TSubMenu( 'One', 0x1234, 0 );

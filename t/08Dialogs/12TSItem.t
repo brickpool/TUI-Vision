@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Dialogs::StrItem';
+  use_ok 'TUI::Dialogs::StrItem';
 }
 
 my ( $item1, $item2, $item3 );

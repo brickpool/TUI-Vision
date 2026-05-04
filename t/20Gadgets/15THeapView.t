@@ -5,14 +5,14 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Gadgets::HeapView';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Gadgets::HeapView';
 }
 
 {
   package MyHeapView;
-  use TV::toolkit;
-  extends 'TV::Gadgets::HeapView';
+  use TUI::toolkit;
+  extends 'TUI::Gadgets::HeapView';
   sub BUILD     { shift->{heapStr} = 'test' }
   sub writeLine { ::pass 'writeLine()'  }
   sub drawView  { ::pass 'drawView()' }
@@ -43,7 +43,7 @@ subtest 'update()' => sub {
 subtest 'heapSize()' => sub {
   lives_ok {
     if ( $^O eq 'MSWin32' ) {
-      require_ok( 'TV::Gadgets::HeapView::Win32' );
+      require_ok( 'TUI::Gadgets::HeapView::Win32' );
 
       my $ret = $view->heapSize();
       ok( defined $ret, 'heapSize() returns something on Windows' );

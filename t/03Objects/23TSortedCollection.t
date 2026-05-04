@@ -4,14 +4,14 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok "TV::Objects::SortedCollection";
+  use_ok "TUI::Objects::SortedCollection";
 }
 
 # Mock subclass to implement compare method
 {
   package MySortedCollection;
-  use TV::toolkit;
-  extends 'TV::Objects::SortedCollection';
+  use TUI::toolkit;
+  extends 'TUI::Objects::SortedCollection';
 
   sub compare {
     no warnings 'uninitialized';

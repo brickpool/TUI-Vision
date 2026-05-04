@@ -9,12 +9,12 @@ BEGIN {
   unless ( eval { require UNIVERSAL::Object } ) {
     plan skip_all => 'Test irrelevant without UNIVERSAL::Object';
   }
-  require_ok 'TV::toolkit::UO::Antlers';
+  require_ok 'TUI::toolkit::UO::Antlers';
 }
 
 BEGIN {
   package Point;
-  use TV::toolkit::UO::Antlers;
+  use TUI::toolkit::UO::Antlers;
 
   has x => ( default => sub { 0 } );
   has y => ( is => 'rw', default => 0 );
@@ -24,7 +24,7 @@ BEGIN {
 
 BEGIN { 
   package Point3D;
-  use TV::toolkit::UO::Antlers;
+  use TUI::toolkit::UO::Antlers;
 
   extends 'Point';
 
@@ -41,7 +41,7 @@ BEGIN {
     [ qw( x y ) ],
     'keys %Point::HAS is equal to fields'
   );
-  my $HAS = Point->TV::toolkit::UO::Antlers::get_fields();
+  my $HAS = Point->TUI::toolkit::UO::Antlers::get_fields();
   is_deeply(
     [ sort keys %$HAS ],
     [ qw( x y ) ],
@@ -60,7 +60,7 @@ BEGIN {
     [ qw( x y z ) ],
     'keys %Point3D::HAS is equal to fields'
   );
-  my $HAS = Point3D->TV::toolkit::UO::Antlers::get_fields();
+  my $HAS = Point3D->TUI::toolkit::UO::Antlers::get_fields();
   is_deeply(
     [ sort keys %$HAS ],
     [ qw( x y z ) ],
@@ -93,6 +93,6 @@ BEGIN {
   );
 }
 
-note 'Class::XSAccessor: ', TV::toolkit::UO::Antlers::CAN_HAZ_XS() ? 1 : 0;
+note 'Class::XSAccessor: ', TUI::toolkit::UO::Antlers::CAN_HAZ_XS() ? 1 : 0;
 
 done_testing();

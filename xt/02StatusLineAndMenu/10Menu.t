@@ -21,24 +21,24 @@ use constant ManualTestsEnabled => exists($ENV{MANUAL_TESTS})
                                 && !$ENV{NONINTERACTIVE_TESTING};
 
 BEGIN {
-  use_ok 'TV::App';
-  use_ok 'TV::Views';
-  use_ok 'TV::Drivers';
-  use_ok 'TV::Objects';
-  use_ok 'TV::Menus';
-  use_ok 'TV::toolkit';
+  use_ok 'TUI::App';
+  use_ok 'TUI::Views';
+  use_ok 'TUI::Drivers';
+  use_ok 'TUI::Objects';
+  use_ok 'TUI::Menus';
+  use_ok 'TUI::toolkit';
 }
 
 BEGIN {
   package TMyApp;
 
   # The same modules are used for the menu as for the status line.
-  use TV::App;      # TApplication
-  use TV::Views;    # Event (cmQuit)
-  use TV::Drivers;  # Hotkey
-  use TV::Objects;  # Window section (TRect)
-  use TV::Menus;    # Status line and menu
-  use TV::toolkit;
+  use TUI::App;      # TApplication
+  use TUI::Views;    # Event (cmQuit)
+  use TUI::Drivers;  # Hotkey
+  use TUI::Objects;  # Window section (TRect)
+  use TUI::Menus;    # Status line and menu
+  use TUI::toolkit;
 
   extends TApplication;
 

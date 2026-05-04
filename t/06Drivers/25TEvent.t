@@ -3,12 +3,12 @@ use warnings;
 
 use Test::More;
 
-# Mocking 'TV::Drivers::HardwareInfo' for testing purposes
+# Mocking 'TUI::Drivers::HardwareInfo' for testing purposes
 BEGIN {
-  package TV::Drivers::HardwareInfo;
+  package TUI::Drivers::HardwareInfo;
   use Exporter 'import';
   our @EXPORT = qw( THardwareInfo );
-  use TV::Drivers::Const qw(
+  use TUI::Drivers::Const qw(
     evKeyDown
     kbAltShift
     kbDel
@@ -41,13 +41,13 @@ BEGIN {
     }
     return 0;
   } #/ sub getKeyEvent
-  $INC{"TV/Drivers/HardwareInfo.pm"} = 1;
+  $INC{"TUI/Drivers/HardwareInfo.pm"} = 1;
 }
 
 BEGIN {
-  use_ok 'TV::Objects::Point';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Drivers::Const', qw(
+  use_ok 'TUI::Objects::Point';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Drivers::Const', qw(
     :evXXXX
     kbAltSpace
     kbCtrlDel
@@ -55,7 +55,7 @@ BEGIN {
     kbCtrlIns
     kbShiftIns
   );
-  use_ok 'TV::Drivers::HardwareInfo';
+  use_ok 'TUI::Drivers::HardwareInfo';
 }
 use_ok 'CharScanType';
 use_ok 'MouseEventType';

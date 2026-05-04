@@ -1,9 +1,9 @@
 package TShell;
-use TV::App;
-use TV::Views;
-use TV::Drivers;
-use TV::Menus;
-use TV::toolkit;
+use TUI::App;
+use TUI::Views;
+use TUI::Drivers;
+use TUI::Menus;
+use TUI::toolkit;
 
 extends TApplication;
 

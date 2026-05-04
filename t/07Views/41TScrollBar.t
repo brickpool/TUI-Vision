@@ -5,22 +5,22 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Const', qw(
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Const', qw(
     evKeyDown
     kbLeft
   );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Palette';
-  use_ok 'TV::Views::Group';
-  use_ok 'TV::Views::ScrollBar';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Palette';
+  use_ok 'TUI::Views::Group';
+  use_ok 'TUI::Views::ScrollBar';
 }
 
 # Mocking TWindow for testing purposes
 BEGIN {
   package MyWindow;
-  use TV::toolkit;
-  extends 'TV::Views::Group';
+  use TUI::toolkit;
+  extends 'TUI::Views::Group';
   has flags  => ( is => 'rw', default => sub { 0 } );
   has number => ( is => 'rw', default => sub { 0 } );
   sub getTitle { 'title' }

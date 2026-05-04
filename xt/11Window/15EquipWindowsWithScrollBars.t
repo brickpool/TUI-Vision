@@ -27,21 +27,21 @@ use constant ManualTestsEnabled => exists($ENV{MANUAL_TESTS})
                                 && !$ENV{NONINTERACTIVE_TESTING};
 
 BEGIN {
-  use_ok 'TV::App';
-  use_ok 'TV::Objects';
-  use_ok 'TV::Drivers';
-  use_ok 'TV::Views';
-  use_ok 'TV::Menus';
-  use_ok 'TV::toolkit';
+  use_ok 'TUI::App';
+  use_ok 'TUI::Objects';
+  use_ok 'TUI::Drivers';
+  use_ok 'TUI::Views';
+  use_ok 'TUI::Menus';
+  use_ok 'TUI::toolkit';
 }
 
 # Custom window class with scrollbars and indicator
 BEGIN {
   package TMyWindow;
 
-  use TV::Views;
-  use TV::Objects;
-  use TV::toolkit;
+  use TUI::Views;
+  use TUI::Objects;
+  use TUI::toolkit;
 
   extends TWindow;
 
@@ -84,12 +84,12 @@ BEGIN {
 BEGIN {
   package TMyApp;
 
-  use TV::App;
-  use TV::Objects;
-  use TV::Drivers;
-  use TV::Views;
-  use TV::Menus;
-  use TV::toolkit;
+  use TUI::App;
+  use TUI::Objects;
+  use TUI::Drivers;
+  use TUI::Views;
+  use TUI::Menus;
+  use TUI::toolkit;
 
   use constant {
     cmNewWin   => 1001,

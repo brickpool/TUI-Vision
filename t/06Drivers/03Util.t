@@ -4,14 +4,14 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Drivers::Const', qw(
+  use_ok 'TUI::Drivers::Const', qw(
     kbCtrlS
     kbCtrlD
     kbCtrlZ
     kbLeft
     kbRight
   );
-  use_ok 'TV::Drivers::Util', qw(
+  use_ok 'TUI::Drivers::Util', qw(
     ctrlToArrow
     cstrlen
     getAltCode

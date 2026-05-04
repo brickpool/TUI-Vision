@@ -36,10 +36,10 @@ Guide.
 =head2 TFrame
 
     .------------------+-------------------------------------------------------.
-    | class            | TV::Views::Frame                                      |
+    | class            | TUI::Views::Frame                                      |
     +------------------+-------------------------------------------------------+
-    | parents          | TV::Views::View                                       |
-    | classes          | TV::Objects::Object                                   |
+    | parents          | TUI::Views::View                                       |
+    | classes          | TUI::Objects::Object                                   |
     +------------------+-------------------------------------------------------+
     | methods          | BUILD()                                               |
     |                  | TFrame()                                              |
@@ -123,10 +123,10 @@ bits are set, then TFrame->setState calls TView->drawView.
 =head2 TGroup
 
     .------------------+-------------------------------------------------------.
-    | class            | TV::Views::Group                                      |
+    | class            | TUI::Views::Group                                      |
     +------------------+-------------------------------------------------------+
-    | parents          | TV::Views::View                                       |
-    | classes          | TV::Objects::Object                                   |
+    | parents          | TUI::Views::View                                       |
+    | classes          | TUI::Objects::Object                                   |
     +------------------+-------------------------------------------------------+
     | methods          | BUILD()                                               |
     |                  | DEMOLISH()                                            |
@@ -967,7 +967,7 @@ variable
 
 =head3 Module
 
-    TV::Objects::NSCollection
+    TUI::Objects::NSCollection
 
 =head3 Purpose
 
@@ -1245,7 +1245,7 @@ correctly.
 
     # Define TDirList, derived from TListViewer
     package TDirList;
-    use TV::Dialogs;
+    use TUI::Dialogs;
     use parent TListViewer;
     sub getText {
         my ($self, $item, $maxLen) = @_;

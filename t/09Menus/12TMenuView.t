@@ -5,20 +5,20 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  require_ok 'TV::Drivers::Const';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Palette';
-  use_ok 'TV::Menus::Menu';
-  use_ok 'TV::Menus::MenuItem';
-  use_ok 'TV::Menus::MenuView';
+  use_ok 'TUI::Objects::Rect';
+  require_ok 'TUI::Drivers::Const';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Palette';
+  use_ok 'TUI::Menus::Menu';
+  use_ok 'TUI::Menus::MenuItem';
+  use_ok 'TUI::Menus::MenuView';
 }
 
 BEGIN {
   package MyMenuView;
-  use TV::Drivers::Const qw( evKeyDown kbEsc );
-  use TV::toolkit;
-  extends 'TV::Menus::MenuView';
+  use TUI::Drivers::Const qw( evKeyDown kbEsc );
+  use TUI::toolkit;
+  extends 'TUI::Menus::MenuView';
   sub getEvent {
     $_[1]->{what} = evKeyDown;
     $_[1]->{keyDown}{keyCode} = kbEsc;

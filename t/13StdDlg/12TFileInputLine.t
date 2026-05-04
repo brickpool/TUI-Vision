@@ -5,11 +5,11 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Const', qw( evBroadcast );
-  use_ok 'TV::StdDlg::Const', qw( cmFileFocused FA_DIREC );
-  use_ok 'TV::Views::Const', qw( sfSelected );
-  use_ok 'TV::StdDlg::FileInputLine';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Const', qw( evBroadcast );
+  use_ok 'TUI::StdDlg::Const', qw( cmFileFocused FA_DIREC );
+  use_ok 'TUI::Views::Const', qw( sfSelected );
+  use_ok 'TUI::StdDlg::FileInputLine';
 }
 
 # Minimal methods used by the code under test; no real UI needed

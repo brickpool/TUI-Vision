@@ -5,17 +5,17 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Const', qw( :evXXXX );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Palette';
-  use_ok 'TV::Views::ScrollBar';
-  use_ok 'TV::Views::DrawBuffer';
-  use_ok 'TV::Views::Const', qw(
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Const', qw( :evXXXX );
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Palette';
+  use_ok 'TUI::Views::ScrollBar';
+  use_ok 'TUI::Views::DrawBuffer';
+  use_ok 'TUI::Views::Const', qw(
     cmScrollBarChanged
     :sfXXXX
   );
-  use_ok 'TV::Views::ListViewer';
+  use_ok 'TUI::Views::ListViewer';
 } #/ BEGIN
 
 # ScrollBars

@@ -4,11 +4,11 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::View::Cursor';
-  use_ok 'TV::Views::View::Exposed';
-  use_ok 'TV::Views::View::Write';
-  use_ok 'TV::Views::View';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::View::Cursor';
+  use_ok 'TUI::Views::View::Exposed';
+  use_ok 'TUI::Views::View::Write';
+  use_ok 'TUI::Views::View';
 }
 
 isa_ok( TView->new( bounds => TRect->new() ), TView );

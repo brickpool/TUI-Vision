@@ -1,0 +1,100 @@
+package TUI::Objects::StringCollection;
+# ABSTRACT: Implement a string collection for the Turbo Vision framework.
+
+use 5.010;
+use strict;
+use warnings;
+
+our $VERSION = '2.000_001';
+$VERSION =~ tr/_//d;
+our $AUTHORITY = 'cpan:BRICKPOOL';
+
+use Exporter 'import';
+our @EXPORT = qw(
+  TStringCollection
+  new_TStringCollection
+);
+
+use TUI::toolkit;
+use TUI::toolkit::Types qw( :types );
+
+use TUI::Objects::Const qw( ccNotFound );
+use TUI::Objects::SortedCollection;
+
+sub TStringCollection() { __PACKAGE__ }
+sub name() { 'TStringCollection' };
+sub new_TStringCollection { __PACKAGE__->from(@_) }
+
+extends TSortedCollection;
+
+sub BUILDARGS {    # \%args (|%args)
+  state $sig = signature(
+    method => 1,
+    named => [
+      limit => Int, { alias => 'aLimit' },
+      delta => Int, { alias => 'aDelta' },
+    ],
+    caller_level => +1,
+  );
+  my ( $class, $args ) = $sig->( @_ );
+  return { %$args };
+}
+
+sub from {    # $obj ($aLimit, $aDelta)
+  state $sig = signature(
+    method => 1,
+    pos => [Int, Int],
+  );
+  my ( $class, @args ) = $sig->( @_ );
+  return $class->new( limit => $args[0], delta => $args[1] );
+}
+
+sub compare {    # $cmp ($key1, $key2)
+  state $sig = signature(
+    method => Object,
+    pos    => [Str, Str],
+  );
+  my ( $self, $key1, $key2 ) = $sig->( @_ );
+  return $key1 cmp $key2;
+}
+
+1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TStringCollection - implement a string collection for Turbo Vision.
+
+=head1 DESCRIPTION
+
+In this Perl module, the class I<TStringCollection> is created, which inherits
+from I<TSortedCollection>. 
+
+=head1 METHODS
+
+The method I<compare> has been overridden to suit the comparison of strings. 
+Otherwise, all methods have been adopted unchanged from the parent classes.
+
+=head1 AUTHORS
+
+=over
+
+=item Turbo Vision Development Team
+
+=item J. Schneider <brickpool@cpan.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

@@ -4,18 +4,18 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Const', qw( INT_MAX );
-  use_ok 'TV::Objects::Point';
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Const', qw( :evXXXX );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Const', qw( 
+  use_ok 'TUI::Const', qw( INT_MAX );
+  use_ok 'TUI::Objects::Point';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Const', qw( :evXXXX );
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Const', qw( 
     :dmXXXX
     :gfXXXX
     :hcXXXX
     :sfXXXX
   );
-  use_ok 'TV::Views::View';
+  use_ok 'TUI::Views::View';
 }
 
 my $bounds = TRect->new( ax => 0, ay => 0, bx => 10, by => 10 );

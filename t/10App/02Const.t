@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::App::Const', qw( 
+  use_ok 'TUI::App::Const', qw( 
     :cpXXXX
     :hcXXXX
     :apXXXX

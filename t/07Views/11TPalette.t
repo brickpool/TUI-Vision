@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Views::Palette';
+  use_ok 'TUI::Views::Palette';
 }
 
 my $data = sub {

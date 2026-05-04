@@ -5,7 +5,7 @@ use Test::More;
 use IO::Scalar;
 
 BEGIN {
-  use_ok 'TV::Drivers::Const', qw(
+  use_ok 'TUI::Drivers::Const', qw(
     kbCtrlA
     kbLeftCtrl
     kbRightCtrl
@@ -15,7 +15,7 @@ BEGIN {
     meMouseMoved
     meDoubleClick
   );
-  use_ok 'TV::Gadgets::PrintConstants', qw(
+  use_ok 'TUI::Gadgets::PrintConstants', qw(
     printKeyCode
     printControlKeyState
     printEventCode
@@ -25,8 +25,8 @@ BEGIN {
   );
 }
 
-my $printFlags = sub { goto &TV::Gadgets::PrintConstants::_printFlags };
-my $printCode = sub { goto &TV::Gadgets::PrintConstants::_printCode };
+my $printFlags = sub { goto &TUI::Gadgets::PrintConstants::_printFlags };
+my $printCode = sub { goto &TUI::Gadgets::PrintConstants::_printCode };
 
 subtest 'Test &$printCode (match)' => sub {
   my $output = '';

@@ -4,17 +4,17 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Menus::Const';
-  use_ok 'TV::Menus::Menu';
-  use_ok 'TV::Menus::MenuItem';
-  use_ok 'TV::Menus::SubMenu';
-  use_ok 'TV::Menus::MenuView';
-  use_ok 'TV::Menus::MenuBar';
-  use_ok 'TV::Menus::MenuBox';
-  use_ok 'TV::Menus::StatusItem';
-  use_ok 'TV::Menus::StatusDef';
-  use_ok 'TV::Menus::StatusLine';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Menus::Const';
+  use_ok 'TUI::Menus::Menu';
+  use_ok 'TUI::Menus::MenuItem';
+  use_ok 'TUI::Menus::SubMenu';
+  use_ok 'TUI::Menus::MenuView';
+  use_ok 'TUI::Menus::MenuBar';
+  use_ok 'TUI::Menus::MenuBox';
+  use_ok 'TUI::Menus::StatusItem';
+  use_ok 'TUI::Menus::StatusDef';
+  use_ok 'TUI::Menus::StatusLine';
 }
 
 isa_ok( TMenu->new(), TMenu );

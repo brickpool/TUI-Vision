@@ -6,7 +6,7 @@ use Test::Exception;
 
 # Mocking 'THardwareInfo' for testing purposes
 BEGIN {
-  package TV::Drivers::HardwareInfo;
+  package TUI::Drivers::HardwareInfo;
   use Exporter 'import';
   our @EXPORT = qw( THardwareInfo );
   sub THardwareInfo() { __PACKAGE__ }
@@ -17,12 +17,12 @@ BEGIN {
   sub getScreenCols   { return 80; }
   sub getScreenMode   { return 1; }
   sub setScreenMode   { }
-  $INC{"TV/Drivers/HardwareInfo.pm"} = 1;
+  $INC{"TUI/Drivers/HardwareInfo.pm"} = 1;
 } #/ BEGIN
 
 BEGIN {
-  use_ok 'TV::Drivers::HardwareInfo';
-  use_ok 'TV::Drivers::Display';
+  use_ok 'TUI::Drivers::HardwareInfo';
+  use_ok 'TUI::Drivers::Display';
 }
 
 # Test object creation and updateIntlChars method

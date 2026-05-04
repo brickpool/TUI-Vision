@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Drivers';
+  use_ok 'TUI::Drivers';
 }
 
 is( eventQSize, 16, 'eventQSize is 16' );

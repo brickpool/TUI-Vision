@@ -5,8 +5,8 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Dialogs::CheckBoxes';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Dialogs::CheckBoxes';
 }
 
 my ( $bounds, $cb );

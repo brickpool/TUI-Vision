@@ -5,8 +5,8 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Const', qw(
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Const', qw(
     :evXXXX
     kbLeft
     kbRight
@@ -16,17 +16,17 @@ BEGIN {
     kbDel
     kbIns
   );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Const', qw( :sfXXXX );
-  use_ok 'TV::Dialogs::InputLine';
-  require_ok 'TV::toolkit';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Const', qw( :sfXXXX );
+  use_ok 'TUI::Dialogs::InputLine';
+  require_ok 'TUI::toolkit';
 }
 
 # Mock subclass to intercept drawing/UI-related calls
 BEGIN {
   package MyInputLine;
-  use TV::toolkit;
-  extends 'TV::Dialogs::InputLine';
+  use TUI::toolkit;
+  extends 'TUI::Dialogs::InputLine';
 
   # Just record that these methods were called; no real UI required
   sub drawView  { ::pass('drawView called') }

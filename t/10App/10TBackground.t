@@ -5,10 +5,10 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::App::Const', qw( cpBackground );
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::Palette';
-  use_ok 'TV::App::Background';
+  use_ok 'TUI::App::Const', qw( cpBackground );
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Palette';
+  use_ok 'TUI::App::Background';
 }
 
 # Test object creation

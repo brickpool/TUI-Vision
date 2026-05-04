@@ -5,12 +5,12 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Menus::Menu';
+  use_ok 'TUI::Menus::Menu';
 }
 
 # Mocking TMenuItem for testing purposes
 {
-  package TV::Menus::MenuItem;
+  package TUI::Menus::MenuItem;
   sub main::TMenuItem (){ __PACKAGE__ }
   sub new { bless { next => undef }, shift }
 }

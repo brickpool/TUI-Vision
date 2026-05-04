@@ -30,7 +30,7 @@ developed by an open-source community, there are no known ports to Perl.
 Most further developments and ports focused on other platforms, such as Unix 
 systems.
 
-=head2 Perl TVision
+=head2 TUI-Vision
 
 Starting in 2025, I made the previously private project public after 
 successfully porting the Turbo Vision C++ framework to Perl for the target 
@@ -43,12 +43,12 @@ L<tv2fixed.zip|http://www.sigala.it/sergio/tvision/source/tv2fixed.zip>).
 In addition, assembler routines that have been ported to C++ come from 
 I<magiblot>'s implementation I<"A modern port of Turbo Vision 2.0.">.
 
-Perl TVision wanted to enable developers to use the powerful text-based user 
+TUI-Vision wanted to enable developers to use the powerful text-based user 
 interfaces of Turbo Vision in Perl. 
 
 =head3 Source Module Inventory
 
-  lib/TV/
+  lib/TUI/
     +-- App/      - TProgram, TApplication, TDeskTop, TBackground, etc.
     +-- Dialogs/  - TDialog, TButton, TInputLine, TLabel, etc.
     +-- Drivers/  - TEvent, TScreen, TEventQueue, THardwareInfo, etc.
@@ -87,62 +87,62 @@ Each entry includes:
 =head3 Core Primitives
 
   +----------------+---------------------------+-----------+
-  | TPoint         | TV::Objects::Point        | [x]       |
-  | TRect          | TV::Objects::Rect         | [x]       |
-  | TDrawBuffer    | TV::Views::DrawBuffer     | [x]       |
-  | TPalette       | TV::Views::Palette        | [x]       |
-  | TCommandSet    | TV::Views::CommandSet     | [x]       |
+  | TPoint         | TUI::Objects::Point        | [x]       |
+  | TRect          | TUI::Objects::Rect         | [x]       |
+  | TDrawBuffer    | TUI::Views::DrawBuffer     | [x]       |
+  | TPalette       | TUI::Views::Palette        | [x]       |
+  | TCommandSet    | TUI::Views::CommandSet     | [x]       |
   +----------------+---------------------------+-----------+
 
 =head3 Event System
 
   +----------------+---------------------------+-----------+
-  | TEvent         | TV::Drivers::Event        | [x]       |
-  | KeyDownEvent   | TV::Drivers::Event        | [x]       |
-  | MouseEvent     | TV::Drivers::Event        | [x]       |
-  | MessageEvent   | TV::Drivers::Event        | [x]       |
-  | TEventQueue    | TV::Drivers::EventQueue   | [x]       |
+  | TEvent         | TUI::Drivers::Event        | [x]       |
+  | KeyDownEvent   | TUI::Drivers::Event        | [x]       |
+  | MouseEvent     | TUI::Drivers::Event        | [x]       |
+  | MessageEvent   | TUI::Drivers::Event        | [x]       |
+  | TEventQueue    | TUI::Drivers::EventQueue   | [x]       |
   +----------------+---------------------------+-----------+
 
 =head3 Platform Layer
 
   +----------------+---------------------------+-----------+
-  | THWMouse       | TV::Drivers::HWMouse      | [o]       |
-  | TMouse         | TV::Drivers::Mouse        | [x]       |
-  | TSystemError   | TV::Drivers::SystemError  | [o]       |
-  | TScreen        | TV::Drivers::Screen       | [o]       |
-  | TDisplay       | TV::Drivers::Display      | [o]       |
-  | THardwareInfo  | TV::Drivers::HardwareInfo | [o]       |
+  | THWMouse       | TUI::Drivers::HWMouse      | [o]       |
+  | TMouse         | TUI::Drivers::Mouse        | [x]       |
+  | TSystemError   | TUI::Drivers::SystemError  | [o]       |
+  | TScreen        | TUI::Drivers::Screen       | [o]       |
+  | TDisplay       | TUI::Drivers::Display      | [o]       |
+  | THardwareInfo  | TUI::Drivers::HardwareInfo | [o]       |
   +----------------+---------------------------+-----------+
 
-Win32 Console Driver, implemented in C<TV::Drivers::HardwareInfo::Win32>.
+Win32 Console Driver, implemented in C<TUI::Drivers::HardwareInfo::Win32>.
 
 =head3 View Hierarchy
 
   +----------------+---------------------------+-----------+
-  | TObject        | TV::Objects::Object       | [x]       |
-  | TView          | TV::Views::View           | [x]       |
-  | TGroup         | TV::Views::Group          | [x]       |
-  | TFrame         | TV::Views::Frame          | [x]       |
-  | TScrollBar     | TV::Views::ScrollBar      | [x]       |
-  | TScroller      | TV::Views::Scroller       | [x]       |
-  | TListViewer    | TV::Views::ListViewer     | [x]       |
-  | TBackground    | TV::App::Background       | [x]       |
+  | TObject        | TUI::Objects::Object       | [x]       |
+  | TView          | TUI::Views::View           | [x]       |
+  | TGroup         | TUI::Views::Group          | [x]       |
+  | TFrame         | TUI::Views::Frame          | [x]       |
+  | TScrollBar     | TUI::Views::ScrollBar      | [x]       |
+  | TScroller      | TUI::Views::Scroller       | [x]       |
+  | TListViewer    | TUI::Views::ListViewer     | [x]       |
+  | TBackground    | TUI::App::Background       | [x]       |
   +----------------+---------------------------+-----------+
 
-Hierarchical screen write system, implemented in C<TV::Views::View::Write>.
+Hierarchical screen write system, implemented in C<TUI::Views::View::Write>.
 
 =head3 Application Framework
 
   +----------------+---------------------------+-----------+
-  | TDeskInit      | TV::App::DeskInit         | [x]       |
-  | TDeskTop       | TV::App::DeskTop          | [x]       |
-  | TProgInit      | TV::App::ProgInit         | [x]       |
-  | TProgram       | TV::App::Program          | [x]       |
-  | TApplication   | TV::App::Application      | [x]       |
-  | TWindowInit    | TV::Views::WindowInit     | [x]       |
-  | TWindow        | TV::Views::Window         | [x]       |
-  | TDialog        | TV::Dialogs::Dialog       | [x]       |
+  | TDeskInit      | TUI::App::DeskInit         | [x]       |
+  | TDeskTop       | TUI::App::DeskTop          | [x]       |
+  | TProgInit      | TUI::App::ProgInit         | [x]       |
+  | TProgram       | TUI::App::Program          | [x]       |
+  | TApplication   | TUI::App::Application      | [x]       |
+  | TWindowInit    | TUI::Views::WindowInit     | [x]       |
+  | TWindow        | TUI::Views::Window         | [x]       |
+  | TDialog        | TUI::Dialogs::Dialog       | [x]       |
   +----------------+---------------------------+-----------+
 
 =head3 Dialog Controls
@@ -150,77 +150,77 @@ Hierarchical screen write system, implemented in C<TV::Views::View::Write>.
 Buttons and Clusters
 
   +------------------+------------------------------+-----------+
-  | TButton          | TV::Dialogs::Button          | [x]       |
-  | TSItem           | TV::Dialogs::StrItem         | [x]       |
-  | TCluster         | TV::Dialogs::Cluster         | [x]       |
-  | TRadioButtons    | TV::Dialogs::RadioButtons    | [x]       |
-  | TCheckBoxes      | TV::Dialogs::CheckBoxes      | [x]       |
-  | TMultiCheckBoxes | TV::Dialogs::MultiCheckBoxes | [x]       |
+  | TButton          | TUI::Dialogs::Button          | [x]       |
+  | TSItem           | TUI::Dialogs::StrItem         | [x]       |
+  | TCluster         | TUI::Dialogs::Cluster         | [x]       |
+  | TRadioButtons    | TUI::Dialogs::RadioButtons    | [x]       |
+  | TCheckBoxes      | TUI::Dialogs::CheckBoxes      | [x]       |
+  | TMultiCheckBoxes | TUI::Dialogs::MultiCheckBoxes | [x]       |
   +------------------+------------------------------+-----------+
 
 Input and Text
 
   +----------------+---------------------------+-----------+
-  | TInputLine     | TV::Dialogs::InputLine    | [x]       |
-  | TStaticText    | TV::Dialogs::StaticText   | [x]       |
-  | TParamText     | TV::Dialogs::ParamText    | [x]       |
-  | TLabel         | TV::Dialogs::Label        | [x]       |
+  | TInputLine     | TUI::Dialogs::InputLine    | [x]       |
+  | TStaticText    | TUI::Dialogs::StaticText   | [x]       |
+  | TParamText     | TUI::Dialogs::ParamText    | [x]       |
+  | TLabel         | TUI::Dialogs::Label        | [x]       |
   +----------------+---------------------------+-----------+
 
 Lists and History
 
   +----------------+--------------------------------------+-----------+
-  | TListBox       | TV::Dialogs::ListBox                 | [x]       |
-  | TListBoxRec    | TV::Dialogs::ListBox                 | [x]       |
-  | TSortedListBox | TV::StdDlg::SortedListBox            | [x]       |
-  | HistRec        | TV::Dialogs::HistoryViewer::HistList | [x]       |
-  | THistoryViewer | TV::Dialogs::HistoryViewer           | [x]       |
-  | THistInit      | TV::Dialogs::HistInit                | [x]       |
-  | THistoryWindow | TV::Dialogs::HistoryWindow           | [x]       |
-  | THistory       | TV::Dialogs::History                 | [x]       |
+  | TListBox       | TUI::Dialogs::ListBox                 | [x]       |
+  | TListBoxRec    | TUI::Dialogs::ListBox                 | [x]       |
+  | TSortedListBox | TUI::StdDlg::SortedListBox            | [x]       |
+  | HistRec        | TUI::Dialogs::HistoryViewer::HistList | [x]       |
+  | THistoryViewer | TUI::Dialogs::HistoryViewer           | [x]       |
+  | THistInit      | TUI::Dialogs::HistInit                | [x]       |
+  | THistoryWindow | TUI::Dialogs::HistoryWindow           | [x]       |
+  | THistory       | TUI::Dialogs::History                 | [x]       |
   +----------------+--------------------------------------+-----------+
 
 =head3 File/Directory Dialogs
 
   +-----------------+----------------------------+-----------+
-  | ffblk/find_t    | TV::StdDlg::Dos            | [x]       |
-  | FindFirstRec    | TV::StdDlg::FindFirstRec   | [o]       |
-  | TSearchRec      | TV::StdDlg::FileCollection | [x]       |
-  | TFileCollection | TV::StdDlg::FileCollection | [x]       |
-  | TFileInputLine  | TV::StdDlg::FileInputLine  | [x]       |
-  | TFileList       | TV::StdDlg::FileList       | [x]       |
-  | TFileInfoPane   | TV::StdDlg::FileInfoPane   | [x]       |
-  | TFileDialog     | TV::StdDlg::FileDialog     | [x]       |
-  | TDirEntry       | TV::StdDlg::DirEntry       | [x]       |
-  | TDirCollection  | TV::StdDlg::DirCollection  | [x]       |
-  | TDirListBox     | TV::StdDlg::DirListBox     | [x]       |
-  | TChDirDialog    | TV::StdDlg::ChDirDialog    | [x]       |
+  | ffblk/find_t    | TUI::StdDlg::Dos            | [x]       |
+  | FindFirstRec    | TUI::StdDlg::FindFirstRec   | [o]       |
+  | TSearchRec      | TUI::StdDlg::FileCollection | [x]       |
+  | TFileCollection | TUI::StdDlg::FileCollection | [x]       |
+  | TFileInputLine  | TUI::StdDlg::FileInputLine  | [x]       |
+  | TFileList       | TUI::StdDlg::FileList       | [x]       |
+  | TFileInfoPane   | TUI::StdDlg::FileInfoPane   | [x]       |
+  | TFileDialog     | TUI::StdDlg::FileDialog     | [x]       |
+  | TDirEntry       | TUI::StdDlg::DirEntry       | [x]       |
+  | TDirCollection  | TUI::StdDlg::DirCollection  | [x]       |
+  | TDirListBox     | TUI::StdDlg::DirListBox     | [x]       |
+  | TChDirDialog    | TUI::StdDlg::ChDirDialog    | [x]       |
   +-----------------+----------------------------+-----------+
 
-Win32 FindFirstRec class, implemented in C<TV::Drivers::FindFirstRec::Win32>.
+Win32 FindFirstRec class, implemented in C<TUI::Drivers::FindFirstRec::Win32>.
 
 =head3 Menu System
 
   +----------------+---------------------------+-----------+
-  | TMenuItem      | TV::Menus::MenuItem       | [x]       |
-  | TMenu          | TV::Menus::Menu           | [x]       |
-  | TMenuView      | TV::Menus::MenuView       | [x]       |
-  | TMenuBar       | TV::Menus::MenuBar        | [x]       |
-  | TMenuBox       | TV::Menus::MenuBox        | [x]       |
+  | TMenuItem      | TUI::Menus::MenuItem       | [x]       |
+  | TMenu          | TUI::Menus::Menu           | [x]       |
+  | TMenuView      | TUI::Menus::MenuView       | [x]       |
+  | TMenuBar       | TUI::Menus::MenuBar        | [x]       |
+  | TMenuBox       | TUI::Menus::MenuBox        | [x]       |
   | TMenuPopup     | (missing)                 | [ ]       |
-  | TSubMenu       | TV::Menus::SubMenu        | [x]       |
-  | TStatusLine    | TV::Menus::StatusLine     | [x]       |
-  | TStatusItem    | TV::Menus::StatusItem     | [x]       |
-  | TStatusDef     | TV::Menus::StatusDef      | [x]       |
+  | TSubMenu       | TUI::Menus::SubMenu        | [x]       |
+  | TStatusLine    | TUI::Menus::StatusLine     | [x]       |
+  | TStatusItem    | TUI::Menus::StatusItem     | [x]       |
+  | TStatusDef     | TUI::Menus::StatusDef      | [x]       |
   +----------------+---------------------------+-----------+
 
 =head3 Message Box System
 
   +------------------+-------------------------+-----------+
-  | messageBox()     | TV::MsgBox::MsgBoxText  | [x]       |
-  | messageBoxRect() | TV::MsgBox::MsgBoxText  | [x]       |
-  | inputBox()       | TV::MsgBox::MsgBoxText  | [x]       |
-  | inputBoxRect()   | TV::MsgBox::MsgBoxText  | [x]       |
+  | messageBox()     | TUI::MsgBox::MsgBoxText  | [x]       |
+  | messageBoxRect() | TUI::MsgBox::MsgBoxText  | [x]       |
+  | inputBox()       | TUI::MsgBox::MsgBoxText  | [x]       |
+  | inputBoxRect()   | TUI::MsgBox::MsgBoxText  | [x]       |
   +------------------+-------------------------+-----------+
 
 =head3 Validator System
@@ -237,11 +237,11 @@ Win32 FindFirstRec class, implemented in C<TV::Drivers::FindFirstRec::Win32>.
 =head3 Collections Framework
 
   +----------------------+---------------------------------+-----------+
-  | TNSCollection        | TV::Objects::NSCollection       | [x]       |
-  | TNSSortedCollection  | TV::Objects::NSSortedCollection | [x]       |
-  | TCollection          | TV::Objects::Collection         | [x]       |
-  | TSortedCollection    | TV::Objects::SortedCollection   | [x]       |
-  | TStringCollection    | TV::Objects::StringCollection   | [x]       |
+  | TNSCollection        | TUI::Objects::NSCollection       | [x]       |
+  | TNSSortedCollection  | TUI::Objects::NSSortedCollection | [x]       |
+  | TCollection          | TUI::Objects::Collection         | [x]       |
+  | TSortedCollection    | TUI::Objects::SortedCollection   | [x]       |
+  | TStringCollection    | TUI::Objects::StringCollection   | [x]       |
   | TStringList          | (missing)                       | [ ]       |
   | TStrListMaker        | (missing)                       | [ ]       |
   | TResourceCollection  | (missing)                       | [ ]       |
@@ -256,8 +256,8 @@ Win32 FindFirstRec class, implemented in C<TV::Drivers::FindFirstRec::Win32>.
   | TFileEditor    | (missing)                 | [ ]       |
   | TEditWindow    | (missing)                 | [ ]       |
   | TIndicator     | (missing)                 | [ ]       |
-  | TTextDevice    | TV::TextView::TextDevice  | [x]       |
-  | TTerminal      | TV::TextView::Terminal    | [x]       |
+  | TTextDevice    | TUI::TextView::TextDevice  | [x]       |
+  | TTerminal      | TUI::TextView::Terminal    | [x]       |
   +----------------+---------------------------+-----------+
 
 =head3 Gadgets
@@ -266,14 +266,14 @@ Win32 FindFirstRec class, implemented in C<TV::Drivers::FindFirstRec::Win32>.
   | TCalcDisplay    | (missing)                | [ ]       |
   | TCalendarView   | (missing)                | [ ]       |
   | TClickTester    | (missing)                | [ ]       |
-  | TClockView      | TV::Gadgets::ClockView   | [x]       |
-  | TEventViewer    | TV::Gadgets::EventViewer | [x]       |
-  | THeapView       | TV::Gadgets::HeapView    | [o]       |
+  | TClockView      | TUI::Gadgets::ClockView   | [x]       |
+  | TEventViewer    | TUI::Gadgets::EventViewer | [x]       |
+  | THeapView       | TUI::Gadgets::HeapView    | [o]       |
   | TLineCollection | (missing)                | [ ]       |
   | TPuzzleView     | (missing)                | [ ]       |
   +-----------------+--------------------------+-----------+
 
-Win32 THeapView, implemented in C<TV::Gadgets::HeapView::Win32>.
+Win32 THeapView, implemented in C<TUI::Gadgets::HeapView::Win32>.
 
 =head3 Interpretation
 
@@ -395,7 +395,7 @@ L<Coverage|/Source Module Inventory>).
 
 A I<Moo/s/e> based toolkit was used to ensure that the applications remain 
 efficient and portable. The toolkit enables developers to extend the 
-functionality of Perl TVision easily and efficiently. The L<Moos> package (by 
+functionality of TUI-Vision easily and efficiently. The L<Moos> package (by 
 default), L<Moo> and L<Moose> are currently supported. 
 
 L<Moo> and L<Moose> are widely used libraries with a well-known API. It is 
@@ -404,7 +404,7 @@ The default toolkit L<Moos> is compatible with this API and implemented in pure
 Perl. 
 
 It's up to you what you want to use. Simply C<use Moo> in your application, 
-instead of C<use TV::toolkit> if you want to use L<Moo>. Perl TVision will then 
+instead of C<use TUI::toolkit> if you want to use L<Moo>. TUI-Vision will then 
 use L<Moo> in its entirety (the same applies to L<Moose>, of course). 
 
 =back
@@ -418,7 +418,7 @@ run the following command:
 
 A simple example to create an application with Turbo Vision in Perl:
 
-  use TV::App;
+  use TUI::App;
 
   my $app = TApplication->new();
   $app->run();

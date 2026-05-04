@@ -7,18 +7,18 @@ require bytes;
 use Encode qw( decode );
 
 BEGIN {
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Drivers::Const', qw(
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Drivers::Const', qw(
     evKeyboard
     evMouse
     evCommand
   );
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::TextView::Terminal';
-  use_ok 'TV::Gadgets::EventViewer';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::TextView::Terminal';
+  use_ok 'TUI::Gadgets::EventViewer';
 }
 
-my $printEvent = sub { goto &TV::Gadgets::EventViewer::_printEvent };
+my $printEvent = sub { goto &TUI::Gadgets::EventViewer::_printEvent };
 
 my $sample_event = TEvent->new(
   what    => evKeyboard,
@@ -80,7 +80,7 @@ subtest 'Text length calculation' => sub {
 };
 
 subtest '&$printEvent output for keyboard event' => sub {
-  my $viewer = TV::Gadgets::EventViewer->new(
+  my $viewer = TUI::Gadgets::EventViewer->new(
     bounds   => $bounds,
     bufSize => 10
   );
@@ -97,7 +97,7 @@ subtest '&$printEvent output for keyboard event' => sub {
 }; #/ '&$printEvent output for keyboard event' => sub
 
 subtest '&$printEvent output for mouse event' => sub {
-  my $viewer = TV::Gadgets::EventViewer->new(
+  my $viewer = TUI::Gadgets::EventViewer->new(
     bounds   => $bounds,
     bufSize => 10
   );
@@ -117,7 +117,7 @@ subtest '&$printEvent output for mouse event' => sub {
 }; #/ '&$printEvent output for mouse event' => sub
 
 subtest '&$printEvent output for command event' => sub {
-  my $viewer = TV::Gadgets::EventViewer->new(
+  my $viewer = TUI::Gadgets::EventViewer->new(
     bounds   => $bounds,
     bufSize => 10
   );

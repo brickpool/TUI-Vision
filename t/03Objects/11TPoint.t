@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Point';
+  use_ok 'TUI::Objects::Point';
 }
 
 # Test TPoint->new

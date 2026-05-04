@@ -5,8 +5,8 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Views::View';
-  use_ok 'TV::Menus::MenuItem';
+  use_ok 'TUI::Views::View';
+  use_ok 'TUI::Menus::MenuItem';
 }
 
 # Test object creation with command

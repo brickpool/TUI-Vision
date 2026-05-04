@@ -247,7 +247,7 @@ variable
 
 =head3 Module
 
-    TV::App::Program
+    TUI::App::Program
 
 =head3 Purpose
 
@@ -265,7 +265,7 @@ variable
 
 =head3 Module
 
-    TV::App::Program
+    TUI::App::Program
 
 =head3 Purpose
 
@@ -280,7 +280,7 @@ Application Palette constants
 
 =head3 Module
 
-    TV::App::Const
+    TUI::App::Const
 
 =head3 Purpose
 
@@ -300,7 +300,7 @@ Button Flags constants
 
 =head3 Module
 
-    TV::Dialogs::Const
+    TUI::Dialogs::Const
 
 =head3 Purpose
 
@@ -333,7 +333,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::HWMouse
+    TUI::Drivers::HWMouse
 
 =head3 Purpose
 
@@ -353,7 +353,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -862,7 +862,7 @@ subroutine
 
 =head3 Module
 
-    TV::HistList
+    TUI::HistList
 
 =head3 Purpose
 
@@ -878,7 +878,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -892,7 +892,7 @@ Command constants
 
 =head3 Module
 
-    TV::Views::Const
+    TUI::Views::Const
 
 =head3 Purpose
 
@@ -985,7 +985,7 @@ Collection Error constants
 
 =head3 Module
 
-    TV::Objects::Const
+    TUI::Objects::Const
 
 =head3 Purpose
 
@@ -1008,7 +1008,7 @@ function
 
 =head3 Module
 
-    TV::Util
+    TUI::Util
 
 =head3 Purpose
 
@@ -1030,7 +1030,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -1049,7 +1049,7 @@ function
 
 =head3 Module
 
-    TV::Util
+    TUI::Util
 
 =head3 Purpose
 
@@ -1085,7 +1085,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -1113,7 +1113,7 @@ variable
 
 =head3 Module
 
-    TV::App::Program
+    TUI::App::Program
 
 =head3 Purpose
 
@@ -1128,7 +1128,7 @@ Drag Mode constants
 
 =head3 Module
 
-    TV::Views::Const
+    TUI::Views::Const
 
 =head3 Purpose
 
@@ -1156,7 +1156,7 @@ subroutine
 
 =head3 Unit
 
-    TV::Drivers::EventQueue
+    TUI::Drivers::EventQueue
 
 =head3 Purpose
 
@@ -1175,7 +1175,7 @@ subroutine
 
 =head3 Module
 
-    TV::Dialogs::History
+    TUI::Dialogs::History
 
 =head3 Purpose
 
@@ -1192,7 +1192,7 @@ subroutine
 
 =head3 Module
 
-    TV::Memory::Buffers
+    TUI::Memory::Buffers
 
 =head3 Purpose
 
@@ -1208,7 +1208,7 @@ L</allocateDiscardable>.
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -1227,7 +1227,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -1244,7 +1244,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::EventQueue
+    TUI::Drivers::EventQueue
 
 =head3 Purpose
 
@@ -1265,7 +1265,7 @@ variable
 
 =head3 Module
 
-    TV::Views::View
+    TUI::Views::View
 
 =head3 Purpose
 
@@ -1296,7 +1296,7 @@ constants
 
 =head3 Module
 
-    TV::Drivers::Const
+    TUI::Drivers::Const
 
 =head3 Purpose
 
@@ -1333,7 +1333,7 @@ constant
 
 =head3 Module
 
-    TV::Views::Const
+    TUI::Views::Const
 
 =head3 Purpose
 
@@ -1354,7 +1354,7 @@ subroutine
 
 =head3 Module
 
-    TV::Memory::Buffers
+    TUI::Memory::Buffers
 
 =head3 Purpose
 
@@ -1371,7 +1371,7 @@ function
 
 =head3 Module
 
-    TV::Util
+    TUI::Util
 
 =head3 Purpose
 
@@ -1394,7 +1394,7 @@ function
 
 =head3 Module
 
-    TV::Util
+    TUI::Util
 
 =head3 Purpose
 
@@ -1416,7 +1416,7 @@ subroutine
 
 =head3 Module
 
-    TV::Memory::Buffers
+    TUI::Memory::Buffers
 
 =head3 Purpose
 
@@ -1463,7 +1463,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::HardwareInfo
+    TUI::Drivers::HardwareInfo
 
 =head3 Purpose
 
@@ -1486,7 +1486,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::HardwareInfo
+    TUI::Drivers::HardwareInfo
 
 =head3 Purpose
 
@@ -1504,7 +1504,7 @@ TView->growMode field constants
 
 =head3 Module
 
-    TV::Views::Const
+    TUI::Views::Const
 
 =head3 Purpose
 

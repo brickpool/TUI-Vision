@@ -10,8 +10,8 @@ use Scalar::Util qw(
 );
 
 BEGIN {
-  require_ok 'TV::StdDlg::FindFirstRec';
-  use_ok 'TV::StdDlg::Dos', qw(
+  require_ok 'TUI::StdDlg::FindFirstRec';
+  use_ok 'TUI::StdDlg::Dos', qw(
     _dos_findfirst
     _dos_findnext
   );
@@ -19,7 +19,7 @@ BEGIN {
 
 BEGIN {
   package Local::Rec;
-  use parent 'TV::StdDlg::FindFirstRec';
+  use parent 'TUI::StdDlg::FindFirstRec';
   our $DESTROY_COUNT = 0;
   sub DESTROY {
     $DESTROY_COUNT++;
@@ -36,7 +36,7 @@ subtest 'fieldhash cleans up when $finfo goes out of scope' => sub {
   {
     my $finfo = find_t->new();
     my $rec   = Local::Rec->allocate( $finfo, 0, '.\\*' );
-    isa_ok( $rec, 'TV::StdDlg::FindFirstRec' );
+    isa_ok( $rec, 'TUI::StdDlg::FindFirstRec' );
 
     ok( $rec, 'Rec was created' );
     is( Local::Rec->get( $finfo ), $rec, 'Mapping exists' );
@@ -82,15 +82,15 @@ subtest '_dos_findfirst and _dos_findnext' => sub {
   }
 };
 
-subtest 'TV::StdDlg::FindFirstRec::Win32' => sub {
+subtest 'TUI::StdDlg::FindFirstRec::Win32' => sub {
   if ( $^O ne 'MSWin32' ) {
     skip( 'This test is only relevant on Windows', 3 );
     return;
   }
-  use_ok 'TV::StdDlg::FindFirstRec::Win32';
-  dies_ok { TV::StdDlg::FindFirstRec::Win32->CP_UTF8() }
+  use_ok 'TUI::StdDlg::FindFirstRec::Win32';
+  dies_ok { TUI::StdDlg::FindFirstRec::Win32->CP_UTF8() }
     'CP_UTF8 should not be visible outside of the module';
-  dies_ok { TV::StdDlg::FindFirstRec::Win32->dwFileAttributes() }
+  dies_ok { TUI::StdDlg::FindFirstRec::Win32->dwFileAttributes() }
     'dwFileAttributes should not be visible outside of the module';
 };
 

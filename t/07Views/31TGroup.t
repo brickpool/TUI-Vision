@@ -5,17 +5,17 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::Const', qw( cmCancel );
-  use_ok 'TV::Views::View';
-  use_ok 'TV::Views::Group';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Const', qw( cmCancel );
+  use_ok 'TUI::Views::View';
+  use_ok 'TUI::Views::Group';
 }
 
 # Mocking TGroup for testing purposes
 BEGIN {
   package MyGroup;
-  use TV::toolkit;
-  extends 'TV::Views::Group';
+  use TUI::toolkit;
+  extends 'TUI::Views::Group';
   sub handleEvent { shift->{endState} = 100 }
   $INC{"MyGroup.pm"} = 1;
 }

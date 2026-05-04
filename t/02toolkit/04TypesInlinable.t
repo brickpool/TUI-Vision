@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-use TV::toolkit::Types qw(
+use TUI::toolkit::Types qw(
   :types
   Maybe
   :is

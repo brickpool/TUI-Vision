@@ -1,0 +1,545 @@
+package TUI::Views::Window;
+# ABSTRACT: A base class for managing windows in Turbo Vision 2.0.
+
+use 5.010;
+use strict;
+use warnings;
+
+our $VERSION = '2.000_001';
+$VERSION =~ tr/_//d;
+our $AUTHORITY = 'cpan:BRICKPOOL';
+
+use Exporter 'import';
+our @EXPORT = qw(
+  TWindow
+  new_TWindow
+);
+
+use Carp ();
+use TUI::toolkit;
+use TUI::toolkit::Types qw(
+  is_Object
+  :types
+);
+
+use TUI::App::Program;
+use TUI::Drivers::Const qw(
+  :evXXXX
+  :kbXXXX
+);
+use TUI::Objects::Point;
+use TUI::Objects::Rect;
+use TUI::Views::Const qw(
+  :cmXXXX
+  :cpXXXX
+  :gfXXXX
+  :ofXXXX
+  :sbXXXX
+  :sfXXXX
+  :wfXXXX
+  wpBlueWindow
+);
+use TUI::Views::CommandSet;
+use TUI::Views::Frame;
+use TUI::Views::Group;
+use TUI::Views::Palette;
+use TUI::Views::ScrollBar;
+use TUI::Views::WindowInit;
+
+sub TWindow() { __PACKAGE__ }
+sub name() { 'TWindow' }
+sub new_TWindow { __PACKAGE__->from(@_) }
+
+extends ( TGroup, TWindowInit );
+
+# declare global variables
+our $minWinSize = TPoint->new( x => 16, y => 6 );
+
+# import global variables
+use vars qw(
+  $appPalette
+);
+{
+  no strict 'refs';
+  *appPalette = \${ TProgram . '::appPalette' };
+}
+
+# public attributes
+has flags    => ( is => 'rw', default => wfMove | wfGrow | wfClose | wfZoom );
+has zoomRect => ( is => 'rw' );
+has number   => ( is => 'rw', default => sub { 'required' } );
+has palette  => ( is => 'rw', default => wpBlueWindow );
+has frame    => ( is => 'rw' );
+has title    => ( is => 'rw', default => sub { 'required' } );
+
+sub BUILDARGS {    # \%args (%args)
+  state $sig = signature(
+    method => 1,
+    named => [
+      bounds => Object,
+      title  => Str, { alias => 'aTitle' },
+      number => Int, { alias => 'aNumber' },
+    ],
+    caller_level => +1,
+  );
+  my ( $class, $args1 ) = $sig->( @_ );
+  local $Carp::CarpLevel = $Carp::CarpLevel + 1;
+  my $args2 = TGroup->BUILDARGS( bounds => $args1->{bounds} );
+  my $args3 = TWindowInit->BUILDARGS( cFrame => $class->can( 'initFrame' ) );
+  return { %$args1, %$args2, %$args3 };
+}
+
+sub BUILD {    # void (\%args)
+  my ( $self, $args ) = @_;
+  assert ( @_ == 2 );
+  assert ( is_Object $self );
+  $self->{zoomRect} = $self->getBounds();
+
+  $self->{state}   |= sfShadow;
+  $self->{options} |= ofSelectable | ofTopSelect;
+  $self->{growMode} = gfGrowAll | gfGrowRel;
+
+  if ( $self->{createFrame}
+    && ( $self->{frame} = $self->createFrame( $self->getExtent() ) )
+  ) {
+    $self->insert( $self->{frame} );
+  }
+  return;
+}
+
+sub from {    # $obj ($bounds, $aTitle, $aNumber)
+  state $sig = signature(
+    method => 1,
+    pos    => [Object, Str, Int],
+  );
+  my ( $class, @args ) = $sig->( @_ );
+  return $class->new( bounds => $args[0], title => $args[1], 
+    number => $args[2] );
+}
+
+sub DEMOLISH {    # void ($in_global_destruction)
+  my ( $self, $in_global_destruction ) = @_;
+  assert ( @_ == 2 );
+  assert ( is_Object $self );
+  $self->{title} = undef;
+  return;
+}
+
+sub close {    # void ()
+  state $sig = signature(
+    method => Object,
+    pos    => [],
+  );
+  my ( $self ) = $sig->( @_ );
+  alias: for $self ( $_[0] ) {    # Maybe we are destroying ourselves
+  if ( $self->valid( cmClose ) ) {
+    # so we don't try to use the frame after it's been deleted
+    $self->{frame} = undef;
+    $self->destroy( $self );
+  }
+  return;
+  } #/ alias
+}
+
+sub getPalette {    # $palette ()
+  state $sig = signature(
+    method => Object,
+    pos    => [],
+  );
+  my ( $self ) = $sig->( @_ );
+  state $blue = TPalette->new(
+    data => cpBlueWindow,
+    size => length( cpBlueWindow ) 
+  );
+  state $cyan = TPalette->new( 
+    data => cpCyanWindow,
+    size => length( cpCyanWindow ) 
+  );
+  state $gray = TPalette->new( 
+    data => cpGrayWindow,
+    size => length( cpGrayWindow ) 
+  );
+  state $palettes = [ $blue, $cyan, $gray ];
+  return $palettes->[$appPalette]->clone();
+} #/ sub getPalette
+
+sub getTitle {    # $str ($maxSize)
+  state $sig = signature(
+    method => Object,
+    pos    => [Int],
+  );
+  my ( $self, $maxSize ) = $sig->( @_ );
+  return $self->{title};
+}
+
+sub handleEvent {    # void ($event)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $event ) = $sig->( @_ );
+  my $limits = TRect->new();
+  my ( $min, $max ) = ( TPoint->new(), TPoint->new() );
+
+  $self->SUPER::handleEvent( $event );
+  if ( $event->{what} == evCommand ) {
+    SWITCH: for ( $event->{message}{command} ) {
+      cmResize == $_ and do {
+        if ( $self->{flags} & ( wfMove | wfGrow ) ) {
+          $limits = $self->{owner}->getExtent();
+          $self->sizeLimits( $min, $max );
+          $self->dragView( $event, 
+            $self->{dragMode} | ( $self->{flags} & ( wfMove | wfGrow ) ), 
+            $limits, $min, $max
+          );
+          $self->clearEvent( $event );
+        }
+        last;
+      };
+      cmClose == $_ and do {
+        no warnings 'uninitialized';
+        if ( ( $self->{flags} & wfClose )
+          && ( !$event->{message}{infoPtr}
+            ||  $event->{message}{infoPtr} == $self
+          ) 
+        ) {
+          $self->clearEvent( $event );
+          if ( !( $self->{state} & sfModal ) ) {
+            $self->close();
+          }
+          else {
+            $event->{what} = evCommand;
+            $event->{message}{command} = cmCancel;
+            $self->putEvent( $event );
+            $self->clearEvent( $event );
+          }
+        } #/ if ( $self->{flags} & ...)
+        last;
+      };
+      cmZoom == $_ and do {
+        no warnings 'uninitialized';
+        if ( ( $self->{flags} & wfZoom )
+          && ( !$event->{message}{infoPtr} 
+            ||  $event->{message}{infoPtr} == $self
+          )
+        ) {
+          $self->zoom();
+          $self->clearEvent( $event );
+        }
+        last;
+      };
+    }
+  }
+  elsif ( $event->{what} == evKeyDown ) {
+    SWITCH: for ( $event->{keyDown}{keyCode} ) {
+      kbTab == $_ and do {
+        $self->focusNext( false );
+        $self->clearEvent( $event );
+        last;
+      };
+      kbShiftTab == $_ and do {
+        $self->focusNext( true );
+        $self->clearEvent( $event );
+        last;
+      };
+    }
+  } #/ elsif ( $event->{what} ==...)
+  elsif ( $event->{what} == evBroadcast
+    && $event->{message}{command} == cmSelectWindowNum
+    && $event->{message}{infoInt} == $self->{number}
+    && ( $self->{options} & ofSelectable )
+  ) {
+    $self->select();
+    $self->clearEvent( $event );
+  }
+  return;
+} #/ sub handleEvent
+
+sub initFrame {    # $frame ($r)
+  state $sig = signature(
+    method => 1,
+    pos    => [Object],
+  );
+  my ( $class, $r ) = $sig->( @_ );
+  return TFrame->new( bounds => $r );
+}
+
+sub setState {    # void ($aState, $enable)
+  state $sig = signature(
+    method => Object,
+    pos    => [PositiveOrZeroInt, Bool],
+  );
+  my ( $self, $aState, $enable ) = $sig->( @_ );
+  my $windowCommands = TCommandSet->new();
+
+  $self->SUPER::setState( $aState, $enable );
+  if ( $aState & sfSelected ) {
+    $self->setState( sfActive, $enable );
+    if ( $self->{frame} ) {
+      $self->{frame}->setState( sfActive, $enable );
+    }
+    $windowCommands += cmNext;
+    $windowCommands += cmPrev;
+    if ( $self->{flags} & ( wfGrow | wfMove ) ) {
+      $windowCommands += cmResize;
+    }
+    if ( $self->{flags} & wfClose ) {
+      $windowCommands += cmClose;
+    }
+    if ( $self->{flags} & wfZoom ) {
+      $windowCommands += cmZoom;
+    }
+    if ( $enable ) {
+      $self->enableCommands( $windowCommands );
+    }
+    else {
+      $self->disableCommands( $windowCommands );
+    }
+  } #/ if ( $aState & sfSelected)
+  return;
+} #/ sub setState
+
+sub sizeLimits {    # void ($min, $max)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object, Object],
+  );
+  my ( $self, $min, $max ) = $sig->( @_ );
+  alias: for $min ( $_[1] ) {
+  alias: for $max ( $_[2] ) {
+  $self->SUPER::sizeLimits( $min, $max );
+  $min = $minWinSize->clone();
+  return;
+  }} #/ alias:
+}
+
+sub standardScrollBar {    # $scrollBar ($aOptions)
+  state $sig = signature(
+    method => Object,
+    pos    => [PositiveOrZeroInt],
+  );
+  my ( $self, $aOptions ) = $sig->( @_ );
+  my $r = $self->getExtent();
+  if ( $aOptions & sbVertical ) {
+    $r = TRect->new(
+      ax => $r->{b}{x} - 1, ay => $r->{a}{y} + 1,
+      bx => $r->{b}{x},     by => $r->{b}{y} - 1,
+    );
+  }
+  else {
+    $r = TRect->new(
+      ax => $r->{a}{x} + 2, ay => $r->{b}{y} - 1, 
+      bx => $r->{b}{x} - 2, by => $r->{b}{y},
+    );
+  }
+
+  my $s = TScrollBar->new( bounds => $r );
+  $self->insert( $s );
+  if ( $aOptions & sbHandleKeyboard ) {
+    $s->{options} |= ofPostProcess;
+  }
+  return $s;
+} #/ sub standardScrollBar
+
+sub zoom {    # void ()
+  state $sig = signature(
+    method => Object,
+    pos    => [],
+  );
+  my ( $self ) = $sig->( @_ );
+  my ( $minSize, $maxSize ) = ( TPoint->new(), TPoint->new() );
+  $self->sizeLimits( $minSize, $maxSize );
+  if ( $self->{size} != $maxSize ) {
+    $self->{zoomRect} = $self->getBounds();
+    my $r = TRect->new( 
+      ax => 0, ay => 0, bx => $maxSize->{x}, by => $maxSize->{y}
+    );
+    $self->locate( $r );
+  }
+  else {
+    $self->locate( $self->{zoomRect} );
+  }
+  return;
+} #/ sub zoom
+
+sub shutDown {    # void ()
+  state $sig = signature(
+    method => Object,
+    pos    => [],
+  );
+  my ( $self ) = $sig->( @_ );
+  $self->{frame} = undef;
+  $self->SUPER::shutDown();
+  return;
+}
+
+1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Views::Window - a base class for managing windows in Turbo Vision 2.0.
+
+=head1 SYNOPSIS
+
+  use TUI::Views;
+
+  my $window = TWindow->new( bounds => $r, title => 'Title', number => 0 );
+
+=head1 DESCRIPTION
+
+The TWindow class is used to manage windows and their components in a Turbo 
+Vision application. It provides methods to handle window operations such as 
+opening, closing, and resizing. This class is essential for creating and 
+managing user interface windows on the desktop.
+
+=head1 ATTRIBUTES
+
+=over
+
+=item flags
+
+Stores the state flags of the window. (Int)
+
+=item frame
+
+A reference to the frame of the window. (TFrame)
+
+=item number
+
+The unique identifier number of the window. (Int)
+
+=item palette
+
+The color palette used by the window. (TPalette)
+
+=item title
+
+The title of the window. (Str)
+
+=item zoomRect
+
+The rectangle defining the zoomed state of the window. (TRect)
+
+=back
+
+=head1 METHODS
+
+=head2 new
+
+  my $obj = TWindow->new(%args);
+
+Creates a new TWindow object.
+
+=over
+
+=item bounds
+
+The bounds of the window. (TRect)
+
+=item title
+
+The title of the window. (Str)
+
+=item number
+
+The unique identifier number of the window. (Int)
+
+=back
+
+=head2 DEMOLISH
+
+  $self->DEMOLISH($in_global_destruction);
+
+Destroys the window and releases its resources.
+
+=head2 close
+
+  $self->close();
+
+Closes the window.
+
+=head2 from
+
+  my $obj = $self->from($bounds, $aTitle, $aNumber);
+
+Creates a TWindow object from the specified bounds, title, and number.
+
+=head2 getPalette
+
+  my $palette = $self->getPalette();
+
+Returns the color palette of the window.
+
+=head2 getTitle
+
+  my $str = $self->getTitle($maxSize);
+
+Returns the title of the window, truncated to the specified maximum size.
+
+=head2 handleEvent
+
+  $self->handleEvent($event);
+
+Handles an event sent to the window.
+
+=head2 initFrame
+
+  my $frame = $self->initFrame($r);
+
+Initializes the frame of the window.
+
+=head2 setState
+
+  $self->setState($aState, $enable);
+
+Sets the state of the window to the specified value.
+
+=head2 shutDown
+
+  $self->shutDown();
+
+Shuts down the window and releases its resources.
+
+=head2 sizeLimits
+
+  $self->sizeLimits($min, $max);
+
+Sets the minimum and maximum size limits of the window.
+
+=head2 standardScrollBar
+
+  my $scrollBar = $self->standardScrollBar($aOptions);
+
+Creates a standard scroll bar for the window with the specified options.
+
+=head2 zoom
+
+  $self->zoom();
+
+Zooms the window to its maximum or previous size.
+
+=head1 AUTHORS
+
+=over
+
+=item Turbo Vision Development Team
+
+=item J. Schneider <brickpool@cpan.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is 
+part of the distribution). This documentation is provided under the same terms 
+as the Turbo Vision library itself.
+
+=cut

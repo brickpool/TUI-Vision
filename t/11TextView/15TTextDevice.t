@@ -5,18 +5,18 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::TextView::TextDevice';
-  use_ok 'TV::Views::ScrollBar';
-  require_ok 'TV::toolkit';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::TextView::TextDevice';
+  use_ok 'TUI::Views::ScrollBar';
+  require_ok 'TUI::toolkit';
 }
 
 # Create a subclass for tests that implements do_sputn
 {
   package MyTextDevice;
-  use TV::toolkit;
+  use TUI::toolkit;
 
-  extends 'TV::TextView::TextDevice';
+  extends 'TUI::TextView::TextDevice';
 
   has io   => ( is => 'bare' );
   has data => ( is => 'ro', default => sub { '' } );

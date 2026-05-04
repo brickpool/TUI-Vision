@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Views::WindowInit';
+  use_ok 'TUI::Views::WindowInit';
 }
 
 isa_ok( TWindowInit->new( cFrame => sub { } ), TWindowInit );

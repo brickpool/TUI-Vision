@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::MsgBox';
+  use_ok 'TUI::MsgBox';
 }
 
 done_testing();

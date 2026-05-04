@@ -7,20 +7,20 @@ use Hash::Util;
 
 BEGIN {
   require_ok 'Moos';
-  use_ok 'TV::Objects::Object';
+  use_ok 'TUI::Objects::Object';
 }
 
 BEGIN {
   package Derived;
-  use TV::toolkit;
-  extends 'TV::Objects::Object';
+  use TUI::toolkit;
+  extends 'TUI::Objects::Object';
   has x => ( is => 'rw', default => sub { 0 } );
   has y => ( is => 'rw', default => sub { 0 } );
   $INC{"Derived.pm"} = 1;
 }
 
 # Test TObject function
-is( TObject, 'TV::Objects::Object', 'TObject returns correct package name' );
+is( TObject, 'TUI::Objects::Object', 'TObject returns correct package name' );
 
 # Test new method
 my $obj = TObject->new();

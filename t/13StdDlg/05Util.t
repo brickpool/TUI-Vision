@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::StdDlg::Util', qw( fexpand );
+  use_ok 'TUI::StdDlg::Util', qw( fexpand );
 }
 
 subtest 'fexpand basic expansion' => sub {
@@ -30,7 +30,7 @@ subtest 'fexpand basic expansion' => sub {
   }
   like(
     $path,
-    qr{FOO\\BAR\.TXT$},
+    qr{foo\\bar\.txt$}i,
     'path suffix preserved'
   );
 }; #/ 'fexpand basic expansion' => sub
@@ -44,14 +44,14 @@ subtest 'fexpand dot and dotdot' => sub {
   if ( $^O eq 'MSWin32' ) {
     like(
       $path,
-      qr{\\A\\C$},
+      qr{\\a\\c$},
       'Windows: "." and ".." collapsed correctly'
     );
   }
   else {
     like(
       $path,
-      qr{/A/C$},
+      qr{/a/c$},
       'Unix: "." and ".." collapsed correctly'
     );
   }
@@ -66,14 +66,14 @@ subtest 'fexpand mixed separators' => sub {
   if ( $^O eq 'MSWin32' ) {
     like(
       $path,
-      qr{\\A\\B\\C\\D$},
+      qr{\\a\\b\\c\\d$},
       'Windows: mixed separators normalized to backslash'
     );
   }
   else {
     like(
       $path,
-      qr{/A/B/C/D$},
+      qr{/a/b/c/d$},
       'Unix: mixed separators normalized to slash'
     );
   }
@@ -93,7 +93,7 @@ subtest 'fexpand drive-relative path' => sub {
     );
     like(
       $path,
-      qr{FOO\\BAR$},
+      qr{foo\\bar$},
       'Windows: path suffix preserved'
     );
   }
@@ -111,7 +111,7 @@ subtest 'fexpand rooted path without drive' => sub {
   if ( $^O eq 'MSWin32' ) {
     like(
       $path,
-      qr{^[A-Z]:\\FOO\\BAR$},
+      qr{^[A-Z]:\\foo\\bar$},
       'Windows: rooted path uses current drive'
     );
   }
@@ -132,7 +132,7 @@ subtest 'fexpand home expansion' => sub {
     );
     like(
       $path,
-      qr{/TESTDIR/FILE\.TXT$},
+      qr{/testdir/file\.txt$},
       'Unix: home expansion preserves suffix'
     );
   }

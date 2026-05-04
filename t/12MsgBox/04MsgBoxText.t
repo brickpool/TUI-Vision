@@ -5,11 +5,11 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::App::Program';
-  use_ok 'TV::Views::Const', qw( cmOK cmCancel );
-  use_ok 'TV::MsgBox::Const', qw( :mfXXXX );
-  use_ok 'TV::MsgBox::MsgBoxText', qw(
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::App::Program';
+  use_ok 'TUI::Views::Const', qw( cmOK cmCancel );
+  use_ok 'TUI::MsgBox::Const', qw( :mfXXXX );
+  use_ok 'TUI::MsgBox::MsgBoxText', qw(
     messageBox
     messageBoxRect
     inputBox
@@ -36,8 +36,8 @@ BEGIN {
 } #/ BEGIN
 
 # inject mocks into used globals
-$TV::App::Program::application = MyApplication->new;
-$TV::App::Program::deskTop     = MyDeskTop->new;
+$TUI::App::Program::application = MyApplication->new;
+$TUI::App::Program::deskTop     = MyDeskTop->new;
 
 # Smoke test: messageBoxRect()
 subtest 'messageBoxRect' => sub {
@@ -71,10 +71,10 @@ subtest 'inputBoxRect' => sub {
   my $bounds = TRect->new( ax => 1, ay => 1, bx => 30, by => 6 );
   my $data   = [ 'Test' ];
 
-  # stub TV::Dialogs::Dialog to avoid side effects
+  # stub TUI::Dialogs::Dialog to avoid side effects
   no warnings 'redefine';
-  local *TV::Dialogs::Dialog::insert = sub { };
-  local *TV::Dialogs::Dialog::getData = sub { $_[1]->[0] = 'Update' };
+  local *TUI::Dialogs::Dialog::insert = sub { };
+  local *TUI::Dialogs::Dialog::getData = sub { $_[1]->[0] = 'Update' };
 
   lives_ok {
     $MyApplication::return_code = cmOK;
@@ -87,10 +87,10 @@ subtest 'inputBoxRect' => sub {
 subtest 'inputBox' => sub {
   my $data  = [ 'Original' ];
 
-  # stub TV::Dialogs::Dialog to avoid side effects
+  # stub TUI::Dialogs::Dialog to avoid side effects
   no warnings 'redefine';
-  local *TV::Dialogs::Dialog::insert = sub { };
-  local *TV::Dialogs::Dialog::getData = sub { $_[1]->[0] = 'Update' };
+  local *TUI::Dialogs::Dialog::insert = sub { };
+  local *TUI::Dialogs::Dialog::getData = sub { $_[1]->[0] = 'Update' };
 
   lives_ok {
     $MyApplication::return_code = cmOK;    # simulate pressing OK

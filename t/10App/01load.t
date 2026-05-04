@@ -4,14 +4,14 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::App::Const';
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::App::Background';
-  use_ok 'TV::App::DeskInit';
-  use_ok 'TV::App::DeskTop';
-  use_ok 'TV::App::ProgInit';
-  use_ok 'TV::App::Program';
-  use_ok 'TV::App::Application';
+  use_ok 'TUI::App::Const';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::App::Background';
+  use_ok 'TUI::App::DeskInit';
+  use_ok 'TUI::App::DeskTop';
+  use_ok 'TUI::App::ProgInit';
+  use_ok 'TUI::App::Program';
+  use_ok 'TUI::App::Application';
 }
 
 isa_ok(

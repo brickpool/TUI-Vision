@@ -4,16 +4,16 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Const', qw( evCommand );
-  use_ok 'TV::Views::View';
-  use_ok 'TV::Views::Util', qw( message );
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Const', qw( evCommand );
+  use_ok 'TUI::Views::View';
+  use_ok 'TUI::Views::Util', qw( message );
 }
 
 BEGIN {
   package MyTView;
-  use TV::toolkit;
-  extends 'TV::Views::View';
+  use TUI::toolkit;
+  extends 'TUI::Views::View';
   my $toggle = 1;
   sub handleEvent {
     my ( $self, $event ) = @_;

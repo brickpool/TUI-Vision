@@ -5,10 +5,10 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::StdDlg::FileCollection';
-  use_ok 'TV::StdDlg::FileList';
-  use_ok 'TV::Views::Group';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::StdDlg::FileCollection';
+  use_ok 'TUI::StdDlg::FileList';
+  use_ok 'TUI::Views::Group';
 }
 
 my $list;

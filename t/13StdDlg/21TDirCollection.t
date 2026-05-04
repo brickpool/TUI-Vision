@@ -5,14 +5,14 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::StdDlg::DirEntry';
-  use_ok 'TV::StdDlg::DirCollection';
+  use_ok 'TUI::StdDlg::DirEntry';
+  use_ok 'TUI::StdDlg::DirCollection';
 }
 
 my $collection;
 
 lives_ok {
-  $collection = TV::StdDlg::DirCollection->new;
+  $collection = TUI::StdDlg::DirCollection->new;
 } 'TDirCollection->new() lives';
 
 isa_ok(

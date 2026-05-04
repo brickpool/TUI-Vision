@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Drivers::Event';
+  use_ok 'TUI::Drivers::Event';
 }
 INIT {
   use_ok 'CharScanType';

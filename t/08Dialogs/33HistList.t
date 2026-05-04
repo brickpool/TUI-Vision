@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Dialogs::HistoryViewer::HistList', qw(
+  use_ok 'TUI::Dialogs::HistoryViewer::HistList', qw(
     historyCount
     historyAdd
     historyStr
@@ -21,9 +21,9 @@ use vars qw(
   $historyUsed
 );
 {
-  *historyBlock = \$TV::Dialogs::HistoryViewer::HistList::historyBlock;
-  *historySize  = \$TV::Dialogs::HistoryViewer::HistList::historySize;
-  *historyUsed  = \$TV::Dialogs::HistoryViewer::HistList::historyUsed;
+  *historyBlock = \$TUI::Dialogs::HistoryViewer::HistList::historyBlock;
+  *historySize  = \$TUI::Dialogs::HistoryViewer::HistList::historySize;
+  *historyUsed  = \$TUI::Dialogs::HistoryViewer::HistList::historyUsed;
 }
 
 # Initialize history

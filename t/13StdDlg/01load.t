@@ -4,22 +4,22 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::StdDlg::Const';
-  use_ok 'TV::StdDlg::FindFirstRec';
-  use_ok 'TV::StdDlg::Dos';               # incl. ffblk and find_t
-  use_ok 'TV::StdDlg::Dir';
-  use_ok 'TV::StdDlg::Util', qw( fexpand );
-  use_ok 'TV::StdDlg::SortedListBox';
-  use_ok 'TV::StdDlg::FileCollection';    # incl. TSearchRec
-  use_ok 'TV::StdDlg::FileInputLine';
-  use_ok 'TV::StdDlg::FileList';
-  use_ok 'TV::StdDlg::FileInfoPane';
-  use_ok 'TV::StdDlg::FileDialog';
-  use_ok 'TV::StdDlg::DirEntry';
-  use_ok 'TV::StdDlg::DirCollection';
-  use_ok 'TV::StdDlg::DirListBox';
-  use_ok 'TV::StdDlg::ChDirDialog';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::StdDlg::Const';
+  use_ok 'TUI::StdDlg::FindFirstRec';
+  use_ok 'TUI::StdDlg::Dos';               # incl. ffblk and find_t
+  use_ok 'TUI::StdDlg::Dir';
+  use_ok 'TUI::StdDlg::Util', qw( fexpand );
+  use_ok 'TUI::StdDlg::SortedListBox';
+  use_ok 'TUI::StdDlg::FileCollection';    # incl. TSearchRec
+  use_ok 'TUI::StdDlg::FileInputLine';
+  use_ok 'TUI::StdDlg::FileList';
+  use_ok 'TUI::StdDlg::FileInfoPane';
+  use_ok 'TUI::StdDlg::FileDialog';
+  use_ok 'TUI::StdDlg::DirEntry';
+  use_ok 'TUI::StdDlg::DirCollection';
+  use_ok 'TUI::StdDlg::DirListBox';
+  use_ok 'TUI::StdDlg::ChDirDialog';
 }
 
 isa_ok( FindFirstRec->allocate( [], 0, '' ), FindFirstRec() );

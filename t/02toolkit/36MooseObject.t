@@ -12,15 +12,15 @@ BEGIN {
     plan tests => 8;
   }
   require_ok 'Moose';
-  use_ok 'TV::toolkit';
+  use_ok 'TUI::toolkit';
 }
 
 BEGIN {
   package MyObject;
-  use TV::toolkit;
+  use TUI::toolkit;
   has x => ( is => 'rw' );
   has y => ( is => 'rw' );
-  no TV::toolkit;
+  no TUI::toolkit;
   $INC{"MyObject.pm"} = 1;
 }
 

@@ -5,9 +5,9 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::Window';
-  use_ok 'TV::Dialogs::HistInit';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Window';
+  use_ok 'TUI::Dialogs::HistInit';
 }
 
 my $histInit = THistInit->new(

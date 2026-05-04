@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Memory::Util', qw( lowMemory );
+  use_ok 'TUI::Memory::Util', qw( lowMemory );
 }
 
 done_testing();

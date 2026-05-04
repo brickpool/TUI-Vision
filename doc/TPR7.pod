@@ -43,7 +43,7 @@ subroutine
 
 =head3 Module
 
-    TV::Dialogs::History::HistList
+    TUI::Dialogs::History::HistList
 
 =head3 Purpose
 
@@ -60,7 +60,7 @@ variable
 
 =head3 Module
 
-    TV::Dialogs::History::HistList
+    TUI::Dialogs::History::HistList
 
 =head3 Purpose
 
@@ -77,7 +77,7 @@ function
 
 =head3 Module
 
-    TV::Dialogs::History::HistList
+    TUI::Dialogs::History::HistList
 
 =head3 Purpose
 
@@ -97,7 +97,7 @@ variable
 
 =head3 Module
 
-    TV::Dialogs::History::HistList
+    TUI::Dialogs::History::HistList
 
 =head3 Purpose
 
@@ -117,7 +117,7 @@ function
 
 =head3 Module
 
-    TV::Dialogs::History::HistList
+    TUI::Dialogs::History::HistList
 
 =head3 Purpose
 
@@ -134,7 +134,7 @@ variable
 
 =head3 Module
 
-    TV::Dialogs::History::HistList
+    TUI::Dialogs::History::HistList
 
 =head3 Purpose
 
@@ -150,7 +150,7 @@ subroutine
 
 =head3 Module
 
-    TV::Dialogs::History::HistList
+    TUI::Dialogs::History::HistList
 
 =head3 Purpose
 
@@ -167,7 +167,7 @@ function
 
 =head3 Module
 
-    TV::MsgBox
+    TUI::MsgBox
 
 =head3 Purpose
 
@@ -192,7 +192,7 @@ function
 
 =head3 Module
 
-    TV::MsgBox
+    TUI::MsgBox
 
 =head3 Purpose
 
@@ -215,7 +215,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::EventQueue
+    TUI::Drivers::EventQueue
 
 =head3 Purpose
 
@@ -234,7 +234,7 @@ subroutine
 
 =head3 Module
 
-    TV::Memory::Buffers
+    TUI::Memory::Buffers
 
 =head3 Purpose
 
@@ -252,7 +252,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -271,7 +271,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -417,7 +417,7 @@ function
 
 =head3 Module
 
-    TV::Memory::Util
+    TUI::Memory::Util
 
 =head3 Purpose
 
@@ -435,7 +435,7 @@ constant
 
 =head3 Module
 
-    TV::Const
+    TUI::Const
 
 =head3 Purpose
 
@@ -453,7 +453,7 @@ constant
 
 =head3 Module
 
-    TV::Const
+    TUI::Const
 
 =head3 Purpose
 
@@ -465,7 +465,7 @@ Mouse Button constants
 
 =head3 Module
 
-    TV::Drivers::Const
+    TUI::Drivers::Const
 
 =head3 Purpose
 
@@ -488,7 +488,7 @@ variable
 
 =head3 Module
 
-    TV::App::MenuBar
+    TUI::App::MenuBar
 
 =head3 Purpose
 
@@ -509,7 +509,7 @@ subroutine
 
 =head3 Module
 
-    TV::Util
+    TUI::Util
 
 =head3 Purpose
 
@@ -552,7 +552,7 @@ function
 
 =head3 Module
 
-    TV::MsgBox
+    TUI::MsgBox
 
 =head3 Purpose
 
@@ -633,7 +633,7 @@ function
 
 =head3 Module
 
-    TV::MsgBox
+    TUI::MsgBox
 
 =head3 Purpose
 
@@ -657,7 +657,7 @@ variable
 
 =head3 Module
 
-    TV::Views::Window
+    TUI::Views::Window
 
 =head3 Purpose
 
@@ -676,7 +676,7 @@ function
 
 =head3 Module
 
-    TV::Drivers::HardwareInfo
+    TUI::Drivers::HardwareInfo
 
 =head3 Purpose
 
@@ -693,7 +693,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::EventQueue
+    TUI::Drivers::EventQueue
 
 =head3 Purpose
 
@@ -711,7 +711,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::EventQueue
+    TUI::Drivers::EventQueue
 
 =head3 Purpose
 
@@ -728,7 +728,7 @@ method
 
 =head3 Module
 
-    TV::Objects::DrawBuffer
+    TUI::Objects::DrawBuffer
 
 =head3 Purpose
 
@@ -751,7 +751,7 @@ method
 
 =head3 Module
 
-    TV::Objects::DrawBuffer
+    TUI::Objects::DrawBuffer
 
 =head3 Purpose
 
@@ -772,7 +772,7 @@ method
 
 =head3 Module
 
-    TV::Objects::DrawBuffer
+    TUI::Objects::DrawBuffer
 
 =head3 Purpose
 
@@ -814,7 +814,7 @@ method
 
 =head3 Module
 
-    TV::Objects::DrawBuffer
+    TUI::Objects::DrawBuffer
 
 =head3 Purpose
 
@@ -835,7 +835,7 @@ function
 
 =head3 Module
 
-    TV::Menus::MenuItem
+    TUI::Menus::MenuItem
 
 =head3 Purpose
 
@@ -853,7 +853,7 @@ function
 
 =head3 Module
 
-    TV::Util
+    TUI::Util
 
 =head3 Purpose
 
@@ -883,7 +883,7 @@ function
 
 =head3 Module
 
-    TV::Menus::SubMenu
+    TUI::Menus::SubMenu
 
 =head3 Purpose
 
@@ -975,7 +975,7 @@ constant
 
 =head3 Module
 
-    TV::Views::Const
+    TUI::Views::Const
 
 =head3 Purpose
 

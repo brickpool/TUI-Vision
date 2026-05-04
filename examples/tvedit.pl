@@ -12,15 +12,15 @@
 #
 package TEditorApp;
 
-use TV::Objects;
-use TV::Menus;
-use TV::Drivers;
-use TV::App;
-use TV::Views;
-use TV::Dialogs;
-use TV::MsgBox;
+use TUI::Objects;
+use TUI::Menus;
+use TUI::Drivers;
+use TUI::App;
+use TUI::Views;
+use TUI::Dialogs;
+use TUI::MsgBox;
 
-use TV::toolkit;
+use TUI::toolkit;
 
 sub ::new_TEditorApp { __PACKAGE__->new( argc => shift, argv => shift ) }
 

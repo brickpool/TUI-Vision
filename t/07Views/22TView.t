@@ -5,17 +5,17 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Const', qw( :sfXXXX );
-  use_ok 'TV::Views::View';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Const', qw( :sfXXXX );
+  use_ok 'TUI::Views::View';
 }
 
 BEGIN {
   package MyOwner;
-  use TV::Objects::Rect;
-  use TV::toolkit;
-  extends 'TV::Views::View';
+  use TUI::Objects::Rect;
+  use TUI::toolkit;
+  extends 'TUI::Views::View';
   has last => ( is => 'rw' );
   has clip => ( is => 'rw', default => sub { TRect->new() } );
 

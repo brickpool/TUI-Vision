@@ -43,7 +43,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::EventQueue
+    TUI::Drivers::EventQueue
 
 =head3 Purpose
 
@@ -64,7 +64,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -111,7 +111,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -128,7 +128,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -147,7 +147,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -166,7 +166,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -228,7 +228,7 @@ Constants for selectMode
 
 =head3 Module
 
-    TV::Views::Const
+    TUI::Views::Const
 
 =head3 Purpose
 
@@ -244,7 +244,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -334,7 +334,7 @@ variable
 
 =head3 Module
 
-    TV::Views::View
+    TUI::Views::View
 
 =head3 Purpose
 
@@ -355,7 +355,7 @@ variable
 
 =head3 Module
 
-    TV::Views::View
+    TUI::Views::View
 
 =head3 Purpose
 
@@ -375,7 +375,7 @@ variable
 
 =head3 Module
 
-    TV::Views::View
+    TUI::Views::View
 
 =head3 Purpose
 
@@ -403,7 +403,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::HWMouse
+    TUI::Drivers::HWMouse
 
 =head3 Purpose
 
@@ -442,7 +442,7 @@ variable
 
 =head3 Module
 
-    TV::Views::View
+    TUI::Views::View
 
 =head3 Purpose
 
@@ -461,7 +461,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::Screen
+    TUI::Drivers::Screen
 
 =head3 Purpose
 
@@ -480,7 +480,7 @@ variable
 
 =head3 Module
 
-    TV::App::Program
+    TUI::App::Program
 
 =head3 Purpose
 
@@ -498,7 +498,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -523,7 +523,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -539,7 +539,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -587,7 +587,7 @@ variable
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -610,7 +610,7 @@ subroutine
 
 =head3 Module
 
-    TV::Drivers::SystemError
+    TUI::Drivers::SystemError
 
 =head3 Purpose
 
@@ -624,13 +624,13 @@ B<See>: L</$sysErrorFunc>
 =head2 TApplication
 
     .------------------+-------------------------------------------------------.
-    | module           | TV::App::Application                                  |
+    | module           | TUI::App::Application                                  |
     +------------------+-------------------------------------------------------+
-    | parents          | TV::App::Program                                      |
-    | classes          | TV::Views::Group                                      |
-    |                  | TV::Views::View                                       |
-    |                  | TV::Objects::Object                                   |
-    |                  | TV::App::ProgInit                                     |
+    | parents          | TUI::App::Program                                      |
+    | classes          | TUI::Views::Group                                      |
+    |                  | TUI::Views::View                                       |
+    |                  | TUI::Objects::Object                                   |
+    |                  | TUI::App::ProgInit                                     |
     +------------------+-------------------------------------------------------+
     | methods          | BUILD()                                               |
     |                  | DEMOLISH()                                            |
@@ -669,11 +669,11 @@ are available to TApplication objects.
   package TShell;
   use strict;
   use warnings;
-  use TV::App;
-  use TV::Views;
-  use TV::Drivers;
-  use TV::Menus;
-  use TV::toolkit;
+  use TUI::App;
+  use TUI::Views;
+  use TUI::Drivers;
+  use TUI::Menus;
+  use TUI::toolkit;
   
   extends TApplication;
   
@@ -743,10 +743,10 @@ TVMemMgr->suspend().
 =head2 TBackground
 
     .------------------+-------------------------------------------------------.
-    | module           | TV::App::Background                                   |
+    | module           | TUI::App::Background                                   |
     +------------------+-------------------------------------------------------+
-    | parents          | TV::Views::View                                       |
-    | classes          | TV::Objects::Object                                   |
+    | parents          | TUI::Views::View                                       |
+    | classes          | TUI::Objects::Object                                   |
     +------------------+-------------------------------------------------------+
     | fields           | pattern                                               |
     +------------------+-------------------------------------------------------+
@@ -787,7 +787,7 @@ a new background pattern.
   02  # program demo TBackground
   03  
   04  use 
-  05    TV::Objects; use TV::App; use TV::Views;
+  05    TUI::Objects; use TUI::App; use TUI::Views;
   06  
   07  { 
   08    package TSampleProgram; use parent ::TApplication;
@@ -1250,47 +1250,47 @@ view's state is C<sfSelected>, then calls TView->drawView.
 =head2 TCollection
 
     .------------------+-------------------------------------------------------.
-    | module           | TV::Objects::Collection                               |
+    | module           | TUI::Objects::Collection                               |
     +------------------+-------------------------------------------------------+
-    | parents          | TV::Objects::NSCollection                             |
-    | classes          | TV::Objects::Object                                   |
+    | parents          | TUI::Objects::NSCollection                             |
+    | classes          | TUI::Objects::Object                                   |
     +------------------+-------------------------------------------------------+
-    | fields           | items [TV::Objects::NSCollection]                     |
-    |                  | count [TV::Objects::NSCollection]                     |
-    |                  | limit [TV::Objects::NSCollection]                     |
-    |                  | delta [TV::Objects::NSCollection]                     |
-    |                  | shouldDelete [TV::Objects::NSCollection]              |
+    | fields           | items [TUI::Objects::NSCollection]                     |
+    |                  | count [TUI::Objects::NSCollection]                     |
+    |                  | limit [TUI::Objects::NSCollection]                     |
+    |                  | delta [TUI::Objects::NSCollection]                     |
+    |                  | shouldDelete [TUI::Objects::NSCollection]              |
     +------------------+-------------------------------------------------------+
-    | methods          | BUILD() [TV::Objects::NSCollection]                   |
-    |                  | BUILDARGS() [TV::Objects::NSCollection]               |
-    |                  | DEMOLISH() [TV::Objects::NSCollection]                |
+    | methods          | BUILD() [TUI::Objects::NSCollection]                   |
+    |                  | BUILDARGS() [TUI::Objects::NSCollection]               |
+    |                  | DEMOLISH() [TUI::Objects::NSCollection]                |
     |                  | TCollection()                                         |
-    |                  | at() [TV::Objects::NSCollection]                      |
-    |                  | atFree() [TV::Objects::NSCollection]                  |
-    |                  | atInsert() [TV::Objects::NSCollection]                |
-    |                  | atPut() [TV::Objects::NSCollection]                   |
-    |                  | atRemove() [TV::Objects::NSCollection]                |
-    |                  | count() [TV::Objects::NSCollection]                   |
-    |                  | delta() [TV::Objects::NSCollection]                   |
-    |                  | error() [TV::Objects::NSCollection]                   |
-    |                  | firstThat() [TV::Objects::NSCollection]               |
-    |                  | forEach() [TV::Objects::NSCollection]                 |
-    |                  | free() [TV::Objects::NSCollection]                    |
-    |                  | freeAll() [TV::Objects::NSCollection]                 |
-    |                  | from() [TV::Objects::NSCollection]                    |
-    |                  | indexOf() [TV::Objects::NSCollection]                 |
-    |                  | insert() [TV::Objects::NSCollection]                  |
-    |                  | items() [TV::Objects::NSCollection]                   |
-    |                  | lastThat() [TV::Objects::NSCollection]                |
-    |                  | limit() [TV::Objects::NSCollection]                   |
+    |                  | at() [TUI::Objects::NSCollection]                      |
+    |                  | atFree() [TUI::Objects::NSCollection]                  |
+    |                  | atInsert() [TUI::Objects::NSCollection]                |
+    |                  | atPut() [TUI::Objects::NSCollection]                   |
+    |                  | atRemove() [TUI::Objects::NSCollection]                |
+    |                  | count() [TUI::Objects::NSCollection]                   |
+    |                  | delta() [TUI::Objects::NSCollection]                   |
+    |                  | error() [TUI::Objects::NSCollection]                   |
+    |                  | firstThat() [TUI::Objects::NSCollection]               |
+    |                  | forEach() [TUI::Objects::NSCollection]                 |
+    |                  | free() [TUI::Objects::NSCollection]                    |
+    |                  | freeAll() [TUI::Objects::NSCollection]                 |
+    |                  | from() [TUI::Objects::NSCollection]                    |
+    |                  | indexOf() [TUI::Objects::NSCollection]                 |
+    |                  | insert() [TUI::Objects::NSCollection]                  |
+    |                  | items() [TUI::Objects::NSCollection]                   |
+    |                  | lastThat() [TUI::Objects::NSCollection]                |
+    |                  | limit() [TUI::Objects::NSCollection]                   |
     |                  | name()                                                |
     |                  | new_TCollection()                                     |
-    |                  | pack() [TV::Objects::NSCollection]                    |
-    |                  | remove() [TV::Objects::NSCollection]                  |
-    |                  | removeAll() [TV::Objects::NSCollection]               |
-    |                  | setLimit() [TV::Objects::NSCollection]                |
-    |                  | shouldDelete() [TV::Objects::NSCollection]            |
-    |                  | shutDown() [TV::Objects::NSCollection]                |
+    |                  | pack() [TUI::Objects::NSCollection]                    |
+    |                  | remove() [TUI::Objects::NSCollection]                  |
+    |                  | removeAll() [TUI::Objects::NSCollection]               |
+    |                  | setLimit() [TUI::Objects::NSCollection]                |
+    |                  | shouldDelete() [TUI::Objects::NSCollection]            |
+    |                  | shutDown() [TUI::Objects::NSCollection]                |
     '------------------+-------------------------------------------------------'
 
 =head3 Turbo Vision Hierarchy
@@ -1581,7 +1581,7 @@ B<See>: TCollection->items, TCollection->limit
 =head2 TCommandSet 
 
     .------------------+-------------------------------------------------------.
-    | module           | TV::Views::CommandSet                                 |
+    | module           | TUI::Views::CommandSet                                 |
     +------------------+-------------------------------------------------------+
     | methods          | TCommandSet()                                         |
     |                  | clone()                                               |
@@ -1615,14 +1615,14 @@ B<See>: TCollection->items, TCollection->limit
 
 =head3 Declaration:       
     
-    package TV::Views::CommandSet;
+    package TUI::Views::CommandSet;
     sub new {
       bless [ ( 0 ) x 32 ] => shift;
     }
 
 =head3 Module
 
-    TV::Views::CommandSet
+    TUI::Views::CommandSet
 
 =head3 Purpose
 
@@ -1658,12 +1658,12 @@ Listing C<TCMDSET> illustrates the use of a TCommandSet object.
 =head2 TDeskTop
 
     .------------------+-------------------------------------------------------.
-    | module           | TV::App::DeskTop                                      |
+    | module           | TUI::App::DeskTop                                      |
     +------------------+-------------------------------------------------------+
-    | parents          | TV::Views::Group                                      |
-    |                  | TV::App::DeskInit                                     |
-    | classes          | TV::Views::View                                       |
-    |                  | TV::Objects::Object                                   |
+    | parents          | TUI::Views::Group                                      |
+    |                  | TUI::App::DeskInit                                     |
+    | classes          | TUI::Views::View                                       |
+    |                  | TUI::Objects::Object                                   |
     +------------------+-------------------------------------------------------+
     | fields           | background                                            |
     |                  | tileColumnsFirst                                      |
@@ -1900,7 +1900,7 @@ B<See>: TView->valid, Chapters 16 and 19.
 =head2 TDrawBuffer
 
     .------------------+-------------------------------------------------------.
-    | module           | TV::Views::DrawBuffer                                 |
+    | module           | TUI::Views::DrawBuffer                                 |
     +------------------+-------------------------------------------------------+
     | methods          | TDrawBuffer()                                         |
     |                  | from()                                                |
@@ -1916,7 +1916,7 @@ B<See>: TView->valid, Chapters 16 and 19.
 
 =head3 Declaration
 
-    package TV::Views::DrawBuffer;
+    package TUI::Views::DrawBuffer;
     ...
     sub new {
       bless [ ( 0 ) x maxViewWidth ] => shift;
@@ -1924,7 +1924,7 @@ B<See>: TView->valid, Chapters 16 and 19.
 
 =head3 Module
 
-    TV::Views::DrawBuffer
+    TUI::Views::DrawBuffer
 
 =head3 Purpose
 
@@ -1946,7 +1946,7 @@ B<See>: TView methods writeBuf and writeLine.
 =head2 TEvent
 
     .------------------+-------------------------------------------------------.
-    | module           | TV::Drivers::Event                                    |
+    | module           | TUI::Drivers::Event                                    |
     +------------------+-------------------------------------------------------+
     | parents          | Tie::Hash                                             |
     +------------------+-------------------------------------------------------+
@@ -2010,7 +2010,7 @@ in Perl:
 
 =head3 Module
 
-    TV::Drivers::Event
+    TUI::Drivers::Event
 
 =head3 Purpose
 

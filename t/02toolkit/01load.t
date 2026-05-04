@@ -4,16 +4,16 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::toolkit::boolean';
-  use_ok 'TV::toolkit::Params';
-  use_ok 'TV::toolkit::Types';
+  use_ok 'TUI::toolkit::boolean';
+  use_ok 'TUI::toolkit::Params';
+  use_ok 'TUI::toolkit::Types';
   if ( eval { require UNIVERSAL::Object } ) {
-    use_ok 'TV::toolkit::UO::Base';
-    use_ok 'TV::toolkit::UO::Antlers';
+    use_ok 'TUI::toolkit::UO::Base';
+    use_ok 'TUI::toolkit::UO::Antlers';
   }
-  use_ok 'TV::toolkit';
+  use_ok 'TUI::toolkit';
 }
 
-note $TV::toolkit::name;
+note $TUI::toolkit::name;
 
 done_testing();

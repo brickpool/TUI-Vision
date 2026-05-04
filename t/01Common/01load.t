@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Const';
+  use_ok 'TUI::Const';
 }
 
 done_testing();

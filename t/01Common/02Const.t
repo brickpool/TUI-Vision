@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Const', qw( 
+  use_ok 'TUI::Const', qw( 
     maxFindStrLen
     maxReplaceStrLen
   );

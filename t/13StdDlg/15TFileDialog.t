@@ -5,20 +5,20 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Drivers::Const', qw( evCommand );
-  use_ok 'TV::Views::Group';
-  use_ok 'TV::StdDlg::Const', qw( cmFileOpen );
-  use_ok 'TV::StdDlg::FileDialog';
-  require_ok 'TV::toolkit';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Drivers::Const', qw( evCommand );
+  use_ok 'TUI::Views::Group';
+  use_ok 'TUI::StdDlg::Const', qw( cmFileOpen );
+  use_ok 'TUI::StdDlg::FileDialog';
+  require_ok 'TUI::toolkit';
 }
 
 BEGIN {
   package MyOwner;
-  use TV::Views::Group;
-  use TV::toolkit;
-  extends 'TV::Views::Group';
+  use TUI::Views::Group;
+  use TUI::toolkit;
+  extends 'TUI::Views::Group';
 
   has wildCard  => ( is => 'rw' );
   has directory => ( is => 'rw' );
@@ -78,7 +78,7 @@ subtest 'setData()/getData() survive' => sub {
   } 'setData()/getData() do not die';
   like(
     ( $rec[0] || '' ), 
-    qr/TEST\.TXT/, 
+    qr/test\.txt/,
     'getData() returns the expected data'
   );
 };

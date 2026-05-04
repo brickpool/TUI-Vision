@@ -6,7 +6,7 @@ use Test::Exception;
 
 # Mocking 'THardwareInfo', 'TMouse', and 'TScreen' for testing purposes
 BEGIN {
-  package TV::Drivers::HardwareInfo;
+  package TUI::Drivers::HardwareInfo;
   use Exporter 'import';
   our @EXPORT = qw( THardwareInfo );
   sub THardwareInfo (){ __PACKAGE__ }
@@ -48,11 +48,11 @@ BEGIN {
     return 0;
   } #/ sub getMouseEvent
   sub getTickCount { return 100; }
-  $INC{"TV/Drivers/HardwareInfo.pm"} = 1;
+  $INC{"TUI/Drivers/HardwareInfo.pm"} = 1;
 } #/ BEGIN
 
 BEGIN {
-  package TV::Drivers::Mouse;
+  package TUI::Drivers::Mouse;
   use Exporter 'import';
   our @EXPORT = qw( TMouse );
   sub TMouse () { __PACKAGE__ }
@@ -61,11 +61,11 @@ BEGIN {
   sub suspend   { }
   sub getEvent  { }
   sub setRange  { }
-  $INC{"TV/Drivers/Mouse.pm"} = 1;
+  $INC{"TUI/Drivers/Mouse.pm"} = 1;
 } #/ BEGIN
 
 BEGIN {
-  package TV::Drivers::Screen;
+  package TUI::Drivers::Screen;
   use Exporter 'import';
   our @EXPORT = qw( TScreen );
   sub TScreen ()   { __PACKAGE__ }
@@ -73,13 +73,13 @@ BEGIN {
   our $screenHeight = 25;
   TScreen->{screenWidth} = $screenWidth;
   TScreen->{screenHeight} = $screenHeight;
-  $INC{"TV/Drivers/Screen.pm"} = 1;
+  $INC{"TUI/Drivers/Screen.pm"} = 1;
 } #/ BEGIN
 
 BEGIN {
-  use_ok 'TV::Drivers::Const', qw( :evXXXX );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Drivers::EventQueue';
+  use_ok 'TUI::Drivers::Const', qw( :evXXXX );
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Drivers::EventQueue';
 }
 
 use_ok 'MouseEventType';
@@ -118,10 +118,10 @@ is( $event->{what}, evMouseMove, 'Mouse move event handled correctly' );
 
 # Test some global variables
 is(
-  $TV::Drivers::EventQueue::doubleDelay,
+  $TUI::Drivers::EventQueue::doubleDelay,
   8,
   'TEventQueue->{doubleDelay} is set correctly'
 );
-isa_ok( $TV::Drivers::EventQueue::lastMouse, 'MouseEventType' );
+isa_ok( $TUI::Drivers::EventQueue::lastMouse, 'MouseEventType' );
 
 done_testing();

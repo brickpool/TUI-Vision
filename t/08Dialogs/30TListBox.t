@@ -5,11 +5,11 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Const', qw( EOS );
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::ScrollBar';
-  use_ok 'TV::Dialogs::ListBox';
-  use_ok 'TV::Objects::Collection';
+  use_ok 'TUI::Const', qw( EOS );
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::ScrollBar';
+  use_ok 'TUI::Dialogs::ListBox';
+  use_ok 'TUI::Objects::Collection';
 }
 
 sub make_collection {
@@ -40,7 +40,7 @@ subtest 'Object creation' => sub {
     $listbox = new_TListBox( $bounds, 1, $vBar );
   } 'TListBox object created';
 
-  isa_ok( $listbox, 'TV::Dialogs::ListBox' );
+  isa_ok( $listbox, 'TUI::Dialogs::ListBox' );
   ok( !defined $listbox->list, 'list() is undef after creation' );
 }; #/ 'Object creation' => sub
 

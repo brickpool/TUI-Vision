@@ -6,7 +6,7 @@ use Test::Exception;
 use Scalar::Util qw( refaddr );
 
 BEGIN {
-  use_ok 'TV::Drivers::Event';
+  use_ok 'TUI::Drivers::Event';
 }
 use_ok 'MessageEvent';
 

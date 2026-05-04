@@ -24,9 +24,9 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  if ( eval { require TV::toolkit::Types } ) {
-    note 'use TV::toolkit::Types';
-    use_ok 'TV::toolkit::Types', qw( 
+  if ( eval { require TUI::toolkit::Types } ) {
+    note 'use TUI::toolkit::Types';
+    use_ok 'TUI::toolkit::Types', qw( 
       Any Int ArrayRef HashRef ClassName Str Object Num Ref is_HashRef
     );
   }
@@ -40,7 +40,7 @@ BEGIN {
     plan skip_all => 'Test irrelevant without a Type constraint library';
   }
   # use_ok 'Type::Params', qw( compile signature );
-  use_ok 'TV::toolkit::Params', qw( signature );
+  use_ok 'TUI::toolkit::Params', qw( signature );
 }
 
 #

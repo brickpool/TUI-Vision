@@ -5,12 +5,12 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Objects::StringCollection';
-  use_ok 'TV::Drivers::Const', qw( :evXXXX kbBack );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::StdDlg::SortedListBox';
-  use_ok 'TV::Views::Const', qw( cmReleasedFocus );
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Objects::StringCollection';
+  use_ok 'TUI::Drivers::Const', qw( :evXXXX kbBack );
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::StdDlg::SortedListBox';
+  use_ok 'TUI::Views::Const', qw( cmReleasedFocus );
 }
 
 my ( $listBox, $event );

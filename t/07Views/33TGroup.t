@@ -5,21 +5,21 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Const', qw( 
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Const', qw( 
     cmCancel
     sfActive
   );
-  use_ok 'TV::Views::View';
-  use_ok 'TV::Views::Group';
+  use_ok 'TUI::Views::View';
+  use_ok 'TUI::Views::Group';
 }
 
 # Mocking TView for testing purposes
 BEGIN {
   package MyView;
-  use TV::toolkit;
-  extends 'TV::Views::View';
+  use TUI::toolkit;
+  extends 'TUI::Views::View';
   sub dataSize { 1 }
   $INC{"MyView.pm"} = 1;
 }

@@ -3,14 +3,14 @@ use warnings;
 
 use Test::More;
 
-use_ok( 'TV::Objects::StringCollection' );
+use_ok( 'TUI::Objects::StringCollection' );
 
 BEGIN {
-  use_ok 'TV::Objects::StringCollection';
+  use_ok 'TUI::Objects::StringCollection';
 }
 
 is(
-  TStringCollection(), 'TV::Objects::StringCollection',
+  TStringCollection(), 'TUI::Objects::StringCollection',
   'TStringCollection() returns package name'
 );
 

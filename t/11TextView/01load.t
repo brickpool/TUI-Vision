@@ -4,10 +4,10 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::ScrollBar';
-  use_ok 'TV::TextView::TextDevice';
-  use_ok 'TV::TextView::Terminal';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::ScrollBar';
+  use_ok 'TUI::TextView::TextDevice';
+  use_ok 'TUI::TextView::Terminal';
 }
 
 isa_ok(

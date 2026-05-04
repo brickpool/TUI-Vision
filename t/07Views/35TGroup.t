@@ -8,9 +8,9 @@ use Devel::Refcount qw( refcount );
 use Scalar::Util qw( isweak );
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::View';
-  use_ok 'TV::Views::Group';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::View';
+  use_ok 'TUI::Views::Group';
 }
 
 my (

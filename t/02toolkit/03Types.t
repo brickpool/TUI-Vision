@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-use TV::toolkit::Types qw(
+use TUI::toolkit::Types qw(
   Any Item Undef Defined Value Bool Str ClassName
   Num Int PositiveInt PositiveOrZeroInt
   Object Ref ScalarRef ArrayRef HashRef CodeRef GlobRef FileHandle
@@ -196,7 +196,7 @@ subtest 'ClassName' => sub {
     type   => $t,
     name   => 'ClassName',
     accept => [
-      'TV::toolkit::Types',
+      'TUI::toolkit::Types',
       'Local::ClassNameTest',
     ],
     reject => [

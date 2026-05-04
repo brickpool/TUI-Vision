@@ -5,17 +5,17 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Menus::Menu';
-  use_ok 'TV::Menus::MenuItem';
-  use_ok 'TV::Menus::MenuBox';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Menus::Menu';
+  use_ok 'TUI::Menus::MenuItem';
+  use_ok 'TUI::Menus::MenuBox';
 }
 
 BEGIN {
   package MyMenuView;
-  use TV::Drivers::Const qw( evKeyDown kbEsc );
-  use TV::toolkit;
-  extends 'TV::Menus::MenuView';
+  use TUI::Drivers::Const qw( evKeyDown kbEsc );
+  use TUI::toolkit;
+  extends 'TUI::Menus::MenuView';
   sub getEvent {
     $_[1]->{what} = evKeyDown;
     $_[1]->{keyDown}{keyCode} = kbEsc;
@@ -23,7 +23,7 @@ BEGIN {
   $INC{"MyMenuView.pm"} = 1;
 }
 
-my $getRect = sub { goto &TV::Menus::MenuBox::_getRect };
+my $getRect = sub { goto &TUI::Menus::MenuBox::_getRect };
 
 my ( $bounds, $item1, $item2, $menu, $menuBox );
 

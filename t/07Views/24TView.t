@@ -5,10 +5,10 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Const', qw( :evXXXX );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::View';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Const', qw( :evXXXX );
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::View';
 }
 
 my $bounds = TRect->new( ax => 0, ay => 0, bx => 10, by => 10 );

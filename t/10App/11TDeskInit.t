@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::App::DeskInit';
+  use_ok 'TUI::App::DeskInit';
 }
 
 isa_ok( TDeskInit->new( cBackground => sub { } ), TDeskInit );

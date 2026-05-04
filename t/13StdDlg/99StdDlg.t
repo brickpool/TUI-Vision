@@ -4,8 +4,8 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::StdDlg';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::StdDlg';
 }
 
 isa_ok( new_TFileCollection( 0, 0 ), TFileCollection() );

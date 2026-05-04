@@ -5,15 +5,15 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::App::DeskTop';
-  use_ok 'TV::App::Program';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Menus::MenuBar';
-  use_ok 'TV::Menus::StatusLine';
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::Const', qw( cmCancel );
-  use_ok 'TV::Views::Palette';
-  use_ok 'TV::Views::View';
+  use_ok 'TUI::App::DeskTop';
+  use_ok 'TUI::App::Program';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Menus::MenuBar';
+  use_ok 'TUI::Menus::StatusLine';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Const', qw( cmCancel );
+  use_ok 'TUI::Views::Palette';
+  use_ok 'TUI::Views::View';
 }
 
 # Test initDeskTop method
@@ -44,7 +44,7 @@ my $program;
 subtest 'object creation' => sub {
   $program = TProgram->new();
   isa_ok( $program, TProgram, 'Object is of class TProgram' );
-  isa_ok(  $TV::App::Program::deskTop,  TDeskTop, 
+  isa_ok( $TUI::App::Program::deskTop, TDeskTop, 
     '$desktop is of class TDesktop' );
 };
 

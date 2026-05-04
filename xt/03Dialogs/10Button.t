@@ -21,28 +21,28 @@ use constant ManualTestsEnabled => exists($ENV{MANUAL_TESTS})
                                 && !$ENV{NONINTERACTIVE_TESTING};
 
 BEGIN {
-  use_ok 'TV::App';
-  use_ok 'TV::Objects';
-  use_ok 'TV::Drivers';
-  use_ok 'TV::Views';
-  use_ok 'TV::Menus';
-  use_ok 'TV::Dialogs';
-  use_ok 'TV::toolkit';
+  use_ok 'TUI::App';
+  use_ok 'TUI::Objects';
+  use_ok 'TUI::Drivers';
+  use_ok 'TUI::Views';
+  use_ok 'TUI::Menus';
+  use_ok 'TUI::Dialogs';
+  use_ok 'TUI::toolkit';
 }
 
 BEGIN {
   package TMyApp;
 
   #
-  # For dialogs, you still need to add the C<TV::Dialogs> unit.
+  # For dialogs, you still need to add the C<TUI::Dialogs> unit.
   #
-  use TV::App;        # TApplication
-  use TV::Objects;    # Window section (TRect)
-  use TV::Drivers;    # Hotkey
-  use TV::Views;      # Event (cmQuit)
-  use TV::Menus;      # Status line and menu
-  use TV::Dialogs;    # Dialogs
-  use TV::toolkit;
+  use TUI::App;        # TApplication
+  use TUI::Objects;    # Window section (TRect)
+  use TUI::Drivers;    # Hotkey
+  use TUI::Views;      # Event (cmQuit)
+  use TUI::Menus;      # Status line and menu
+  use TUI::Dialogs;    # Dialogs
+  use TUI::toolkit;
 
   #
   # Another command for calling up the dialog box.

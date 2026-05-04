@@ -13,14 +13,14 @@ BEGIN {
     plan tests => 9;
   }
   require_ok 'UNIVERSAL::Object';
-  use_ok 'TV::toolkit';
+  use_ok 'TUI::toolkit';
 }
 
-ok( TV::toolkit::is_UNIVERSAL(), 'is UNIVERSAL::Object toolkit' );
+ok( TUI::toolkit::is_UNIVERSAL(), 'is UNIVERSAL::Object toolkit' );
 
 BEGIN {
   package MyObject;
-  use TV::toolkit;
+  use TUI::toolkit;
   has x => ( is => 'rw' );
   has y => ( is => 'rw' );
   $INC{"MyObject.pm"} = 1;

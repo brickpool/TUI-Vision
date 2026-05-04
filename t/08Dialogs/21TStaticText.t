@@ -5,20 +5,20 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Views::Const', qw( gfFixed );
-  use_ok 'TV::Views::DrawBuffer';
-  use_ok 'TV::Views::Palette';
-  use_ok 'TV::Views::View';
-  use_ok 'TV::Dialogs::StaticText';
-  require_ok 'TV::toolkit';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Const', qw( gfFixed );
+  use_ok 'TUI::Views::DrawBuffer';
+  use_ok 'TUI::Views::Palette';
+  use_ok 'TUI::Views::View';
+  use_ok 'TUI::Dialogs::StaticText';
+  require_ok 'TUI::toolkit';
 }
 
 # Mock class to intercept writeLine calls
 BEGIN {
   package MyStaticText;
-  use TV::toolkit;
-  extends 'TV::Dialogs::StaticText';
+  use TUI::toolkit;
+  extends 'TUI::Dialogs::StaticText';
   our @WRITE_LINES;
   sub writeLine {
     shift;

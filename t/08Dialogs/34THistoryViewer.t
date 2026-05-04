@@ -5,19 +5,19 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Const', qw( EOS );
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Dialogs::HistoryViewer';
-  use_ok 'TV::Dialogs::HistoryViewer::HistList', qw( /\S+/ );
-  use_ok 'TV::Drivers::Const', qw(
+  use_ok 'TUI::Const', qw( EOS );
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Dialogs::HistoryViewer';
+  use_ok 'TUI::Dialogs::HistoryViewer::HistList', qw( /\S+/ );
+  use_ok 'TUI::Drivers::Const', qw(
     :evXXXX
     kbEnter
     kbEsc
     meDoubleClick
   );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::ScrollBar';
-  use_ok 'TV::Views::Const', qw(
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::ScrollBar';
+  use_ok 'TUI::Views::Const', qw(
     cmOK
     cmCancel
   );

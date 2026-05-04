@@ -12,12 +12,12 @@ BEGIN {
     plan tests => 10;
   }
   require_ok 'Moos';
-  use_ok 'TV::toolkit';
+  use_ok 'TUI::toolkit';
 }
 
 BEGIN {
   package MyObject;
-  use TV::toolkit;
+  use TUI::toolkit;
   has x => ( is => 'rw' );
   has y => ( is => 'rw' );
   sub DEMOLISH { ::pass 'DEMOLISH was called from '. caller }

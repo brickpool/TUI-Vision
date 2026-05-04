@@ -4,15 +4,15 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Const';
-  use_ok 'TV::Objects::Object';
-  use_ok 'TV::Objects::Point';
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Objects::NSCollection';
-  use_ok 'TV::Objects::NSSortedCollection';
-  use_ok 'TV::Objects::Collection';
-  use_ok 'TV::Objects::SortedCollection';
-  use_ok 'TV::Objects::StringCollection';
+  use_ok 'TUI::Objects::Const';
+  use_ok 'TUI::Objects::Object';
+  use_ok 'TUI::Objects::Point';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Objects::NSCollection';
+  use_ok 'TUI::Objects::NSSortedCollection';
+  use_ok 'TUI::Objects::Collection';
+  use_ok 'TUI::Objects::SortedCollection';
+  use_ok 'TUI::Objects::StringCollection';
 }
 
 isa_ok( TObject->new(), TObject );

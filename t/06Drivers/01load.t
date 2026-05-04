@@ -4,16 +4,16 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Drivers::Const', qw( eventQSize );
-  use_ok 'TV::Drivers::Util';
-  use_ok 'TV::Drivers::HardwareInfo';
-  use_ok 'TV::Drivers::Display';
-  use_ok 'TV::Drivers::Screen';
-  use_ok 'TV::Drivers::SystemError';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Drivers::HWMouse';
-  use_ok 'TV::Drivers::Mouse';
-  use_ok 'TV::Drivers::EventQueue';
+  use_ok 'TUI::Drivers::Const', qw( eventQSize );
+  use_ok 'TUI::Drivers::Util';
+  use_ok 'TUI::Drivers::HardwareInfo';
+  use_ok 'TUI::Drivers::Display';
+  use_ok 'TUI::Drivers::Screen';
+  use_ok 'TUI::Drivers::SystemError';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Drivers::HWMouse';
+  use_ok 'TUI::Drivers::Mouse';
+  use_ok 'TUI::Drivers::EventQueue';
 }
 
 is( eventQSize, 16, 'eventQSize is 16' );

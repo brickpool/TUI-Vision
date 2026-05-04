@@ -18,7 +18,6 @@ trial/
 nytprof.out
 pod2htm*.tmp
 pm_to_blib
-TurboVision.tar.gz
 .gitignore
 .gitattributes
 MANIFEST.SKIP
@@ -33,4 +32,4 @@ test.bin
 TVision.code-workspace
 TVision.komodoproject
 xt/win*
-TVision-*
+TUI-Vision*

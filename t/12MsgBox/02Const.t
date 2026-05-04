@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::MsgBox::Const', qw( :mfXXXX );
+  use_ok 'TUI::MsgBox::Const', qw( :mfXXXX );
 }
 
 is( mfWarning,      0x0000, 'mfWarning is 0x0000' );

@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::StdDlg::DirEntry';
+  use_ok 'TUI::StdDlg::DirEntry';
 }
 
 lives_ok {

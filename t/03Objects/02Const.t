@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects::Const', qw(
+  use_ok 'TUI::Objects::Const', qw(
     ccNotFound 
     maxCollectionSize
   );

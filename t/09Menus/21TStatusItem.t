@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Menus::StatusItem';
+  use_ok 'TUI::Menus::StatusItem';
 }
 
 # Test object creation as list

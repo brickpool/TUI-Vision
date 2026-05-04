@@ -17,7 +17,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::App';
+  use_ok 'TUI::App';
 }
 
 use constant ManualTestsEnabled => exists($ENV{MANUAL_TESTS})

@@ -5,14 +5,14 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Dialogs::Const', qw( cmRecordHistory );
-  use_ok 'TV::Dialogs::History';
-  use_ok 'TV::Dialogs::HistoryViewer::HistList', qw( /\S+/ );
-  use_ok 'TV::Dialogs::InputLine';
-  use_ok 'TV::Drivers::Const', qw( :evXXXX );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Const', qw(
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Dialogs::Const', qw( cmRecordHistory );
+  use_ok 'TUI::Dialogs::History';
+  use_ok 'TUI::Dialogs::HistoryViewer::HistList', qw( /\S+/ );
+  use_ok 'TUI::Dialogs::InputLine';
+  use_ok 'TUI::Drivers::Const', qw( :evXXXX );
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Const', qw(
     cmReleasedFocus
     ofPostProcess
   );

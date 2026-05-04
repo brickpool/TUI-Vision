@@ -6,7 +6,7 @@ use Test::Exception;
 
 # Mocking 'THardwareInfo' and 'TMouse' for testing purposes
 BEGIN {
-  package TV::Drivers::HardwareInfo;
+  package TUI::Drivers::HardwareInfo;
   use Exporter 'import';
   our @EXPORT = qw( THardwareInfo );
   sub THardwareInfo() { __PACKAGE__ }
@@ -20,23 +20,23 @@ BEGIN {
   sub getScreenMode   { return 3; }
   sub setScreenMode   { }
   sub getPlatform     { return $^O }
-  $INC{"TV/Drivers/HardwareInfo.pm"} = 1;
+  $INC{"TUI/Drivers/HardwareInfo.pm"} = 1;
 } #/ BEGIN
 
 BEGIN {
-  package TV::Drivers::Mouse;
+  package TUI::Drivers::Mouse;
   use Exporter 'import';
   our @EXPORT = qw( TMouse );
   sub TMouse() { __PACKAGE__ }
   sub present { return 1; }
   sub setRange { }
-  $INC{"TV/Drivers/Mouse.pm"} = 1;
+  $INC{"TUI/Drivers/Mouse.pm"} = 1;
 }
 
 BEGIN {
-  use_ok 'TV::Drivers::HardwareInfo';
-  use_ok 'TV::Drivers::Mouse';
-  use_ok 'TV::Drivers::Screen';
+  use_ok 'TUI::Drivers::HardwareInfo';
+  use_ok 'TUI::Drivers::Mouse';
+  use_ok 'TUI::Drivers::Screen';
 }
 
 # Test object creation and setCrtData method

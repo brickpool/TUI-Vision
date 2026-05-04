@@ -5,10 +5,10 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::App::Background';
-  use_ok 'TV::App::DeskTop';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::App::Background';
+  use_ok 'TUI::App::DeskTop';
 }
 
 # Test object creation

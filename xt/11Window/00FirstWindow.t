@@ -21,19 +21,19 @@ use constant ManualTestsEnabled => exists($ENV{MANUAL_TESTS})
                                 && !$ENV{NONINTERACTIVE_TESTING};
 
 BEGIN {
-  use_ok 'TV::toolkit';
-  use_ok 'TV::Objects';
-  use_ok 'TV::Views';
-  use_ok 'TV::App';
+  use_ok 'TUI::toolkit';
+  use_ok 'TUI::Objects';
+  use_ok 'TUI::Views';
+  use_ok 'TUI::App';
 }
 
 BEGIN {
   package TMyApp;
 
-  use TV::toolkit;
-  use TV::Objects;
-  use TV::Views;
-  use TV::App;
+  use TUI::toolkit;
+  use TUI::Objects;
+  use TUI::Views;
+  use TUI::App;
 
   extends TApplication;
 

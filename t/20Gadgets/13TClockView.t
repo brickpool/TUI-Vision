@@ -5,14 +5,14 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Gadgets::ClockView';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Gadgets::ClockView';
 }
 
 {
   package MyClockView;
-  use TV::toolkit;
-  extends 'TV::Gadgets::ClockView';
+  use TUI::toolkit;
+  extends 'TUI::Gadgets::ClockView';
   sub writeLine { ::pass 'writeLine()'  }
   sub drawView  { ::pass 'drawView()' }
   $INC{"MyClockView.pm"} = 1;

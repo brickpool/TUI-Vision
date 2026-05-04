@@ -2,7 +2,7 @@
 # program demo TBackground
 
 use
-  TV::Objects; use TV::App; use TV::Views;
+  TUI::Objects; use TUI::App; use TUI::Views;
 
 {
   package TSampleProgram;

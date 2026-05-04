@@ -5,11 +5,11 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok "TV::Objects::Collection";
+  use_ok "TUI::Objects::Collection";
 }
 
 # Test TCollection function
-is( TCollection, 'TV::Objects::Collection', 
+is( TCollection, 'TUI::Objects::Collection', 
   'TCollection returns correct package name' );
 
 # Test new method

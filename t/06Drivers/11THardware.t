@@ -73,8 +73,8 @@ BEGIN {
 }
 
 BEGIN {
-  use_ok 'TV::Drivers::Const', qw( smCO80 );
-  use_ok 'TV::Drivers::HardwareInfo';
+  use_ok 'TUI::Drivers::Const', qw( smCO80 );
+  use_ok 'TUI::Drivers::HardwareInfo';
 }
 
 # Test object creation and INIT block

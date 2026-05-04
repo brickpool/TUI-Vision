@@ -12,15 +12,15 @@
 #
 package TVDemo;
 
-use TV::Objects;
-use TV::Menus;
-use TV::Drivers;
-use TV::App;
-use TV::Views;
-use TV::Dialogs;
-use TV::Gadgets;
+use TUI::Objects;
+use TUI::Menus;
+use TUI::Drivers;
+use TUI::App;
+use TUI::Views;
+use TUI::Dialogs;
+use TUI::Gadgets;
 
-use TV::toolkit;
+use TUI::toolkit;
 
 sub ::new_TVDemo { __PACKAGE__->new( argc => shift, argv => shift ) }
 

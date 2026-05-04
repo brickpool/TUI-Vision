@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Objects';
+  use_ok 'TUI::Objects';
 }
 
 is( ccNotFound, -1, 'ccNotFound is -1' );

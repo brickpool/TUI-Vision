@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Views::Const', qw( :cmXXXX );
+  use_ok 'TUI::Views::Const', qw( :cmXXXX );
 }
 
 is( cmValid,    0,  'cmValid is 0' );

@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Drivers::Const', qw(
+  use_ok 'TUI::Drivers::Const', qw(
     eventQSize
     :evXXXX
     :mbXXXX

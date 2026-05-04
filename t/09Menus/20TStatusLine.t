@@ -5,10 +5,10 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Menus::StatusDef';
-  use_ok 'TV::Menus::StatusLine';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Menus::StatusDef';
+  use_ok 'TUI::Menus::StatusLine';
 }
 
 # Test case for the constructor

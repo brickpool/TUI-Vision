@@ -5,24 +5,24 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Drivers::Const', qw( evCommand );
-  use_ok 'TV::Views::Group';
-  use_ok 'TV::StdDlg::Const', qw(
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Drivers::Const', qw( evCommand );
+  use_ok 'TUI::Views::Group';
+  use_ok 'TUI::StdDlg::Const', qw(
     cmRevert
     cmChangeDir
     cmDirSelection
   );
-  use_ok 'TV::StdDlg::ChDirDialog';
-  require_ok 'TV::toolkit';
+  use_ok 'TUI::StdDlg::ChDirDialog';
+  require_ok 'TUI::toolkit';
 }
 
 BEGIN {
   package MyOwner;
-  use TV::Views::Group;
-  use TV::toolkit;
-  extends 'TV::Views::Group';
+  use TUI::Views::Group;
+  use TUI::toolkit;
+  extends 'TUI::Views::Group';
   has directory => ( is => 'rw' );
   $INC{"MyOwner.pm"} = 1;
 }

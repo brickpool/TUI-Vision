@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Validate::Const', qw( 
+  use_ok 'TUI::Validate::Const', qw( 
     :voXXXX
     :vsXXXX
     :vtXXXX

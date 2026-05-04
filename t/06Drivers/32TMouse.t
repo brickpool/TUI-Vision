@@ -5,9 +5,9 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Drivers::HardwareInfo';
-  use_ok 'TV::Drivers::HWMouse';
-  use_ok 'TV::Drivers::Mouse';
+  use_ok 'TUI::Drivers::HardwareInfo';
+  use_ok 'TUI::Drivers::HWMouse';
+  use_ok 'TUI::Drivers::Mouse';
 }
 
 # Test TMouse

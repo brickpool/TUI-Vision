@@ -8,13 +8,13 @@ use Test::Exception;
 use Devel::StrictMode;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Dialogs::Button'
-    or BAIL_OUT( 'Cannot load TV::Dialogs::Button' );
-  use_ok 'TV::Dialogs::Const', qw( :bfXXXX );
-  use_ok 'TV::Views::Const',   qw( :sfXXXX );
-  use_ok 'TV::Views::Group';
-  use_ok 'TV::Drivers::Const', qw( :evXXXX );
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Dialogs::Button'
+    or BAIL_OUT( 'Cannot load TUI::Dialogs::Button' );
+  use_ok 'TUI::Dialogs::Const', qw( :bfXXXX );
+  use_ok 'TUI::Views::Const',   qw( :sfXXXX );
+  use_ok 'TUI::Views::Group';
+  use_ok 'TUI::Drivers::Const', qw( :evXXXX );
 }
 
 sub unlock_value {
@@ -32,14 +32,14 @@ my $bounds = TRect->new(
 subtest 'BUILDARGS() - valid arguments' => sub {
   my $button;
   lives_ok {
-    $button = TV::Dialogs::Button->new(
+    $button = TUI::Dialogs::Button->new(
       bounds   => $bounds,
       title   => 'OK',
       command => 100,
       flags   => bfDefault,
     );
   } 'constructor lives with valid title/command/flags';
-  isa_ok( $button, 'TV::Dialogs::Button', 'object is of correct class' );
+  isa_ok( $button, 'TUI::Dialogs::Button', 'object is of correct class' );
 
   is( $button->title,   'OK',      'title attribute set from title' );
   is( $button->command, 100,       'command attribute set from command' );
@@ -54,7 +54,7 @@ subtest 'BUILDARGS() - invalid arguments' => sub {
     skip 'STRICT validation not enabled or not testable', 3 unless STRICT;
 
     dies_ok {
-      TV::Dialogs::Button->new(
+      TUI::Dialogs::Button->new(
         bounds   => $bounds,
         title   => undef,
         command => 100,
@@ -63,7 +63,7 @@ subtest 'BUILDARGS() - invalid arguments' => sub {
     } 'constructor dies when title is undef';
 
     dies_ok {
-      TV::Dialogs::Button->new(
+      TUI::Dialogs::Button->new(
         bounds   => $bounds,
         title   => 'OK',
         command => 'NOT_NUMERIC',
@@ -72,7 +72,7 @@ subtest 'BUILDARGS() - invalid arguments' => sub {
     } 'constructor dies when command is not numeric';
 
     dies_ok {
-      TV::Dialogs::Button->new(
+      TUI::Dialogs::Button->new(
         bounds   => $bounds,
         title   => 'OK',
         command => 100,

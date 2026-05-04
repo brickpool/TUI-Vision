@@ -4,8 +4,8 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::MsgBox::Const', qw( mfOKButton );
-  use_ok 'TV::MsgBox::MsgBoxText', qw( messageBox );
+  use_ok 'TUI::MsgBox::Const', qw( mfOKButton );
+  use_ok 'TUI::MsgBox::MsgBoxText', qw( messageBox );
 }
 
 done_testing();

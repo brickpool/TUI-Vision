@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::Views::CommandSet';
+  use_ok 'TUI::Views::CommandSet';
 }
 
 my $intersect = \&{ TCommandSet . '::intersect' };

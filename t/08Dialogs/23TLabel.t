@@ -6,11 +6,11 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Drivers::Const', qw( :evXXXX );
-  use_ok 'TV::Drivers::Event';
-  use_ok 'TV::Views::Const', qw( :ofXXXX );
-  use_ok 'TV::Dialogs::Label';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Drivers::Const', qw( :evXXXX );
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Const', qw( :ofXXXX );
+  use_ok 'TUI::Dialogs::Label';
 } #/ BEGIN
 
 # Mock link object used by TLabel
@@ -98,7 +98,7 @@ subtest 'focus link' => sub {
   {
     # Prevent side effects from superclass
     no warnings;
-    local *TV::Dialogs::StaticText::handleEvent = sub { };
+    local *TUI::Dialogs::StaticText::handleEvent = sub { };
     lives_ok { $label->handleEvent( $event ) }
       'handleEvent(evMouseDown) lives';
   }

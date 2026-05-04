@@ -4,11 +4,11 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TV::StdDlg::FileCollection';
+  use_ok 'TUI::StdDlg::FileCollection';
 }
 
 # Import FA_DIREC for attribute bit tests.
-use TV::StdDlg::Const qw(FA_DIREC);
+use TUI::StdDlg::Const qw(FA_DIREC);
 
 # Helper to build a TSearchRec instance used as "key" objects.
 sub mk_rec {

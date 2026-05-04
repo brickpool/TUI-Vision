@@ -6,38 +6,39 @@ use Test::Exception;
 
 BEGIN {
   require_ok 'Moos';
-  use_ok 'TV::toolkit', qw( /^is_/ signature assert );
+  use_ok 'Devel::StrictMode';
+  use_ok 'TUI::toolkit', qw( /^is_/ signature assert );
 }
 
 BEGIN {
   package Export::Ok;
   use Scalar::Util qw( blessed );
-  use TV::toolkit;
-  assert ( TV::toolkit::is_Moos );
+  use TUI::toolkit;
+  assert ( TUI::toolkit::is_Moos );
   $INC{"Export/Ok.pm"} = 1;
 }
 
 BEGIN {
   package Point;
-  use TV::toolkit;
+  use TUI::toolkit;
   has x => ( is => 'bare' );
   has y => ( is => 'rw' );
   sub x {
     $#_ ? $_[0]->{x} = $_[1] : $_[0]->{x}
   }
   sub DEMOLISH { ::pass __PACKAGE__ . '::DEMOLISH called'  }
-  no TV::toolkit;
+  no TUI::toolkit;
   $INC{"Point.pm"} = 1;
 }
 
 BEGIN {
   package Point3D;
-  use TV::toolkit;                # should NOT replace our dump
+  use TUI::toolkit;                # should NOT replace our dump
   extends 'Point';
   has z => ( is => 'rw' );
   sub dump { return "custom" }    # class provides dump
   sub DEMOLISH { ::pass __PACKAGE__ . '::DEMOLISH called'  }
-  no TV::toolkit;
+  no TUI::toolkit;
   $INC{"Point3D.pm"} = 1;
 }
 
@@ -45,7 +46,7 @@ use_ok 'Export::Ok';
 use_ok 'Point';
 use_ok 'Point3D';
 
-note "Toolkit is $TV::toolkit::name";
+note "Toolkit is $TUI::toolkit::name";
 
 subtest 'Import' => sub {
   ok( main->can('is_Moos'), 'symbol is_Moos exists' );
@@ -81,7 +82,7 @@ subtest 'create_method redefine warns' => sub {
   my $warning;
   {
     local $SIG{__WARN__} = sub { $warning = shift };
-    TV::toolkit::_create_method( 'Point3D', 'z', sub { 2 } );
+    TUI::toolkit::_create_method( 'Point3D', 'z', sub { 2 } );
   }
   like(
     $warning, qr/Subroutine Point3D::z redefined/,
@@ -90,11 +91,14 @@ subtest 'create_method redefine warns' => sub {
 };
 
 subtest 'assert' => sub {
-  no TV::toolkit;
-  use TV::toolkit qw( assert );
+  no TUI::toolkit;
+  use TUI::toolkit qw( assert );
   lives_ok { assert( 1 == 1 ) } 'assert does not die on true condition';
-  throws_ok { assert( 1 == 0 ) } qr/Assertion failed/, 
-    'assert dies on false condition';
+  SKIP: {
+    skip "Strict mode causes assert to die on false condition", 1 unless STRICT;
+    throws_ok { assert( 1 == 0 ) } qr/Assertion failed/, 
+      'assert dies on false condition';
+  }
 };
 
 done_testing();

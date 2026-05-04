@@ -5,11 +5,11 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::Objects::Rect';
-  use_ok 'TV::Menus::Menu';
-  use_ok 'TV::Menus::SubMenu';
-  use_ok 'TV::Menus::MenuItem';
-  use_ok 'TV::Menus::MenuBar';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Menus::Menu';
+  use_ok 'TUI::Menus::SubMenu';
+  use_ok 'TUI::Menus::MenuItem';
+  use_ok 'TUI::Menus::MenuBar';
 }
 
 # Test case for the constructor

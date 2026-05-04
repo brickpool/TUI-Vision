@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::App::ProgInit';
+  use_ok 'TUI::App::ProgInit';
 }
 
 isa_ok(

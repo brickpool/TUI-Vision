@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TV::App::Application';
+  use_ok 'TUI::App::Application';
 }
 
 my $app;
