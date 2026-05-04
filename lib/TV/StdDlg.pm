@@ -10,6 +10,7 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 use Import::Into;
 
 use TV::StdDlg::Const;
+use TV::StdDlg::ChDirDialog;
 use TV::StdDlg::Dir;
 use TV::StdDlg::DirCollection;
 use TV::StdDlg::DirEntry;
@@ -29,6 +30,7 @@ sub import {
   TV::StdDlg::Dos->import::into( $target, qw( /\S+/ ) );
   TV::StdDlg::Dir->import::into( $target, qw( /\S+/ ) );
   TV::StdDlg::Util->import::into( $target, qw( /\S+/ ) );
+  TV::StdDlg::ChDirDialog->import::into( $target );
   TV::StdDlg::DirCollection->import::into( $target );
   TV::StdDlg::DirEntry->import::into( $target );
   TV::StdDlg::DirListBox->import::into( $target );
@@ -46,6 +48,7 @@ sub unimport {
   TV::StdDlg::Dos->unimport::out_of( $caller );
   TV::StdDlg::Dir->unimport::out_of( $caller );
   TV::StdDlg::Util->unimport::out_of( $caller );
+  TV::StdDlg::ChDirDialog->unimport::out_of( $caller );
   TV::StdDlg::DirCollection->unimport::out_of( $caller );
   TV::StdDlg::DirEntry->unimport::out_of( $caller );
   TV::StdDlg::DirListBox->unimport::out_of( $caller );

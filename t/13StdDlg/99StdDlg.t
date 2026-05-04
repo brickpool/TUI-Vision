@@ -17,5 +17,6 @@ isa_ok( new_TFileDialog( '*.t', '', '', 0, 0 ), TFileDialog() );
 isa_ok( new_TDirEntry( '', '' ), TDirEntry() );
 isa_ok( new_TDirCollection( 0, 0 ), TDirCollection() );
 isa_ok( new_TDirListBox( TRect->new(), undef ), TDirListBox() );
+isa_ok( new_TChDirDialog( 0, 0 ), TChDirDialog() );
 
 done_testing();

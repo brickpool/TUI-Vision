@@ -14,6 +14,12 @@ our @EXPORT_OK = qw(
 
 our %EXPORT_TAGS = (
 
+  cdXXXX => [qw(
+    cdNormal
+    cdNoLoadDir
+    cdHelpButton
+  )],
+
   cmXXXX => [qw(
     cmFileOpen
     cmFileReplace
@@ -128,6 +134,14 @@ use constant {
                                 # This means you intend to change the
                                 # wildCard by using setData or store
                                 # the dialog on a stream.
+};
+
+# TChDirDialog options
+
+use constant {
+  cdNormal     => 0x0000,    # Option to use dialog immediately
+  cdNoLoadDir  => 0x0001,    # Option to init the dialog to store on a stream
+  cdHelpButton => 0x0002,    # Put a help button in the dialog
 };
 
 # DOS-Attributes for File Dialogs

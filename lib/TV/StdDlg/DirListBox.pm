@@ -4,6 +4,7 @@ package TV::StdDlg::DirListBox;
 use 5.010;
 use strict;
 use warnings;
+use utf8;
 
 our $VERSION = '2.000_001';
 $VERSION =~ tr/_//d;
@@ -48,12 +49,12 @@ sub new_TDirListBox { __PACKAGE__->from( @_ ) }
 extends TListBox;
 
 # declare global variables
-our $pathDir   =   "└─┬";
-our $firstDir  =     "└┬─";
-our $middleDir =     " ├─";
-our $lastDir   =     " └─";
+our $pathDir   = "\xC0\xC4\xC2";    # cp437: "└─┬";
+our $firstDir  = "\xC0\xC2\xC4";    # cp437:   "└┬─";
+our $middleDir = " \xC3\xC4";       # cp437:   " ├─";
+our $lastDir   = " \xC0\xC4";       # cp437:   " └─";
 our $drives    = "Drives";
-our $graphics  =   "└├─";
+our $graphics  = "\xC0\xC3\xC4";    # cp437: "└├─";
 
 # private attributes
 has dir => ( is => 'bare', default => EOS );
@@ -219,39 +220,51 @@ $showDirs = sub {    # void ($dirs)
 
   state $indentSize = 2;
   my $indent = $indentSize;
-  my $org    = $pathDir;
 
-  state $endPos = 3;
+  my $org = $pathDir;
   my $curDir = $self->{dir};
-  $dirs->insert( TDirEntry->new(
-    displayText => $org, 
-    directory   => substr( $curDir, 0, $endPos ),
-  ));
 
-  $curDir = substr( $curDir, $endPos );
+  # Show root directory.
+  my $pos = index( $curDir, '\\' );
+  return if $pos < 0;
+  my $root = substr( $curDir, 0, $pos + 1 );
+  $dirs->insert( TDirEntry->new(
+    displayText => $org . $root,
+    directory   => $root,
+  ));
+  $curDir = substr( $curDir, $pos + 1 );
+
+  # Show directories up to the current one.
+  my $partial = $root;
   while ( ( my $pos = index( $curDir, '\\' ) ) != -1 ) {
+    my $name = substr( $curDir, 0, $pos );
+    my $entryDir = $partial . $name;
     $dirs->insert( TDirEntry->new(
-      displayText => ( ' ' x $indent ) . $org, 
-      directory   => $self->{dir},
+      displayText => ( ' ' x $indent ) . $org . $name,
+      directory   => $entryDir,
     ));
+    $partial .= $name . '\\';
     $curDir = substr( $curDir, $pos + 1 );
     $indent += $indentSize;
   }
 
   $self->{cur} = $dirs->getCount() - 1;
 
+  # Show subdirectories.
   my $basePath = $self->{dir};
-  $basePath =~ s/\\[^\\]*$//;
-  $basePath .= '\\';
+  if ( substr( $basePath, -1, 1 ) ne '\\' ) {
+    $basePath =~ s/\\[^\\]*$//;
+    $basePath .= '\\';
+  }
   my $path = $basePath . '*.*';
 
   my $isFirst = true;
-  my $ff  = ffblk->new();
-  my $res = findfirst( $path, $ff, FA_DIREC );
+  my $ff      = ffblk->new();
+  my $res     = findfirst( $path, $ff, FA_DIREC );
   while ( $res == 0 ) {
-    if ( ( $ff->ff_attrib & FA_DIREC )
-      && substr( $ff->ff_name, 0, 1 ) ne '.'
-    ) {
+    if ( ( $ff->ff_attrib() & FA_DIREC )
+      && substr( $ff->ff_name, 0, 1 ) ne '.' )
+    {
       if ( $isFirst ) {
         $org     = $firstDir;
         $isFirst = false;
@@ -259,9 +272,10 @@ $showDirs = sub {    # void ($dirs)
       else {
         $org = $middleDir;
       }
-      $path = $basePath . $ff->ff_name;
+      my $name = $ff->ff_name;
+      $path = $basePath . $name;
       $dirs->insert( TDirEntry->new(
-        displayText => ( ' ' x $indent ) . $org,
+        displayText => ( ' ' x $indent ) . $org . $name,
         directory   => $path,
       ));
     }

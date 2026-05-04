@@ -3,7 +3,7 @@ package TV::toolkit::boolean;
 use strict;
 use warnings;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Exporter 'import';
 
@@ -21,7 +21,7 @@ BEGIN {
   no strict 'refs';
   for my $sub ( @EXPORT ) {
     if ( defined &{ 'builtin::' . $sub } ) {
-      no warnings 'prototype';
+      no warnings;
       *$sub = \&{ 'builtin::' . $sub };
     }
   }

@@ -19,6 +19,7 @@ BEGIN {
   use_ok 'TV::StdDlg::DirEntry';
   use_ok 'TV::StdDlg::DirCollection';
   use_ok 'TV::StdDlg::DirListBox';
+  use_ok 'TV::StdDlg::ChDirDialog';
 }
 
 isa_ok( FindFirstRec->allocate( [], 0, '' ), FindFirstRec() );
@@ -39,5 +40,6 @@ isa_ok( TDirEntry->new( displayText => '', directory => '' ), TDirEntry() );
 isa_ok( TDirCollection->new( limit => 0, delta => 0 ), TDirCollection() );
 isa_ok( TDirListBox->new( bounds => TRect->new(), vScrollBar => undef ), 
   TDirListBox() );
+isa_ok( TChDirDialog->new( options => 0, histId => 0 ), TChDirDialog() );
 
 done_testing();

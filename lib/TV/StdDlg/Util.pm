@@ -394,7 +394,7 @@ sub fexpand {    # void ($rpath, |$relativeTo)
   $fn->{dir} =~ tr{/}{\\};
   &$squeeze( $fn->{dir} );
   fnmerge( $path, $fn->{drive}, $fn->{dir}, $fn->{file}, $fn->{ext} );
-  $path = uc $path;
+  # $path = uc $path;
   $_[0] = $rpath = substr( $path, 0, MAXPATH );
   return;
 }

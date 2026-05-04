@@ -104,7 +104,7 @@ sub focusItem {    # void ($item)
   my ( $self, $item ) = $sig->( @_ );
   $self->SUPER::focusItem( $item );
   message( $self->{owner}, evBroadcast, cmFileFocused, 
-    $self->list->at( $item ) );
+    $self->list()->at( $item ) );
   return;
 }
 

@@ -265,18 +265,18 @@ sub getData {    # void (\@rec)
 
 my $relativePath = sub {    # $bool ($path)
   my ( $path ) = @_;
-  assert( @_ == 1 );
-  assert( is_Str $path );
+  assert ( @_ == 1 );
+  assert ( is_Str $path );
   return ( length( $path )
       && ( substr( $path, 0, 1 ) eq '\\' || substr( $path, 1, 1 ) eq ':' ) );
 };
 
 my $noWildChars = sub {    # void ($dest, $src)
   my ( $dest, $src ) = @_;
-  assert( @_ == 2 );
-  assert( is_Str $dest );
-  assert( is_Str $src );
-  assert( not readonly $_[0] );
+  assert ( @_ == 2 );
+  assert ( is_Str $dest );
+  assert ( is_Str $src );
+  assert ( not readonly $_[0] );
   $src =~ s/[?*]//g;
   $_[0] = $src;
   return;
@@ -284,9 +284,9 @@ my $noWildChars = sub {    # void ($dest, $src)
 
 my $trim = sub {    # void ($dest, $src)
   my ( $dest, $src ) = @_;
-  assert( @_ == 2 );
-  assert( is_Str $dest );
-  assert( is_Str $src );
+  assert ( @_ == 2 );
+  assert ( is_Str $dest );
+  assert ( is_Str $src );
   assert ( not readonly $_[0] );
   $src =~ s/^\s+//;
   if ( $src =~ /^(\S+)/ ) {

@@ -194,7 +194,7 @@ Lists and History
   | TDirEntry       | TV::StdDlg::DirEntry       | [x]       |
   | TDirCollection  | TV::StdDlg::DirCollection  | [x]       |
   | TDirListBox     | TV::StdDlg::DirListBox     | [x]       |
-  | TChDirDialog    | (missing)                  | [ ]       |
+  | TChDirDialog    | TV::StdDlg::ChDirDialog    | [x]       |
   +-----------------+----------------------------+-----------+
 
 Win32 FindFirstRec class, implemented in C<TV::Drivers::FindFirstRec::Win32>.
@@ -300,13 +300,13 @@ The project has completed the foundational subsystems:
 
 =item * Dialog controls
 
+=item * Standard dialogs
+
 =back
 
 The remaining work is concentrated in:
 
 =over 4
-
-=item * Standard dialogs
 
 =item * Validators
 
@@ -321,9 +321,9 @@ The remaining work is concentrated in:
 Summary
 
   Total Borland classes/items tracked: 106
-  Implemented:                         77
+  Implemented:                         78
   Partial:                              7
-  Missing:                             22
+  Missing:                             21
 
 B<Notes>: Calculated from the full inventory of ~100 Turbo Vision classes, 
 dialogs, widgets, validators, and subsystems as defined in the mapping list.
