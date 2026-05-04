@@ -37,9 +37,11 @@ sub new_TSortedListBox { __PACKAGE__->from( @_ ) }
 
 extends TListBox;
 
-# declare attributes
-has shiftState => ( is => 'ro',   default =>  0 );
-has searchPos  => ( is => 'bare', default => -1 );
+# protected attributes
+has shiftState => ( is => 'ro', default =>  0 );
+
+# private attributes
+has searchPos => ( is => 'bare', default => -1 );
 
 my $equal = sub {    # $bool ($s1, $s2, $count)
   my ( $s1, $s2, $count ) = @_;

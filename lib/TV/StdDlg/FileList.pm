@@ -68,14 +68,13 @@ sub BUILDARGS {    # \%args (%args)
     ],
     caller_level => +1,
   );
-  my ( $class, $args1 ) = $sig->( @_ );
+  my ( $class, $args ) = $sig->( @_ );
   local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-  my $args2 = $class->SUPER::BUILDARGS(
-    bounds     => $args1->{bounds},
+  return $class->SUPER::BUILDARGS(
+    bounds     => $args->{bounds},
     numCols    => 2,
-    vScrollBar => $args1->{vScrollBar},
+    vScrollBar => $args->{vScrollBar},
   );
-  return { %$args1, %$args2 };
 }
 
 sub from {    # $obj ($bounds, $aVScrollBar|undef)

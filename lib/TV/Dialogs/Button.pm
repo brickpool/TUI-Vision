@@ -368,7 +368,7 @@ sub press {    # void ()
   return;
 } #/ sub press
 
-sub setState { # void ($aState, $enable)
+sub setState {    # void ($aState, $enable)
   state $sig = signature(
     method => Object,
     pos    => [PositiveOrZeroInt, Bool],

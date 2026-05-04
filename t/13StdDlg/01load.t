@@ -18,6 +18,7 @@ BEGIN {
   use_ok 'TV::StdDlg::FileDialog';
   use_ok 'TV::StdDlg::DirEntry';
   use_ok 'TV::StdDlg::DirCollection';
+  use_ok 'TV::StdDlg::DirListBox';
 }
 
 isa_ok( FindFirstRec->allocate( [], 0, '' ), FindFirstRec() );
@@ -36,5 +37,7 @@ isa_ok( TFileDialog->new( wildCard => '*.t', title => '', inputName => '',
   options => 0, histId => 0 ), TFileDialog() );
 isa_ok( TDirEntry->new( displayText => '', directory => '' ), TDirEntry() );
 isa_ok( TDirCollection->new( limit => 0, delta => 0 ), TDirCollection() );
+isa_ok( TDirListBox->new( bounds => TRect->new(), vScrollBar => undef ), 
+  TDirListBox() );
 
 done_testing();
