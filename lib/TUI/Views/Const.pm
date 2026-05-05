@@ -443,21 +443,143 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Const
+TUI::Views::Const - constants for view and window components
+
+=head1 SYNOPSIS
+
+  use TUI::Views::Const qw(:all);
+
+  # or import specific constant groups
+  use TUI::Views::Const qw(:cmXXXX :sfXXXX :ofXXXX);
 
 =head1 DESCRIPTION
 
-In this Perl module, the constants for I<Views> are defined according to the 
-naming conventions in Turbo Vision 2.0 C++, using the lower camel case syntax. 
-The constants are defined with I<use constant> to specify their values.
+C<TUI::Views::Const> defines constants used by Turbo Vision view, window, and
+scrollbar components.
+
+The constants in this module follow the naming conventions of Turbo Vision 2.0
+and are provided using lower camel case identifiers. They are grouped by
+purpose and exported via tag-based export groups.
+
+These constants control view state, option flags, grow and drag modes, command
+handling, palette selection, and event filtering.
+
+This module only defines constants. The semantic meaning and practical usage of
+these constants is documented in higher-level modules such as C<TUI::Views>,
+C<TView>, C<TWindow>, and the individual view classes.
+
+=head1 CONSTANTS
+
+=head2 Phase and selection constants
+
+Constants used during view event processing and selection handling.
+
+=head2 Command constants (cmXXXX)
+
+Command identifiers used by views, dialogs, windows, and application-level
+components.
+
+These values are delivered via C<$event-E<gt>{command}> and are handled by view
+and window classes.
+
+=head2 View state flags (sfXXXX)
+
+State flags describing the current state of a view, such as visibility,
+focus, selection, and modality.
+
+=head2 View option flags (ofXXXX)
+
+Option flags controlling how views participate in event handling, layout,
+validation, and buffering.
+
+=head2 Grow mode flags (gfXXXX)
+
+Flags controlling how views resize when their owner changes size.
+
+=head2 Drag mode flags (dmXXXX)
+
+Flags controlling how views behave during mouse drag operations.
+
+=head2 Help context constants (hcXXXX)
+
+Help context identifiers used by views during interactive operations.
+
+=head2 Scroll bar constants (sbXXXX)
+
+Constants identifying scroll bar parts, directions, and behavior options.
+
+=head2 Window flags (wfXXXX)
+
+Flags controlling window capabilities such as moving, resizing, closing, and
+zooming.
+
+=head2 Inhibit flags (noXXXX)
+
+Flags used to disable specific view or window components.
+
+=head2 Window numbering and palette constants
+
+Constants used for window numbering, palette selection, and color layout of
+views and windows.
+
+=head2 Event mask constants (evXXXX)
+
+Event mask constants used to filter positional and focused events.
+
+=head1 EXPORT TAGS
+
+Constants are exported using the following tag-based export groups:
+
+=over
+
+=item *
+
+C<:phaseType>, C<:selectMode>
+
+=item *
+
+C<:cmXXXX>, C<:hcXXXX>
+
+=item *
+
+C<:sfXXXX>, C<:ofXXXX>
+
+=item *
+
+C<:gfXXXX>, C<:dmXXXX>
+
+=item *
+
+C<:sbXXXX>, C<:wfXXXX>, C<:noXXXX>
+
+=item *
+
+C<:wpXXXX>, C<:cpXXXX>
+
+=item *
+
+C<:evXXXX>
+
+=item *
+
+C<:all> - import all constants
+
+=back
+
+=head1 SEE ALSO
+
+L<TUI::Views>,
+L<TUI::Views::View>,
+L<TUI::Views::Window>,
+L<TUI::Views::ScrollBar>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -467,8 +589,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

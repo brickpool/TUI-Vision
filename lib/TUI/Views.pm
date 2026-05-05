@@ -55,3 +55,86 @@ sub unimport {
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Views - Core view classes for the TUI::Vision framework
+
+=head1 SYNOPSIS
+
+  use TUI::Views;
+
+=head1 DESCRIPTION
+
+TUI::Views provides the core view and windowing subsystem for the
+TUI::Vision framework. It corresponds to the Turbo Vision view
+architecture and includes all fundamental UI components such as views,
+groups, frames, windows, palettes, and drawing buffers.
+
+This module re-exported a wide range of view-related classes, including:
+
+=over 4
+
+=item * Const  
+Symbolic constants for view behavior.
+
+=item * CommandSet  
+Command and hotkey definitions.
+
+=item * DrawBuffer  
+Low-level drawing buffer for character cell output.
+
+=item * Palette  
+Color palette definitions.
+
+=item * View  
+Base class for all visual components.
+
+=item * Group  
+Container for child views.
+
+=item * Frame  
+Window frame and border rendering.
+
+=item * ListViewer  
+Scrollable list view.
+
+=item * ScrollBar  
+Vertical and horizontal scroll bars.
+
+=item * WindowInit / Window  
+Window initialization and window objects.
+
+=item * Util  
+Utility functions such as C<message>.
+
+=back
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+Contributors are documented in the POD of the respective framework modules.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

@@ -85,3 +85,61 @@ sub heapSize {    # $total ()
 } #/ sub heapSize
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Gadgets::HeapView::Win32 - Win32 heap usage backend for HeapView
+
+=head1 SYNOPSIS
+
+  use TUI::Gadgets::HeapView::Win32;
+
+  my $total = TUI::Gadgets::HeapView::Win32->heapSize;
+
+=head1 DESCRIPTION
+
+C<TUI::Gadgets::HeapView::Win32> provides the Windows-specific implementation
+used by C<THeapView> to retrieve memory usage information.
+
+On Win32 systems, heap usage is derived from the process virtual memory
+statistics provided by the operating system. This module encapsulates the
+platform-specific logic required to obtain that information.
+
+The module is not intended to be used directly by application code.
+
+=head1 METHODS
+
+=head2 heapSize
+
+  my $total = TUI::Gadgets::HeapView::Win32->heapSize;
+
+Returns the total amount of virtual memory currently used by the process.
+
+=head1 SEE ALSO
+
+L<TUI::Gadgets::HeapView>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

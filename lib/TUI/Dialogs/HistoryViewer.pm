@@ -169,3 +169,160 @@ sub historyWidth {    # $width ()
 } #/ sub historyWidth
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Dialogs::HistoryViewer - list viewer for dialog input history
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TListViewer
+        THistoryViewer
+
+=head1 SYNOPSIS
+
+  use TUI::Dialogs;
+
+  my $viewer = TUI::Dialogs::HistoryViewer->new(
+    bounds     => $bounds,
+    hScrollBar => $hBar,
+    vScrollBar => $vBar,
+    historyId  => 1
+  );
+
+=head1 DESCRIPTION
+
+C<THistoryViewer> implements the list viewer used to display input history
+entries managed by C<THistory>. It is responsible for presenting the stored
+history values in a scrollable list and handling user interaction with that
+list.
+
+The history viewer is normally created indirectly by a C<THistory> object when
+the history control is activated. Application code rarely needs to instantiate
+or interact with C<THistoryViewer> directly.
+
+The viewer displays the history entries associated with a specific history
+identifier. Input fields that share the same history ID also share the same
+history list.
+
+=head1 ATTRIBUTES
+
+The following attributes are managed internally and exposed as read-only
+accessors.
+
+=over
+
+=item historyId
+
+Numeric identifier selecting which history list is displayed
+(I<PositiveOrZeroInt>).
+
+=back
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $viewer = THistoryViewer->new(
+    bounds     => $bounds,
+    hScrollBar => $hScrollBar,
+    vScrollBar => $vScrollBar,
+    historyId  => $historyId
+  );
+
+Creates a new history viewer for displaying a specific history list.
+
+=over
+
+=item bounds
+
+Bounding rectangle of the list viewer (I<TRect>).
+
+=item hScrollBar
+
+Horizontal scroll bar associated with the viewer (I<TScrollBar>).
+
+=item vScrollBar
+
+Vertical scroll bar associated with the viewer (I<TScrollBar>).
+
+=item historyId
+
+Numeric identifier of the history list to display.
+
+=back
+
+=head2 new_THistoryViewer
+
+  my $viewer = new_THistoryViewer(
+    $bounds,
+    $hScrollBar,
+    $vScrollBar,
+    $historyId
+  );
+
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with named parameters and is
+provided for compatibility with traditional Turbo Vision construction patterns.
+
+=head1 METHODS
+
+=head2 getPalette
+
+  my $palette = $viewer->getPalette();
+
+Returns the color palette used to draw the history viewer.
+
+=head2 getText
+
+  $viewer->getText(\$dest, $item, $maxChars);
+
+Retrieves the history entry at the specified index and writes it into C<$dest>.
+The returned string is truncated to at most C<$maxChars> characters.
+
+=head2 handleEvent
+
+  $viewer->handleEvent($event);
+
+Handles mouse and keyboard events directed at the history viewer.
+
+=head2 historyWidth
+
+  my $width = $viewer->historyWidth();
+
+Returns the width of the longest entry in the history list.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::History>,
+L<TUI::Dialogs::InputLine>,
+L<TUI::Views::ListViewer>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution). This documentation is provided under the same terms
+as the Turbo Vision library itself.
+
+=cut

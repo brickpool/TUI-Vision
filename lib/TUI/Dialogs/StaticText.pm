@@ -180,21 +180,53 @@ __END__
 
 =head1 NAME
 
-TStaticText - displays fixed text inside a Turbo Vision dialog
+TUI::Dialogs::StaticText - displays fixed text inside a Turbo Vision dialog
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TStaticText
 
 =head1 SYNOPSIS
 
+  use TUI::Objects;
   use TUI::Dialogs;
 
-  my $staticText = TStaticText->new(bounds => $bounds, text => "Hello World");
-  $staticText->draw();
+  my $source = 'input.txt';
+  my $dest   = 'output.txt';
+  my $bounds = TRect->new( ax => 1, ay => 2, bx => 58, by => 5 );
+
+  my $static = TStaticText->new(
+    bounds => $bounds,
+    text   => "\003$source to $dest",
+  );
+
+  $dialog->insert($static);
 
 =head1 DESCRIPTION
 
-C<TStaticText> implements a simple non-editable text display control.  
-It stores a text string and renders it inside the given rectangular bounds.  
+C<TStaticText> implements a simple, non-editable text display view used mainly
+inside dialogs and windows. It renders a fixed text string within a rectangular
+area and does not accept user input.
 
-The control supports multiline behavior and basic centering markers. 
+The control supports both single-line and multi-line text. If the bounding
+rectangle spans multiple rows, the text is automatically wrapped to fit the
+available space. Explicit line breaks may also be embedded in the text.
+
+Special formatting markers are supported for compatibility with classic Turbo
+Vision behavior. For example, a leading centering marker causes the text to be
+centered horizontally within its bounds.
+
+C<TStaticText> is typically used for labels, messages, and explanatory text.
+Related views include C<TLabel> and C<TParamText>.
+
+=head2 Commonly Used Features
+
+Most code only instantiates C<TStaticText> with C<new> (or C<new_TStaticText>)
+and inserts it into a dialog. After initialization, it usually remains a
+passive display element; direct method calls are uncommon outside framework
+internals.
 
 =head1 ATTRIBUTES
 
@@ -202,60 +234,79 @@ The control supports multiline behavior and basic centering markers.
 
 =item text
 
-The current text of the static text (I<Str>).
+Text string displayed by the static text view (I<Str>).
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
-Creates a new C<TStaticText> object with the given bounds and text.
+  my $static = TStaticText->new(
+    bounds => $bounds,
+    text   => $text
+  );
+
+Creates a new static text view.
 
 =over
 
 =item bounds
 
-The bounds of the static text (I<TRect>).
+Bounding rectangle of the view (I<TRect>).
 
 =item text
 
-The text for the static text (I<Str>).
+Text to be displayed (I<Str>).
 
 =back
 
 =head2 new_TStaticText
 
- my $obj = new_TStaticText($bounds, $aText);
+  my $static = new_TStaticText($bounds, $text);
 
-Convenience constructor that instantiates a static text control from C<$bounds> 
-and C<$aText>.
+Factory-style constructor using positional arguments.
 
-=head2 getText
+This constructor is equivalent to calling C<new> with named parameters and is
+provided for compatibility with traditional Turbo Vision construction patterns.
 
- $self->getText(\$s);
+=head1 DESTRUCTOR
 
-Retrieves the internal text and writes it into the supplied scalar.
+=head2 DEMOLISH
+
+  $self->DEMOLISH($in_global_destruction);
+
+Destroys the static text view and releases associated resources. This method
+corresponds to the Turbo Vision destructor and is normally invoked
+automatically by the owning group.
+
+=head1 METHODS
 
 =head2 draw
 
- $self->draw();
+  $static->draw();
 
-Renders the control contents into the view's drawing buffer.
+Draws the text into the view, applying wrapping and alignment rules.
 
 =head2 getPalette
 
- my $palette = $self->getPalette();
+  my $palette = $static->getPalette();
 
-Returns the palette used for drawing a static text control.
+Returns the color palette used to draw the static text.
+
+=head2 getText
+
+  $static->getText(\$string);
+
+Copies the internal text string into the supplied scalar.
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -265,7 +316,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

@@ -1,4 +1,5 @@
 package TUI::Drivers::Display;
+# ABSTRACT: low-level display abstraction
 
 use strict;
 use warnings;
@@ -135,3 +136,130 @@ sub setCrtMode {    # void ($class, $mode)
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Drivers::Display - low-level display abstraction
+
+=head1 SYNOPSIS
+
+  use TUI::Drivers::Display;
+
+  # TDisplay is used as a static driver facade.
+  my $cols = TDisplay->getCols();
+  my $rows = TDisplay->getRows();
+
+  my $mode = TDisplay->getCrtMode();
+  TDisplay->setCrtMode($mode);
+
+  my $cursor = TDisplay->getCursorType();
+  TDisplay->setCursorType($cursor);
+
+  TDisplay->clearScreen($cols, $rows);
+
+=head1 DESCRIPTION
+
+C<TDisplay> provides a low-level abstraction layer for screen and
+cursor operations used by the Turbo Vision driver subsystem.
+
+The module defines a set of class-level routines for querying and modifying
+display parameters such as screen size, cursor shape, and video mode. It does
+not maintain any internal state of its own.
+
+C<TDisplay> is not an object-oriented class. It must not be instantiated.
+All interaction is performed via class method calls of the form
+C<TDisplay-E<gt>method>.
+
+This module is primarily used internally by C<TScreen> and related driver
+components.
+
+=head2 Commonly Used Features
+
+Most code interacts with C<TDisplay> through class-style calls to query and
+control the terminal state: C<getCols()>, C<getRows()>, C<getCrtMode()>,
+C<setCrtMode()>, C<getCursorType()>, C<setCursorType()>, and C<clearScreen()>.
+
+C<TDisplay> is a thin abstraction over C<THardwareInfo> and is generally used
+inside the driver stack (for example C<TScreen>) rather than directly in
+application dialogs or views. The C<updateIntlChars()> routine adjusts frame,
+scrollbar, and desktop drawing characters based on the active code page.
+
+=head1 METHODS
+
+=head2 clearScreen
+
+  TDisplay->clearScreen($width, $height);
+
+Clears the display using the specified screen dimensions.
+
+=head2 getCols
+
+  my $cols = TDisplay->getCols();
+
+Returns the current number of screen columns.
+
+=head2 getRows
+
+  my $rows = TDisplay->getRows();
+
+Returns the current number of screen rows.
+
+=head2 getCrtMode
+
+  my $mode = TDisplay->getCrtMode();
+
+Returns the current CRT video mode.
+
+=head2 setCrtMode
+
+  TDisplay->setCrtMode($mode);
+
+Sets the CRT video mode.
+
+=head2 getCursorType
+
+  my $type = TDisplay->getCursorType();
+
+Returns the current cursor shape encoding.
+
+=head2 setCursorType
+
+  TDisplay->setCursorType($type);
+
+Sets the cursor shape using a hardware-specific encoding.
+
+=head2 updateIntlChars
+
+  TDisplay->updateIntlChars();
+
+Updates the display's international character mappings.
+
+=head1 SEE ALSO
+
+L<TUI::Drivers::Screen>,
+L<TUI::Drivers::HardwareInfo>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

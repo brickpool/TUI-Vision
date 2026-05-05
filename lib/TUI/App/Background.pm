@@ -99,57 +99,143 @@ __END__
 
 =head1 NAME
 
-TUI::App::Background - forms the background for the Turbo Vision applications.
+TUI::App::Background - background view for Turbo Vision applications
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TBackground
+
+=head1 SYNOPSIS
+
+  use TUI::App;
+
+  my $bg = TBackground->new(
+    bounds  => $bounds,
+    pattern => chr(0xFF)
+  );
 
 =head1 DESCRIPTION
 
-TBackground contains the background pattern that forms the backdrop of most 
-Turbo Vision applications.
+C<TBackground> represents the background view that forms the visual backdrop of
+a Turbo Vision application. It fills its bounding rectangle by repeatedly
+drawing a single character pattern.
+
+Background views are typically created and managed automatically by the
+desktop. Applications rarely need to interact with C<TBackground> directly
+unless a custom background is desired.
+
+=head2 Commonly Used Features
+
+Most programs use C<TBackground> indirectly through C<TDeskTop>; the default
+desktop creation path already instantiates a background object with the global
+desktop pattern. Direct usage is uncommon and usually limited to customizing
+appearance by overriding C<TDeskTop::initBackground()> and returning a
+background with a different C<pattern> character.
+
+For custom backgrounds, the typical workflow is: derive a desktop class,
+override C<initBackground()> to create 
+C<<TBackground->new(bounds => ..., pattern => ... )>>, then return that desktop 
+from the application's C<initDeskTop()> override.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $background = TBackground->new(
+    bounds  => $bounds,
+    pattern => $pattern
+  );
+
+Creates a new background view.
+
+=over
+
+=item bounds
+
+Bounding rectangle defining the area covered by the background (I<TRect>).
+
+=item pattern
+
+Single-character string used as the background pattern (I<Str>).
+
+=back
 
 =head1 ATTRIBUTES
+
+The following attributes are managed internally and exposed as read-only
+accessors.
 
 =over
 
 =item pattern
 
-The bit pattern that is replicated to form the background design.
+The character pattern replicated to fill the background (I<Str>).
 
 =back
 
 =head1 METHODS
 
-=head2 new
-
-  my $background = TBackground->new(bounds => $bounds, pattern => $pattern);
-
-Use TBackground->new to create a new background object with specified size and 
-pattern.
-
 =head2 draw
 
-  $self->draw();
+  $background->draw();
 
-Draws the background pattern on the screen.
-
-=head2 from
-
-  my $background = TBackground->from($bounds, $aPattern);
-
-Creates a TBackground object with specified bounds and pattern.
+Draws the background pattern across the view area.
 
 =head2 getPalette
 
-  my $palette = $self->getPalette();
+  my $palette = $background->getPalette();
 
-Retrieves the color palette for the background.
+Returns the color palette used to draw the background.
+
+=head1 EXAMPLE
+
+The following example demonstrates how to override the desktop background by
+providing a custom C<TBackground> implementation.
+
+  package TSampleProgram;
+  use parent 'TApplication';
+
+  package TNewDeskTop;
+  use parent 'TDeskTop';
+
+  sub TNewDeskTop::initBackground {
+    my ($self, $bounds) = @_;
+
+    return TBackground->new(
+      bounds  => $bounds,
+      pattern => chr(0xFF)
+    );
+  }
+
+  sub TSampleProgram::initDeskTop {
+    my ($self, $bounds) = @_;
+
+    $bounds->{a}{y}++;
+    $bounds->{b}{y}--;
+
+    return TNewDeskTop->new(bounds => $bounds);
+  }
+
+  package main;
+
+  my $app = TSampleProgram->new;
+  $app->run;
+
+=head1 SEE ALSO
+
+L<TUI::App::DeskTop>,
+L<TUI::Views::View>,
+L<TUI::Objects::Rect>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -159,8 +245,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

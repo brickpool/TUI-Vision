@@ -1,15 +1,5 @@
-=pod
-
-=head1 DESCRIPTION
-
-Defines C<EV_*>, C<MB_*>, C<ME_*> and C<SM_*> constants.
-
-Additionally defines constants for all control key combinations (C<KB_*> and 
-C<:kbXXXX>).
-
-=cut
-
 package TUI::Drivers::Const;
+# ABSTRACT: constants for driver and event handling
 
 use strict;
 use warnings;
@@ -466,3 +456,127 @@ use constant {
 };
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Drivers::Const - constants for driver and event handling
+
+=head1 SYNOPSIS
+
+  use TUI::Drivers::Const qw(:all);
+
+  # or import specific constant groups
+  use TUI::Drivers::Const qw(:evXXXX :kbXXXX);
+
+=head1 DESCRIPTION
+
+C<TUI::Drivers::Const> defines constants used by the Turbo Vision driver layer.
+
+The constants in this module are grouped by purpose and exported via tag-based
+export groups. They are used by the event system, keyboard and mouse handling,
+screen and video mode selection, and low-level driver logic.
+
+This module only defines constants. The semantic meaning and practical usage of
+these constants is documented in higher-level driver modules such as
+C<TUI::Drivers::Event>, C<TUI::Drivers::Screen>, and C<TUI::Drivers::HardwareInfo>.
+
+=head1 CONSTANTS
+
+=head2 Event type constants (evXXXX)
+
+Event type and event mask constants used by the Turbo Vision event system.
+
+These constants identify mouse, keyboard, command, broadcast, and message
+events and are used when dispatching and filtering events.
+
+=head2 Mouse button state constants (mbXXXX)
+
+Constants describing mouse button states.
+
+These values are used to identify which mouse buttons are pressed during a
+mouse event.
+
+=head2 Mouse event flag constants (meXXXX)
+
+Constants describing additional mouse event attributes, such as movement and
+double-click detection.
+
+=head2 Screen mode constants (smXXXX)
+
+Constants defining supported screen and video modes.
+
+These values are used by the screen and display drivers to select the active
+video configuration.
+
+=head2 Keyboard code constants (kbXXXX)
+
+Constants representing keyboard input codes and modifier states.
+
+These include control key combinations, function keys, extended keys, and
+keyboard state masks. They are used by the keyboard and event handling logic
+to interpret raw input.
+
+=head1 EXPORT TAGS
+
+Constants are exported using the following tag-based export groups:
+
+=over
+
+=item *
+
+C<:evXXXX> - event types and event masks
+
+=item *
+
+C<:mbXXXX> - mouse button state flags
+
+=item *
+
+C<:meXXXX> - mouse event flags
+
+=item *
+
+C<:smXXXX> - screen and video mode constants
+
+=item *
+
+C<:kbXXXX> - keyboard codes and modifier flags
+
+=item *
+
+C<:all> - import all constants
+
+=back
+
+=head1 SEE ALSO
+
+L<TUI::Drivers::Event>,
+L<TUI::Drivers::Screen>,
+L<TUI::Drivers::Display>,
+L<TUI::Drivers::HardwareInfo>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
+

@@ -234,3 +234,153 @@ $drawLine = sub {    # void ($b)
 };
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Menus::MenuBox - pull-down or pop-up menu box
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TMenuView
+        TMenuBox
+
+=head1 SYNOPSIS
+
+  use TUI::Menus;
+  use TUI::Objects;
+
+  my $bounds = TRect->new( ax => 10, ay => 5, bx => 40, by => 12 );
+
+  my $menu = new_TMenu(
+    new_TMenuItem( '~A~dd Watch',        1, 0 ),
+    new_TMenuItem( '~D~elete Watch',     2, 0 ),
+    new_TMenuItem( '~E~dit Watch...',    3, 0 ),
+    new_TMenuItem( '~R~emove all',       4, 0 ),
+  );
+
+  my $menuBox = TMenuBox->new(
+    bounds     => $bounds,
+    menu       => $menu,
+    parentMenu => undef,
+  );
+  my $cmd = $desktop->execView( $menuBox );   # returns selected command
+
+=head1 DESCRIPTION
+
+C<TMenuBox> implements a menu box that displays the contents of a menu either
+as a pull-down menu originating from a menu bar or as a standalone pop-up
+menu.
+
+Menu boxes handle drawing, keyboard navigation, and mouse interaction for menu
+items. They are most commonly created indirectly as part of a menu bar, but may
+also be instantiated explicitly to present a temporary selection menu.
+
+For standard pull-down menus, the parent menu view is typically the menu bar.
+For standalone menu boxes, the parent menu may be omitted.
+
+=head2 Commonly Used Features
+
+In most applications C<TMenuBox> is never referenced directly, because
+pull-down menus are built automatically through the menu bar. The practical
+use case is a standalone pop-up: construct the box with C<new_TMenuBox>,
+passing the desired bounding rectangle, a menu built from C<new_TMenu> and
+C<new_TMenuItem> calls, and C<undef> as the parent. Pass the resulting object
+to C<< $desktop->execView >>, which returns the command constant of the
+selected item.
+
+=head1 VARIABLES
+
+The following global variable defines the frame characters used by
+C<TMenuView>.
+
+=head2 $frameChars
+
+Character sequence used to draw menu frames and borders.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $menuBox = TMenuBox->new(
+    bounds     => $bounds,
+    menu       => $menu,
+    parentMenu => $parentMenu
+  );
+
+Creates a new menu box.
+
+=over
+
+=item bounds
+
+Bounding rectangle of the menu box (I<TRect>).
+
+=item menu
+
+Menu structure defining the items displayed by the menu box (I<TMenu>).
+
+=item parentMenu
+
+Optional parent menu view (I<TMenuView>). This parameter may be omitted for
+standalone menu boxes.
+
+=back
+
+=head2 new_TMenuBox
+
+  my $menuBox = new_TMenuBox($bounds, $menu, | $parentMenu);
+
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with named parameters and is
+provided for compatibility with traditional Turbo Vision construction patterns.
+
+=head1 METHODS
+
+=head2 draw
+
+  $menuBox->draw();
+
+Draws the menu box and its contents, highlighting the currently focused item.
+
+=head2 getItemRect
+
+  my $rect = $menuBox->getItemRect($item | undef);
+
+Returns the screen rectangle occupied by the specified menu item. This method
+is used internally to determine whether a mouse click occurred on a particular
+menu entry.
+
+=head1 SEE ALSO
+
+L<TUI::Menus::MenuBar>,
+L<TUI::Menus::MenuView>,
+L<TUI::Menus::MenuItem>,
+L<TUI::Views::View>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

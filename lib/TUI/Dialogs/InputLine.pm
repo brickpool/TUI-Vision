@@ -584,29 +584,62 @@ __END__
 
 =head1 NAME
 
-TInputLine - editable single-line text input control for Turbo Vision dialogs
+TUI::Dialogs::InputLine - editable single-line text input control for dialogs
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TInputLine
 
 =head1 SYNOPSIS
 
-  use TUI::Dialogs::InputLine;
+  use TUI::Dialogs;
 
   my $input = new_TInputLine($bounds, 64);
-  $input->setData(["Hello"]);
+  my $data = ['Hello'];
+  $input->setData($data);
 
 =head1 DESCRIPTION
 
-C<TInputLine> provides an editable text field with cursor control, selection, 
-and validation support. It handles keyboard input, mouse selection, scrolling, 
-and optional validators. It is intended for use wherever a single editable text 
-field is required.
+C<TInputLine> implements a single-line editable text field for use in dialog
+boxes. It provides cursor movement, text insertion and deletion, selection,
+and horizontal scrolling when the visible field is smaller than the maximum
+allowed input length.
+
+The control automatically handles keyboard and mouse input when it has focus.
+It is typically used for entering filenames, identifiers, or other short text
+values.
+
+C<TInputLine> supports optional validation through validator objects. By
+deriving from C<TInputLine> and overriding validation and data transfer
+methods, applications can implement specialized input controls such as numeric
+or formatted fields.
+
+=head1 VARIABLES
+
+The following global variables affect the visual rendering of C<TInputLine>.
+
+=head2 $rightArrow
+
+Defines the character used to indicate hidden text to the right of the
+visible input area. The default value is a CP437 character.
+
+=head2 $leftArrow
+
+Defines the character used to indicate hidden text to the left of the
+visible input area. The default value is a CP437 character.
 
 =head1 ATTRIBUTES
+
+The following attributes are part of the public state of the input line.
+Internal and private attributes are intentionally not documented.
 
 =over
 
 =item data
 
-The current input string stored inside the control (I<Str>).
+Current text stored in the input field (I<Str>).
 
 =item maxLen
 
@@ -614,149 +647,145 @@ Maximum allowed length of the input text (I<Int>).
 
 =item curPos
 
-The current cursor position within the input string (I<Int>).
+Current cursor position within the text (I<Int>).
 
 =item firstPos
 
-The index of the first visible character, used for horizontal scrolling 
-(I<Int>).
+Index of the first visible character, used for horizontal scrolling (I<Int>).
 
 =item selStart
 
-The start index of the current selection block (I<Int>).
+Start index of the current selection (I<Int>).
 
 =item selEnd
 
-The end index of the current selection block (I<Int>).
-
-=item validator
-
-Optional validator object used for input checking and data transfer 
-(I<TValidator> or undef).
-
-=item anchor
-
-Selection anchor used during mouse or shift-key selection (I<Int>).
-
-=item oldAnchor
-
-Stored anchor position for validation rollback (I<Int>).
-
-=item oldData
-
-Cached input data used to restore previous state after failed validation 
-(I<Str>).
-
-=item oldCurPos
-
-Previous cursor position saved before validation attempts (I<Int>).
-
-=item oldFirstPos
-
-Previous visible offset saved before validation attempts (I<Int>).
-
-=item oldSelStart
-
-Previous selection start stored for validation rollback (I<Int>).
-
-=item oldSelEnd
-
-Previous selection end stored for validation rollback (I<Int>).
+End index of the current selection (I<Int>).
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $input = TInputLine->new(%args);
+  my $input = TInputLine->new(
+    bounds => $bounds,
+    maxLen => $maxLen,
+    validator => $validator
+  );
 
-Creates a new input line with the given bounds and maximum allowed text length.
+Creates a new input line control.
 
 =over
 
 =item bounds
 
-The rectangular position and size of the input line (I<TRect>).
+Bounding rectangle of the input field (I<TRect>).  
+The rectangle must describe a single-line area.
 
 =item maxLen
 
-The maximum number of characters the input field can hold (integer).
+Maximum number of characters the input field can hold (I<Int>).
 
 =item validator
 
-An optional validator object used for input checking (I<TValidator> or undef).
+Optional validator object used for input checking and data transfer
+(I<TValidator>). This parameter may be omitted.
 
 =back
 
 =head2 new_TInputLine
 
-  my $input = new_TInputLine($bounds, $aMaxLen, | $aValid);
+  my $input = new_TInputLine($bounds, $maxLen, | $validator);
 
-Factory constructor that builds an input line control from C<$bounds>, length 
-and optional validator.
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with named parameters and is
+provided for compatibility with traditional Turbo Vision construction patterns.
+
+=head1 DESTRUCTOR
+
+=head2 DEMOLISH
+
+  $self->DEMOLISH($in_global_destruction);
+
+Destroys the input line and releases associated resources. This method
+corresponds to the Turbo Vision destructor and is normally invoked
+automatically.
+
+=head1 METHODS
 
 =head2 dataSize
 
- my $dSize = $self->dataSize();
+  my $size = $input->dataSize();
 
-Returns the size required to store the control's data based on its validator.
+Returns the number of elements required to store the control's data.
+
+For C<TInputLine>, this value is C<1>, since the input text is transferred as a
+single element when using C<getData> and C<setData>.
 
 =head2 draw
 
- $self->draw();
+  $input->draw();
 
-Displays the current text, cursor position and selection region.
+Draws the input line, including text, cursor, selection, and scroll indicators.
 
 =head2 getData
 
- $self->getData(\@rec);
+  $input->getData(\$record);
 
-Transfers the control's text content into the provided record structure.
+Copies the current input text into the supplied record.
 
 =head2 getPalette
 
- my $palette = $self->getPalette();
+  my $palette = $input->getPalette();
 
-Returns the palette used for drawing the input line.
+Returns the color palette used to draw the input line.
 
 =head2 handleEvent
 
- $self->handleEvent($event);
+  $input->handleEvent($event);
 
-Processes keyboard navigation, editing commands, scrolling and mouse input.
+Processes keyboard and mouse events for editing, selection, and navigation.
 
 =head2 selectAll
 
- $self->selectAll($enable);
+  $input->selectAll($enable);
 
-Selects or clears all text based on the given argument.
+Selects or clears the entire input text depending on C<$enable>.
 
 =head2 setData
 
- $self->setData(\@rec);
+  $input->setData(\$record);
 
-Replaces the control's text content using a record structure.
+Replaces the current input text using the supplied record and selects the text.
 
 =head2 setState
 
- $self->setState($aState, $enable);
+  $input->setState($state, $enable);
 
-Updates internal state flags and adjusts selection and cursor behavior.
+Updates the view state and performs additional processing specific to input
+lines.
 
 =head2 setValidator
 
- $self->setValidator($aValid | undef);
+  $input->setValidator($validator);
 
-Installs or replaces the validator object for input checking.
+Installs or replaces the validator object used for input checking.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::Dialog>,
+L<TUI::Dialogs::Label>,
+L<TUI::Dialogs::History>,
+L<TUI::Validators::Validator>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -766,7 +795,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). 
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

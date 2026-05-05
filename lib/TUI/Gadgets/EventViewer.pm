@@ -293,57 +293,112 @@ $printEvent = sub {    # void ($out, $ev)
 
 __END__
 
+=pod
+
 =head1 NAME
 
-TUI::Gadgets::EventViewer - A Terminal window for showing received TEvents.
+TUI::Gadgets::EventViewer - terminal window for displaying received events
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TWindow
+          TEventViewer
+
+=head1 SYNOPSIS
+
+  use TUI::Gadgets;
+
+  my $viewer = new_TEventViewer(
+    $bounds,
+    $bufSize
+  );
+
+  $deskTop->insert($viewer);
 
 =head1 DESCRIPTION
 
-C<TEventViewer> is a Terminal window displaying the attributes of 
-C<TEvents> received by the application.
+C<TEventViewer> implements a terminal-style window that displays the attributes
+of C<TEvent> objects received by the application.
 
-This code base was taken from the framework 
-I<"A modern port of Turbo Vision 2.0"> and is inspired by TTYWindow from 
-Daniel Ambrose.
+The window captures incoming events and renders them in textual form, allowing
+developers to observe and debug event flow during program execution. It is
+intended as a diagnostic gadget and is typically used during development or
+testing.
 
-=head1 METHODS
+The implementation is inspired by the Turbo Vision C++ event viewer and by the
+TTYWindow concept.
+
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $evntview = TEventViewer->new(%args);
+  my $viewer = TEventViewer->new(
+    bounds  => $bounds,
+    bufSize => $bufSize
+  );
 
-Creates a new C<TEventViewer> instance with the given arguments.
+Creates a new event viewer window.
 
 =over
 
 =item bounds
 
-The bounds of the scroller (I<TRect>).
+Bounding rectangle defining the position and size of the window (I<TRect>).
 
 =item bufSize
 
-Defines the buffer size (I<Int>).
+Size of the internal event buffer (I<Int>).
 
 =back
 
 =head2 new_TEventViewer
 
- my $evntview = new_TEventViewer($bounds, $bufSize);
+  my $viewer = new_TEventViewer($bounds, $bufSize);
 
-Factory constructor for creating a new event viewer object.
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 handleEvent
+
+  $viewer->handleEvent($event);
+
+Processes incoming events and records them for display.
+
+=head2 print
+
+  $viewer->print($event);
+
+Formats and appends the specified C<TEvent> to the internal output buffer.
+
+=head2 toggle
+
+  $viewer->toggle();
+
+Enables or disables event recording.
+
+=head2 shutDown
+
+  $viewer->shutDown();
+
+Releases window resources and stops event recording.
 
 =head1 SEE ALSO
 
-I<evntview.h>, I<evntview.cpp>, 
-L<Reading Unicode input|https://github.com/magiblot/tvision/blob/423aeb568a181ffebb3695859654385950588a93/README.md#reading-unicode-input>
+L<TUI::Drivers::Event>,
+L<TUI::Views::Window>,
+L<TUI::Gadgets::HeapView>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -361,7 +416,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

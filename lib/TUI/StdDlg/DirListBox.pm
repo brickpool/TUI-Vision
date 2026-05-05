@@ -300,3 +300,172 @@ $showDirs = sub {    # void ($dirs)
 };
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::StdDlg::DirListBox - list box view for directory entries
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TListBox
+          TDirListBox
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg;
+
+  my $list = new_TDirListBox(
+    $bounds,
+    $scrollBar
+  );
+
+=head1 DESCRIPTION
+
+C<TDirListBox> implements a specialized list box used by standard Turbo Vision
+dialogs to display and navigate directory entries.
+
+The list box presents directory items backed by a C<TDirCollection> and
+operates on directory entry records of type C<TDirEntry>. It supports keyboard
+and mouse navigation, selection, and directory changes.
+
+This view is primarily used by C<TChDirDialog>.
+
+=head1 VARIABLES
+
+The following global variables define the visual layout and labels used
+by C<TDirListBox>.
+
+=head2 $pathDir
+
+Defines the character sequence used to display the path directory prefix.
+The default value uses CP437 line-drawing characters.
+
+=head2 $firstDir
+
+Defines the characters used to display the first directory entry
+in a directory tree (CP437).
+
+=head2 $middleDir
+
+Defines the characters used for intermediate directory entries
+in the directory tree (CP437).
+
+=head2 $lastDir
+
+Defines the characters used for the last directory entry
+in the directory tree (CP437).
+
+=head2 $drives
+
+Label text used for the drives list.
+
+=head2 $graphics
+
+Defines additional line-drawing characters used for directory tree
+rendering (CP437).
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $list = TDirListBox->new(
+    bounds     => $bounds,
+    vScrollBar => $scrollBar | undef
+  );
+
+Creates a new directory list box.
+
+=over
+
+=item bounds
+
+Bounding rectangle defining the position and size of the list box (I<TRect>).
+
+=item vScrollBar
+
+Optional vertical scroll bar associated with the list box (I<TScrollBar>).
+
+=back
+
+=head2 new_TDirListBox
+
+  my $list = new_TDirListBox($bounds, $scrollBar | undef);
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+The following methods operate on directory entry objects (C<TDirEntry>).
+
+=head2 getText
+
+  $list->getText(\$text, $item, $maxChars);
+
+Retrieves the display text for the specified directory entry.
+
+=head2 isSelected
+
+  my $bool = $list->isSelected($item);
+
+Returns true if the specified directory entry is currently selected.
+
+=head2 list
+
+  my $collection = $list->list();
+
+Returns the directory collection backing this list box
+(C<TDirCollection>).
+
+=head2 newDirectory
+
+  $list->newDirectory($path);
+
+Updates the list box to display the contents of the specified directory.
+
+=head2 selectItem
+
+  $list->selectItem($item);
+
+Selects the specified directory entry.
+
+=head2 setState
+
+  $list->setState($state, $enable);
+
+Updates the list box state and refreshes the display if necessary.
+
+=head1 SEE ALSO
+
+L<TUI::StdDlg::ChDirDialog>,
+L<TUI::StdDlg::DirCollection>,
+L<TUI::StdDlg::DirEntry>,
+L<TUI::Views::ListBox>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
+

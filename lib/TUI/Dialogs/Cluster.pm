@@ -589,33 +589,86 @@ __END__
 
 =head1 NAME
 
-TCluster - base control class for TRadioButtons, TCheckBoxes etc.
+TUI::Dialogs::Cluster - base class for clustered dialog controls
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TCluster
+        TRadioButtons
+        TCheckBoxes
+
+=head1 SYNOPSIS
+
+  use TUI::Dialogs;
+  use TUI::Objects;
+
+  # TCluster is a base class; typically use its subclasses instead:
+  my $items = TSItem->new( value => '~F~irst',
+      next => TSItem->new( value => '~S~econd',
+      next => TSItem->new( value => '~T~hird',
+      next => undef
+  )));
+
+  # Usually instantiated as TRadioButtons (single select) or
+  # TCheckBoxes (multi-select):
+  my $buttons = TRadioButtons->new(
+    bounds => TRect->new(ax => 2, ay => 5, bx => 20, by => 8),
+    strings => $items
+  );
+
+  $dialog->insert($buttons);
 
 =head1 DESCRIPTION
 
-C<TCluster> provides the common base implementation for all cluster-style input 
-controls.  It manages selection, navigation, enable-masks and visual 
-representation of clustered items.  
+C<TCluster> provides the common base implementation for all cluster-style dialog
+controls. It manages selection state, navigation, enable masks, and the visual
+layout of clustered items.
 
-The class handles both keyboard and mouse input to navigate and activate 
-individual entries. Subclasses override the marking and activation behavior to 
-implement specific cluster types.
+The class handles keyboard and mouse input for navigating and activating
+individual entries. Subclasses specialize the marking and activation behavior
+to implement specific cluster types such as radio buttons or checkboxes.
+
+C<TCluster> itself is not intended to be instantiated directly.
+
+=head2 Commonly Used Features
+
+Most application code uses one of TCluster's concrete subclasses:
+L<TUI::Dialogs::RadioButtons> for single-select clusters and
+L<TUI::Dialogs::CheckBoxes> for multi-select clusters. These subclasses inherit
+all navigation and state management from TCluster while providing their own
+C<mark()> and C<press()> implementations for distinct user interactions.
+
+TCluster provides a common interface for cluster-type controls: manage
+selection via keyboard and mouse, track enabled/disabled items via an enable
+mask, and exchange selection state with dialogs using C<getData()> and
+C<setData()>. Typical workflow is to build a C<TSItem> linked-list, pass it to
+a subclass constructor, insert the resulting control into a L<TUI::Dialogs::Dialog>,
+then retrieve the final selection via C<getData()> after the dialog is closed.
 
 =head1 ATTRIBUTES
+
+The following attributes represent the internal state of the cluster.
 
 =over
 
 =item value
 
-Holds the numeric value associated with the current selection state (I<Int>).
+Numeric value representing the current selection state.
+
+For C<TRadioButtons>, this value contains the index of the selected item.
+For C<TCheckBoxes>, this value is a bit mask where each bit represents the state
+of one checkbox.
 
 =item enableMask
 
-Bitmask indicating which items are enabled and selectable (I<Int>).
+Bitmask indicating which items are enabled and selectable
+(I<PositiveOrZeroInt>).
 
 =item sel
 
-Index of the currently selected item inside the cluster (I<Int>).
+Index of the currently selected item (I<PositiveOrZeroInt>).
 
 =item strings
 
@@ -623,131 +676,154 @@ Collection containing the text labels of all cluster items (I<TSItem>).
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
- my $cluster = TCluster->new(%args);
+  my $cluster = TCluster->new(
+    bounds  => $bounds,
+    strings => $items
+  );
 
-Creates a new cluster with given bounds and item list.
+Creates a new cluster control.
 
 =over
 
 =item bounds
 
-Defines the screen rectangle (I<TRect>) specifying the position and size of the 
-cluster control.
+Bounding rectangle defining the position and size of the cluster control
+(I<TRect>).
 
 =item strings
 
-Provides the linked list of item descriptors (I<TSItem>) that are consumed and 
-converted into an internal string collection.
+Linked list of item descriptors consumed and converted into an internal string
+collection (I<TSItem>).
 
 =back
 
 =head2 new_TCluster
 
- my $cluster = new_TCluster($bounds, $aStrings | undef);
+  my $cluster = new_TCluster($bounds, $items | undef);
 
-Constructs a new cluster instance using the Turbo Vision factory wrapper.
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
 
 =head2 buttonState
 
- my $bool = $self->buttonState($item);
+  my $bool = $cluster->buttonState($item);
 
-Returns true if the specified item is enabled according to the enableMask.
+Returns true if the specified item is enabled according to the enable mask.
 
 =head2 dataSize
 
- my $size = $self->dataSize();
+  my $size = $cluster->dataSize();
 
-Returns the number of scalars transferred via getData/setData.
+Returns the number of scalar values transferred via C<getData> and C<setData>.
+
+For cluster controls, this value is always C<1>.
 
 =head2 drawBox
 
- $self->drawBox($icon, $marker);
+  $cluster->drawBox($icon, $marker);
 
-Draws a single selection box with the given icon and marker.
+Draws a single selection box using the given icon and marker.
 
 =head2 drawMultiBox
 
- $self->drawMultiBox($icon, $marker);
+  $cluster->drawMultiBox($icon, $marker);
 
 Renders the full multi-column cluster layout.
 
 =head2 getData
 
- $self->getData(\@rec);
+  $cluster->getData(\@record);
 
 Stores the cluster's current value into the supplied record.
 
 =head2 getHelpCtx
 
- my $ctx = $self->getHelpCtx();
+  my $ctx = $cluster->getHelpCtx();
 
-Returns the help context offset by the current selection.
+Returns the help context associated with the current item.
+
+The returned value is computed by adding the current selection index to the
+base help context.
 
 =head2 getPalette
 
- my $palette = $self->getPalette();
+  my $palette = $cluster->getPalette();
 
 Returns a cloned palette used for rendering cluster elements.
 
 =head2 handleEvent
 
- $self->handleEvent($event);
+  $cluster->handleEvent($event);
 
 Processes keyboard and mouse events for navigation and activation.
 
 =head2 mark
 
- my $bool = $self->mark($item);
+  my $bool = $cluster->mark($item);
 
-Indicates whether the given item is marked; subclasses override this.
+Indicates whether the given item is marked.
+
+This method is always overridden by subclasses to implement their specific
+selection behavior.
 
 =head2 movedTo
 
- $self->movedTo($item);
+  $cluster->movedTo($item);
 
-Called whenever the selection moves to another item.
+Called whenever the selection cursor moves to a different item.
 
 =head2 multiMark
 
- my $int = $self->multiMark($item);
+  my $marker = $cluster->multiMark($item);
 
-Returns the marker index (0 or 1) depending on mark().
+Returns the marker index used for drawing based on C<mark()>.
 
 =head2 press
 
- $self->press($item);
+  $cluster->press($item);
 
-Invoked when an item is activated; subclasses implement their behavior.
+Invoked when an item is activated.
+
+This method is always overridden by subclasses to implement their selection or
+toggle behavior.
 
 =head2 setButtonState
 
- $self->setButtonState($aMask, $enable);
+  $cluster->setButtonState($mask, $enable);
 
 Enables or disables items using a bitmask and updates cluster selectability.
 
 =head2 setData
 
- $self->setData(\@rec);
+  $cluster->setData(\@record);
 
 Applies the stored value from an external record.
 
 =head2 setState
 
- $self->setState($aState, $enable);
+  $cluster->setState($state, $enable);
 
-Handles state changes and moves the selection if required.
+Handles view state changes and moves the selection if required.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::RadioButtons>,
+L<TUI::Dialogs::CheckBoxes>,
+L<TUI::Dialogs::Dialog>,
+L<TUI::Views::View>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -765,7 +841,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 1994, 2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). 
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

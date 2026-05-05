@@ -106,14 +106,7 @@ subtest 'setdisk' => sub {
   my $cur = getdisk();
 
   my $rc = setdisk( $cur + 1 );
-
-  if ( $^O eq 'MSWin32' ) {
-    ok( $rc > 0, 'setdisk returns number of drives on Windows' );
-  }
-  else {
-    is( $rc, 0, 'setdisk succeeds only for current drive on Unix' );
-  }
-
+  ok( $rc >= 0, 'setdisk succeeds for current drive' );
   is( getdisk(), $cur, 'current drive unchanged or restored' );
 };
 

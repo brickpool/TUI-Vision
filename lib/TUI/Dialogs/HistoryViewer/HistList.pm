@@ -178,67 +178,170 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::HistoryViewer::HistList - manages TVision-style input history lists
+TUI::Dialogs::HistoryViewer::HistList - TVision style input history functions
 
 =head1 SYNOPSIS
 
   use TUI::Dialogs::HistoryViewer::HistList qw(
-    historyAdd historyStr historyCount
+    historyAdd
+    historyStr
+    historyCount
+    clearHistory
   );
 
   historyAdd(1, "hello");
+  historyAdd(1, "world");
+
   my $count = historyCount(1);
-  my $entry = historyStr(1, 0);
+  my $first = historyStr(1, 0);
 
 =head1 DESCRIPTION
 
-C<HistList> provides a simple history buffer used by Turbo Vision input 
-controls. Entries are grouped by numeric IDs and stored in an internal list 
-structure. The implementation mimics the behavior of the original Turbo Vision 
-history code.  
+C<TUI::Dialogs::HistoryViewer::HistList> provides a set of functions 
+implementing the Turbo Vision input history mechanism. It is used by dialog 
+controls such as input lines to store and retrieve previously entered values.
 
-It supports adding entries, retrieving them, counting them, and clearing the 
-buffer. The structure of the history buffer is as follows:
+History entries are grouped by numeric identifiers. Each group maintains an
+ordered list of strings. The implementation mirrors the behavior of the
+original Turbo Vision history list routines, while adapting the interface to
+idiomatic Perl usage.
 
-  $historyBlock = [
+This module is purely functional. It does not define any classes or objects.
+
+=head1 VARIABLES
+
+The following global variables manage the internal history storage used
+by C<HistList>.
+
+=head2 $historyBlock
+
+Reference to the history storage block.
+This is an array reference, not a packed string.
+
+=head2 $historySize
+
+Initial size of the history storage block.
+
+=head2 $historyUsed
+
+Number of entries currently used in the history block.
+This behavior follows the original Turbo Pascal implementation.
+
+=head1 INTERNAL STRUCTURE
+
+Internally, history entries are stored in a single list of records:
+
+  [
     { id => Int, str => Str },
     { id => Int, str => Str },
     ...
-  ];
+  ]
+
+Each entry associates a history group identifier with a string value.
 
 =head1 FUNCTIONS
 
 =head2 historyAdd
 
-Adds a string to the history group identified by the given ID.
+  historyAdd($id, $string);
+
+Adds a string to the history group identified by C<$id>.
+
+If the string already exists in the same history group, it may be moved or
+reordered according to Turbo Vision history semantics.
 
 =head2 historyCount
 
-Returns the number of entries associated with the given history ID.
+  my $count = historyCount($id);
+
+Returns the number of entries stored in the history group identified by C<$id>.
 
 =head2 historyStr
 
-Returns the Nth history string for the specified ID.
+  my $string = historyStr($id, $index);
+
+Returns the string at position C<$index> in the history group identified by
+C<$id>.
+
+If the index is out of range, an empty string is returned.
 
 =head2 clearHistory
 
-Clears all history entries.
+  clearHistory();
+
+Removes all history entries from all history groups.
 
 =head2 initHistory
 
-Initializes the history structure and clears all entries.
+  initHistory();
+
+Initializes the history list management system.
+
+This function clears all existing history data and prepares the internal
+storage structures. It is typically called automatically during application
+startup.
 
 =head2 doneHistory
 
-Destroys all history data and resets the module state.
+  doneHistory();
+
+Destroys all history data and resets the internal module state.
+
+This function is typically called during application shutdown.
+
+=head1 COMPATIBILITY NOTES
+
+This module follows the Turbo Vision C++ history model and preserves its
+behavior and semantics.
+
+Internally, the original implementation relied on global state and shared
+history storage managed by the application lifecycle. In this Perl port, the
+same logical behavior is retained while using Perl-native data structures and
+memory management.
+
+The public interface has been adapted to idiomatic Perl usage. In particular:
+
+=over
+
+=item *
+
+State is managed internally by the module and does not require explicit memory
+allocation by the caller.
+
+=item *
+
+Strings are passed and returned directly, rather than being modified via
+call-by-reference parameters.
+
+=item *
+
+Initialization and shutdown are handled by the surrounding application
+framework.
+
+=back
+
+These differences do not change the observable behavior of history handling,
+but make the interface safer and more natural to use in Perl.
+
+=head1 IMPORTANT
+
+The history functions are intended for use within Turbo Vision applications
+only. They depend on application-level initialization performed during program
+startup.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::InputLine>,
+L<TUI::Dialogs::HistoryViewer>,
+L<TUI::App::Application>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -248,7 +351,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

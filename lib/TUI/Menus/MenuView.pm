@@ -758,6 +758,179 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::MenuView - defines the class TMenuView
+TUI::Menus::MenuView - abstract base class for menu views
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TMenuView
+        TMenuBar
+        TMenuBox
+
+=head1 DESCRIPTION
+
+C<TMenuView> implements the shared behavior required by menu views such as
+C<TMenuBar> and C<TMenuBox>. It manages menu navigation, item selection, hotkey
+handling, and modal execution of menus.
+
+This class is abstract and is not intended to be instantiated directly.
+Applications normally interact with derived classes rather than with
+C<TMenuView> itself.
+
+Most methods defined here are used internally by the menu system and are rarely
+called directly by application code.
+
+=head1 ATTRIBUTES
+
+The following attributes are managed internally and exposed as read-only
+accessors.
+
+=over
+
+=item menu
+
+Reference to the menu data structure defining the menu items (I<TMenu>).
+
+=item parentMenu
+
+Optional reference to the parent menu view (I<TMenuView>).
+
+=item current
+
+Reference to the currently selected menu item (I<TMenuItem>).
+
+=back
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $view = TMenuView->new(
+    bounds     => $bounds,
+    menu       => $menu,
+    parentMenu => $parentMenu
+  );
+
+Creates a new menu view. This constructor is intended to be called only by
+derived classes such as C<TMenuBar> and C<TMenuBox>.
+
+=over
+
+=item bounds
+
+Bounding rectangle of the menu view (I<TRect>).
+
+=item menu
+
+Menu data structure defining the menu items (I<TMenu>).
+
+=item parentMenu
+
+Optional parent menu view (I<TMenuView>).
+
+=back
+
+=head2 new_TMenuView
+
+  my $view = new_TMenuView($bounds, | $menu, | $parentMenu);
+
+Factory-style constructor using positional arguments.
+
+This constructor exists primarily for internal use and for compatibility with
+traditional Turbo Vision construction patterns.
+
+=head1 METHODS
+
+=head2 current
+
+  my $item = $view->current();
+  $view->current($item);
+
+Gets or sets the currently selected menu item.
+
+=head2 execute
+
+  my $command = $view->execute();
+
+Executes the menu view in a modal loop and returns the selected command
+identifier, or C<0> if the menu was cancelled.
+
+=head2 findItem
+
+  my $item = $view->findItem($ch);
+
+Searches for a menu item matching the specified shortcut character and returns
+the corresponding menu item, or C<undef> if no match is found.
+
+=head2 getHelpCtx
+
+  my $ctx = $view->getHelpCtx();
+
+Returns the help context associated with the currently selected menu item.
+
+=head2 getItemRect
+
+  my $rect = $view->getItemRect($item | undef);
+
+Returns the screen rectangle occupied by the specified menu item.
+
+=head2 getPalette
+
+  my $palette = $view->getPalette();
+
+Returns the color palette used to draw the menu view.
+
+=head2 handleEvent
+
+  $view->handleEvent($event);
+
+Processes keyboard and mouse events for menu navigation and selection.
+
+=head2 hotKey
+
+  my $item = $view->hotKey($keyCode);
+
+Searches for a menu item matching the specified hot key and returns it if found.
+
+=head2 newSubView
+
+  my $subView = $view->newSubView($bounds, $menu, $parentMenu);
+
+Creates a new submenu view associated with this menu view.
+
+=head2 parentMenu
+
+  my $parent = $view->parentMenu();
+  $view->parentMenu($parent);
+
+Gets or sets the parent menu view.
+
+=head1 SEE ALSO
+
+L<TUI::Menus::MenuBar>,
+L<TUI::Menus::MenuBox>,
+L<TUI::Menus::Menu>,
+L<TUI::Menus::MenuItem>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut
+

@@ -371,185 +371,58 @@ __END__
 
 =head1 NAME
 
-TUI::Objects::NSCollection provides a mechanism for managing any data collection.
+TUI::Objects::NSCollection - internal non-storable collection base class
 
 =head1 DESCRIPTION
 
-In this Perl module, the class I<TNSCollection> is created, which contains the 
-same methods as the Borland C++ class. 
+C<TNSCollection> is the non-storable base variant of the Turbo Vision collection
+classes. It exists primarily for internal use, most notably by the stream and
+resource management infrastructure.
 
-The NS variants of collections are Not Storable.  These are needed for 
-internal use in the stream manager.  There are storable variants of each of 
-these classes for use by the rest of the library.
+This class provides the same operational behavior as C<TCollection>, but is not
+intended to be used directly by application code. Public-facing code should
+always use C<TCollection> or one of its derived classes instead.
 
-=head1 ATTRIBUTES
+The non-storable variants are required to separate internal framework
+mechanisms from the storable collection types used elsewhere in the library.
 
-=over
+=head1 VARIABLES
 
-=item items
+=head2 %ITEMS
 
-A list of items contained in the collection.
+Internal global hash used to maintain item references for all
+C<TCollection> objects.
 
-=item count
+The collection elements are stored as references in this hash.
+Keys are derived using
+L<Hash::Util::FieldHash::id|Hash::Util::FieldHash>, ensuring stable and
+unique identification of collection items.
 
-The current number of items in the collection.
+This variable is for internal use only and mirrors the reference
+handling approach of the original Turbo Vision implementation.
 
-=item limit
+See also L<Scalar::Util::refaddr|Scalar::Util>.
 
-The maximum number of items the collection can hold.
+=head1 NOTE
 
-=item delta
+This class is considered internal.
 
-The amount by which the collection size increases when the limit is reached.
+Although C<TNSCollection> implements a full collection interface, it should not
+be instantiated or subclassed directly outside of the framework itself.
 
-=item shouldDelete
+=head1 SEE ALSO
 
-A flag indicating whether items should be deleted when removed from the 
-collection.
-
-=back
-
-=head1 METHODS
-
-The methods I<new>, I<DEMOLISH>, I<shutDown>, I<at>, I<atRemove>, I<atFree>, 
-I<atInsert>, I<atPut>, I<remove>, I<removeAll>, I<free>, I<freeAll>, 
-I<freeItem>, I<indexOf>, I<insert>, I<error>, I<firstThat>, I<lastThat>, 
-I<forEach>, I<pack> and I<setLimit> are implemented to provide the same behavior
-as in Borland C++.
-
-=head2 new
-
-  my $collection = TNSCollection->new(limit => $aLimit, delta => $aDelta);
-
-Creates a new TNSCollection with specified limit and delta.
-
-=head2 DESTROY
-
-  $self->DESTROY();
-
-Destroys the TNSCollection object.
-
-=head2 at
-
-  my $item = $self->at($index);
-
-Retrieves the item at the specified index.
-
-=head2 atFree
-
-  $self->atFree($index);
-
-Frees the item at the specified index.
-
-=head2 atInsert
-
-  $self->atInsert($index, $item | undef);
-
-Inserts an item at the specified index.
-
-=head2 atPut
-
-  $self->atPut($index, $item | undef);
-
-Puts an item at the specified index.
-
-=head2 atRemove
-
-  $self->atRemove($index);
-
-Removes the item at the specified index.
-
-=head2 error
-
-  $self->error($code, $info);
-
-Handles errors with the given code and info.
-
-=head2 firstThat
-
-  my $item | undef = $self->firstThat(\&Test, $arg | undef);
-
-Finds the first item that matches the test function.
-
-=head2 forEach
-
-  $self->forEach(\&action, $arg | undef);
-
-Executes an action for each item in the collection.
-
-=head2 free
-
-  $self->free($item);
-
-Frees the specified item.
-
-=head2 freeAll
-
-  $self->freeAll();
-
-Frees all items in the collection.
-
-=head2 from
-
-  my $collection = TNSCollection->from($aLimit, $aDelta);
-
-Creates a TNSCollection from specified limit and delta.
-
-=head2 indexOf
-
-  my $index = $self->indexOf($item | undef);
-
-Returns the index of the specified item.
-
-=head2 insert
-
-  my $index = insert($item | undef);
-
-Inserts an item into the collection.
-
-=head2 lastThat
-
-  my $item | undef = $self->lastThat(\&Test, $arg | undef);
-
-Finds the last item that matches the test function.
-
-=head2 pack
-
-  $self->pack();
-
-Packs the collection to remove gaps.
-
-=head2 remove
-
-  $self->remove($item);
-
-Removes the specified item from the collection.
-
-=head2 removeAll
-
-  $self->removeAll();
-
-Removes all items from the collection.
-
-=head2 setLimit
-
-  $self->setLimit($aLimit);
-
-Sets the limit for the collection.
-
-=head2 shutDown
-
-  $self->shutDown();
-
-Shuts down the collection.
+L<TUI::Objects::Collection>,
+L<TUI::Objects::SortedCollection>,
+L<TUI::Objects::StringCollection>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -559,8 +432,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

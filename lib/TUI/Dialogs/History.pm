@@ -211,3 +211,176 @@ sub shutDown {    # void ()
 }
 
 1
+
+__END__
+
+=head1 NAME
+
+TUI::Dialogs::History - history browser for dialog input fields
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      THistory
+
+=head1 SYNOPSIS
+
+  use TUI::Dialogs;
+
+  my $history = TUI::Dialogs::History->new(
+    bounds    => $bounds,
+    link      => $inputLine,
+    historyId => 1
+  );
+
+=head1 DESCRIPTION
+
+C<THistory> implements a history browser for dialog input controls. It is
+typically displayed as a small down-arrow icon next to an input field and
+allows users to recall previously entered values.
+
+Each history object is linked to a specific input field and identified by a
+numeric history ID. Input fields that share the same history ID also share the
+same history list, allowing multiple controls to reuse stored values.
+
+Whenever a new value is entered into a linked input field, the previous value
+is recorded automatically. When the history control is activated, a list of
+stored entries is displayed for selection.
+
+C<THistory> is designed to be used as part of a dialog and is rarely
+instantiated or manipulated outside that context.
+
+=head1 VARIABLES
+
+The following global variable affects the visual rendering of C<THistory>.
+
+=head2 $icon
+
+Defines the character sequence used to display the history indicator icon.
+The default value uses CP437 characters to render a framed arrow symbol.
+
+=head1 ATTRIBUTES
+
+The following attributes are managed internally and exposed as read-only
+accessors.
+
+=over
+
+=item link
+
+Reference to the associated input line control (I<TInputLine>).
+
+=item historyId
+
+Numeric identifier for the history list (I<PositiveOrZeroInt>).  
+Input fields using the same identifier share the same history.
+
+=back
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $history = THistory->new(
+    bounds    => $bounds,
+    link      => $link,
+    historyId => $historyId
+  );
+
+Creates a new history control linked to an input field.
+
+=over
+
+=item bounds
+
+Bounding rectangle of the history control (I<TRect>).
+
+=item link
+
+Input field associated with this history control (I<TInputLine>).
+
+=item historyId
+
+Numeric identifier used to group history entries.
+
+=back
+
+=head2 new_THistory
+
+  my $history = new_THistory($bounds, $link, $historyId);
+
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with named parameters and is
+provided for compatibility with traditional Turbo Vision construction patterns.
+
+=head1 METHODS
+
+=head2 draw
+
+  $history->draw();
+
+Draws the history icon at the location defined by the bounding rectangle.
+
+=head2 getPalette
+
+  my $palette = $history->getPalette();
+
+Returns the color palette used to draw the history control.
+
+=head2 handleEvent
+
+  $history->handleEvent($event);
+
+Handles mouse and keyboard events directed at the history control.
+
+=head2 initHistoryWindow
+
+  my $window = $history->initHistoryWindow($bounds);
+
+Creates and initializes the history list window used to display stored entries.
+
+=head2 name
+
+  my $name = $history->name();
+
+Returns the class name.
+
+=head2 recordHistory
+
+  $history->recordHistory($string);
+
+Records a new entry in the history list.
+
+=head2 shutDown
+
+  $history->shutDown();
+
+Shuts down the history control and releases associated resources.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::Dialog>, L<TUI::Dialogs::InputLine>, L<TUI::Views::View>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution). This documentation is provided under the same terms
+as the Turbo Vision library itself.
+
+=cut

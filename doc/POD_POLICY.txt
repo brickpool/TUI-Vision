@@ -1,0 +1,132 @@
+TurboVision Perl Port - POD Documentation Policy (Chat-derived)
+==============================================================
+
+Scope
+-----
+This policy defines how we document modules/classes/functions in POD for this codebase.
+It covers:
+- View/Window/Dialog classes (TView hierarchy)
+- Data/Value types (non-TObject, scalar/array/tied-hash based)
+- Pure function modules (utility subs)
+- Platform backends (Win32 etc.)
+- NS* internal variants (non-storable/internal implementations)
+
+Core Principles
+--------------
+P1. The POD must be useful locally: readers must find essential info in the module's POD.
+    Avoid "see elsewhere" as a substitute for content.
+P2. No invented API: do not document methods that are not actually part of the intended public API.
+P3. Avoid leaking framework internals: do not document BUILD, BUILDARGS, DESTROY, from(), name()
+    unless explicitly approved as a public API exception.
+P4. Private/internal attributes (is => 'bare') must not be documented as public attributes.
+P5. POD lists must use POD list markup (=over/=item/=back), not markdown dashes.
+
+Naming Rules (critical)
+-----------------------
+N1. =head1 NAME uses the fully-qualified Perl module name:
+    Example: "TUI::StdDlg::FileList - ..."
+N2. HIERARCHY is conceptual Turbo Vision hierarchy WITHOUT namespace:
+    Example: TObject -> TView -> TGroup -> TListBox -> TFileList
+N3. SYNOPSIS uses the public constructors/factories as actually used (e.g. new_T...),
+    and should NOT be cluttered by namespace details.
+N4. SEE ALSO uses fully-qualified module names (L<TUI::...>) where appropriate.
+
+Section Order (Standard)
+------------------------
+For base classes and most classes:
+  NAME
+  HIERARCHY
+  SYNOPSIS
+  DESCRIPTION
+  VARIABLES (if global vars used)
+  ATTRIBUTES (only if truly public)
+  CONSTRUCTOR
+  METHODS (alphabetical, head2 per method)
+  EXAMPLE (optional, real examples only)
+  SEE ALSO
+  AUTHORS
+  CONTRIBUTORS (if used)
+  COPYRIGHT AND LICENSE
+
+For pure function modules (only subs):
+  NAME
+  SYNOPSIS
+  DESCRIPTION
+  FUNCTIONS (alphabetical, head2 per function)
+  SEE ALSO
+  AUTHORS
+  COPYRIGHT AND LICENSE
+
+No extra "OVERRIDABLE METHODS" section:
+- All methods go into METHODS and may mention "subclasses override this".
+
+When to use NOTES sections
+--------------------------
+Prefer no NOTES sections.
+Use IMPLEMENTATION NOTES only if behavior cannot be explained per-function
+and only with user approval.
+
+Constructor/Factory Policy
+--------------------------
+C1. If the class defines its own named constructor signature (named => [...]), document:
+    - CONSTRUCTOR
+    - new (named parameters)
+    - new_T<Class> (positional factory) if present
+C2. If construction is inherited but META data exists, CONSTRUCTOR may still be documented
+    as inherited, if requested by the user.
+C3. Never document from() as public API.
+C4. BUILD and BUILDARGS must never be documented.
+C5. name() must never be documented.
+
+Destructor Policy
+-----------------
+D1. Do not document Perl DESTROY.
+D2. Document DEMOLISH only if explicitly requested.
+D3. Avoid Pascal Init/Done/Load/Store wording.
+
+Attributes Policy
+-----------------
+A1. Document attributes only if they are public API (rw/ro).
+A2. is => 'ro' means read-only.
+A3. is => 'rw' means read/write.
+A4. is => 'bare' means internal: do not document as public attribute.
+
+Value Types / Non-TObject Types
+-------------------------------
+V1. Some types are not derived from TObject (e.g. TEvent, TDrawBuffer).
+V2. Do not show TObject hierarchy for these.
+V3. Operator overloading must be explicitly documented.
+V4. For tied-hash types, document conceptual structure, not internal packages.
+
+Platform-specific Backends
+--------------------------
+PFB1. Base module documents platform-independent interface only.
+PFB2. Platform modules document implementation details only.
+
+NS* Internal Variants
+---------------------
+NS1. NS variants are internal and non-storable.
+NS2. Document briefly and mark as internal.
+NS3. Reference public variants via SEE ALSO.
+
+Examples
+--------
+E1. EXAMPLE sections are optional.
+E2. Use real examples provided by the user.
+E3. Keep SYNOPSIS short.
+
+Copyright and License
+---------------------
+CL1. StdDlg modules use dual copyright:
+     Borland (historical) + current AUTHORS.
+CL2. Follow the exact wording agreed in the project.
+
+Misc Rules
+----------
+R1. Avoid foreign-language artifacts in POD.
+R2. Avoid REQUIRES sections in final docs.
+R3. Do not document internal helper subs unless explicitly requested.
+R4. If user POD skeleton is wrong, explain first unless user wants final POD only.
+
+End of Policy
+-------------

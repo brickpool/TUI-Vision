@@ -273,3 +273,182 @@ sub getKey {    # $key ($s)
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::StdDlg::FileList - list box view for file and directory entries
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TListBox
+          TSortedListBox
+            TFileList
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg;
+
+  my $list = new_TFileList(
+    $bounds,
+    $scrollBar
+  );
+
+=head1 DESCRIPTION
+
+C<TFileList> implements a specialized list box used by standard
+Turbo Vision file dialogs to display directory contents.
+
+The list presents files and directories obtained from a C<TFileCollection>
+instance and supports keyboard and mouse navigation, selection, and activation
+of entries.
+
+This class extends C<TListBox> with file-specific behavior and integrates
+tightly with other standard dialog components.
+
+C<TFileList> is typically managed by C<TFileDialog> and not used
+directly by application code.
+
+The list view relies on C<TFileCollection> for sorting and filtering file
+entries and reflects changes immediately when a new collection is assigned.
+
+This class extends the generic list box behavior with file-specific logic such
+as directory scanning, filename display formatting, and hotkey extraction.
+
+=head1 VARIABLES
+
+The following global variable defines the error message used by C<TFileList>.
+
+=head2 $tooManyFiles
+
+Message text displayed when the number of files exceeds the supported limit.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $list = TFileList->new(
+    bounds     => $bounds,
+    vScrollBar => $scrollBar | undef
+  );
+
+Creates a new file list view.
+
+=over
+
+=item bounds
+
+Bounding rectangle defining the position and size of the list box (I<TRect>).
+
+=item vScrollBar
+
+Optional vertical scroll bar associated with the list box (I<TScrollBar>).
+
+=back
+
+=head2 new_TFileList
+
+  my $list = new_TFileList($bounds, $scrollBar | undef);
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 dataSize
+
+  my $size = $list->dataSize();
+
+Returns the number of scalar values transferred via C<getData> and C<setData>.
+
+For file lists, this value is always C<1>.
+
+=head2 focusItem
+
+  $list->focusItem($index);
+
+Moves the focus to the specified item index.
+
+=head2 getData
+
+  $list->getData(\@record);
+
+Stores the current selection state into the supplied record.
+
+=head2 getKey
+
+  my $key = $list->getKey($string);
+
+Extracts and returns the hotkey associated with a file list entry.
+
+=head2 getText
+
+  $list->getText(\$dest, $item, $maxChars);
+
+Retrieves the display text for the specified list item.
+
+=head2 list
+
+  my $collection = $list->list();
+
+Returns the C<TFileCollection> currently backing the list.
+
+=head2 newList
+
+  $list->newList($collection);
+
+Assigns a new file collection to the list and refreshes its contents.
+
+=head2 readDirectory
+
+  $list->readDirectory($dir | undef, $wildCard | undef);
+
+Reads the contents of the specified directory and populates the file list.
+
+If no directory is specified, the current working directory is used.
+
+=head2 selectItem
+
+  $list->selectItem($index);
+
+Selects the specified item index.
+
+=head2 setData
+
+  $list->setData(\@record);
+
+Restores the selection state from external input.
+
+=head1 SEE ALSO
+
+L<TUI::StdDlg::FileDialog>,
+L<TUI::StdDlg::FileCollection>,
+L<TUI::Views::ListBox>,
+L<TUI::Views::ScrollBar>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
+

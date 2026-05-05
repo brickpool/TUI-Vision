@@ -266,7 +266,13 @@ __END__
 
 =head1 NAME
 
-TFrame - Frame class for window components in Turbo Vision
+TFrame - frame class for window components in Turbo Vision
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TFrame
 
 =head1 SYNOPSIS
 
@@ -277,62 +283,127 @@ TFrame - Frame class for window components in Turbo Vision
 
 =head1 DESCRIPTION
 
-The C<TFrame> class is used to create frames for window components in Turbo
-Vision. It provides methods for drawing the frame and managing its appearance.
+C<TFrame> implements the visual border that surrounds a window. It is
+responsible for drawing the window frame, including the title, border lines,
+and standard window icons such as close, zoom, and resize indicators.
 
-=head1 METHODS
+Frame objects are normally created and managed automatically by
+C<TWindow>. Applications rarely instantiate C<TFrame> directly and typically
+do not interact with it except through subclassing or customization hooks
+provided by the window.
+
+To customize the appearance of a window frame, applications override
+C<TWindow::initFrame> to instantiate a C<TFrame>-derived object with modified
+behavior, such as a different color palette.
+
+=head1 VARIABLES
+
+The following global variables define the visual appearance and behavior
+of C<TFrame>.
+
+=head2 $initFrame
+
+Initial frame definition table used to map frame styles and states.
+
+=head2 $frameChars
+
+Character set used to draw frame borders.
+The default value uses CP437 line-drawing characters.
+
+=head2 $closeIcon
+
+Icon text used for the close window command.
+
+=head2 $zoomIcon
+
+Icon text used for the zoom window command.
+
+=head2 $unZoomIcon
+
+Icon text used for the unzoom window command.
+
+=head2 $dragIcon
+
+Icon text used to indicate window dragging (CP437).
+
+=head1 CONSTRUCTOR
 
 =head2 new
 
   my $frame = TFrame->new(bounds => $bounds);
 
-Initializes an instance of C<TFrame> with the specified bounds.
+Creates a new frame object with the specified bounds. This constructor is
+normally called internally by C<TWindow::initFrame>.
 
 =over
 
 =item bounds
 
-The bounds of the view (TRect).
+Bounding rectangle of the frame (I<TRect>).
 
 =back
 
-=head2 dragWindow
+=head2 new_TFrame
 
-  $self->dragWindow($event, $mode);
+  my $frame = new_TFrame($bounds);
 
-Handles the dragging of the window.
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with the C<bounds> parameter
+and is provided for compatibility with traditional Turbo Vision construction
+patterns.
+
+=head1 METHODS
 
 =head2 draw
 
   $self->draw();
 
-Draws the frame on the screen.
+Draws the frame, including the window title and any enabled window icons. The
+exact appearance depends on the current view state flags.
 
 =head2 getPalette
 
-  my $palette = getPalette();
+  my $palette = $self->getPalette();
 
-Returns the frame color palette.
+Returns the color palette used to draw the frame. The default implementation
+returns the standard frame palette.
+
+To customize frame colors, override C<TWindow::initFrame> to create a
+C<TFrame>-derived object that overrides this method.
 
 =head2 handleEvent
 
   $self->handleEvent($event);
 
-Handles an event sent to the frame.
+Handles events directed at the frame. This method delegates general event
+processing to C<TView::handleEvent> and processes events related to frame
+icons such as close or zoom.
 
 =head2 setState
 
-  $self->setState($aState, $enable);
+  $self->setState($state, $enable);
 
-Sets the state of the frame to the specified value.
+Updates the frame state. After delegating to C<TView::setState>, the frame is
+redrawn if the active or dragging state changes.
+
+=head2 dragWindow
+
+  $self->dragWindow($event, $mode);
+
+Handles interactive dragging of the owning window using the mouse.
+
+=head1 SEE ALSO
+
+L<TUI::Views::Window>, L<TUI::Views::View>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -342,8 +413,8 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution). This documentation is provided under the same terms
 as the Turbo Vision library itself.
 
 =cut

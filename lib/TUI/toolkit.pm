@@ -67,8 +67,8 @@ BEGIN { sub SUB_UTIL  () { eval q[ require Sub::Util     ]; !$@ } }
 
 our $name;
 BEGIN {
-  $name = STRICT ? 'UNIVERSAL::Object' : 'Moos';
-  foreach my $toolkit ( qw( Moose Moo Moos UNIVERSAL::Object ) ) {
+  $name = 'UNIVERSAL::Object';    # default if no other toolkit is found
+  foreach my $toolkit ( qw( Moose Moo Moos ) ) {
     if ( Module::Loaded::is_loaded $toolkit ) {
       $name = $toolkit;
       last;
@@ -383,7 +383,7 @@ __END__
 
 =head1 NAME
 
-TUI::toolkit - Unified OO facade using Moos/Moo/Moose when available
+TUI::toolkit - Unified OO facade for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -394,25 +394,33 @@ TUI::toolkit - Unified OO facade using Moos/Moo/Moose when available
   has y => ( is => 'rw' );
 
   no TUI::toolkit;  # remove keywords (has, extends, etc.) from namespace
-                   # keep methods (new, dump, DESTROY)
+                    # keep methods (new, dump, DESTROY)
 
   my $p = Point->new( x => 1, y => 2 );
   say $p->dump;
 
 =head1 DESCRIPTION
 
-C<TUI::toolkit> is a lightweight object system facade which automatically
-selects an available OO toolkit in the following priority:
+TUI::toolkit provides a unified object system facade for the
+TUI::Vision framework. It corresponds to the functionality of
+C<TV::toolkit> and offers a consistent set of OO features regardless of
+which backend toolkit is available.
+
+C<TV::toolkit> dynamically selected an OO backend from:
 
 =over 4
 
-=item * C<Moos> (if loaded)
+=item * Moos  
+Minimalistic attribute and method generator.
 
-=item * C<Moo>  (if loaded)
+=item * Moo  
+Lightweight meta-object system.
 
-=item * C<Moose> (if loaded)
+=item * Moose  
+Full-featured meta-object system.
 
-=item * otherwise: a minimal LOP fallback provided by TUI::toolkit itself
+=item * UNIVERSAL::Object  
+Modern, minimal object base class.
 
 =back
 
@@ -462,8 +470,8 @@ directly:
 No attempt is made to replace or extend the backend beyond injecting
 C<dump> and C<DESTROY> when appropriate.
 
-If none of Moos/Moo/Moose are loaded, a very small I<LOP style> OO layer is 
-used. 
+If none of Moos/Moo/Moose are loaded, a very small L<LUNIVERSAL::Object> based 
+OO layer is used. 
 
 This exists only to keep modules functional in environments where no of the 
 other toolkits are available. It is not intended to be a full object system.

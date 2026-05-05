@@ -398,55 +398,38 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::FindFirstRec::Win32 - Win32 FindFirstFile semantics
+TUI::StdDlg::FindFirstRec::Win32 - Win32 implementation of FindFirstRec
 
 =head1 DESCRIPTION
 
-A class implementing the behaviour of findfirst and findnext for Win32.
+C<TUI::StdDlg::FindFirstRec::Win32> provides the Windows-specific implementation
+of the C<FindFirstRec> directory search interface.
 
-The constructor I<allocate> assigns a C<FindFirstRec> to the provided 
-C<find_t> struct and sets the search filters. I<get> simply retrieves the 
-C<FindFirstRec> that was assigned to a C<find_t> struct. I<next> performs the 
-actual search and automatically updates the C<find_t> struct.
-
-This code base was taken from the framework 
-I<"A modern port of Turbo Vision 2.0">.
+The implementation maps the generic search operations to the Win32
+C<FindFirstFile> and C<FindNextFile> APIs and updates the associated C<find_t>
+record accordingly.
 
 =head1 METHODS
 
 =head2 allocate
 
-  my $rec = FindFirstFile->allocate($fileinfo, $attrib, $pathname)
-
-the I<allocates> constructor creates a C<FindFirstRec> object for the provided 
-C<find_t> struct and sets the search parameters.
+Win32-specific initialization of a directory search.
 
 =head2 get
 
-  $rec = get($fileinfo)
-
-The I<gets> method the C<FindFirstRec> object associated with the provided 
-C<find_t> struct.
+Retrieves the search context associated with a C<find_t> record.
 
 =head2 next
 
-  $rec = next()
-
-The I<next> method performs the search and updates the C<find_t> struct 
-associated with the C<FindFirstRec> object. It returns true if a match is found 
-and false if there are no more matches.
-
-=head1 SEE ALSO
-
-I<findfrst.h>, I<findfrst.cpp>, 
+Advances the search using the Win32 filesystem APIs.
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -464,7 +447,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

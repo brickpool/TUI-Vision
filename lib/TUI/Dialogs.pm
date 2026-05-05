@@ -76,3 +76,70 @@ sub unimport {
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Dialogs - Dialog components for the TUI::Vision framework
+
+=head1 SYNOPSIS
+
+  use TUI::Dialogs;
+
+=head1 DESCRIPTION
+
+TUI::Dialogs provides the dialog and widget layer for the TUI::Vision
+framework. It corresponds to the Turbo Vision dialog subsystem and
+includes a wide range of interactive UI components.
+
+This module re-exported numerous dialog-related classes, including:
+
+=over 4
+
+=item * Const  
+Symbolic constants for dialog behavior.
+
+=item * History and HistoryViewer  
+History lists, history windows, and history initialization.
+
+=item * Basic widgets  
+Button, Label, StaticText, InputLine, ParamText.
+
+=item * Selection widgets  
+CheckBoxes, MultiCheckBoxes, RadioButtons, Cluster.
+
+=item * List widgets  
+ListBox, StrItem.
+
+=item * Utility modules  
+Dialog helpers and internal utilities.
+
+=back
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+Contributors are documented in the POD of the respective framework modules.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

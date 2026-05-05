@@ -1,4 +1,5 @@
 package TUI::App::Const;
+# ABSTRACT: constants for TUI::App and related components
 
 use strict;
 use warnings;
@@ -147,3 +148,105 @@ use constant {
 };
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::App::Const - constants for application-level components
+
+=head1 SYNOPSIS
+
+  use TUI::App::Const qw(:all);
+
+  # or import specific constant groups
+  use TUI::App::Const qw(:cpXXXX :hcXXXX);
+
+=head1 DESCRIPTION
+
+C<TUI::App::Const> defines constants used by Turbo Vision application-level
+components such as the program object, application palettes, and help system.
+
+The constants in this module are grouped by purpose and exported via tag-based
+export groups. They are used to control application appearance, help context
+selection, and palette configuration.
+
+This module only defines constants. The semantic meaning and practical usage of
+these constants is documented in higher-level modules such as C<TUI::App>,
+C<TProgram>, and C<TApplication>.
+
+=head1 CONSTANTS
+
+=head2 Palette constants (cpXXXX)
+
+Palette identifiers and palette data used by application-level views.
+
+These constants define background palettes and the standard application color
+schemes used by the program and application objects.
+
+=head2 Help context constants (hcXXXX)
+
+Help context identifiers used by application menus, dialogs, and commands.
+
+These values are passed to the help system to identify the appropriate help
+topic for a given command or user action.
+
+=head2 Application palette selectors (apXXXX)
+
+Constants used to select the active application palette.
+
+These values identify the color, black-and-white, and monochrome application
+palette variants.
+
+=head1 EXPORT TAGS
+
+Constants are exported using the following tag-based export groups:
+
+=over
+
+=item *
+
+C<:cpXXXX> - application palette constants
+
+=item *
+
+C<:hcXXXX> - help context identifiers
+
+=item *
+
+C<:apXXXX> - application palette selectors
+
+=item *
+
+C<:all> - import all constants
+
+=back
+
+=head1 SEE ALSO
+
+L<TUI::App>,
+L<TUI::App::Program>,
+L<TUI::App::Application>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

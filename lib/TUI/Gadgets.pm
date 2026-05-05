@@ -34,3 +34,68 @@ sub unimport {
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Gadgets - Optional UI gadgets for the TUI::Vision framework
+
+=head1 SYNOPSIS
+
+  use TUI::Gadgets;
+
+=head1 DESCRIPTION
+
+TUI::Gadgets provides optional visual components for the TUI::Vision
+framework. These modules extend the core UI with additional views and
+diagnostic tools, similar to the classic Turbo Vision gadget set.
+
+This module re-exported several non-essential but useful UI components, 
+including:
+
+=over 4
+
+=item * Const  
+Symbolic constants for gadget behavior.
+
+=item * PrintConstants  
+Utility for printing symbolic values.
+
+=item * ClockView  
+A live clock widget.
+
+=item * EventViewer  
+A real-time event inspection tool.
+
+=item * HeapView  
+A memory usage visualization widget.
+
+=back
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+Contributors are documented in the POD of the respective framework modules.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

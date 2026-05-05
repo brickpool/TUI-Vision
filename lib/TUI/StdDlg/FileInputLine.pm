@@ -1,5 +1,5 @@
 package TUI::StdDlg::FileInputLine;
-# ABSTRACT: # ABSTRACT: Input line view for file dialog focus handling
+# ABSTRACT: Input line view for file dialog focus handling
 
 use 5.010;
 use strict;
@@ -114,3 +114,104 @@ sub handleEvent {    # void ($event)
 } #/ sub handleEvent
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::StdDlg::FileInputLine - input line view for file dialog interaction
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TInputLine
+        TFileInputLine
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg;
+
+  my $input = new_TFileInputLine(
+    $bounds,
+    $maxLen
+  );
+
+=head1 DESCRIPTION
+
+C<TFileInputLine> implements a specialized input line used by standard Turbo
+Vision file dialogs for entering file and directory names.
+
+The control extends C<TInputLine> with file-dialog-specific behavior, such as
+custom keyboard handling and interaction with other dialog components. It is
+typically embedded in a C<TFileDialog> and participates in focus navigation
+and command processing within the dialog.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $input = TFileInputLine->new(
+    bounds => $bounds,
+    maxLen => $maxLen
+  );
+
+Creates a new file input line.
+
+=over
+
+=item bounds
+
+Bounding rectangle defining the position and size of the input line (I<TRect>).
+
+=item maxLen
+
+Maximum length of the input text (I<Int>).
+
+=back
+
+=head2 new_TFileInputLine
+
+  my $input = new_TFileInputLine($bounds, $maxLen);
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 handleEvent
+
+  $input->handleEvent($event);
+
+Processes keyboard and command events specific to file dialog interaction.
+
+This method extends the default input line behavior to integrate with file
+selection and dialog-level commands.
+
+=head1 SEE ALSO
+
+L<TUI::StdDlg::FileDialog>,
+L<TUI::Dialogs::InputLine>,
+L<TUI::Views::View>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

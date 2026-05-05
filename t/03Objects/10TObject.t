@@ -6,7 +6,7 @@ use Test::Exception;
 use Hash::Util;
 
 BEGIN {
-  require_ok 'Moos';
+  require_ok 'UNIVERSAL::Object';
   use_ok 'TUI::Objects::Object';
 }
 
@@ -42,7 +42,7 @@ ok( !defined $obj, 'destroy() sets the object to undefined' );
 use_ok 'Derived';
 
 $obj = Derived->new();
-isa_ok( $obj, 'Moos::Object' );
+isa_ok( $obj, 'UNIVERSAL::Object' );
 
 can_ok( $obj, 'x' );
 lives_ok { $obj->x() } 'x works correctly';

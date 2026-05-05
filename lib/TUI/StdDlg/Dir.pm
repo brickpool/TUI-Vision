@@ -287,26 +287,115 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::Dir - Replacements for functions in Borland's C/C++ RTL
+TUI::StdDlg::Dir - directory and path utility functions
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg;
+
+  my $rc = findfirst('*.*', $ffblk, 0);
+  while ( $rc == 0 ) {
+    print $ffblk->ff_name, "\n";
+    $rc = findnext($ffblk);
+  }
+
+  my ($drive, $dir, $name, $ext);
+  fnsplit('/usr/local/bin/perl', $drive, $dir, $name, $ext);
 
 =head1 DESCRIPTION
 
-Replacements for functions in Borland's C/C++ Run Time Library.
+C<TUI::StdDlg::Dir> provides a set of directory- and path-related utility
+functions compatible with the traditional Borland C/C++ runtime library.
 
-The code base, although inspired by RTL version 1.5 from BC++ 4.52,
-has been taken from the framework I<"A modern port of Turbo Vision 2.0">.
+The functions in this module are used by the standard dialog subsystem to
+perform directory traversal, path manipulation, and drive handling. Although
+inspired by the original Borland RTL, the implementation is adapted to modern
+platforms and Perl conventions.
+
+This module is purely functional and does not define any objects.
+
+=head1 FUNCTIONS
+
+=head2 findfirst
+
+  my $rc = findfirst($pathname, $ffblk, $attrib);
+
+Initializes a directory search using the specified pathname and attribute
+mask.
+
+On success, the directory entry record C<$ffblk> is populated with information
+about the first matching entry and the function returns zero.
+
+=head2 findnext
+
+  my $rc = findnext($ffblk);
+
+Advances the directory search to the next matching entry.
+
+The directory entry record is updated to describe the new match. The function
+returns zero on success and a non-zero value if no further entries are
+available.
+
+=head2 fnmerge
+
+  fnmerge($pathP, $drive | undef, $dir | undef, $name | undef, $ext | undef);
+
+Builds a path from its component parts.
+
+Output components are written directly to the provided arguments. Undefined 
+components are ignored.
+
+=head2 fnsplit
+
+  fnsplit($path, $driveP | undef, $dirP | undef, $nameP | undef, $extP | undef);
+
+Splits a full path name into its individual components.
+
+The component parameters are modified directly by the function and do not need
+to be passed as references.
+
+=head2 getcurdir
+
+  my $rc = getcurdir($drive, $dir | undef);
+
+Retrieves the current directory for the specified drive.
+
+The directory name is stored without drive specification or leading path
+separator.
+
+=head2 getdisk
+
+  my $drive = getdisk();
+
+Returns the index of the current drive (A=0, B=1, C=2, ...).
+
+=head2 setdisk
+
+  my $rc = setdisk($drive);
+
+Sets the current drive.
+
+=head1 IMPLEMENTATION NOTES
+
+Parameters with a trailing C<P> suffix are modified directly by the function.
+
+In this Perl implementation, these parameters are passed as ordinary arguments
+and updated in place via C<@_>. No explicit references are required and the
+parameters are not treated as read-only.
 
 =head1 SEE ALSO
 
-I<dir.h>, I<dir.cpp>, 
+L<TUI::StdDlg::Dos>,
+L<TUI::StdDlg::FindFirstRec>,
+L<TUI::StdDlg::Util>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -324,7 +413,7 @@ Copyright (c) 1987, 1993 by Borland International
 
 Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

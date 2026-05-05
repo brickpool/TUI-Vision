@@ -155,147 +155,202 @@ __END__
 
 =head1 NAME
 
-TMultiCheckBoxes - Multi-state checkbox cluster control based on TCluster
+TUI::Dialogs::MultiCheckBoxes - multi-state checkbox cluster control
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TCluster
+        TMultiCheckBoxes
 
 =head1 SYNOPSIS
 
   use TUI::Objects;
   use TUI::Dialogs;
 
-  my $bounds = TRect->new( ax => 0, ay => 0, bx => 30, by => 5 );
+  my $bounds = TRect->new(
+    ax => 0, ay => 0,
+    bx => 30, by => 5
+  );
 
-  my $items = { value => 'Low',  next =>
-              { value => 'Med',  next =>
-              { value => 'High', next => undef }}};
+  my $items = {
+    value => 'Low', next => {
+    value => 'Med', next => {
+    value => 'High', next => undef
+  }}};
 
   my $mcb = new_TMultiCheckBoxes(
-      $bounds,
-      $items,
-      3,        # selRange   (number of states per item)
-      0x0201,   # flags      (low byte = mask, high byte = shift per item)
-      " -+"     # states     (characters representing each possible state)
+    $bounds,
+    $items,
+    3,        # selRange   (number of states per item)
+    0x0201,   # flags      (low byte = mask, high byte = shift per item)
+    ' -+'     # states     (characters representing each possible state)
   );
 
 =head1 DESCRIPTION
 
-C<TMultiCheckBoxes> provides a multi-state checkbox control where each item can 
-cycle through a configurable number of states.  
+C<TMultiCheckBoxes> implements a multi-state checkbox cluster where each item
+cycles through a configurable number of states instead of a simple on/off
+selection.
 
-The state of each item is stored inside a packed bitfield, with a configurable
-field width and state mask derived from the C<flags> attribute.  
+The control stores its state in a packed bitfield. Each item occupies a fixed
+number of bits, determined by the supplied mask and shift values. This allows
+multiple stateful items to be encoded efficiently in a single scalar value.
 
-The control inherits its navigation and layout behavior from C<TCluster>, while
-implementing its own multi-state display and toggling logic.
+C<TMultiCheckBoxes> inherits navigation, layout, and focus handling from
+C<TCluster>, while extending the marking and activation logic to support
+multi-state cycling.
 
-=head1 ATTRIBUTES
-
-=over
-
-=item selRange
-
-Defines the number of distinct states each item may cycle through (I<Int>).
-
-=item flags
-
-Bitfield descriptor controlling how state values are packed (I<Int>):
-low byte = state mask, high byte = bit-shift step per item.
-
-=item states
-
-A string containing the per-state marker characters used for drawing (I<Str>).
-
-=back
-
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $obj = TMultiCheckBoxes->new(%args);
+  my $mcb = TMultiCheckBoxes->new(
+    bounds   => $bounds,
+    strings  => $items,
+    selRange => $range,
+    flags    => $flags,
+    states   => $states
+  );
 
-Constructs a new multi-state checkbox cluster with the specified parameters.
-
-=head2 new
-
-  my $obj = TMultiCheckBoxes->new(%args);
-
-Creates a new multi-state checkbox cluster using the following arguments:
+Creates a new multi-state checkbox cluster.
 
 =over
 
 =item bounds
 
-A C<TRect> object defining the screen position and size of the cluster.
+Bounding rectangle defining the position and size of the cluster (I<TRect>).
 
 =item strings
 
-A linked C<TSItem> list containing the textual labels for each item.
+Linked list of item descriptors providing the labels (I<TSItem>).
 
 =item selRange
 
-The number of different states each item may cycle through (I<Int>).
+Number of distinct states each item cycles through (I<Int>).
 
 =item flags
 
-A packed integer describing the bit-mask (low byte) and bit-shift step (high 
-byte) used for encoding item states (I<Int>).
+Packed integer describing the bit mask and bit shift used for encoding item
+states.
+
+The low byte defines the state mask, the high byte defines the bit shift per
+item.
 
 =item states
 
-A string containing the characters used to visually represent each possible 
-state (I<Str>).
+String containing one character per possible state, used for visual
+representation (I<Str>).
 
 =back
 
 =head2 new_TMultiCheckBoxes
 
-  my $obj = new_TMultiCheckBoxes($bounds, $aStrings, $range, $flags, $states);
+  my $mcb = new_TMultiCheckBoxes(
+    $bounds,
+    $items,
+    $range,
+    $flags,
+    $states
+  );
 
-Factory wrapper for creating a TMultiCheckBoxes instance.
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
 
 =head2 dataSize
 
-  my $size = $self->dataSize();
+  my $size = $mcb->dataSize();
 
-Returns the number of scalars transferred by getData/setData (always 1).
+Returns the number of scalar values transferred via C<getData> and C<setData>.
+
+For multi-state clusters, this value is always C<1>.
 
 =head2 draw
 
-  $self->draw();
+  $mcb->draw();
 
-Renders the multi-state cluster using the supplied state marker table.
+Renders the multi-state checkbox cluster using the supplied state marker table.
 
 =head2 getData
 
-  $self->getData(\@p);
+  $mcb->getData(\@record);
 
 Writes the packed state bitfield into the output record.
 
 =head2 multiMark
 
-  my $state = $self->multiMark($item);
+  my $state = $mcb->multiMark($item);
 
-Returns the current state index for the specified item extracted from the 
-bitfield.
+Returns the current state index for the specified item, extracted from the
+packed bitfield.
 
 =head2 press
 
-  $self->press($item);
+  $mcb->press($item);
 
-Advances the state of the given item and wraps around according to selRange.
+Advances the state of the specified item and wraps around according to
+C<selRange>.
 
 =head2 setData
 
-  $self->setData(\@p);
+  $mcb->setData(\@record);
 
-Updates the internal state bitfield from external input.
+Updates the internal packed state bitfield from external input.
+
+=head1 USAGE NOTES
+
+C<TMultiCheckBoxes> is particularly useful for representing configuration
+options with more than two possible values while maintaining a compact visual
+and data representation.
+
+The packed bitfield design allows seamless integration with dialog data
+exchange mechanisms.
+
+=head1 IMPLEMENTATION NOTES
+
+C<TMultiCheckBoxes> stores its internal state using a packed bitfield
+representation.
+
+The following values are provided at construction time and used internally
+by the control:
+
+=over
+
+=item *
+
+The number of states per item (selection range)
+
+=item *
+
+A packed flags value defining the bit mask and bit shift used for encoding
+item states
+
+=item *
+
+A string defining the visual marker for each possible state
+
+=back
+
+These values are considered internal implementation details and are not exposed
+as public attributes. Application code should not rely on direct access to
+these values after construction.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::CheckBoxes>,
+L<TUI::Dialogs::RadioButtons>,
+L<TUI::Dialogs::Cluster>,
+L<TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -305,7 +360,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). 
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

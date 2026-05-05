@@ -391,7 +391,7 @@ sub fexpand {    # void ($rpath, |$relativeTo)
     }
   } #/ if ( ( ( $flags & $DIRECTORY...)))
 
-  $fn->{dir} =~ tr{/}{\\};
+  $fn->{dir} =~ tr{\/}{\\};
   &$squeeze( $fn->{dir} );
   fnmerge( $path, $fn->{drive}, $fn->{dir}, $fn->{file}, $fn->{ext} );
   # $path = uc $path;
@@ -400,3 +400,120 @@ sub fexpand {    # void ($rpath, |$relativeTo)
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::StdDlg::Util - utility functions for Turbo Vision standard dialogs
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg::Util qw(
+    driveValid
+    fexpand
+    getCurDir
+    getHomeDir
+    isDir
+    isWild
+    pathValid
+    validFileName
+  );
+
+  my $ok = pathValid('/usr/local');
+  my $abs = fexpand('docs', '/home/user');
+
+=head1 DESCRIPTION
+
+C<TUI::StdDlg::Util> provides a collection of helper functions used by Turbo
+Vision standard dialogs to validate paths, filenames, and directories.
+
+The functions in this module operate on strings and filesystem-related data and
+do not maintain any internal state. They are intended to support file and
+directory selection dialogs.
+
+=head1 FUNCTIONS
+
+=head2 driveValid
+
+  my $bool = driveValid($drive);
+
+Returns true if the specified drive identifier is valid.
+
+=head2 fexpand
+
+  my $path = fexpand($relativePath, $basePath | undef);
+
+Expands a relative path into an absolute path.
+
+If C<$basePath> is provided, the expansion is performed relative to that path.
+Otherwise, the current directory is used as the base.
+
+=head2 getCurDir
+
+  getCurDir($dir, $drive);
+
+Retrieves the current directory for the specified drive and stores it in
+C<$dir>.
+
+=head2 getHomeDir
+
+  my $bool = getHomeDir($drive, $dir);
+
+Retrieves the home directory associated with the specified drive and stores it
+in C<$dir>.
+
+Returns true if a home directory could be determined.
+
+=head2 isDir
+
+  my $bool = isDir($path);
+
+Returns true if the specified path refers to an existing directory.
+
+=head2 isWild
+
+  my $bool = isWild($string);
+
+Returns true if the specified string contains wildcard characters.
+
+=head2 pathValid
+
+  my $bool = pathValid($path);
+
+Returns true if the specified path is syntactically valid.
+
+=head2 validFileName
+
+  my $bool = validFileName($fileName);
+
+Returns true if the specified file name is valid.
+
+=head1 SEE ALSO
+
+L<TUI::StdDlg::FileDialog>,
+L<TUI::StdDlg::DirListBox>,
+L<TUI::StdDlg::ChDirDialog>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

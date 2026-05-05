@@ -63,11 +63,29 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Util
+TUI::Views::Util - utility functions for Turbo Vision views
+
+=head1 SYNOPSIS
+
+  use TUI::Views::Util qw(message);
+
+  my $handled_by = message(
+    $receiver,
+    evMessage,
+    cmScrollBarChanged,
+    $sender
+  );
 
 =head1 DESCRIPTION
 
-Defines utility functions used throughout Turbo Vision.
+C<TUI::Views::Util> provides low-level utility functions used throughout the
+Turbo Vision view system.
+
+The functions in this module operate on views and events and are intended to
+simplify common interaction patterns such as message dispatching and command
+broadcasting between views.
+
+This module is purely functional and does not define any classes or objects.
 
 =head1 FUNCTIONS
 
@@ -75,40 +93,69 @@ Defines utility functions used throughout Turbo Vision.
 
   my $view | undef = message($receiver | undef, $what, $command, $infoPtr);
 
-Sends a message to a specified receiver and returns the view that handled the
-message, or C<undef> if no view handled it.
+Sends a message event to a view and returns the view that ultimately handled
+the message, or C<undef> if the message was not handled.
+
+The function constructs a message event using the supplied C<what>,
+C<command>, and C<infoPtr> parameters and invokes the event handling mechanism
+starting at the specified receiver.
 
 =over
 
-=item $receiver
+=item receiver
 
-The target view that will receive the message. If C<undef>, the message is sent
-to the current view. (TView | undef)
+The target view that receives the message. If C<undef>, the message is sent to
+the current view context. (TView | undef)
 
-=item $what
+=item what
 
-The type of message being sent. This parameter specifies the category or
-purpose of the message. (Int)
+The event type being sent. This is typically C<evMessage> or
+C<evBroadcast>. (Int)
 
-=item $command
+=item command
 
-The specific command associated with the message. This parameter defines the
-action to be taken by the receiver. (Int)
+The command identifier associated with the message. This usually corresponds
+to a C<cmXXXX> constant. (Int)
 
-=item $infoPtr
+=item infoPtr
 
-A reference to additional information related to the message. This can be used 
-to pass extra data required for handling the message. (Ref)
+Optional reference to additional contextual information associated with the
+message.
+
+This value may be used to pass a data structure, an object, or a reference to
+the sending view, depending on the semantics of the command.
+(Ref | undef)
 
 =back
+
+=head1 USAGE NOTES
+
+The C<message> function is a convenience wrapper around the Turbo Vision event
+dispatch mechanism.
+
+Messages are delivered by invoking the C<handleEvent> method of the receiver.
+If the receiver does not handle the message, it may be propagated to child
+views depending on the event type and view hierarchy.
+
+The return value indicates which view actually processed the message. This
+allows callers to detect whether a command was handled and by whom.
+
+This function is intended for use within a running Turbo Vision application.
+Calling it outside of a valid view context will have no useful effect.
+
+=head1 SEE ALSO
+
+L<TUI::Drivers::Event>,
+L<TUI::Views::View>,
+L<TUI::Views::Group>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -118,8 +165,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

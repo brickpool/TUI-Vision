@@ -206,98 +206,133 @@ __END__
 
 =head1 NAME
 
-TLabel - provides a descriptive label linked to another dialog control
+TUI::Dialogs::Label - descriptive label linked to another dialog control
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TStaticText
+        TLabel
 
 =head1 SYNOPSIS
 
   use TUI::Dialogs;
 
-  my $label = TLabel->new(bounds => $bounds, text => "~N~ame:", 
-    link => $inputLine);
+  my $label = TLabel->new(
+    bounds => $bounds,
+    text   => '~N~ame:',
+    link   => $inputLine
+  );
 
 =head1 DESCRIPTION
 
-C<TLabel> represents a static text label associated with another control.  
-It highlights based on focus changes and forwards activation events to its 
-linked control. The class supports hotkey activation through marked characters. 
+C<TLabel> represents a static text label that is explicitly linked to another
+dialog control. Unlike C<TStaticText>, a label forwards activation events to
+its linked control, allowing users to focus or activate that control by
+clicking the label or using a keyboard shortcut.
+
+Hotkey activation is supported through marked characters in the label text.
+When the corresponding key combination is pressed, focus is transferred to the
+linked control.
+
+Labels are typically used as prompts for input fields, list boxes, or other
+dialog elements and are commonly paired with controls such as C<TInputLine> or
+radio button groups.
 
 =head1 ATTRIBUTES
+
+The following attributes are exposed as read-only accessors and are managed
+internally by the label implementation.
 
 =over
 
 =item link
 
-The control associated with the label and activated through its hotkey 
-(I<TView>).
+Reference to the control associated with this label (I<TView>).  
+If set, activation of the label selects the linked control.
 
 =item light
 
-Indicates whether the label is displayed in its highlighted variant (I<Bool>).
+Indicates whether the label is currently displayed in its highlighted variant
+(I<Bool>). This state is managed internally.
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $label = TLabel->new(%args);
+  my $label = TLabel->new(
+    bounds => $bounds,
+    text   => $text,
+    link   => $link
+  );
 
-Creates a new C<TLabel> with bounds, label text and an optional link target.
+Creates a new label with the specified bounds, text, and optional link target.
 
 =over
 
 =item bounds
 
-The rectangular area where the label is placed (I<TRect>).
+Bounding rectangle of the label (I<TRect>).
 
 =item text
 
-The displayed label string, optionally containing a hotkey marker (I<Str>).
+Text displayed by the label. Marked characters may be used to define a hotkey
+(I<Str>).
 
 =item link
 
-A control that receives focus when the label is activated (I<TView> or undef).
+Optional control that receives focus when the label is activated
+(I<TView>). This parameter may be omitted.
 
 =back
 
 =head2 new_TLabel
 
-  my $label = new_TLabel($bounds, $aText, $aLink | undef);
+  my $label = new_TLabel($bounds, $text, | $link);
 
-Factory constructor that instantiates a label from C<$bounds>, C<$aText> and a 
-linked control.
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with named parameters and is
+provided for compatibility with traditional Turbo Vision construction patterns.
+
+=head1 METHODS
 
 =head2 draw
 
- $self->draw();
+  $label->draw();
 
-Draws the label and renders its hotkey and optional marker symbols.
+Draws the label using the palette returned by C<getPalette> and renders any
+hotkey markers.
 
 =head2 getPalette
 
- my $palette = $self->getPalette();
+  my $palette = $label->getPalette();
 
-Returns the palette used for rendering the label.
+Returns the color palette used to draw the label.
 
 =head2 handleEvent
 
- $self->handleEvent($event);
+  $label->handleEvent($event);
 
-Processes mouse and keyboard events to activate or highlight the linked control.
+Processes mouse and keyboard events. Activation events are forwarded to the
+linked control, if present.
 
 =head2 shutDown
 
- $self->shutDown();
+  $label->shutDown();
 
-Releases the internal link reference during destruction.
+Releases internal references during shutdown.
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

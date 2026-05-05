@@ -61,3 +61,69 @@ sub unimport {
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::StdDlg - Standard dialogs for the TUI::Vision framework
+
+=head1 SYNOPSIS
+
+    use TUI::StdDlg;
+
+    # Placeholder module.
+    # The full standard dialog set will be migrated from TV::StdDlg.
+
+=head1 DESCRIPTION
+
+TUI::StdDlg provides the standard dialog set for the TUI::Vision
+framework. It corresponds to the Turbo Vision standard dialogs and
+includes high-level components such as file dialogs, directory dialogs,
+and specialized list boxes.
+
+This module re-exported:
+
+=over 4
+
+=item * Const  
+Symbolic constants for standard dialog behavior.
+
+=item * FileCollection  
+Support structures for file and directory dialogs.
+
+=item * SortedListBox  
+A list box widget with automatic sorting.
+
+=back
+
+Additional Turbo Vision standard dialogs (file dialog, directory dialog,
+input dialogs, message dialogs, etc.) are planned but not yet included
+in the Perl port.
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+Contributors are documented in the POD of the respective framework modules.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

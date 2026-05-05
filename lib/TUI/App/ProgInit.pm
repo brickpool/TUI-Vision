@@ -1,4 +1,5 @@
 package TUI::App::ProgInit;
+# ABSTRACT: program initialization helper
 
 use 5.010;
 use strict;
@@ -83,3 +84,125 @@ sub createDeskTop {    # $deskTop ($r)
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::App::ProgInit - program initialization helper
+
+=head1 SYNOPSIS
+
+  use TUI::App::ProgInit;
+
+  my $progInit = TProgInit->new(
+    createStatusLine => \&initStatusLine,
+    createMenuBar    => \&initMenuBar,
+    createDeskTop    => \&initDeskTop,
+  );
+
+=head1 DESCRIPTION
+
+C<TProgInit> encapsulates the initialization logic used by a Turbo Vision
+application to create its main user interface components.
+
+The class stores factory callbacks for creating the status line, menu bar, and
+desktop views. These callbacks are invoked during application startup to build
+the visible structure of the program.
+
+C<TProgInit> is not a view and does not participate in the view hierarchy. It
+exists solely to decouple application initialization from the concrete
+construction of user interface elements.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $progInit = TProgInit->new(
+    createStatusLine => \&statusLineFactory,
+    createMenuBar    => \&menuBarFactory,
+    createDeskTop    => \&deskTopFactory
+  );
+
+Creates a new program initialization helper.
+
+=over
+
+=item createStatusLine
+
+Code reference that is called with a C<TRect> argument and must return a
+C<TStatusLine> object.
+
+=item createMenuBar
+
+Code reference that is called with a C<TRect> argument and must return a
+C<TMenuBar> object.
+
+=item createDeskTop
+
+Code reference that is called with a C<TRect> argument and must return a
+C<TDeskTop> object.
+
+=back
+
+=head2 new_TProgInit
+
+  my $progInit = new_TProgInit(
+    \&statusLineFactory,
+    \&menuBarFactory,
+    \&deskTopFactory
+  );
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 createStatusLine
+
+  my $statusLine = $progInit->createStatusLine($rect);
+
+Invokes the stored status line factory callback and returns a status line view
+for the specified rectangle.
+
+=head2 createMenuBar
+
+  my $menuBar = $progInit->createMenuBar($rect);
+
+Invokes the stored menu bar factory callback and returns a menu bar view for the
+specified rectangle.
+
+=head2 createDeskTop
+
+  my $deskTop = $progInit->createDeskTop($rect);
+
+Invokes the stored desktop factory callback and returns a desktop view for the
+specified rectangle.
+
+=head1 SEE ALSO
+
+L<TUI::App::Program>,
+L<TUI::App::Application>,
+L<TUI::App::DeskInit>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

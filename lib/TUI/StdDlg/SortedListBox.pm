@@ -177,3 +177,142 @@ sub list {    # $sortedCollection ()
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::StdDlg::SortedListBox - list box with automatic item sorting
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TListBox
+          TSortedListBox
+            TFileList
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg;
+
+  my $list = new_TSortedListBox(
+    $bounds,
+    $scrollBar
+  );
+
+=head1 DESCRIPTION
+
+C<TSortedListBox> is a subclass of C<TListBox> that adds automatic sorting
+behavior for its items.
+
+The list box maintains its contents in sorted order based on keys extracted
+from the item text. It is designed as a reusable base class for list views that
+require ordered presentation, such as file and directory lists.
+
+This class does not define its own construction parameters and relies on the
+standard C<TListBox> initialization.
+
+=head1 ATTRIBUTES
+
+=over
+
+=item shiftState
+
+Current keyboard shift state used during incremental search and navigation
+(I<Int>).
+
+=back
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $list = TSortedListBox->new(
+    bounds     => $bounds,
+    vScrollBar => $scrollBar | undef
+  );
+
+Creates a new sorted list box.
+
+This constructor is inherited from C<TListBox> and initializes the view with
+the specified bounds and optional vertical scroll bar.
+
+=over
+
+=item bounds
+
+Bounding rectangle defining the position and size of the list box (I<TRect>).
+
+=item vScrollBar
+
+Optional vertical scroll bar associated with the list box (I<TScrollBar>).
+
+=back
+
+=head2 new_TSortedListBox
+
+  my $list = new_TSortedListBox($bounds, $scrollBar | undef);
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 getKey
+
+  my $key = $list->getKey($string);
+
+Extracts and returns the sort key used for ordering items.
+
+This method is used internally to determine the relative order of list items
+and may be overridden by subclasses to customize sorting behavior.
+
+=head2 handleEvent
+
+  $list->handleEvent($event);
+
+Processes keyboard and command events.
+
+This method extends the inherited list box behavior to support incremental
+search and navigation within the sorted list.
+
+=head2 list
+
+  my $collection = $list->list();
+
+Returns the sorted collection backing the list box.
+
+=head2 newList
+
+  $list->newList($collection);
+
+Assigns a new sorted collection to the list box and refreshes its contents.
+
+=head1 SEE ALSO
+
+L<TUI::Views::ListBox>,
+L<TUI::StdDlg::FileList>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

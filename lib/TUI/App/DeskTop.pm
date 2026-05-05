@@ -346,76 +346,179 @@ __END__
 
 =head1 NAME
 
-TUI::App::DeskTop - manages the screen area, owning different views.
+TUI::App::DeskTop - manages the application desktop area and owned views
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TDeskTop
+
+=head1 SYNOPSIS
+
+  use TUI::App;
+  use TUI::Objects;
+
+  # Usually created by TProgram/TApplication during startup:
+  my $deskTop = TDeskTop->new(
+    bounds => $bounds
+  );
+
+  # Non-modal views are inserted directly into the desktop.
+  $deskTop->insert($window);
+
+  # Modal views are executed and return a command/result.
+  my $result = $deskTop->execView($dialog);
+
+  # Rearrange tileable windows in the desktop area.
+  my $workArea = TRect->new(ax => 0, ay => 1, bx => 80, by => 24);
+  $deskTop->tile($workArea);
+  $deskTop->cascade($workArea);
 
 =head1 DESCRIPTION
 
-Each application has one TDeskTop object, controlled by $deskTop, managing the 
-screen area between the menu bar and status line, owning the TBackground and 
-other windows/dialogs.
+C<TDeskTop> represents the desktop area of a Turbo Vision application. It manages
+the screen region between the menu bar and the status line and owns the
+background view as well as all top-level windows and dialogs.
+
+Each application has exactly one desktop object, referenced by the global
+variable C<$deskTop>. Windows and non-modal dialogs are inserted into the
+desktop, while modal dialogs are executed via C<execView> inherited from
+C<TGroup>.
+
+C<TDeskTop> also provides functionality to rearrange its child windows using
+cascading or tiling layouts.
+
+=head2 Commonly Used Features
+
+In normal application code, the desktop is primarily used as the owner for
+top-level views. Non-modal windows and dialogs are inserted with C<insert()>,
+while modal dialogs are run with C<execView()> so the caller can react to the
+returned command.
+
+Window management operations are typically C<tile()> and C<cascade()> to
+rearrange visible tileable windows, plus keyboard focus cycling handled through
+desktop event processing. Most projects use the desktop created by
+C<TProgram::initDeskTop>; custom desktop subclasses are mainly needed when you
+want alternative background behavior via C<initBackground()> or custom layout
+error handling via C<tileError()>.
+
+=head1 VARIABLES
+
+The following global variable defines the default background appearance
+used by C<TDeskTop>.
+
+=head2 $defaultBkgrnd
+
+Defines the default background character used to fill the desktop area.
 
 =head1 ATTRIBUTES
+
+The following attributes are managed internally and exposed as read-only
+accessors.
 
 =over
 
 =item background
 
-The TBackground object that forms the backdrop of the desktop.
+The C<TBackground> object forming the visual backdrop of the desktop.
 
 =item tileColumnsFirst
 
-A flag indicating whether tiling should prioritize columns first.
+Boolean flag controlling whether tiling prefers columns before rows.
+
+=back
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $deskTop = TDeskTop->new(
+    bounds => $bounds
+  );
+
+Creates a new desktop object.
+
+=over
+
+=item bounds
+
+Bounding rectangle defining the usable screen area of the desktop
+(I<TRect>).
 
 =back
 
 =head1 METHODS
 
-=head2 new
-
-  $deskTop = TDeskTop->new(bounds => $bounds);
-
-Creates a new TDeskTop object with specified bounds.
-
 =head2 cascade
 
-  $self->cascade($r);
+  $deskTop->cascade($rect);
 
-Arranges windows in a cascading manner.
-
-=head2 from
-
-  $deskTop = TDeskTop->from($bounds);
-
-Creates a TDeskTop object from specified bounds.
+Arranges all tileable windows owned by the desktop in a cascading layout.
 
 =head2 handleEvent
 
-  $self->handleEvent($event);
+  $deskTop->handleEvent($event);
 
-Handles events for the TDeskTop object.
+Processes desktop-level events.
+
+This method primarily intercepts navigation keys used to cycle through the
+windows owned by the desktop. Other events are passed to inherited handlers.
 
 =head2 initBackground
 
-  my $background = TDeskTop->initBackground($r);
+  my $background = $deskTop->initBackground($bounds);
 
-Initializes the background with specified bounds.
+Creates and initializes the background view.
+
+Subclasses may override this method to provide a custom background
+implementation.
 
 =head2 shutDown
 
-  $self->shutDown();
+  $deskTop->shutDown();
 
-Shuts down the TDeskTop object.
+Shuts down the desktop and releases owned views.
 
 =head2 tile
 
-  $self->tile($r);
+  $deskTop->tile($rect);
 
-Arranges windows in a tiled manner.
+Arranges all tileable windows owned by the desktop in a tiled layout.
 
 =head2 tileError
 
-  $self->tileError();
+  $deskTop->tileError();
 
-Handles errors related to tiling windows.
+Called when the desktop cannot arrange its windows using cascade or tile.
+
+Subclasses may override this method to report layout errors.
+
+=head1 SEE ALSO
+
+L<TUI::App::Background>,
+L<TUI::App::Program>,
+L<TUI::Views::Window>,
+L<TUI::Views::Group>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

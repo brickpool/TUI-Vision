@@ -452,132 +452,200 @@ __END__
 
 TUI::Dialogs::Button - pushbutton control for Turbo Vision dialogs
 
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TButton
+
 =head1 SYNOPSIS
 
   use TUI::Dialogs;
+  use TUI::Objects;
 
-  my $btn = TButton->new(bounds => $bounds, title => "~O~K", command => cmOK, 
-    flags => bfNormal);
+  my $dialog = TDialog->new(
+    bounds => TRect->new(ax => 10, ay => 4, bx => 44, by => 15),
+    title  => 'Confirm'
+  );
+
+  my $ok = TButton->new(
+    bounds  => TRect->new(ax => 7, ay => 8, bx => 17, by => 10),
+    title   => '~O~K',
+    command => cmOK,
+    flags   => bfDefault
+  );
+
+  my $cancel = TButton->new(
+    bounds  => TRect->new(ax => 19, ay => 8, bx => 31, by => 10),
+    title   => '~C~ancel',
+    command => cmCancel,
+    flags   => bfNormal
+  );
+
+  $dialog->insert($ok);
+  $dialog->insert($cancel);
+
+  my $result = $deskTop->execView($dialog);
 
 =head1 DESCRIPTION
 
-C<TButton> implements an interactive pushbutton control with full Turbo Vision 
-semantics. It supports highlighting, shadow rendering, pressing behavior, 
-default-button logic, and command dispatch.  
+C<TButton> implements an interactive pushbutton control with full Turbo Vision
+semantics. It supports highlighting, shadow rendering, pressing behavior,
+default-button logic, and command dispatch.
 
-Mouse and keyboard events are handled according to Turbo Vision's original 
-model. 
+Mouse and keyboard events are handled according to the original Turbo Vision
+model.
 
-=head1 ATTRIBUTES
+=head2 Commonly Used Features
 
-=over
+Most applications use C<TButton> as a dialog control: create a button with
+title/command/flags, insert it into a C<TDialog>, then react to the command
+returned by C<execView()>. Typical setups include one default action button
+(C<bfDefault>) and one normal cancel button (C<bfNormal>).
 
-=item title
+In day-to-day use you rarely call low-level methods directly; C<handleEvent()>,
+C<draw()>, and default-button behavior are managed by the framework. Manual
+calls to C<makeDefault()> are only needed for advanced dialog interactions
+where default focus behavior is changed dynamically.
 
-The caption displayed on the button, usually containing a hotkey marker 
-(I<Str>).
+=head1 VARIABLES
 
-=item command
+The following global variables affect the visual rendering of C<TButton>.
 
-The command identifier triggered when the button is pressed (I<Int>).
+=head2 $shadows
 
-=item flags
+Defines the characters used to draw the button shadow.
 
-Bit-mask of behavioral settings such as default, broadcast or selectable 
-(I<Int>).
+=head2 $markers
 
-=item amDefault
+Defines the characters used as button markers, for example C<[]>.
 
-Boolean flag indicating whether the button is currently treated as the dialog's 
-default button (I<Bool>).
-
-=back
-
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $btn = TButton->new(%args);
+  my $btn = TButton->new(
+    bounds  => $bounds,
+    title   => $title,
+    command => $command,
+    flags   => $flags
+  );
 
-Creates a new button with bounds, a title string, a command identifier and 
-behavioral flags.
+Creates a new button control.
 
 =over
 
 =item bounds
 
-The rectangular region that defines the button's position (I<TRect>).
+The rectangular region defining the button's position (I<TRect>).
 
 =item title
 
-The caption displayed on the button, usually with a hotkey marker (I<Str>).
+The caption displayed on the button, usually containing a hotkey marker
+(I<Str>).
 
 =item command
 
-The command ID broadcast when the button is pressed (I<Int>).
+The command identifier broadcast when the button is pressed
+(I<PositiveOrZeroInt>).
 
 =item flags
 
-Behavioral flags controlling default state, focus handling and selection 
+Behavioral flags controlling default state, focus handling, and selection
 (I<bfXXXX>).
 
 =back
 
 =head2 new_TButton
 
- my $obj = new_TButton($bounds, $aTitle, $aCommand, $aFlags);
+  my $btn = new_TButton($bounds, $title, $command, $flags);
 
-Factory constructor for building a Turbo-Vision-style button control.
+Factory-style constructor using positional arguments.
+
+=head1 ATTRIBUTES
+
+The following attributes are exposed as read-only accessors.
+
+=over
+
+=item title
+
+The caption displayed on the button (I<Str>).
+
+=item command
+
+The command identifier triggered when the button is pressed
+(I<PositiveOrZeroInt>).
+
+=item flags
+
+Bit-mask of behavioral settings such as default, broadcast, or selectable
+(I<PositiveOrZeroInt>).
+
+=item amDefault
+
+Boolean flag indicating whether the button is currently treated as the dialog's
+default button (I<Bool>).
+
+=back
+
+=head1 METHODS
 
 =head2 draw
 
- $self->draw();
+  $btn->draw();
 
 Renders the button according to its current state.
 
 =head2 drawState
 
- $self->drawState($down);
+  $btn->drawState($down);
 
 Draws the button in pressed or unpressed visual form.
 
 =head2 getPalette
 
- my $palette = $self->getPalette();
+  my $palette = $btn->getPalette();
 
-Returns the drawing palette for a button control.
+Returns the drawing palette for the button control.
 
 =head2 handleEvent
 
- $self->handleEvent($event);
+  $btn->handleEvent($event);
 
-Processes mouse clicks, key presses and broadcast events for the button.
+Processes mouse clicks, key presses, and broadcast events for the button.
 
 =head2 makeDefault
 
- $self->makeDefault($enable);
+  $btn->makeDefault($enable);
 
 Marks or unmarks the button as the dialog's default action button.
 
 =head2 press
 
- $self->press();
+  $btn->press();
 
 Sends the button's command to the dialog owner.
 
 =head2 setState
 
- $self->setState($aState, $enable);
+  $btn->setState($state, $enable);
 
 Updates the control's internal state and refreshes its appearance.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::Dialog>,
+L<TUI::Dialogs::Label>,
+L<TUI::Views::View>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -595,7 +663,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 1995, 2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). 
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut
