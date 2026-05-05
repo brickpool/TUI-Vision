@@ -271,141 +271,211 @@ __END__
 
 =head1 NAME
 
-TCommandSet - A class for managing command sets in Turbo Vision 2.0.
+TUI::Views::CommandSet - value type for managing sets of commands
+
+=head1 HIERARCHY
+
+  TCommandSet (value type)
+    used by TView and derived classes
 
 =head1 SYNOPSIS
 
   use TUI::Views;
 
-  my $cmdSet = TCommandSet->new();
-  $cmdSet->include( $command );
-  $cmdSet->disableCmd( $command );
-  if ( $cmdSet->contains( $command ) ) {
-    print "Command is in the set.\n";
+  my $cmds = TCommandSet->new;
+
+  $cmds->enableCmd(cmQuit);
+  $cmds->disableCmd(cmDelete);
+
+  if ($cmds->has(cmQuit)) {
+    ...
   }
+
+  my $other = TCommandSet->new;
+  $other->enableCmd(cmCopy);
+
+  my $union = $cmds | $other;
+  my $inter = $cmds & $other;
 
 =head1 DESCRIPTION
 
-The C<TCommandSet> class is used to manage sets of commands in Turbo Vision 2.0.
-It provides methods to include, exclude, enable, disable, and check commands
-within the set. This class is essential for handling user commands and
-interactions in a Turbo Vision application.
+C<TCommandSet> represents a set of command identifiers. It is used throughout
+Turbo Vision to enable, disable, and query commands associated with views.
 
-=head1 METHODS
+This type is a lightweight value type and is not derived from C<TObject>.
+Internally, a command set represents up to 256 commands, corresponding to the
+range of commands that can be selectively enabled or disabled.
+
+C<TCommandSet> supports set-style operations through Perl operator overloading,
+allowing command sets to be combined, intersected, and compared using natural
+expressions.
+
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $obj = TCommandSet->new(%args);
+  my $set = TCommandSet->new(
+    copy_from => $other | undef
+  );
 
-Creates a new TCommandSet object.
+Creates a new command set.
 
 =over
 
 =item copy_from
 
-Creates a copy of the command set (optional).
+Optional command set to copy from.
 
 =back
 
+=head1 METHODS
+
 =head2 clone
 
-  my $clone = TCommandSet->clone();
+  my $copy = $set->clone();
 
-Creates a clone of the command set.
-
-=head2 from
-
-  my $obj = TCommandSet->from( | $tc);
-
-Creates a TCommandSet object from another command set.
+Creates and returns a copy of the command set.
 
 =head2 disableCmd
 
-  $self->disableCmd($cmd | $tc);
+  $set->disableCmd($cmd | $other);
 
-Disables a specific command.
+Disables a command or all commands contained in another command set.
 
 =head2 enableCmd
 
-  $self->enableCmd($cmd | $tc);
+  $set->enableCmd($cmd | $other);
 
-Enables a specific command.
+Enables a command or all commands contained in another command set.
 
 =head2 equal
 
-  my $bool = $self->equal($tc1, $tc2);
-  '==' => \&equal,
+  my $bool = $set->equal($a, $b);
 
-Checks if two command sets are equal.
+Returns true if two command sets are equal.
+
+Implements the C<==> operator.
 
 =head2 exclude
 
-  $self = $self->exclude($cmd | $tc);
-  '-=' => \&exclude,
+  $set = $set->exclude($cmd | $other);
 
-Excludes a specific command from the set.
+Removes a command or command set from the current set.
+
+Implements the C<-=> operator.
 
 =head2 has
 
-  my $bool = $self->has($cmd);
+  my $bool = $set->has($cmd);
 
-Checks if the command set has a specific command.
+Returns true if the specified command is contained in the set.
 
 =head2 include
 
-  $self = $self->include($cmd | $tc);
-  # '+=' => \&include;
+  $set = $set->include($cmd | $other);
 
-Includes a specific command in the set.
+Adds a command or command set to the current set.
+
+Implements the C<+=> operator.
 
 =head2 intersect
 
-  my $tc = $self->intersect($tc1, $tc2);
-  # '&' => \&intersect,
+  my $set = $set->intersect($a, $b);
 
 Returns the intersection of two command sets.
 
+Implements the C<&> operator.
+
 =head2 intersect_assign
 
-  my $self = $self->intersect_assign($tc);
-  # '&=' => \&intersect_assign,
+  $set = $set->intersect_assign($other);
 
 Assigns the intersection of another command set to the current set.
 
+Implements the C<&=> operator.
+
 =head2 isEmpty
 
-  my $bool = $self->isEmpty();
+  my $bool = $set->isEmpty();
 
-Checks if the command set is empty.
+Returns true if the command set contains no commands.
 
 =head2 not_equal
 
-  my $bool = $self->not_equal($tc1, $tc2);
-  # '!=' => \&not_equal,
+  my $bool = $set->not_equal($a, $b);
 
-Checks if two command sets are not equal.
+Returns true if two command sets are not equal.
+
+Implements the C<!=> operator.
 
 =head2 union
 
-  my $tc = $self->union($tc1, $tc2);
-  # '|' => \&union,
+  my $set = $set->union($a, $b);
 
 Returns the union of two command sets.
 
+Implements the C<|> operator.
+
 =head2 union_assign
 
-  $self = $self->union_assign($tc);
-  # '|=' => \&union_assign,
+  $set = $set->union_assign($other);
 
 Assigns the union of another command set to the current set.
+
+Implements the C<|=> operator.
+
+=head1 OPERATOR OVERLOADING
+
+C<TCommandSet> supports set operations via Perl operator overloading.
+
+=over
+
+=item *
+
+C<+=> - include commands
+
+=item *
+
+C<-=> - exclude commands
+
+=item *
+
+C<&>  - intersection
+
+=item *
+
+C<&=> - intersection assignment
+
+=item *
+
+C<|>  - union
+
+=item *
+
+C<|=> - union assignment
+
+=item *
+
+C<==> - equality comparison
+
+=item *
+
+C<!=> - inequality comparison
+
+=back
+
+=head1 SEE ALSO
+
+L<TUI::Views::View>,
+L<TUI::Drivers::Event>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -415,8 +485,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

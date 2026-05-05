@@ -381,154 +381,221 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Window - a base class for managing windows in Turbo Vision 2.0.
+TUI::Views::Window - base class for windows in Turbo Vision
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TWindow
 
 =head1 SYNOPSIS
 
   use TUI::Views;
 
-  my $window = TWindow->new( bounds => $r, title => 'Title', number => 0 );
+  my $window = TWindow->new(
+    bounds => $bounds,
+    title  => 'Title',
+    number => 1
+  );
 
 =head1 DESCRIPTION
 
-The TWindow class is used to manage windows and their components in a Turbo 
-Vision application. It provides methods to handle window operations such as 
-opening, closing, and resizing. This class is essential for creating and 
-managing user interface windows on the desktop.
+C<TWindow> is a core view class used to represent windows in a Turbo Vision
+application. Windows may contain other views, display optional titles and
+window numbers, and support standard window operations such as moving,
+resizing, closing, and zooming.
+
+The class encapsulates the behavior required for managing window frames,
+handling window-specific commands, and maintaining optional scroll bars.
+Dialog boxes and many other high-level interface elements are implemented as
+specialized window descendants.
+
+Most applications interact with C<TWindow> indirectly through subclasses or
+by responding to window-related events.
+
+=head1 VARIABLES
+
+The following global variable defines default size constraints
+for C<TWindow>.
+
+=head2 $minWinSize
+
+Specifies the minimum allowed window size, represented as a C<TPoint>.
 
 =head1 ATTRIBUTES
+
+The following attributes define the state and appearance of a window. Unless
+otherwise noted, attributes are part of the public window state.
 
 =over
 
 =item flags
 
-Stores the state flags of the window. (Int)
+Window behavior flags (I<Int>), typically a combination of C<wfXXXX>
+constants. These flags control whether the window can be moved, resized,
+closed, or zoomed.
 
 =item frame
 
-A reference to the frame of the window. (TFrame)
+Reference to the window frame object (I<TFrame>).  
+This attribute is created internally and represents the visual border of the
+window.
 
 =item number
 
-The unique identifier number of the window. (Int)
+Window number identifier (I<Int>).  
+If the value is between 1 and 9, the window can be selected directly using the
+C<Alt-n> key combination.
 
 =item palette
 
-The color palette used by the window. (TPalette)
+Palette selector for the window (I<Int>).  
+Determines which predefined window palette is used.
 
 =item title
 
-The title of the window. (Str)
+Title string displayed in the window frame (I<Str>).
 
 =item zoomRect
 
-The rectangle defining the zoomed state of the window. (TRect)
+Rectangle storing the window's normal (unzoomed) bounds (I<TRect>).  
+This value is used to restore the window when toggling the zoom state.
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $obj = TWindow->new(%args);
+  my $obj = TWindow->new(
+    bounds => $bounds,
+    title  => $title,
+    number => $number
+  );
 
-Creates a new TWindow object.
+Creates a new window with the specified bounds, title, and window number.
 
 =over
 
 =item bounds
 
-The bounds of the window. (TRect)
+Bounding rectangle of the window (I<TRect>).
 
 =item title
 
-The title of the window. (Str)
+Title string displayed in the window frame (I<Str>).
 
 =item number
 
-The unique identifier number of the window. (Int)
+Window number identifier (I<Int>).  
+Values from 1 to 9 allow direct keyboard selection.
 
 =back
+
+=head2 new_TWindow
+
+  my $obj = new_TWindow($bounds, $aTitle, $aNumber);
+
+Factory-style constructor using positional arguments.
+
+This constructor is provided for compatibility with traditional Turbo Vision
+construction patterns and is functionally equivalent to calling C<new> with
+named parameters.
+
+=head1 DESTRUCTOR
 
 =head2 DEMOLISH
 
   $self->DEMOLISH($in_global_destruction);
 
-Destroys the window and releases its resources.
+Destroys the window and removes it from the view hierarchy.
+
+This method corresponds to the Turbo Vision destructor and is normally invoked
+automatically by the owning group or application.
+
+=head1 METHODS
 
 =head2 close
 
   $self->close();
 
-Closes the window.
-
-=head2 from
-
-  my $obj = $self->from($bounds, $aTitle, $aNumber);
-
-Creates a TWindow object from the specified bounds, title, and number.
+Closes the window. This is functionally equivalent to invoking the window
+destructor and is typically triggered by the C<cmClose> command.
 
 =head2 getPalette
 
   my $palette = $self->getPalette();
 
-Returns the color palette of the window.
+Returns the color palette associated with the window.
 
 =head2 getTitle
 
   my $str = $self->getTitle($maxSize);
 
-Returns the title of the window, truncated to the specified maximum size.
+Returns the window title. Subclasses may override this method to truncate or
+modify the title if it exceeds the specified maximum length.
 
 =head2 handleEvent
 
   $self->handleEvent($event);
 
-Handles an event sent to the window.
+Handles events directed at the window. Applications commonly override this
+method to intercept window-related commands such as close or zoom.
 
 =head2 initFrame
 
-  my $frame = $self->initFrame($r);
+  my $frame = $self->initFrame($bounds);
 
-Initializes the frame of the window.
+Creates and initializes the window frame. Subclasses may override this method
+to provide a custom frame implementation.
 
 =head2 setState
 
-  $self->setState($aState, $enable);
+  $self->setState($state, $enable);
 
-Sets the state of the window to the specified value.
+Sets or clears state flags and performs additional window-specific processing
+when the window becomes active or inactive.
 
 =head2 shutDown
 
   $self->shutDown();
 
-Shuts down the window and releases its resources.
+Shuts down the window and releases associated resources.
 
 =head2 sizeLimits
 
   $self->sizeLimits($min, $max);
 
-Sets the minimum and maximum size limits of the window.
+Determines the minimum and maximum size limits for the window.
 
 =head2 standardScrollBar
 
-  my $scrollBar = $self->standardScrollBar($aOptions);
+  my $scrollBar = $self->standardScrollBar($options);
 
-Creates a standard scroll bar for the window with the specified options.
+Creates and inserts a standard scroll bar into the window. The C<$options>
+parameter specifies orientation and keyboard handling using C<sbXXXX>
+constants.
 
 =head2 zoom
 
   $self->zoom();
 
-Zooms the window to its maximum or previous size.
+Toggles the window between its zoomed state and its normal size stored in
+L</zoomRect>.
+
+=head1 SEE ALSO
+
+L<TUI::Views::View>, L<TUI::Views::Group>, L<TUI::Views::Frame>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -538,8 +605,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

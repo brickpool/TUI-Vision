@@ -70,3 +70,106 @@ use constant {
 };
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Validate::Const - constants for validator components
+
+=head1 SYNOPSIS
+
+  use TUI::Validate::Const qw(:all);
+
+  # or import specific constant groups
+  use TUI::Validate::Const qw(:vsXXXX :voXXXX :vtXXXX);
+
+=head1 DESCRIPTION
+
+C<TUI::Validate::Const> defines constants used by validation components
+within the TUI::Vision framework.
+
+The constants in this module describe validator status codes, option flags,
+and data transfer operations. They are grouped by purpose and exported via
+tag-based export groups.
+
+This module only defines constants. The semantic meaning and practical usage
+of these values is implemented and documented in the corresponding validator
+classes.
+
+=head1 CONSTANTS
+
+=head2 Validator status constants (vsXXXX)
+
+Status codes returned by validators to indicate validation results.
+
+These values are typically used to signal success or specific validation
+errors, such as syntax errors detected by picture-based validators.
+
+=head2 Validator option flags (voXXXX)
+
+Option flags controlling validator behavior.
+
+These flags are used to configure validation and data transfer semantics,
+for example whether data should be filled or transferred.
+
+=head2 Validator transfer constants (vtXXXX)
+
+Constants defining data transfer operations between validators and
+associated data structures.
+
+These values are used internally by validators to identify transfer modes
+such as setting or retrieving data.
+
+=head1 EXPORT TAGS
+
+Constants are exported using the following tag-based export groups:
+
+=over
+
+=item *
+
+C<:vsXXXX> - validator status constants
+
+=item *
+
+C<:voXXXX> - validator option flags
+
+=item *
+
+C<:vtXXXX> - validator transfer constants
+
+=item *
+
+C<:all> - import all constants
+
+=back
+
+=head1 SEE ALSO
+
+L<TUI::Validate>,
+L<TUI::Objects>,
+L<TUI::Drivers::Event>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

@@ -271,26 +271,214 @@ __END__
 
 =head1 NAME
 
-TUI::Objects::Rect - defines the class TRect
+TUI::Objects::Rect - rectangular area defined by two points
+
+=head1 HIERARCHY
+
+  TRect (value type)
+    composed of two TPoint objects
+
+=head1 SYNOPSIS
+
+  use TUI::Objects;
+
+  my $r1 = TRect->new( ax => 0, ay => 0, bx => 80, by => 25 );
+  my $r2 = TRect->new(
+    a => TPoint->new( x => 10, y => 5 ),
+    b => TPoint->new( x => 40, y => 15 ),
+  );
+
+  my $copy = $r1->clone();
+  $copy->move( 2, 1 );
+  $copy->grow( 1, 1 );
+
+  if ( $r1 == $r2 ) {
+    ...
+  }
 
 =head1 DESCRIPTION
 
-In this Perl module, the I<TRect> class is created, which contains the same 
-methods as the Borland C++ class. 
+C<TRect> represents a rectangular area defined by two corner points. The
+attribute C<a> specifies the upper-left corner and C<b> specifies the
+lower-right corner of the rectangle.
+
+C<TRect> is a lightweight value type and is not derived from C<TObject>. It is
+used throughout Turbo Vision to describe screen locations and sizes of views,
+dialogs, and controls.
+
+The class provides a set of geometric operations such as moving, resizing,
+intersection, and containment testing. Rectangles can also be compared for
+equality using operator overloading.
+
+=head2 Commonly Used Features
+
+Most code constructs rectangles directly with C<TRect-E<gt>new> using
+coordinate arguments, then passes them into view and dialog constructors.
+For incremental layout changes, C<move> and C<grow> are the common operations,
+and C<clone> is useful when you need a temporary variant without mutating the
+original bounds object.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $rect = TRect->new();
+
+  my $rect = TRect->new(
+    a => $pointA,
+    b => $pointB
+  );
+
+  my $rect = TRect->new(
+    ax => $ax,
+    ay => $ay,
+    bx => $bx,
+    by => $by
+  );
+
+Creates a new rectangle.
+
+When point coordinates are supplied, the constructor creates internal
+C<TPoint> objects automatically.
+
+=over
+
+=item a
+
+Upper-left corner as a C<TPoint>.
+
+=item b
+
+Lower-right corner as a C<TPoint>.
+
+=item ax, ay, bx, by
+
+Integer coordinates used to initialize the corner points.
+
+=back
+
+=head2 new_TRect
+
+  my $rect = new_TRect($ax, $ay, $bx, $by);
+
+Factory-style constructor using positional arguments.
+
+This constructor is provided for compatibility with traditional Turbo Vision
+construction patterns.
+
+=head1 ATTRIBUTES
+
+The following attributes define the rectangle geometry.
+
+=over
+
+=item a
+
+Upper-left corner of the rectangle (I<TPoint>).
+
+=item b
+
+Lower-right corner of the rectangle (I<TPoint>).
+
+=back
 
 =head1 METHODS
 
-The methods I<move>, I<grow>, I<intersect>, I<union>, I<contains>, I<equal>, 
-I<not_equal> and I<isEmpty> are implemented to provide the same behavior as in 
-the original code.
+=head2 assign
+
+  $rect->assign($ax, $ay, $bx, $by);
+
+Sets the coordinates of the rectangle corners.
+
+=head2 clone
+
+  my $copy = $rect->clone();
+
+Creates and returns a copy of the rectangle.
+
+=head2 contains
+
+  my $bool = $rect->contains($point);
+
+Returns true if the specified point lies within the rectangle.
+
+=head2 dump
+
+  my $string = $rect->dump();
+
+Returns a string representation of the rectangle for debugging.
+
+=head2 equal
+
+  my $bool = $rect->equal($other, | $swap);
+
+Implements the C<==> operator for rectangle comparison.
+
+=head2 grow
+
+  $rect->grow($dx, $dy);
+
+Expands or contracts the rectangle by adjusting its corner points.
+
+=head2 intersect
+
+  $rect->intersect($other);
+
+Modifies the rectangle to become the intersection of itself and another
+rectangle.
+
+=head2 isEmpty
+
+  my $bool = $rect->isEmpty();
+
+Returns true if the rectangle has zero area.
+
+=head2 move
+
+  $rect->move($dx, $dy);
+
+Moves the rectangle by adding offsets to both corner points.
+
+=head2 not_equal
+
+  my $bool = $rect->not_equal($other, | $swap);
+
+Implements the C<!=> operator for rectangle comparison.
+
+=head2 union
+
+  $rect->union($other);
+
+Expands the rectangle so that it encompasses both rectangles.
+
+=head1 OPERATOR OVERLOADING
+
+C<TRect> supports comparison operators through Perl operator overloading.
+
+=over
+
+=item *
+
+C<==> maps to C<equal>
+
+=item *
+
+C<!=> maps to C<not_equal>
+
+=back
+
+=head1 SEE ALSO
+
+L<TUI::Objects::Point>,
+L<TUI::Views::View>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -300,8 +488,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

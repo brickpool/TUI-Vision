@@ -1,4 +1,5 @@
 package TUI::Dialogs::Const;
+# ABSTRACT: constants for dialog components
 
 use strict;
 use warnings;
@@ -142,3 +143,117 @@ use constant {
 };
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Dialogs::Const - constants for dialog components
+
+=head1 SYNOPSIS
+
+  use TUI::Dialogs::Const qw(:all);
+
+  # or import specific constant groups
+  use TUI::Dialogs::Const qw(:bfXXXX :cmXXXX :cpXXXX);
+
+=head1 DESCRIPTION
+
+C<TUI::Dialogs::Const> defines constants used by Turbo Vision dialog components
+such as dialogs, buttons, labels, input lines, and history views.
+
+The constants in this module are grouped by purpose and exported via tag-based
+export groups. They control dialog behavior, button flags, command handling,
+palette layouts, and dialog palette selection.
+
+This module only defines constants. The semantic meaning and practical usage of
+these constants is documented in higher-level modules such as C<TUI::Dialogs>,
+C<TDialog>, and the individual dialog view classes.
+
+=head1 CONSTANTS
+
+=head2 Button flags (bfXXXX)
+
+Flags controlling the behavior and appearance of dialog buttons.
+
+These flags are used when creating button views and may be combined to modify
+default handling, focus behavior, and event broadcasting.
+
+=head2 Dialog command constants (cmXXXX)
+
+Command identifiers used by dialog-related components.
+
+These values are delivered via C<$event-E<gt>{command}> and are handled by
+dialogs, buttons, and history components.
+
+=head2 Dialog palette layouts (cpXXXX)
+
+Palette layouts used by dialog views and dialog-related components.
+
+These constants define the color layout for dialogs, buttons, labels, input
+lines, clusters, and history views.
+
+=head2 Dialog palette selectors (dpXXXX)
+
+Constants used to select the active dialog palette variant.
+
+These values identify the blue, cyan, and gray dialog palette configurations.
+
+=head1 EXPORT TAGS
+
+Constants are exported using the following tag-based export groups:
+
+=over
+
+=item *
+
+C<:bfXXXX> - button flags
+
+=item *
+
+C<:cmXXXX> - dialog command identifiers
+
+=item *
+
+C<:cpXXXX> - dialog palette layouts
+
+=item *
+
+C<:dpXXXX> - dialog palette selectors
+
+=item *
+
+C<:all> - import all constants
+
+=back
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs>,
+L<TUI::Dialogs::Dialog>,
+L<TUI::Dialogs::Button>,
+L<TUI::Dialogs::InputLine>,
+L<TUI::Dialogs::History>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

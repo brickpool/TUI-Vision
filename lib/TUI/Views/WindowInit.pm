@@ -122,9 +122,9 @@ Creates the frame for a TWindow using the specified TRect parameter $r.
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

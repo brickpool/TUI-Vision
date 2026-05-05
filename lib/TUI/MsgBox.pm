@@ -25,3 +25,59 @@ sub unimport {
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::MsgBox - Message box utilities for the TUI::Vision framework
+
+=head1 SYNOPSIS
+
+  use TUI::MsgBox;
+
+=head1 DESCRIPTION
+
+TUI::MsgBox provides message box and input box utilities for the
+TUI::Vision framework. It corresponds to the Turbo Vision message box
+subsystem and offers simple modal dialogs for displaying messages,
+warnings, confirmations, and text prompts.
+
+This module re-exported:
+
+=over 4
+
+=item * Const  
+Symbolic constants for message box types and button sets.
+
+=item * MsgBoxText  
+Functions such as C<messageBox> and C<inputBox>.
+
+=back
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+Contributors are documented in the POD of the respective framework modules.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

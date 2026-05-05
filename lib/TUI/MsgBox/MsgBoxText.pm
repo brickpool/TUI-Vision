@@ -227,3 +227,287 @@ sub inputBoxRect {    # $command ($bounds, $Title, $aLabel, \@s, $limit)
 } #/ sub inputBoxRect
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::MsgBox::MsgBoxText - message box and input box helper functions
+
+=head1 SYNOPSIS
+
+  use TUI::MsgBox::MsgBoxText;
+
+  my $cmd = inputBox(
+    'The Title',
+    'Enter some text:',
+    $string,
+    30
+  );
+
+  my $cmd = messageBox(
+    'Problem renaming %s',
+    mfError | mfOkButton | mfCancelButton,
+    $fileName
+  );
+
+=head1 DESCRIPTION
+
+C<TUI::MsgBox::MsgBoxText> provides a set of convenience functions for displaying
+simple message boxes and input dialogs in Turbo Vision applications.
+
+This module implements functional equivalents of the Turbo Vision
+C<InputBox>, C<MessageBox>, and related helper routines found in the original
+MSGBOX.PAS demo sources.
+
+All functions in this module are implemented as plain subroutines. No objects
+are created or required.
+
+These functions may only be used within a running Turbo Vision application.
+
+=head1 VARIABLES
+
+The following global variables define the default text labels used by
+message boxes.
+
+=head2 $yesText
+
+Label text for the affirmative response button.
+
+=head2 $noText
+
+Label text for the negative response button.
+
+=head2 $okText
+
+Label text for the confirmation button.
+
+=head2 $cancelText
+
+Label text for the cancel action.
+
+=head2 $warningText
+
+Title text used for warning message boxes.
+
+=head2 $errorText
+
+Title text used for error message boxes.
+
+=head2 $informationText
+
+Title text used for informational message boxes.
+
+=head2 $confirmText
+
+Title text used for confirmation message boxes.
+
+=head1 FUNCTIONS
+
+=head2 inputBox
+
+  my $command = inputBox($title, $label, $string, $limit);
+
+Displays a modal dialog containing a single input field.
+
+=over
+
+=item title
+
+Dialog window title (I<Str>).
+
+=item label
+
+Prompt text displayed next to the input field (I<Str>).
+
+=item string
+
+Initial value of the input field. The value may be modified by the user.
+
+=item limit
+
+Maximum length of the input string (I<Int>).
+
+=back
+
+Returns either C<cmOk> or C<cmCancel> depending on user selection.
+
+=head2 inputBoxRect
+
+  my $command = inputBoxRect($bounds, $title, $label, \$string, $limit);
+
+Identical to C<inputBox>, but allows explicit control over dialog position and
+size.
+
+=over
+
+=item bounds
+
+Bounding rectangle of the dialog (I<TRect>).
+
+=item title
+
+Dialog window title (I<Str>).
+
+=item label
+
+Prompt text displayed next to the input field (I<Str>).
+
+=item string
+
+Scalar reference receiving the edited text.
+
+=item limit
+
+Maximum length of the input string (I<Int>).
+
+=back
+
+Returns either C<cmOk> or C<cmCancel>.
+
+=head2 messageBox
+
+  my $command = messageBox($message, $options, @params);
+
+Displays a formatted message box with configurable buttons and style.
+
+The message string and optional parameters are formatted using Turbo Vision
+formatting rules.
+
+=over
+
+=item message
+
+Message format string (I<Str>).
+
+=item options
+
+Bitmask selecting message type and button layout (I<Int>).
+
+=item params
+
+Optional parameters inserted into the message string.
+
+=back
+
+Returns one of C<cmOk>, C<cmCancel>, C<cmYes>, or C<cmNo>.
+
+=head2 messageBoxRect
+
+  my $command = messageBoxRect($bounds, $message, $options, @params);
+
+Identical to C<messageBox>, but allows explicit control over dialog position and
+size.
+
+=over
+
+=item bounds
+
+Bounding rectangle of the message box (I<TRect>).
+
+=item message
+
+Message format string (I<Str>).
+
+=item options
+
+Bitmask selecting message type and button layout (I<Int>).
+
+=item params
+
+Optional parameters inserted into the message string.
+
+=back
+
+Returns one of C<cmOk>, C<cmCancel>, C<cmYes>, or C<cmNo>.
+
+=head1 MESSAGE BOX OPTIONS
+
+Message box appearance and buttons are controlled via option flags.
+
+Message types:
+
+=over
+
+=item *
+
+C<mfWarning>
+
+=item *
+
+C<mfError>
+
+=item *
+
+C<mfInformation>
+
+=item *
+
+C<mfConfirmation>
+
+=back
+
+Button flags:
+
+=over
+
+=item *
+
+C<mfYesButton>
+
+=item *
+
+C<mfNoButton>
+
+=item *
+
+C<mfOkButton>
+
+=item *
+
+C<mfCancelButton>
+
+=item *
+
+C<mfYesNoCancel>
+
+=item *
+
+C<mfOkCancel>
+
+=back
+
+=head1 IMPORTANT
+
+These functions require a running Turbo Vision application environment.
+They must not be used outside of a Turbo Vision program.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::Dialog>,
+L<TUI::Dialogs::StaticText>,
+L<TUI::Dialogs::InputLine>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution). 
+
+=cut
+

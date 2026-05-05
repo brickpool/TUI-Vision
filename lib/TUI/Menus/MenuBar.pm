@@ -159,33 +159,127 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::MenuBar - manages the menu bar at the top of the app.
+TUI::Menus::MenuBar - manages the menu bar at the top of the application
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TMenuView
+        TMenuBar
+
+=head1 SYNOPSIS
+
+  use TUI::Menus;
+
+  my $menuBar = new_TMenuBar($bounds, $menu);
 
 =head1 DESCRIPTION
 
-The TMenuBar object manages the menu bar across the top of the application
-screen.
+C<TMenuBar> implements the menu bar displayed at the top of a Turbo Vision
+application. In this Perl implementation, menu structures are created using
+a declarative, expression-based style rather than explicit builder calls.
 
-=head1 METHODS
+Menus are constructed by combining submenu and menu item objects using the
+overloaded C<+> operator. This allows entire menu trees to be expressed as a
+single expression that is passed directly to the menu bar constructor.
+
+The resulting structure closely mirrors the logical menu hierarchy while
+remaining compact and readable. Once created, the menu bar handles drawing,
+keyboard navigation, and mouse interaction automatically.
+
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $menuBar = TMenuBar->new(bounds => $bounds, menu => $aMenu);
+  my $menuBar = TMenuBar->new(
+    bounds => $bounds,
+    menu   => $menu
+  );
 
-=head2 DESTROY
+Creates a new menu bar.
 
-  $self->DESTROY();
+=over
+
+=item bounds
+
+Bounding rectangle of the menu bar (I<TRect>).
+
+=item menu
+
+Root menu structure defining the contents of the menu bar (I<TMenu> or undef).
+
+=back
+
+=head2 new_TMenuBar
+
+  my $menuBar = new_TMenuBar($bounds, $menu);
+
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with named parameters and is
+provided for compatibility with traditional Turbo Vision construction patterns.
+
+=head1 METHODS
 
 =head2 draw
 
-  $self->draw();
+  $menuBar->draw();
 
-=head2 from
-
-  my $menuBar = TMenuBar->from($bounds, $aMenu;
+Draws the menu bar and highlights the currently selected menu item.
 
 =head2 getItemRect
 
-  my $rect = $self->getItemRect($item | undef);
+  my $rect = $menuBar->getItemRect($item | undef);
+
+Returns the screen rectangle occupied by the specified menu item. This method
+is used internally to determine whether a mouse click occurred on a particular
+menu entry.
+
+=head1 EXAMPLE
+
+The following example shows how a menu bar can be constructed using chained
+menu and submenu objects.
+
+  sub initMenuBar {
+    my ( $class, $r ) = @_;
+    $r->{b}{y} = $r->{a}{y} + 1;
+    return new_TMenuBar(
+      $r,
+      new_TSubMenu( '~F~ile', hcNoContext )
+        + new_TMenuItem( '~O~pen...', cmFileOpen, kbF3, hcNoContext, 'F3' )
+        + new_TMenuItem( '~S~ave as...', cmFileSave, hcNoContext )
+        + newLine
+        + new_TMenuItem( 'E~x~it', cmQuit, kbAltX, hcNoContext, 'Alt-X' )
+      + new_TSubMenu( '~H~elp', hcNoContext )
+        + new_TMenuItem( '~A~bout', cmAbout, hcNoContext )
+    );
+  }
+
+=head1 SEE ALSO
+
+L<TUI::Menus::Menu>,
+L<TUI::Menus::MenuBox>,
+L<TUI::Menus::MenuView>,
+L<TUI::Views::View>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

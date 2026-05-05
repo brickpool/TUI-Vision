@@ -94,19 +94,33 @@ TSItem - simple singly linked list node for Turbo Vision dialog data
   my $item2 = TSItem->new("second", $item3);
   my $item1 = TSItem->new("first",  $item2);
 
-  my $value = $item1->value;      # "first"
-  my $next  = $item1->next;       # $item2
+  my $value = $item1->value;   # "first"
+  my $next  = $item1->next;    # $item2
 
 =head1 DESCRIPTION
 
-C<TSItem> represents a simple singly linked list node used for storing 
-dialog-related data.  
+C<TSItem> represents a minimal singly linked list node used by Turbo Vision
+dialog infrastructure. Each node stores a string value and a reference to the
+next node in the list, or C<undef> if it is the last element.
 
-Each node contains a string value and a reference to the next node or C<undef>.  
-The structure mirrors the original Turbo Vision C++ TSItem class, but uses 
-Perl's automatic memory management.  
+This structure originates from the classic Turbo Vision record type used for
+managing lists of strings. In the Perl implementation, it benefits from
+automatic memory management and reference handling while preserving the
+original data model.
 
-It is typically used internally by higher-level dialog controls and support code.
+C<TSItem> is typically created indirectly by helper functions or higher-level
+dialog components and is rarely manipulated directly in application code.
+
+=head1 DISCUSSION
+
+Linked lists of C<TSItem> objects are commonly used to represent collections of
+dialog-related strings, such as option lists or input histories. Each node
+contains only the essential information required to traverse the list, keeping
+the structure lightweight and efficient.
+
+Unlike container abstractions such as arrays, C<TSItem> mirrors the original
+Turbo Vision design closely, which simplifies porting and maintenance of
+existing logic.
 
 =head1 ATTRIBUTES
 
@@ -114,11 +128,11 @@ It is typically used internally by higher-level dialog controls and support code
 
 =item value
 
-The current string value held by this list node (I<Str>).
+The string value stored in this list node (I<Str>).
 
 =item next
 
-The reference to the next node in the singly linked list, or C<undef> 
+Reference to the next node in the list, or C<undef> if this is the last element
 (I<TSItem> or undef).
 
 =back
@@ -129,17 +143,18 @@ The reference to the next node in the singly linked list, or C<undef>
 
   my $item = TSItem->new(value => $value, next => $next);
 
-Creates a new C<TSItem> node with the given value and link to the next node.
+Creates a new C<TSItem> node with the specified string value and an optional
+reference to the next node.
 
 =over
 
 =item value
 
-The string value stored in the node (I<Str>).
+The string value to be stored in the node (I<Str>).
 
 =item next
 
-Reference to the next C<TSItem> in the list or C<undef> (I<TSItem> or undef).
+Reference to the next C<TSItem> in the list, or C<undef> (I<TSItem> or undef).
 
 =back
 
@@ -147,16 +162,16 @@ Reference to the next C<TSItem> in the list or C<undef> (I<TSItem> or undef).
 
   my $item = new_TSItem($aValue, $aNext | undef);
 
-Factory constructor that instantiates a string element from a value and the 
-next list element (I<TSItem> or undef).
+Factory constructor that creates a new list element from a string value and a
+reference to the next node.
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

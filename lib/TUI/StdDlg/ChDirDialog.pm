@@ -365,19 +365,159 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::ChDirDialog - Common dialog box for selecting a directory
+TUI::StdDlg::ChDirDialog - common dialog for selecting a directory
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TWindow
+          TDialog
+            TChDirDialog
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg;
+
+  my $dlg = new_TChDirDialog(
+    $options,
+    $histId
+  );
+
+  my $result = $deskTop->execView($dlg);
 
 =head1 DESCRIPTION
 
-Dialog box for selecting a directory.
+C<TChDirDialog> implements the standard Turbo Vision dialog used for selecting
+and changing directories.
+
+The dialog presents a directory list, an input line for the directory path,
+and command buttons. It allows navigation through the directory hierarchy
+using keyboard and mouse input and returns the selected directory to the
+caller.
+
+=head1 VARIABLES
+
+The following global variables define the default labels and messages
+used by C<TChDirDialog>.
+
+=head2 $changeDirTitle
+
+Title text of the change directory dialog.
+
+=head2 $dirNameText
+
+Label text for the directory name input field.
+
+=head2 $dirTreeText
+
+Label text for the directory tree view.
+
+=head2 $okText
+
+Label text for the confirmation button.
+
+=head2 $chdirText
+
+Label text for the change directory action.
+
+=head2 $revertText
+
+Label text for the revert action.
+
+=head2 $helpText
+
+Label text for the help command.
+
+=head2 $drivesText
+
+Label text for the drives selection area.
+
+=head2 $invalidText
+
+Message text displayed for an invalid directory.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $dlg = TChDirDialog->new(
+    options => $options,
+    histId  => $histId
+  );
+
+Creates a new change-directory dialog.
+
+=over
+
+=item options
+
+Dialog option flags controlling behavior and appearance (I<Int>).
+
+=item histId
+
+History identifier used for directory input history (I<Int>).
+
+=back
+
+=head2 new_TChDirDialog
+
+  my $dlg = new_TChDirDialog($options, $histId);
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 dataSize
+
+  my $size = $dlg->dataSize();
+
+Returns the number of scalar values transferred via C<getData> and C<setData>.
+
+=head2 getData
+
+  $dlg->getData(\@record);
+
+Stores the selected directory into the supplied record.
+
+=head2 handleEvent
+
+  $dlg->handleEvent($event);
+
+Processes keyboard and command events for directory navigation and selection.
+
+=head2 setData
+
+  $dlg->setData(\@record);
+
+Initializes the dialog state from external input.
+
+=head2 shutDown
+
+  $dlg->shutDown();
+
+Releases dialog resources during shutdown.
+
+=head2 valid
+
+  my $bool = $dlg->valid($command);
+
+Checks whether the dialog should accept the specified command.
+
+=head1 SEE ALSO
+
+L<TUI::StdDlg::DirListBox>,
+L<TUI::StdDlg::DirEntry>,
+L<TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

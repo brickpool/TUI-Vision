@@ -99,95 +99,129 @@ __END__
 
 =head1 NAME
 
-TParamText - displays formatted dynamic text inside a Turbo Vision dialog
+TUI::Dialogs::ParamText - formatted dynamic text control for dialogs
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TStaticText
+        TLabel
+          TParamText
 
 =head1 SYNOPSIS
 
-  use TUI::Objects;
   use TUI::Dialogs;
 
   my $bounds = TRect->new(ax => 1, ay => 1, bx => 30, by => 2);
-  my $paramText = TParamText->new(bounds => $bounds);
+  my $paramText = TParamText->new( bounds => $bounds );
 
   $paramText->setText('Value: %d, Name: %s', 42, 'John');
 
   my $text = '';
   $paramText->getText(\$text);
-  
+
   print "Current text: $text\n";
-  
+
 =head1 DESCRIPTION
 
-C<TParamText> provides a formatted text control for Turbo Vision dialogs.
-It stores a dynamic string buffer and allows updating its content using 
-printf-style formatting.
+C<TParamText> is a dynamic text control derived from C<TStaticText>. It allows
+formatted text to be displayed inside dialogs using printf-style format
+strings.
 
-The control integrates with the Turbo Vision drawing system and refreshes itself 
-when the text changes.
+The control maintains an internal string buffer and recomputes its displayed
+text whenever C<setText> is called. This mirrors the original Turbo Vision
+behavior, where formatted strings are generated using the C<FormatStr>
+procedure.
 
-=head1 ATTRIBUTES
+C<TParamText> is typically used for status messages, confirmations, or prompts
+that include variable data.
 
-=over
+=head2 Commonly Used Features
 
-=item str
+In practice you will call C<new_TParamText> to create the control, call
+C<setText> once to supply the format string together with any arguments, and
+then insert the control into the dialog. Unlike the Pascal original, which
+required manually assigning a pointer to a parameter record, the Perl
+implementation accepts the format string and its arguments directly in
+C<setText>, so no separate data structure needs to be maintained. When the
+dialog data changes you simply call C<setText> again with the new values;
+C<getText> is rarely needed outside of tests.
 
-The formatted text buffer maintained internally by the control (I<Str>).
-
-=back
-
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
- my $paramText = $self->new(%args);
+  my $paramText = TParamText->new(
+    bounds => $bounds
+  );
 
-Creates a new C<TParamText> object using the provided constructor arguments and 
-initializes its internal buffer.
+Creates a new parameterized text control.
 
 =over
 
 =item bounds
 
-The bounds of the param text (I<TRect>).
+Bounding rectangle of the control (I<TRect>).
 
 =back
 
 =head2 new_TParamText
 
- my $paramText = new_TParamText($bounds);
+  my $paramText = new_TParamText($bounds);
 
-Constructs a C<TParamText> instance from a C<TRect> object as a convenience 
-wrapper for simplified creation.
+Factory-style constructor using positional arguments.
+
+This constructor is provided for compatibility with traditional Turbo Vision
+construction patterns.
+
+=head1 ATTRIBUTES
+
+The following attributes are managed internally and exposed as read-only
+accessors.
+
+=over
+
+=item str
+
+Internal formatted text buffer (I<Str>).
+
+=back
+
+=head1 METHODS
 
 =head2 getText
 
- $self->getText(\$s);
+  $paramText->getText(\$string);
 
-Retrieves the current internal text and writes it into the scalar supplied by 
-the caller.
+Retrieves the current formatted text and writes it into the supplied scalar.
 
 =head2 getTextLen
 
- my $len = $self->getTextLen();
+  my $len = $paramText->getTextLen();
 
-Returns the length of the text currently stored in the internal buffer.
+Returns the length of the formatted text currently stored in the buffer.
 
 =head2 setText
 
- $self->setText($fmt, @args);
+  $paramText->setText($format, @args);
 
-Formats and stores text using a printf-style format string and triggers a 
+Formats and stores text using a printf-style format string and triggers a
 redraw of the view.
 
-=cut
+=head1 SEE ALSO
+
+L<TUI::Dialogs::StaticText>,
+L<TUI::Dialogs::Label>,
+L<TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -197,7 +231,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

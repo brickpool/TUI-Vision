@@ -436,142 +436,233 @@ __END__
 
 =head1 NAME
 
-TScrollBar - Scroll bar class for window components in Turbo Vision
+TUI::Views::ScrollBar - scroll bar view for Turbo Vision components
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TScrollBar
 
 =head1 SYNOPSIS
 
+  use TUI::Objects;
   use TUI::Views;
 
-  my $scrollBar = TScrollBar->new(bounds => $bounds);
-  $scrollBar->draw();
+  my $bounds = TRect->new( ax => 0, ay => 0, bx => 30, by => 10 );
+  my $vbar   = TScrollBar->new(
+    bounds => TRect->new( ax => 29, ay => 0, bx => 30, by => 10 )
+  );
+
+  my $viewer = TListViewer->new(
+    bounds     => $bounds,
+    numCols    => 1,
+    hScrollBar => undef,
+    vScrollBar => $vbar,
+  );
+
+  # Typical setup for list-style scrolling.
+  $vbar->setRange(0, 99);
+  $vbar->setStep(10, 1);
+  $vbar->setValue(0);
 
 =head1 DESCRIPTION
 
-The C<TScrollBar> class is used to create scroll bars for window components in
-Turbo Vision. It provides methods for drawing the scroll bar and managing its
-appearance and behavior.
+C<TScrollBar> implements a visual scroll bar used to control and display a
+numeric position within a bounded range. Scroll bars are typically attached
+to other views such as list viewers, text editors, or scrollers and remain
+synchronized with the associated view.
+
+When linked to a compatible view, the scroll bar automatically reflects
+changes in position and range. Conversely, user interaction with the scroll
+bar generates events that notify the owning view of position changes.
+
+C<TScrollBar> supports both vertical and horizontal orientations. A vertical
+scroll bar is created when its width is one column; otherwise, a horizontal
+scroll bar is created.
+
+=head2 Commonly Used Features
+
+In everyday code, scroll bars are usually created once and then configured with
+either C<setParams> (single-call setup) or the C<setRange>/C<setStep>/
+C<setValue> trio (incremental setup). After that, application logic mainly
+reacts to scroll events rather than manipulating internal fields directly.
+
+=head1 VARIABLES
+
+The following global variables define the characters used to render
+C<TScrollBar> elements.
+
+=head2 $vChars
+
+Defines the character set used for vertical scroll bars.
+The default value uses CP437 characters (up, down, track, thumb).
+
+=head2 $hChars
+
+Defines the character set used for horizontal scroll bars.
+The default value uses CP437 characters (left, right, track, thumb).
 
 =head1 ATTRIBUTES
+
+The following attributes describe the state and behavior of the scroll bar.
 
 =over
 
 =item value
 
-The current value of the scroll bar (I<Int>).
+Current position of the scroll bar (I<Int>).
 
 =item minVal
 
-The minimum value of the scroll bar (I<Int>).
+Lower bound of the scroll bar range (I<Int>).
 
 =item maxVal
 
-The maximum value of the scroll bar (I<Int>).
+Upper bound of the scroll bar range (I<Int>).
 
 =item pgStep
 
-The page step value of the scroll bar (I<Int>).
+Page step size used for page-up and page-down operations (I<Int>).
 
 =item arStep
 
-The arrow step value of the scroll bar (I<Int>).
+Arrow step size used for single-step movements (I<Int>).
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
   my $scrollBar = TScrollBar->new(bounds => $bounds);
 
-Initializes an instance of C<TScrollBar> with the specified bounds.
-
-=head2 new_TStaticText
-
- my $scrollBar = new_TStaticText($bounds);
-
-Convenience constructor that instantiates a scroll bar from bounds.
+Creates a new scroll bar with the specified bounds.
 
 =over
 
-=item $bounds
+=item bounds
 
-The bounds of the view (I<TRect>).
+Bounding rectangle of the scroll bar (I<TRect>).
 
 =back
 
+=head2 new_TScrollBar
+
+  my $scrollBar = new_TScrollBar($bounds);
+
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with the C<bounds> parameter
+and is provided for compatibility with traditional Turbo Vision construction
+patterns.
+
+=head1 METHODS
+
 =head2 draw
 
-  $self->draw();
+  $scrollBar->draw();
 
-Draws the scroll bar on the screen.
+Draws the scroll bar.
 
 =head2 drawPos
 
-  $self->drawPos($pos);
+  $scrollBar->drawPos($pos);
+
+Draws the scroll bar thumb at the specified position.
 
 =head2 getPalette
 
-  my $palette = $self->getPalette();
+  my $palette = $scrollBar->getPalette();
 
-Returns the scroll bar's color palette.
+Returns the color palette used to draw the scroll bar.
 
 =head2 getPos
 
-  my $pos = $self->getPos();
+  my $pos = $scrollBar->getPos();
+
+Returns the current scroll bar position.
 
 =head2 getSize
 
-  my $size = $self->getSize();
+  my $size = $scrollBar->getSize();
+
+Returns the usable size of the scroll bar track.
 
 =head2 handleEvent
 
-  $self->handleEvent($event);
+  $scrollBar->handleEvent($event);
 
-Handles an event sent to the scroll bar.
+Handles mouse and keyboard events directed at the scroll bar.
 
 =head2 scrollDraw
 
-  $self->scrollDraw();
+  $scrollBar->scrollDraw();
 
-Draws the scroll bar's thumb and arrows.
+Redraws the scroll bar after a value change and notifies the owner.
 
 =head2 scrollStep
 
-  my $steps = scrollStep($part);
+  my $delta = $scrollBar->scrollStep($part);
 
-Scrolls the scroll bar by a specified step.
+Determines the step size associated with a specific scroll bar part, such as
+an arrow or page region.
 
 =head2 setParams
 
-  $self->setParams($aValue, $aMin, $aMax, $aPgStep, $aArStep);
+  $scrollBar->setParams($value, $min, $max, $pgStep, $arStep);
 
-Sets the parameters of the scroll bar.
+Initializes all scroll bar parameters in a single call.
 
 =head2 setRange
 
-  $self->setRange($aMin, $aMax);
+  $scrollBar->setRange($min, $max);
 
-Sets the range of the scroll bar.
+Sets the minimum and maximum range of the scroll bar.
 
 =head2 setStep
 
-  $self->setStep($aPgStep, $aArStep);
+  $scrollBar->setStep($pgStep, $arStep);
 
-Sets the step values of the scroll bar.
+Sets the page and arrow step sizes.
 
 =head2 setValue
 
-  $self->setValue($aValue);
+  $scrollBar->setValue($value);
 
-Returns the current value of the scroll bar.
+Sets the current scroll bar value and updates the display.
+
+=head1 EXAMPLE
+
+The following example demonstrates how to create a scroll bar and link it to
+a list viewer:
+
+  # Define scroll bar bounds relative to the list viewer
+  my $barBounds = $bounds->clone;
+  $barBounds->{b}->{x} += 1;
+  $barBounds->{a}->{x}  = $bounds->{b}->{x};
+
+  # Create the scroll bar
+  my $listScroller = TScrollBar->new(bounds => $barBounds);
+
+  # Create a list viewer and link it to the scroll bar
+  my $listObject = TListViewer->new(
+      bounds     => $bounds,
+      numCols    => 1,
+      scrollBar  => $listScroller,
+  );
+
+  # Insert both views into the owning group
+  $group->insert($listScroller);
+  $group->insert($listObject);
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -581,7 +672,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

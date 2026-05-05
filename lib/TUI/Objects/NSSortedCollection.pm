@@ -126,31 +126,43 @@ __END__
 
 =head1 NAME
 
-TNSSortedCollection - defines the NS class for TSortedCollection
+TUI::Objects::NSSortedCollection - internal non-storable base for sorted coll's
 
 =head1 DESCRIPTION
 
-In this Perl module, the class I<TNSSortedCollection> is created, which inherits
-from I<TNSCollection>. 
+C<TNSSortedCollection> is the non-storable base variant of sorted collection
+classes in the Turbo Vision framework. It extends C<TNSCollection> with support
+for ordered insertion and lookup.
 
-The NS variants of collections are Not Storable.  These are needed for 
-internal use in the stream manager.  There are storable variants of each of 
-these classes for use by the rest of the library.
+This class exists primarily for internal use by the framework. Public-facing
+code should use C<TSortedCollection> or one of its derived classes instead.
 
-=head1 METHODS
+The non-storable variants are required to separate internal collection behavior
+from the storable collection types used elsewhere in the library.
 
-The methods I<new>, I<search>, I<indexOf>, I<insert>, I<keyOf> and I<compare> 
-are implemented to provide the same behavior as in the Borland C++ code. The 
-I<compare> method is defined as a abstract method that must be implemented in a 
-subclass.
+=head1 NOTE
+
+This class is considered internal.
+
+Although C<TNSSortedCollection> implements the core behavior required for
+sorted collections, it is not intended to be instantiated or subclassed
+directly by application code.
+
+Derived public classes are expected to provide a concrete comparison strategy.
+
+=head1 SEE ALSO
+
+L<TUI::Objects::SortedCollection>,
+L<TUI::Objects::Collection>,
+L<TUI::Objects::NSCollection>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

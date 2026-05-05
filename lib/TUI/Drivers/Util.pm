@@ -15,6 +15,10 @@ our @EXPORT_OK = qw(
   getCtrlCode
 );
 
+our %EXPORT_TAGS = (
+  all => \@EXPORT_OK,
+);
+
 use Devel::StrictMode;
 use PerlX::Assert::PP;
 use Scalar::Util qw(
@@ -137,3 +141,128 @@ sub getCtrlCode ($) {    # $keyCode ($ch)
 } #/ sub getCtrlCode
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Drivers::Util - utility functions for keyboard and event handling
+
+=head1 SYNOPSIS
+
+  use TUI::Drivers::Util qw(
+    cstrlen
+    ctrlToArrow
+    getAltChar
+    getAltCode
+    getCtrlChar
+    getCtrlCode
+  );
+
+  my $len = cstrlen($string);
+  my $arrow = ctrlToArrow($keyCode);
+
+  my $altCode = getAltCode('X');
+  my $altChar = getAltChar($altCode);
+
+  my $ctrlCode = getCtrlCode('C');
+  my $ctrlChar = getCtrlChar($ctrlCode);
+
+=head1 DESCRIPTION
+
+C<TUI::Drivers::Util> provides a collection of low-level helper functions used
+by the Turbo Vision driver and event system.
+
+The functions in this module operate on key codes and character values and are
+used to translate between control, alternate, and normal key representations.
+They are intended for internal use by event processing and input handling
+code.
+
+This module is purely functional and does not define any objects.
+
+=head2 Commonly Used Features
+
+Typical usage falls into three groups: converting control-key navigation
+shortcuts to arrow/navigation key codes via C<ctrlToArrow()>, translating
+between Alt key codes and characters via C<getAltCode()>/C<getAltChar()>, and
+translating between Ctrl key codes and characters via
+C<getCtrlCode()>/C<getCtrlChar()>.
+
+C<cstrlen()> is commonly used when text contains Turbo Vision marker
+characters (for example C<~>) and a marker-aware length is needed.
+
+=head1 FUNCTIONS
+
+=head2 cstrlen
+
+  my $len = cstrlen($string);
+
+Returns the length of a string up to the first null character.
+
+This function behaves like the C runtime C<strlen> and is useful when working
+with strings that may contain embedded null characters.
+
+=head2 ctrlToArrow
+
+  my $keyCode = ctrlToArrow($keyCode);
+
+Maps certain control key codes to their corresponding arrow key codes.
+
+If the key code does not represent a convertible control key, it is returned
+unchanged.
+
+=head2 getAltChar
+
+  my $char = getAltChar($keyCode);
+
+Returns the character associated with an Alt-modified key code.
+
+If the key code does not represent an Alt-modified character, the return value
+is undefined.
+
+=head2 getAltCode
+
+  my $keyCode = getAltCode($char);
+
+Returns the Alt-modified key code corresponding to the given character.
+
+=head2 getCtrlChar
+
+  my $char = getCtrlChar($keyCode);
+
+Returns the character associated with a Ctrl-modified key code.
+
+=head2 getCtrlCode
+
+  my $keyCode = getCtrlCode($char);
+
+Returns the Ctrl-modified key code corresponding to the given character.
+
+=head1 SEE ALSO
+
+L<TUI::Drivers::Const>,
+L<TUI::Drivers::Event>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
+

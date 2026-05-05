@@ -509,3 +509,288 @@ sub validView {    # $view|undef ($view|undef)
 } #/ sub validView
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::App::Program - central program object managing application execution
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TProgram
+          TApplication
+
+=head1 SYNOPSIS
+
+  use TUI::App;
+  use TUI::Drivers;
+  use TUI::Menus;
+
+  package MyProgram;
+  extends TProgram;
+
+  sub initMenuBar {
+    my ( $class, $r ) = @_;
+    $r->{b}{y} = $r->{a}{y} + 1;
+    return new_TMenuBar(
+      $r,
+      new_TSubMenu( '~F~ile', 0, 0 ) +
+      new_TMenuItem( 'E~x~it', cmQuit, kbAltX, 0, 'Alt-X' )
+    );
+  }
+
+  sub initStatusLine {
+    my ( $class, $r ) = @_;
+    $r->{a}{y} = $r->{b}{y} - 1;
+    return new_TStatusLine(
+      $r,
+      new_TStatusDef( 0, 0xFFFF ) +
+      new_TStatusItem( '~Alt-X~ Exit', kbAltX, cmQuit )
+    );
+  }
+
+  package main;
+
+  my $program = MyProgram->new();
+  $program->run();
+
+=head1 DESCRIPTION
+
+C<TProgram> implements the core functionality of a Turbo Vision application.
+It manages the event loop, screen initialization, desktop, menu bar, and status
+line.
+
+Most applications derive from C<TApplication>, which extends C<TProgram> with
+additional behavior. However, it is also possible to derive an application
+directly from C<TProgram>.
+
+C<TProgram> owns all top-level views of the application and coordinates event
+dispatch, idle processing, and shutdown.
+
+=head2 Commonly Used Features
+
+In normal applications you instantiate a C<TProgram>-derived class and call
+C<run>; most day-to-day customization happens by overriding C<initMenuBar>,
+C<initStatusLine>, C<handleEvent>, and sometimes C<idle>. C<TProgram> wires
+the desktop, menu bar, and status line during construction, then drives the
+main event loop for you. While many projects derive from C<TApplication>, the
+same workflow applies because C<TApplication> builds directly on this class.
+
+=head1 VARIABLES
+
+The following global variables are used by C<TProgram> and its subclasses
+to access application state and top-level views.
+
+=head2 $exitText
+
+Label text for the standard application exit command, including optional
+accelerator markers.
+
+=head2 $application
+
+Reference to the running application object (usually C<TApplication>).
+
+=head2 $statusLine
+
+Reference to the application's C<TStatusLine> instance.
+
+=head2 $menuBar
+
+Reference to the application's C<TMenuBar> instance.
+
+=head2 $deskTop
+
+Reference to the application's C<TDeskTop> container.
+
+=head2 $appPalette
+
+Index of the active application color palette.
+
+=head2 $pending
+
+Pending C<TEvent> object queued for later processing.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $program = TProgram->new();
+
+Creates a new program object and initializes Turbo Vision support.
+
+This constructor corresponds to the Turbo Vision C<Init> constructor and calls
+C<initScreen>, C<initDeskTop>, C<initMenuBar>, and C<initStatusLine>.
+
+=head2 new_TProgram
+
+  my $program = new_TProgram();
+
+Factory-style constructor using positional arguments.
+
+This constructor is provided for compatibility with traditional Turbo Vision
+construction patterns.
+
+=head1 DESTRUCTOR
+
+=head2 DEMOLISH
+
+  $self->DEMOLISH($in_global_destruction);
+
+Releases application-level resources during object destruction.
+
+This method is part of the Perl object lifecycle and ensures that internal
+references to the desktop, menu bar, and status line are released when the
+program object is destroyed.
+
+=head1 METHODS
+
+=head2 canMoveFocus
+
+  my $bool = $program->canMoveFocus();
+
+Returns true if the focus can be moved between views.
+
+=head2 executeDialog
+
+  my $command = $program->executeDialog($dialog, \@data | undef);
+
+Executes a dialog modally and returns the resulting command.
+
+=head2 getEvent
+
+  $program->getEvent($event);
+
+Retrieves the next input event and dispatches it to the appropriate view.
+
+=head2 getPalette
+
+  my $palette = $program->getPalette();
+
+Returns the current application-level color palette.
+
+=head2 handleEvent
+
+  $program->handleEvent($event);
+
+Handles application-level events.
+
+Applications typically override this method and call the inherited
+implementation first.
+
+=head2 idle
+
+  $program->idle();
+
+Performs background processing during idle periods.
+
+=head2 initDeskTop
+
+  my $desktop = $program->initDeskTop($rect);
+
+Initializes the desktop view.
+
+=head2 initMenuBar
+
+  my $menuBar = $program->initMenuBar($rect);
+
+Initializes the menu bar.
+
+=head2 initScreen
+
+  $program->initScreen();
+
+Initializes screen mode dependent settings.
+
+=head2 initStatusLine
+
+  my $statusLine = $program->initStatusLine($rect);
+
+Initializes the status line.
+
+=head2 insertWindow
+
+  my $window = $program->insertWindow($window);
+
+Inserts a window into the desktop.
+
+=head2 outOfMemory
+
+  $program->outOfMemory();
+
+Handles low-memory conditions.
+
+=head2 putEvent
+
+  $program->putEvent($event);
+
+Places an event back into the event queue.
+
+=head2 resume
+
+  $program->resume();
+
+Resumes execution after suspension.
+
+=head2 run
+
+  $program->run();
+
+Starts the main application event loop.
+
+=head2 setScreenMode
+
+  $program->setScreenMode($mode);
+
+Changes the application screen mode.
+
+=head2 shutDown
+
+  $program->shutDown();
+
+Shuts down the application and releases resources.
+
+=head2 suspend
+
+  $program->suspend();
+
+Suspends application execution.
+
+=head2 validView
+
+  my $view = $program->validView($view | undef);
+
+Validates a newly created view and handles low-memory conditions.
+
+=head1 SEE ALSO
+
+L<TUI::App::Application>,
+L<TUI::Views::View>,
+L<TUI::Views::Group>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
+

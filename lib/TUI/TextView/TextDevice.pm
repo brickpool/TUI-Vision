@@ -279,33 +279,66 @@ sub READLINE {
 
 __END__
 
+=pod
+
 =head1 NAME
 
-TUI::TextView::TextDevice - Abstract text device class
+TUI::TextView::TextDevice - abstract base class for text output devices
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TScroller
+        TTextDevice
 
 =head1 DESCRIPTION
 
-C<TTextDevice> is an abstract base class for text-based devices in Turbo Vision.
-It represents a scrollable, TTY-like text view and serves as a foundation for
-implementing real terminal drivers.
+C<TTextDevice> is an abstract base class for text-based output devices in Turbo
+Vision. It represents a scrollable, TTY-like text view and provides the common
+infrastructure required by terminal-style views.
 
-In addition to the fields and methods inherited from C<TScroller>, 
-C<TTextDevice> defines virtual methods for reading and writing strings to and 
-from the device. The class itself does not implement any concrete device 
-functionality but provides IO::Handle methods an a tie handle interface for 
-derived classes that represent actual terminal or text output devices.
+The class itself does not implement a concrete device. Instead, it defines a
+minimal interface for reading and writing text buffers that must be implemented
+by derived classes such as C<TTerminal>. In addition to the scrolling behavior
+inherited from C<TScroller>, C<TTextDevice> integrates with Perl's
+C<IO::Handle> interface and supports standard output methods such as
+C<print>, C<printf>, and C<say>.
 
-C<TTextDevice> uses the constructor of C<TScroller> and extends it with 
-features such as buffer management, L</autoflush>, and a simple interface for 
-output operations (e.g., L</print>, L</printf>, L</say>).
+Most input-related methods are implemented as stubs and return fixed values.
+Reading support must be provided explicitly by subclasses if required.
 
-Typical use cases include:
+=head1 ATTRIBUTES
+
+The following attributes are exposed as read-only accessors and are intended for
+internal use by the text device implementation.
 
 =over
 
-=item Deriving custom terminal drivers
+=item opened
 
-=item Implementing text-based output devices for scrollable views
+Indicates whether the device is considered open.  
+This attribute defaults to true and is managed internally.
+
+=back
+
+The following attributes are private and not part of the public API. They are
+documented here for completeness only.
+
+=over
+
+=item egress
+
+Internal output buffer used for staged writes.
+
+=item esize
+
+Size of the internal output buffer (default: 2048 bytes).
+
+=item autoflush
+
+Boolean flag controlling whether output is flushed automatically after each
+write operation.
 
 =back
 
@@ -315,237 +348,194 @@ Typical use cases include:
 
   my $device = new_TTextDevice($bounds, $aHScrollBar, $aVScrollBar);
 
-Factory constructor for creating a new C<TTextDevice> object.
+Factory constructor for creating a new C<TTextDevice> instance. This constructor
+delegates initialization to C<TScroller> and prepares the object for use as a
+text output device.
 
 =head2 autoflush
 
- my $scalar = $self->autoflush( | $scalar);
+  my $value = $self->autoflush();
+  $self->autoflush($value);
 
-Gets or sets the autoflush flag; enables autoflush if called without arguments.
-
-=head2 binmode
-
- my $success = $self->binmode( | $layer);
-
-Sets the device to binary mode (no effect in this implementation, always return 
-I<true> for this class).
-
-=head2 blocking
-
- my $bool | undef = $self->blocking( | $bool);
-
-Stub method for enabling or disabling blocking mode.
-
-=head2 clearerr
-
- my $scalar = $self->clearerr();
-
-Clears any error state (No-op, always return returns I<0> for this class).
-
-=head2 close
-
- my $success = $self->close();
-
-Closes the device and flushes any remaining data.
+Gets or sets the autoflush flag. When enabled, output is flushed automatically
+after each write operation.
 
 =head2 do_sputn
 
- my $num = $self->do_sputn($s, $count);
+  my $num = $self->do_sputn($string, $count);
 
-Writes a string of a given length to the device buffer. Abstract method, must 
-be overridden by a derived class.
+Abstract output method used internally by C<syswrite>. Derived classes must
+override this method to perform actual output operations.
+
+=head2 print
+
+  my $success = $self->print(@list);
+
+Appends data to the device using C<syswrite> internally.
+
+=head2 printf
+
+  my $success = $self->printf($format, @list);
+
+Formats data and appends it to the device using C<syswrite> internally.
+
+=head2 say
+
+  my $success = $self->say(@list);
+
+Appends data followed by a newline and writes it to the device.
+
+=head2 printflush
+
+  my $success = $self->printflush(@list);
+
+Appends data to the device and forces an immediate flush.
+
+=head2 syswrite
+
+  my $num | undef = $self->syswrite($scalar, | $length, | $offset);
+
+Writes raw data to the device. This method delegates the actual output operation
+to C<do_sputn> and mirrors the behavior of the original Turbo Vision runtime.
+
+=head2 flush
+
+  my $success | undef = $self->flush();
+
+Flushes any buffered output. Returns C<"0 but true"> on success.
+
+=head2 name
+
+  my $name = $self->name();
+
+Returns the class name (C<"TTextDevice">).
 
 =head2 eof
 
- my $bool = $self->eof();
+  my $bool = $self->eof();
 
-Indicates end-of-file (No-op, always return I<true> for this class).
+Indicates end-of-file. This implementation always returns true.
 
 =head2 error
 
- my $bool = $self->error();
+  my $bool = $self->error();
 
-Returns the error state (No-op, always return I<false> for this class).
+Returns the error state. This implementation always returns false.
+
+=head2 clearerr
+
+  my $value = $self->clearerr();
+
+Clears the error state. This implementation performs no action.
+
+=head2 read
+
+  my $num = $self->read($buf, $len, | $offset);
+
+Stub method for reading data. Always returns an empty result in this class.
+
+=head2 getline
+
+  my $line | undef = $self->getline();
+
+Stub method for reading a line. Always returns an empty result.
+
+=head2 getlines
+
+  my @lines = $self->getlines();
+
+Stub method for reading all lines. Always returns an empty list.
+
+=head2 getc
+
+  my $char = $self->getc();
+
+Stub method for reading a single character.
+
+=head2 ungetc
+
+  my $success = $self->ungetc($ord);
+
+Stub method for pushing a character back into the input stream.
+
+=head2 binmode
+
+  my $success = $self->binmode(| $layer);
+
+Stub method for enabling binary mode. Always returns true.
+
+=head2 blocking
+
+  my $bool | undef = $self->blocking(| $bool);
+
+Stub method for controlling blocking mode.
+
+=head2 fileno
+
+  my $fd = $self->fileno();
+
+Returns the file descriptor number. Always returns C<-1>.
+
+=head2 seek
+
+  my $success = $self->seek($position, $whence);
+
+Stub method for seeking.
+
+=head2 tell
+
+  my $pos = $self->tell();
+
+Stub method for retrieving the current position.
+
+=head2 truncate
+
+  my $success = $self->truncate($length);
+
+Stub method for truncating the device.
+
+=head2 stat
+
+  my @list = $self->stat();
+
+Stub method for retrieving device statistics.
+
+=head2 ioctl
+
+  my $success = $self->ioctl($function, $scalar);
+
+Stub method for device control operations.
 
 =head2 fcntl
 
- my $success = $self->fcntl($function, $scalar);
+  my $success = $self->fcntl($function, $scalar);
 
 Stub method for file control operations.
 
 =head2 fdopen
 
- my $success = $self->fdopen($fd, $mode);
+  my $success = $self->fdopen($fd, $mode);
 
 Stub method for opening a file descriptor.
 
-=head2 fileno
-
- my $fd = $self->fileno();
-
-Returns the file descriptor number (No-op, always return C<-1> for this class).
-
-=head2 flush
-
- my $success | undef = $self->flush();
-
-Writes the buffer to the device and clears it.
-
-Returns C<"0 but true"> on success, C<undef> on error.
-
-=head2 format_write
-
- $self->format_write($expr);
-
-Stub method for formatted output.
-
-=head2 getc
-
- my $char = $self->getc();
-
-Reads a single character (No-op, always return I<empty> for this class).
-
-=head2 getline
-
- my $line | undef = $self->getline();
-
-Reads a line from the device (No-op, always return I<empty> for this class).
-
-=head2 getlines
-
- my @lines = $self->getlines();
-
-Reads all lines from the device (No-op, always return I<empty> for this class). 
-Croaks in scalar context.
-
-=head2 ioctl
-
- my $success = $self->ioctl($function, $scalar);
-
-Stub method for device control operations.
-
-=head2 name
-
- my $name = $self->name();
-
-Returns the name of the class (C<"TTextDevice">).
-
 =head2 new_from_fd
 
- my $term = $self->new_from_fd();
+  my $obj = $self->new_from_fd();
 
-Stub method for creating an object from a file descriptor (always return 
-C<undef> for this class).
+Stub method for creating a device from a file descriptor. Always returns
+C<undef>.
 
-=head2 overflow
+=head1 SEE ALSO
 
- my $int = $self->overflow( | $c);
-
-Writes a single character to the device (only for compatibility).
-
-=head2 print
-
- my $success = $self->print(@list);
-
-Appends data to the buffer (using L</syswrite> internally).
-
-=head2 $self->printf
-
- my $success = $self->printf($format, @list);
-
-Formats and appends data to the buffer (using L</syswrite> internally).
-
-=head2 printflush
-
- my $success = $self->printflush(@list);
-
-Appends data to the buffer and forces an immediate flush (using L</syswrite> 
-internally).
-
-=head2 read
-
- my $num = $self->read($buf, $len, | $offset);
-
-Reads data from the device (No-op, always return I<empty> for this class).
-
-=head2 say
-
- my $success = $self->say(@list);
-
-Appends data followed by a newline (using L</syswrite> internally).
-
-=head2 seek
-
- my $success = $self->seek($position, $whence);
-
-Stub method for seeking within the device.
-
-=head2 stat
-
- my @list = $self->stat();
-
-Stub method for retrieving device statistics.
-
-=head2 sync
-
- my $success = $self->sync();
-
-Stub method for synchronizing the device.
-
-=head2 sysread
-
- my $num = $self->sysread($buf, $len, | $offset);
-
-Stub method for reading raw data (always returns C<0> for this class).
-
-=head2 sysseek
-
- my $success = $self->sysseek($position, $whence);
-
-Stub method for seeking using system calls.
-
-=head2 syswrite
-
- my $num | undef = $self->syswrite($scalar, | $length, | $offset);
-
-Writes raw data to the device using C<do_sputn> internally.
-
-B<Note>: The C<syswrite> method in Perl is the equivalent of L</do_sputn> in
-Borland's RTL. We need to call L</do_sputn> here to replicate the original
-behavior.
-
-=head2 tell
-
- my $pos = $self->tell();
-
-Stub method for returning the current position.
-
-=head2 truncate
-
- my $success = $self->truncate($length);
-
-Stub method for truncating the device.
-
-=head2 ungetc
-
- my $success = $self->ungetc($ord);
-
-Pushes a character back into the input stream (No-op, always return I<true> for 
-this class).
-
-=head2 write
-
-  my $success = $self->write($buf, $len | $offset);
-
-Writes data to the device using L</syswrite> internally.
+L<TUI::TextView::Terminal>, L<TUI::Views::Scroller>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -555,8 +545,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

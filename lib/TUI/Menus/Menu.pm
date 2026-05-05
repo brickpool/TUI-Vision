@@ -123,6 +123,112 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::Menu - defines the class TMenu
+TUI::Menus::Menu - container for menu item lists
+
+=head1 SYNOPSIS
+
+  use TUI::Menus;
+
+  my $menu =
+      new_TMenu(
+        new_TMenuItem('~O~pen', cmOpen)
+      + new_TMenuItem('~S~ave', cmSave)
+      );
+
+=head1 DESCRIPTION
+
+C<TMenu> represents a container used to build menu structures for menu bars
+and menu boxes. It holds a linked list of C<TMenuItem> objects and an optional
+default item.
+
+Menu objects are typically created indirectly using helper constructors and
+combined using the overloaded C<+> operator. The resulting menu structure is
+passed to menu views such as C<TMenuBar> or C<TMenuBox>.
+
+C<TMenu> is a data structure and does not perform any drawing or event
+processing itself.
+
+=head1 ATTRIBUTES
+
+The following attributes describe the contents of the menu.
+
+=over
+
+=item items
+
+Reference to the first menu item in the list (I<TMenuItem>).
+
+=item deflt
+
+Optional reference to the default menu item (I<TMenuItem>).  
+This item may be highlighted or preselected depending on the menu view.
+
+=back
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $menu = TMenu->new(
+    items => $items,
+    deflt => $default
+  );
+
+Creates a new menu container.
+
+=over
+
+=item items
+
+Optional reference to a list of menu items (I<TMenuItem>).
+
+=item deflt
+
+Optional default menu item (I<TMenuItem>).
+
+=back
+
+=head2 new_TMenu
+
+  my $menu = new_TMenu($items | undef, | $default);
+
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with named parameters and is
+provided for compatibility with traditional Turbo Vision construction patterns.
+
+=head1 METHODS
+
+=head2 deflt
+
+  my $item = $menu->deflt();
+  $menu->deflt($item);
+
+Gets or sets the default menu item.
+
+=head1 SEE ALSO
+
+L<TUI::Menus::MenuItem>,
+L<TUI::Menus::MenuBar>,
+L<TUI::Menus::MenuBox>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

@@ -9,7 +9,6 @@ MYMETA.*
 _build/
 cover_db/
 blib/
-doc/
 inc/
 src/
 trial/
@@ -33,3 +32,4 @@ TVision.code-workspace
 TVision.komodoproject
 xt/win*
 TUI-Vision*
+POD_POLICY.txt

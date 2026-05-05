@@ -1009,7 +1009,17 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Group - a base class for all group components in Turbo Vision.
+TUI::Views::Group - base class for grouping views in Turbo Vision
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TWindow
+          TDialog
+        TDeskTop
+        TProgram
 
 =head1 SYNOPSIS
 
@@ -1021,313 +1031,347 @@ TUI::Views::Group - a base class for all group components in Turbo Vision.
 
 =head1 DESCRIPTION
 
-The C<TGroup> class is the base class for all group components in Turbo Vision.
-It provides methods for managing child views, event handling, and drawing the
-group and its children.
+C<TGroup> is the structural backbone of Turbo Vision's view hierarchy. It
+manages collections of subviews and coordinates drawing, event dispatch, and
+modal execution.
+
+A group itself is an invisible view. Its visual representation is defined
+entirely by its subviews. Dialogs, windows, and the desktop are all implemented
+as specialized groups.
+
+TGroup is responsible for maintaining Z-order, dispatching events according to
+focus and position, and coordinating modal execution via C<execView> and
+C<execute>. During event processing, the C<phase> attribute allows subviews to
+determine in which processing stage their handlers are invoked.
+
+To improve drawing performance, groups may use an internal buffer. In this
+case, screen updates should be bracketed by C<lock> and C<unlock> calls to
+avoid flicker.
+
+=head2 Commonly Used Features
+
+In typical application code, only a small subset of the API is used directly:
+subviews are added with C<insert>, modal views are executed with C<execView>,
+and dialog-style state transfer is handled through C<getData> and C<setData>.
+
+Most remaining methods are primarily infrastructure for descendants such as
+C<TWindow>, C<TDialog>, and C<TDeskTop>. Direct instantiation of C<TGroup>
+itself is therefore uncommon outside framework-level or advanced custom view
+implementations.
+
+=head1 VARIABLES
+
+The following global variables are used internally by C<TGroup> to track
+view hierarchy state.
+
+=head2 $TheTopView
+
+Holds a reference to the currently active top-level view.
+This variable is used during focus and event handling.
+
+=head2 $ownerGroup
+
+Holds a reference to the group currently owning a view.
+It is used internally to manage parent-child relationships between views.
 
 =head1 ATTRIBUTES
 
+The following attributes represent the internal state of the group and its
+relationship to contained subviews. Attributes marked as read-only are managed
+internally and should not be modified directly.
+
 =over
-
-=item buffer
-
-This attribute is typically used to store temporary data or intermediate results 
-during processing. (ArrayRef)
-
-=item clip
-
-The clipping rectangle of the group, represented by a C<TRect>. It defines the 
-area within which drawing operations are allowed. (TRect)
 
 =item current
 
-This attribute usually refers to the currently active or selected item within a 
-group or list. (TView)
-
-=item endState
-
-This attribute represents the final state of an object or process after it has 
-completed its operation. (Int)
+Pointer to the currently selected subview (I<TView>).  
+This attribute is managed internally.
 
 =item last
 
-This attribute often points to the last item in a list or sequence. (TView)
+Read-only pointer to the last subview in the Z-ordered view list.
 
-=item lockFlag
+=item clip
 
-This attribute is used to indicate whether a resource or process is locked, 
-preventing other operations from modifying it. (Bool)
+Clipping rectangle of the group (I<TRect>).  
+Defines the drawable region for subviews.
 
 =item phase
 
-This attribute represents the current phase or stage of a process or operation. 
-(Int)
+Read-only event processing phase indicator (I<Int>).  
+Used by subviews to determine the context in which their C<handleEvent> method
+is invoked.
+
+=item buffer
+
+Read-only reference to the internal screen cache buffer.  
+Used to speed up redraw operations when buffering is enabled.
+
+=item lockFlag
+
+Lock counter used to suppress screen updates while batch operations are
+performed.
+
+=item endState
+
+Command value used to terminate modal execution.
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
   my $group = TGroup->new(bounds => $bounds);
 
-Initializes an instance of C<TGroup> with the specified bounds.
+Creates and initializes a new group with the specified bounds.
 
 =over
 
 =item bounds
 
-The bounds of the view (TRect).
+Bounding rectangle of the group (I<TRect>).
 
 =back
 
-=head2 DESTROY
+=head2 new_TGroup
 
-  $self->DESTROY();
+  my $group = new_TGroup($bounds);
 
-DESTROY first hides the group and then calls destroy for each view's.
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with the C<bounds> parameter
+and is provided for compatibility with traditional Turbo Vision construction
+patterns.
+
+=head1 DESTRUCTOR
+
+=head1 METHODS
+
+The following methods implement group-specific behavior for managing subviews,
+event dispatch, drawing, and modal execution.
 
 =head2 at
 
- my $view | undef = at($index);
+  my $view | undef = $group->at($index);
 
-Returns the view at the specified index.
-
-=head2 awaken
-
-  $self->awaken();
-
-Awakens the group, making it active.
-
-=head2 changeBounds
-
-  $self->changeBounds($self, $bounds);
-
-Changes the bounds of the group.
-
-=head2 current
-
-  my $view | undef = current( | $view | undef);
-
-Returns the current view or sets it to the specified view.
-
-=head2 dataSize
-
-  my $int = dataSize();
-
-Returns the size of the data.
-
-=head2 draw
-
-  $self->draw();
-
-Draws the group and its children on the screen.
-
-=head2 drawSubViews
-
-  $self->drawSubViews($p | undef, $bottom | undef);
-
-Draws the subviews of the group.
-
-=head2 endModal
-
-  $self->endModal($command);
-
-Ends a modal state with the specified command.
-
-=head2 eventError
-
-  $self->eventError($event);
-
-Handles an error event.
-
-=head2 execView
-
-  my $int = $self->execView();
-
-Executes the view and returns a status code.
-
-=head2 execute
-
-  my $int = $self->execute();
-
-Executes the group and returns a status code.
-
-=head2 first
-
-  my $view | undef = $self->first();
-
-Returns the first view in the group.
-
-=head2 firstMatch
-
-  my $view | undef = $self->firstMatch($aState, $aOptions);
-
-Returns the first view that matches the specified state and options.
-
-=head2 firstThat
-
-  my $view | undef = $self->firstThat(\&Test, @args);
-
-Returns the first view that satisfies the specified function.
-
-=head2 focusNext
-
-  my $bool = $self->focusNext($forwards);
-
-Moves the focus to the next view.
-
-=head2 forEach
-
-  $self->forEach(\&action, @args);
-
-Applies the specified function to each view in the group.
-
-=head2 freeBuffer
-
-  $self->freeBuffer();
-
-Frees the buffer used by the group.
-
-=head2 getBuffer
-
-  $self->getBuffer();
-
-Gets the buffer used by the group.
-
-=head2 getData
-
-  $self->getData(\@rec);
-
-Returns the data of the group.
-
-=head2 getHelpCtx
-
- my $int = $self->getHelpCtx();
-
-Returns the help context of the group.
-
-=head2 handleEvent
-
-  $self->handleEvent($event);
-
-Handles an event sent to the group.
-
-=head2 indexOf
-
-  my $int = $self->indexOf($p);
-
-Returns the index of the specified view.
+Returns the subview at the specified index.
 
 =head2 insert
 
-  $self->insert($p);
+  $group->insert($view);
 
-Inserts a view into the group.
+Inserts a view into the group. The view becomes part of the group's Z-ordered
+subview list.
 
 =head2 insertBefore
 
-  $self->insertBefore($p, $Target | undef);
+  $group->insertBefore($view, $target | undef);
 
-Inserts a view before the specified target.
+Inserts a view before the specified target view. If C<$target> is omitted, the
+view is inserted at the back of the Z-order.
 
 =head2 insertView
 
-  $self->insertView($p, $Target | undef);
+  $group->insertView($view, $target | undef);
 
-Inserts a view into the group.
-
-=head2 lock
-
-  $self->lock();
-
-Locks the group to prevent updates.
-
-=head2 matches
-
- my $bool = $self->matches($p);
-
-Checks if the group matches the specified criteria.
-
-=head2 redraw
-
-  $self->redraw();
-
-Redraws the group.
+Internal insertion helper used by group management routines.
 
 =head2 remove
 
-  $self->remove($p|undef);
+  $group->remove($view | undef);
 
 Removes a view from the group.
 
 =head2 removeView
 
-  $self->removeView($p);
+  $group->removeView($view);
 
-Removes a view from the group.
+Removes a view from the group and updates internal bookkeeping.
 
-=head2 resetCurrent
+=head2 indexOf
 
-  $self->resetCurrent();
+  my $index = $group->indexOf($view);
 
-Resets the current view.
+Returns the index of the specified view within the group.
 
-=head2 resetCursor
+=head2 first
 
-  $self->resetCursor();
+  my $view | undef = $group->first();
 
-Resets the cursor position.
+Returns the topmost subview in the group.
 
-=head2 selectNext
+=head2 last
 
-  $self->selectNext($forwards);
+  my $view | undef = $group->last();
 
-Selects the next view.
+Returns the bottommost subview in the group.
+
+=head2 firstMatch
+
+  my $view | undef = $group->firstMatch($state, $options);
+
+Returns the first subview matching the specified state and options.
+
+=head2 firstThat
+
+  my $view | undef = $group->firstThat(\&test, @args);
+
+Returns the first subview for which the supplied test function returns true.
+
+=head2 forEach
+
+  $group->forEach(\&action, @args);
+
+Applies the given action to each subview in Z-order.
+
+=head2 current
+
+  my $view | undef = $group->current();
+  $group->current($view);
+
+Returns or sets the currently selected subview.
 
 =head2 setCurrent
 
-  $self->setCurrent($p, $mode);
+  $group->setCurrent($view, $mode);
 
-Sets the current view to the specified view.
+Sets the currently focused subview using the specified selection mode.
 
-=head2 setData
+=head2 selectNext
 
-  $self->setData(\@rec);
+  $group->selectNext($forwards);
 
-Sets the data of the group to the specified values.
+Selects the next or previous subview in Z-order.
 
-=head2 setState
+=head2 draw
 
-  $self->setState($aState, $enable);
+  $group->draw();
 
-Sets the state of the group to the specified value.
+Draws the group. If buffering is enabled, cached contents are copied to the
+screen.
 
-=head2 shutDown
+=head2 drawSubViews
 
-  $self->shutDown();
+  $group->drawSubViews($from | undef, $bottom | undef);
 
-Shuts down the group.
+Draws subviews within the specified Z-order range.
+
+=head2 redraw
+
+  $group->redraw();
+
+Forces a redraw of the group, bypassing cached output.
+
+=head2 lock
+
+  $group->lock();
+
+Locks the group to suppress screen updates during batch operations.
 
 =head2 unlock
 
-  $self->unlock();
+  $group->unlock();
 
-Unlocks the group to allow updates.
+Unlocks the group and flushes buffered screen updates.
+
+=head2 freeBuffer
+
+  $group->freeBuffer();
+
+Releases the internal cache buffer.
+
+=head2 getBuffer
+
+  my $buffer = $group->getBuffer();
+
+Returns the internal buffer used for cached drawing.
+
+=head2 handleEvent
+
+  $group->handleEvent($event);
+
+Dispatches events to the appropriate subview based on focus and event type.
+
+=head2 eventError
+
+  $group->eventError($event);
+
+Handles events that could not be processed by any subview.
+
+=head2 matches
+
+  my $bool = $group->matches($view);
+
+Returns true if the specified view belongs to this group.
+
+=head2 execView
+
+  my $command = $group->execView($view);
+
+Executes a modal view and returns the command that terminated the modal state.
+
+=head2 execute
+
+  my $command = $group->execute();
+
+Runs the group's event loop until modal execution ends.
+
+=head2 endModal
+
+  $group->endModal($command);
+
+Terminates modal execution and causes C<execute> or C<execView> to return.
+
+=head2 dataSize
+
+  my $size = $group->dataSize();
+
+Returns the combined data size of all subviews.
+
+=head2 getData
+
+  $group->getData(\$record);
+
+Copies subview data into the supplied record.
+
+=head2 setData
+
+  $group->setData(\$record);
+
+Restores subview data from the supplied record.
 
 =head2 valid
 
- my $bool = $self->valid($command);
+  my $bool = $group->valid($command);
 
-Checks if the group is in a valid state.
+Checks whether the group and all subviews are in a valid state.
+
+=head2 shutDown
+
+  $group->shutDown();
+
+Shuts down the group and releases associated resources.
+
+=head1 SEE ALSO
+
+L<TUI::Views::View>, L<TUI::Views::Window>, L<TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+=over
+
+=item magiblot <magiblot@hotmail.com>
 
 =back
 
@@ -1335,10 +1379,9 @@ Checks if the group is in a valid state.
 
 Copyright (c) 1990-1994, 1997 by Borland International
 
-Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
+Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+part of the distribution).
 
 =cut

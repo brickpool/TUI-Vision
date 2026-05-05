@@ -187,3 +187,106 @@ use constant {
 };
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::StdDlg::Const - constants for standard dialog components
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg::Const qw(:all);
+
+  # or import specific constant groups
+  use TUI::StdDlg::Const qw(:cmXXXX :fdXXXX);
+  
+=head1 DESCRIPTION
+
+C<TUI::StdDlg::Const> defines the constants used by the Turbo Vision standard
+dialog subsystem.
+
+The constants in this module are grouped by purpose and exported via tag-based
+export groups. They are used by standard dialogs, list boxes, and related helper
+classes to control behavior, command handling, palette selection, and file
+attribute filtering.
+
+This module only defines constants. The semantic meaning and practical usage of
+these constants is documented in the corresponding higher-level modules, most
+notably C<TUI::StdDlg> and the individual dialog classes.
+
+=head1 CONSTANTS
+
+=head2 Command constants (cmXXXX)
+
+Command identifiers used by standard dialogs and list views.
+
+These values are delivered via C<$event-E<gt>{command}> and are handled by dialog
+and view classes.
+
+=head2 File dialog option flags (fdXXXX)
+
+Option flags controlling the layout and behavior of file dialogs.
+
+These flags may be combined and passed to file dialog constructors.
+
+=head2 Change directory dialog options (cdXXXX)
+
+Option flags used by the change directory dialog.
+
+=head2 Palette identifiers (cpXXXX)
+
+Palette identifiers used by standard dialog views.
+
+These constants identify palette entries within a dialog's palette and are used
+internally by dialog components.
+
+=head2 File attribute flags (FA_* and _A_*)
+
+File attribute constants used for filtering and identifying file system entries
+in file and directory dialogs.
+
+=head2 Path component identifiers (DIR)
+
+Constants identifying components of a file path.
+
+=head2 Path and name size limits (MAX)
+
+Constants defining maximum sizes for path and name components.
+
+=head1 EXPORT TAGS
+
+Constants are exported using tag-based export groups corresponding to the
+functional groups described above.
+
+An additional C<:all> export tag is provided to import all constants at once.
+
+=head1 SEE ALSO
+
+L<TUI::StdDlg>,
+L<TUI::StdDlg::FileDialog>,
+L<TUI::StdDlg::ChDirDialog>,
+L<TUI::StdDlg::FileCollection>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

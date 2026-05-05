@@ -589,290 +589,249 @@ __END__
 
 =head1 NAME
 
-TListViewer - Base class for list viewers in Turbo Vision
+TUI::Views::ListViewer - base class for list viewers in Turbo Vision
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TListViewer
+        TListBox
 
 =head1 SYNOPSIS
 
-  use TUI::Objects;
   use TUI::Views;
 
-  # create horizontal and vertical scroll bars
-  my $hBar = TScrollBar->new(
-    bounds => TRect->new( ax => 0, ay => 0, bx => 10, by => 1 )
-  );
-  my $vBar = TScrollBar->new(
-    bounds => TRect->new( ax => 0, ay => 0, bx => 1, by => 10 )
-  );
-
-  # create list viewer with one column
-  my $bounds = TRect->new( ax => 0, ay => 0, bx => 30, by => 10 );
-  my $lv     = new_TListViewer( $bounds, 1, $hBar, $vBar );
-
-  # subclassing example: override getText() and selectItem()
-  package My::ListViewer;
-  use parent 'TUI::Views::ListViewer';
+  # Subclass TListViewer and override getText to supply your own data
+  package MyListViewer;
+  use Moo;
+  use TUI::Views;
+  extends TListViewer;
 
   sub getText {
-    my ( $self, $dest, $item, $width ) = @_;
-    # fill $dest with the text for the given item
-    $str = sprintf("Item %d", $item);
-    $$dest = substr( $str, 0, $width );
-    return;
+    my ( $self, $dest, $item, $maxChars ) = @_;
+    my @data = ( 'alpha', 'beta', 'gamma' );
+    $$dest = substr( $data[$item] // '', 0, $maxChars );
   }
 
-  sub selectItem {
-    my ( $self, $item ) = @_;
-    # handle activation of the item (double click or space key)
-    ...
-  }
+  package main;
+
+  my $hbar = TScrollBar->new(
+    bounds => TRect->new( ax => 0, ay => 10, bx => 20, by => 11 ) );
+  my $vbar = TScrollBar->new(
+    bounds => TRect->new( ax => 20, ay => 0, bx => 21, by => 10 ) );
+
+  my $lv = MyListViewer->new(
+    bounds     => TRect->new( ax => 0, ay => 0, bx => 20, by => 10 ),
+    numCols    => 1,
+    hScrollBar => $hbar,
+    vScrollBar => $vbar,
+  );
+  $lv->setRange( 3 );
 
 =head1 DESCRIPTION
 
-C<TListViewer> is the Turbo Vision base class for list viewers.
-It implements the generic behaviour for displaying a list of items in one
-or more columns, including scrolling, keyboard navigation and mouse
-interaction.
+C<TListViewer> is the Turbo Vision base class for list viewer controls. It
+implements the generic behavior required to display a list of items arranged
+in one or more columns, including keyboard navigation, mouse interaction, and
+scroll bar synchronization.
 
-List viewer classes are expected to subclass C<TListViewer> and override at 
-least C<getText()> and usually C<selectItem()> in order to provide the actual 
-data and the selection behaviour.
+C<TListViewer> does not store the actual data being displayed. Subclasses are
+expected to provide the data by overriding C<getText()> and typically also
+C<selectItem()>.
+
+List viewers may be equipped with horizontal and/or vertical scroll bars. When
+attached, the list viewer keeps the scroll bars synchronized with the current
+focus and range.
+
+=head2 Commonly Used Features
+
+Because C<TListViewer> does not manage any data itself, the primary task when
+using it is to subclass it and override C<getText>, which is called once per
+visible row to retrieve the display string for a given item index. After
+construction, call C<setRange> to tell the viewer how many items exist. When
+the list viewer is placed in a group other than a dialog, C<getPalette> will
+almost certainly need to be overridden as well so that the color mapping works
+correctly.
+
+=head1 VARIABLES
+
+The following global variable defines the placeholder text used by
+C<TListViewer>.
+
+=head2 $emptyText
+
+Text displayed when the list contains no items.
+
+=head1 ATTRIBUTES
+
+The following attributes are implemented as read/write accessors and are also
+used internally by the list viewer.
+
+=over
+
+=item hScrollBar
+
+Horizontal scroll bar associated with the list viewer.
+
+=item vScrollBar
+
+Vertical scroll bar associated with the list viewer.
+
+=item numCols
+
+Number of columns used to display items.
+
+=item topItem
+
+Index of the first visible item.
+
+=item focused
+
+Index of the currently focused item.
+
+=item range
+
+Total number of items in the list.
+
+=back
 
 =head1 CONSTRUCTOR
 
 =head2 new
 
-  my $lv = TListViewer->new( bounds => $bounds, numCols => $numCols, 
-    hScrollBar => $hScrollBar, vScrollBar => $vScrollBar );
+  my $lv = TListViewer->new(
+    bounds     => $bounds,
+    numCols    => $numCols,
+    hScrollBar => $hScrollBar,
+    vScrollBar => $vScrollBar
+  );
 
-Creates a new C<TListViewer> instance.
+Creates a new list viewer.
 
-=over 4
+=over
 
-=item * C<$bounds>
+=item bounds
 
-A C<TRect> object describing the view's bounds.
+Bounding rectangle of the list viewer (I<TRect>).
 
-=item * C<$numCols>
+=item numCols
 
-Number of columns the list viewer should use. The items are laid out
-column-wise, using the same algorithm as the original C++ implementation.
+Number of columns used to display items (I<PositiveOrZeroInt>).
 
-=item * C<$hScrollBar>
+=item hScrollBar
 
-An optional C<TScrollBar> object used as horizontal scroll bar. It may be
-C<undef>.
+Optional horizontal scroll bar (I<TScrollBar>).
 
-=item * C<$vScrollBar>
+=item vScrollBar
 
-An optional C<TScrollBar> object used as vertical scroll bar. It may be
-C<undef>.
+Optional vertical scroll bar (I<TScrollBar>).
 
 =back
 
 =head2 new_TListViewer
 
-  my $lv = new_TListViewer( $bounds, $numCols, $hScrollBar, $vScrollBar );
+  my $lv = new_TListViewer($bounds, $numCols, $hScrollBar, $vScrollBar);
 
-Convenience constructor that forwards to C<new()> with named parameters.
-
-=head1 ATTRIBUTES
-
-The following attributes are implemented as read/write accessors and
-are also used internally by the class:
-
-=head2 hScrollBar
-
-  my $sb = $lv->hScrollBar;
-  $lv->hScrollBar( $new_sb );
-
-Horizontal scroll bar associated with the list viewer. May be C<undef>.
-
-=head2 vScrollBar
-
-  my $sb = $lv->vScrollBar;
-  $lv->vScrollBar( $new_sb );
-
-Vertical scroll bar associated with the list viewer. May be C<undef>.
-
-=head2 numCols
-
-  my $cols = $lv->numCols;
-  $lv->numCols( 2 );
-
-Number of columns used to display the items.
-
-=head2 topItem
-
-  my $idx = $lv->topItem;
-  $lv->topItem( $idx );
-
-Index of the first item that is currently visible in the list (top-left
-position). This is updated automatically when the focus moves outside the
-visible region.
-
-=head2 focused
-
-  my $idx = $lv->focused;
-  $lv->focused( $idx );
-
-Index of the item that currently has the focus. The focused item is
-highlighted when the view is active and selected.
-
-=head2 range
-
-  my $count = $lv->range;
-  $lv->range( $count );
-
-Number of items in the list. This is used as the upper bound for
-navigation and drawing. The C<setRange()> method should normally be used
-to update this value.
+Factory-style constructor using positional arguments.
 
 =head1 METHODS
 
 =head2 changeBounds
 
-  $lv->changeBounds( $bounds );
+  $lv->changeBounds($bounds);
 
-Adjusts the list viewer to a new bounding rectangle. The scroll bar step
-sizes are recalculated based on the new size, in the same way as in the
-original Turbo Vision implementation.
+Adjusts the list viewer to a new bounding rectangle and recalculates scroll bar
+parameters.
 
 =head2 draw
 
   $lv->draw();
 
-Draws the contents of the list viewer. This method uses C<getText()>,
-C<isSelected()> and the global marker variables from C<TView> to render
-each item into a C<TDrawBuffer>. It is normally not necessary to override
-this method in subclasses.
+Draws the list viewer contents using C<getText()>.
 
 =head2 focusItem
 
-  $lv->focusItem( $index );
+  $lv->focusItem($index);
 
-Moves the focus to the given item index and updates the vertical scroll
-bar and C<topItem> if necessary so that the focused item is visible.
+Moves the focus to the specified item index.
 
 =head2 focusItemNum
 
-  $lv->focusItemNum( $index );
+  $lv->focusItemNum($index);
 
-Like C<focusItem()>, but clamps the index to the valid range
-C<[0 .. range-1]> and ignores the call if C<range> is zero.
+Like C<focusItem>, but clamps the index to the valid range.
 
 =head2 getPalette
 
-  my $pal = $lv->getPalette();
+  my $palette = $lv->getPalette();
 
-Returns a clone of the static palette used by the list viewer. The
-palette data is defined by the C<cpListViewer> constant.
+Returns the color palette used to draw the list viewer.
+
+=head2 getText
+
+  $lv->getText(\$dest, $item, $maxChars);
+
+Returns the text representation of an item.
+
+Subclasses are expected to override this method to provide the actual data to be
+displayed by the list viewer.
 
 =head2 handleEvent
 
-  $lv->handleEvent( $event );
+  $lv->handleEvent($event);
 
-Handles keyboard, mouse and broadcast events.
-
-=over 4
-
-=item *
-
-Mouse events (C<evMouseDown>, C<evMouseMove>, C<evMouseAuto>) are used to
-track the mouse position over the list and to change the focused item
-accordingly, including auto-scrolling when the mouse leaves the view.
-
-=item *
-
-Key events (C<evKeyDown>) are used for navigation (arrow keys, page up/down,
-home/end, control page up/down) and for activating the focused item with the
-space bar.
-
-=item *
-
-Broadcast events (C<evBroadcast>) are used to react to scroll bar clicks
-and changes (C<cmScrollBarClicked>, C<cmScrollBarChanged>) and to keep the
-list viewer in sync with the associated scroll bars.
-
-=back
+Handles keyboard, mouse, and broadcast events.
 
 =head2 isSelected
 
-  my $bool = $lv->isSelected( $index );
+  my $bool = $lv->isSelected($index);
 
-Returns a boolean value indicating whether the given item is currently
-selected. The default implementation returns true only if the index
-matches C<focused>. Subclasses may override this method to implement
-multi-selection.
+Returns true if the specified item is selected.
+
+Subclasses may override this method to implement multi-selection or alternative
+selection policies.
 
 =head2 selectItem
 
-  $lv->selectItem( $index );
+  $lv->selectItem($index);
 
-Called when an item is activated (for example by double clicking or by
-pressing the space bar). The default implementation sends a broadcast
-message C<cmListItemSelected> to the owner view. Subclasses typically
-override this method to implement application-specific behaviour.
+Called when an item is activated.
+
+Subclasses typically override this method to implement application-specific
+activation behavior.
 
 =head2 setRange
 
-  $lv->setRange( $count );
+  $lv->setRange($count);
 
-Sets the number of items in the list and updates C<range>, the focused
-item and the vertical scroll bar parameters. This method corresponds to
-C<TListViewer::setRange()> in the original C++ code and includes the
-same bug fix that prevents the focused index from going past the last
-item.
+Sets the number of items in the list and updates scroll bar state.
 
 =head2 setState
 
-  $lv->setState( $stateMask, $enable );
+  $lv->setState($state, $enable);
 
-Updates the view's state flags and shows or hides the scroll bars
-depending on the C<sfActive> and C<sfVisible> states. The method also
-requests a redraw of the view when the relevant state bits change.
+Updates the view state and shows or hides scroll bars accordingly.
 
 =head2 shutDown
 
   $lv->shutDown();
 
-Shuts down the list viewer and clears the references to its scroll bars
-before delegating to C<TView::shutDown()>. After C<shutDown()> has been
-called, C<hScrollBar> and C<vScrollBar> will be C<undef>.
+Releases scroll bar references and shuts down the view.
 
-=head1 OVERRIDABLE METHODS
+=head1 SEE ALSO
 
-Subclasses are expected to override the following methods:
-
-=head2 getText
-
-  $lv->getText( \$dest, $item, $width );
-
-Fills C<$dest> with the text for the given item index. The text may be longer 
-than C<$width>; the drawing code will only use the first C<$width> characters 
-starting at the current horizontal scroll position.
-
-=head2 isSelected
-
-  my $bool = $lv->isSelected( $index );
-
-May be overridden to implement multi-selection or other selection
-policies. The default implementation returns true only for the focused
-item.
-
-=head2 selectItem
-
-  $lv->selectItem( $index );
-
-May be overridden to react to item activation (double click, space key)
-in an application-specific way.
+L<TUI::Dialogs::ListBox>,
+L<TUI::Views::ScrollBar>,
+L<TUI::Views::View>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -890,7 +849,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 1995, 2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). 
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

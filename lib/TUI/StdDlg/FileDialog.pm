@@ -504,19 +504,214 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::FileDialog - Common file dialog
+TUI::StdDlg::FileDialog - common file selection dialog
 
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TWindow
+          TDialog
+            TFileDialog
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg;
+  use TUI::MsgBox;
+
+  my @fileName = ('*.*');
+
+  my $dialog = TFileDialog->new(
+    wildCard  => $fileName[0],
+    title     => 'Open File',
+    inputName => '~F~ile Name',
+    options   => fdOpenButton,
+    histId    => 1,
+  );
+
+  if ( $application->executeDialog($dialog, \@fileName) != cmCancel ) {
+    messageBox( "'$fileName[0]' was entered", mfOkButton );
+  }
+  
 =head1 DESCRIPTION
 
-Dialog box for opening, replacing, or clearing files. 
+C<TFileDialog> implements the standard Turbo Vision file dialog used for
+opening, replacing, or selecting files.
+
+The dialog combines several specialized views, including a file list, an input
+line for file names, and an information pane displaying details about the
+currently focused file. It manages directory navigation, wildcard filtering,
+and user interaction through keyboard and mouse input.
+
+=head1 VARIABLES
+
+The following global variables define the default labels and messages
+used by C<TFileDialog>.
+
+=head2 $filesText
+
+Label text for the files list section.
+
+=head2 $openText
+
+Label text for the open action.
+
+=head2 $okText
+
+Label text for the confirmation button.
+
+=head2 $replaceText
+
+Label text for the replace action.
+
+=head2 $clearText
+
+Label text for the clear action.
+
+=head2 $cancelText
+
+Label text for the cancel action.
+
+=head2 $helpText
+
+Label text for the help command.
+
+=head2 $invalidDriveText
+
+Message text displayed for an invalid drive or directory.
+
+=head2 $invalidFileText
+
+Message text displayed for an invalid file name.
+
+=head1 ATTRIBUTES
+
+The following attributes are part of the public dialog state and may be queried
+or updated during dialog execution.
+
+=over
+
+=item fileName
+
+The currently selected file name (I<Str>).
+
+=item fileList
+
+Reference to the file list view used by the dialog (I<TFileList>).
+
+=item wildCard
+
+Current wildcard filter applied to the file list (I<Str>).
+
+=item directory
+
+Current directory shown by the dialog (I<Str>).
+
+=back
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $dlg = TFileDialog->new(
+    wildCard  => $wildCard,
+    title     => $title,
+    inputName => $inputName,
+    options   => $options,
+    histId    => $histId
+  );
+
+Creates a new file dialog.
+
+=over
+
+=item wildCard
+
+Wildcard pattern used to filter displayed files (I<Str>).
+
+=item title
+
+Dialog window title (I<Str>).
+
+=item inputName
+
+Initial file name shown in the input line (I<Str>).
+
+=item options
+
+Dialog option flags controlling behavior and appearance (I<Int>).
+
+=item histId
+
+History identifier used for filename input history (I<Int>).
+
+=back
+
+=head2 new_TFileDialog
+
+  my $dlg = new_TFileDialog(
+    $wildCard,
+    $title,
+    $inputName,
+    $options,
+    $histId
+  );
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 getData
+
+  $dlg->getData(\@record);
+
+Stores the dialog result into the supplied record.
+
+=head2 getFileName
+
+  my $name = $dlg->getFileName($string);
+
+Returns the selected file name.
+
+=head2 handleEvent
+
+  $dlg->handleEvent($event);
+
+Processes keyboard and command events for dialog interaction.
+
+=head2 setData
+
+  $dlg->setData(\@record);
+
+Restores dialog state from external input.
+
+=head2 shutDown
+
+  $dlg->shutDown();
+
+Releases dialog resources during shutdown.
+
+=head2 valid
+
+  my $bool = $dlg->valid($command);
+
+Checks whether the dialog should accept the specified command.
+
+=head1 SEE ALSO
+
+L<TUI::StdDlg::FileList>,
+L<TUI::StdDlg::FileInputLine>,
+L<TUI::StdDlg::FileInfoPane>,
+L<TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -534,7 +729,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 1995, 2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). 
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

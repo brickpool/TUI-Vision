@@ -68,6 +68,8 @@ sub nextWord ($$) {    # $index ($s, $pos)
 
 __END__
 
+=pod
+
 =head1 NAME
 
 TUI::Dialogs::Util - Utility functions for Turbo Vision dialogs
@@ -87,6 +89,8 @@ interface components: extracting marked hotkeys from strings, locating the
 previous word boundary, and locating the next word boundary within a string. 
 These functions are intended to support navigation and keyboard-interaction 
 logic.
+
+These functions are intentionally small and side-effect free.
 
 =head1 FUNCTIONS
 
@@ -132,9 +136,9 @@ previous word exists, the function returns C<0>.
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -190,78 +190,105 @@ __END__
 
 =head1 NAME
 
-TDrawBuffer - stores a line of text for output in Turbo Vision 2.0.
+=head1 NAME
+
+TUI::Views::DrawBuffer - temporary line buffer for screen output
+
+=head1 HIERARCHY
+
+  TDrawBuffer (value type)
+    used by TView drawing methods
 
 =head1 SYNOPSIS
 
   use TUI::Views;
 
-  my $buffer = TDrawBuffer->new();
-  $buffer->moveStr(0, 'Financial Results for FY1991', $view->getColor(1));
+  my $buffer = TDrawBuffer->new;
+
+  $buffer->moveStr(
+    0,
+    'Financial Results for FY1991',
+    $view->getColor(1)
+  );
+
   $view->writeLine(1, 3, 28, 1, $buffer);
 
 =head1 DESCRIPTION
 
-TDrawBuffer stores a line of text for screen output, with each word's low byte 
-holding the character value and the high byte holding the video attribute.
+C<TDrawBuffer> represents a temporary buffer for rendering a single line of
+screen output. Each entry in the buffer stores both a character value and a
+display attribute.
 
-=head1 METHODS
+This type is a lightweight value type and is not derived from C<TObject>.
+Internally, it corresponds to an array of fixed width, where each element
+combines a character and its visual attributes.
+
+C<TDrawBuffer> is primarily used inside C<TView> drawing routines. Text and
+attributes are written into the buffer using helper methods, and the buffer is
+then passed to C<TView> methods such as C<writeLine> or C<writeBuf> to render the
+output on screen.
+
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $obj = TDrawBuffer->new();
+  my $buffer = TDrawBuffer->new();
 
-Creates a new object instance.
+Creates a new, empty draw buffer with a width equal to the maximum view width.
 
-=head2 from
-
-  my $obj = TDrawBuffer->from();
-
-An alternative constructor to L</new> that uses positional parameters.
+=head1 METHODS
 
 =head2 moveBuf
 
-  $self->moveBuf($indent, \@source, $attr, $count);
+  $buffer->moveBuf($indent, \@source, $attr, $count);
 
-Moves a buffer of characters with specified attributes.
+Copies a sequence of characters from the source buffer into the draw buffer,
+starting at the specified position and applying the given attribute.
 
 =head2 moveCStr
 
-  $self->moveCStr($indent, $str, $attrs);
+  $buffer->moveCStr($indent, $string, $attrs);
 
-Moves a Tilde style string with specified attributes.
+Writes a string containing Turbo Vision style tilde markers into the buffer,
+applying the specified attributes.
 
 =head2 moveChar
 
-  $self->moveChar($indent, $c, $attr, $count);
+  $buffer->moveChar($indent, $char, $attr, $count);
 
-Moves a single character with specified attributes.
+Writes a repeated character into the buffer using the given attribute.
 
 =head2 moveStr
 
-  $self->moveStr($indent, $str, $attrs);
+  $buffer->moveStr($indent, $string, $attrs);
 
-Moves a string with specified attributes.
+Writes a plain string into the buffer starting at the specified position and
+applies the given attributes.
 
 =head2 putAttribute
 
-  $self->putAttribute($indent, $attr);
+  $buffer->putAttribute($index, $attr);
 
-Sets the attribute at a specified position.
+Sets the display attribute at the specified buffer position.
 
 =head2 putChar
 
-  $self->putChar($indent, $c);
+  $buffer->putChar($index, $char);
 
-Places a character at a specified position.
+Sets the character value at the specified buffer position.
+
+=head1 SEE ALSO
+
+L<TUI::Views::View>,
+L<TUI::Views::Window>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -271,8 +298,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). This documentation is provided under the same terms 
-as the Turbo Vision library itself.
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

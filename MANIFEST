@@ -1,4 +1,10 @@
 bin/overview.pl
+doc/Color.pod
+doc/Constants.pod
+doc/Globals.pod
+doc/Intro.pod
+doc/Overview.pod
+doc/Porting.pod
 examples/demotbac.pl
 examples/hello.pl
 examples/mbcdemo.pl
@@ -106,6 +112,7 @@ lib/TUI/toolkit/Params.pm
 lib/TUI/toolkit/Types.pm
 lib/TUI/toolkit/UO/Antlers.pm
 lib/TUI/toolkit/UO/Base.pm
+lib/TUI/Validate.pm
 lib/TUI/Validate/Const.pm
 lib/TUI/Views.pm
 lib/TUI/Views/CommandSet.pm

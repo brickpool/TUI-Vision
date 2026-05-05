@@ -188,99 +188,140 @@ __END__
 
 =head1 NAME
 
-TDialog - base dialog window class for Turbo Vision dialog boxes
+TUI::Dialogs::Dialog - base dialog window class for Turbo Vision dialogs
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TWindow
+          TDialog
 
 =head1 SYNOPSIS
 
   use TUI::Dialogs;
   use TUI::Objects;
 
-  my $bounds = TRect->new(ax => 5, ay => 3, bx => 40, by => 15);
-  my $dlg = TDialog->new(bounds => $bounds, title => "Example");
+  my $bounds = TRect->new(
+    ax => 5, ay => 3,
+    bx => 40, by => 15
+  );
 
-  $dlg->handleEvent($event);
+  my $dialog = TDialog->new(
+    bounds => $bounds,
+    title  => 'Example'
+  );
+
+  my $result = $deskTop->execView($dialog);
 
 =head1 DESCRIPTION
 
-C<TDialog> implements the fundamental dialog window class used throughout Turbo 
-Vision. It handles palette selection, keyboard shortcuts for dialog acceptance 
-or cancellation, and manages focus and modal dialog termination.  
+C<TDialog> implements the fundamental dialog window class used throughout Turbo
+Vision. Dialogs provide a modal or non-modal container for controls such as
+buttons, input fields, checkboxes, and labels.
 
-The class forms the basis for all higher-level dialogs and provides common 
-event-handling logic.  
+The dialog class manages palette selection, keyboard handling for dialog
+acceptance or cancellation, focus traversal, and modal termination logic.
+It forms the basis for all higher-level dialog implementations.
+
+Dialogs are typically executed modally using C<execView> on the desktop, but
+may also be inserted directly as non-modal windows.
 
 =head1 ATTRIBUTES
+
+The following attributes are inherited from C<TWindow> and managed internally.
 
 =over
 
 =item growMode
 
-Internal window growth behavior flag inherited from C<TWindow> (I<Int>).
+Window growth behavior flag inherited from C<TWindow> (I<Int>).
 
 =item flags
 
-Internal flag mask enabling movement and closing operations (I<Int>).
+Internal flag mask controlling movement and closing behavior (I<Int>).
 
 =item palette
 
-The currently active dialog palette selection (I<Int> palette constant).
+Identifier of the dialog palette used for rendering (I<Int>).
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
-  my $dlg = TDialog->new(%args);
+  my $dialog = TDialog->new(
+    bounds => $bounds,
+    title  => $title
+  );
 
-Creates a new C<TDialog> object and initializes its dialog-specific flags and 
-palette.
+Creates a new dialog window.
 
 =over
 
 =item bounds
 
-The bounding rectangle that defines the dialog window position (I<TRect>).
+Bounding rectangle defining the dialog position and size (I<TRect>).
 
 =item title
 
-The dialog window title displayed in the frame (I<Str>).
+Title string displayed in the dialog frame (I<Str>).
 
 =back
 
 =head2 new_TDialog
 
-  my $dlg = new_TDialog($bounds, $aTitle);
+  my $dialog = new_TDialog($bounds, $title);
 
-Factory constructor that creates a C<TDialog> from C<$bounds> and a title.
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
 
 =head2 getPalette
 
-  my $palette = $self->getPalette();
+  my $palette = $dialog->getPalette();
 
-Returns a clone of the palette object associated with the dialog's color scheme.
+Returns a clone of the palette associated with the dialog color scheme.
+
+Subclasses may override this method to provide custom color mappings.
 
 =head2 handleEvent
 
-  $self->handleEvent($event);
+  $dialog->handleEvent($event);
 
-Processes keyboard and command events, handling ESC, ENTER, and broadcasted 
-dialog commands.
+Processes keyboard and command events.
+
+This method adds dialog-specific handling for keys such as Escape and Enter and
+generates standard dialog commands like C<cmCancel> or C<cmDefault>.
 
 =head2 valid
 
-  my $bool = $self->valid($command);
+  my $bool = $dialog->valid($command);
 
-Checks whether the dialog should accept the provided command (C<cmCancel> is 
-always valid).
+Checks whether the dialog should accept the specified command.
+
+The cancel command (C<cmCancel>) is always accepted. For validation commands,
+this method queries all contained controls to determine whether the dialog state
+is valid.
+
+=head1 SEE ALSO
+
+L<TUI::Dialogs::Button>,
+L<TUI::Dialogs::InputLine>,
+L<TUI::Dialogs::CheckBoxes>,
+L<TUI::Dialogs::RadioButtons>,
+L<TUI::Views::Window>,
+L<TUI::App::DeskTop>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -290,7 +331,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). 
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
 
 =cut

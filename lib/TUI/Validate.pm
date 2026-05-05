@@ -1,4 +1,4 @@
-package TUI::Vision;
+package TUI::Validate;
 
 use strict;
 use warnings;
@@ -7,7 +7,7 @@ our $VERSION = '2.000_001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
-1;
+1
 
 __END__
 
@@ -15,22 +15,20 @@ __END__
 
 =head1 NAME
 
-TUI::Vision - Perl TUI Framework (Turbo Vision 2.0 Port)
+TUI::Validate - Validation utilities for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
-  use TUI::Vision;
-
-  # This is a placeholder module.
-  # The full implementation will be published in upcoming versions.
+  use TUI::Validate;
 
 =head1 DESCRIPTION
 
-TUI::Vision is a modern Perl Text User Interface (TUI) framework.
-It is based on a clean, native port of Borland's Turbo Vision 2.0
-(C++ 1994/97), adapted for contemporary Perl environments.
+TUI::Validate provides validation utilities for the TUI::Vision
+framework. This subsystem offered
+helpers for validating user input, dialog fields, and widget state.
 
-This module is currently just a placeholder. 
+This stub does not implement any validation logic yet.  
+It exists solely to reserve the namespace for the upcoming migration.
 
 =head1 AUTHORS
 

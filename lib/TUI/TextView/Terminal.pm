@@ -371,24 +371,101 @@ sub bufDec {    # void ($val)
 
 __END__
 
+=pod
+
 =head1 NAME
 
-TUI::TextView::Terminal - A simple text view class
+TUI::TextView::Terminal - scrollable terminal-style text output view
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TScroller
+        TTextDevice
+          TTerminal
+
+=head1 SYNOPSIS
+
+  use TUI::Objects;
+  use TUI::Views;
+  use TUI::TextView;
+
+  my $bounds = TRect->new( ax => 0, ay => 0, bx => 60, by => 20 );
+  my $hBar   = TScrollBar->new(
+    bounds => TRect->new( ax => 0, ay => 19, bx => 59, by => 20 )
+  );
+  my $vBar   = TScrollBar->new(
+    bounds => TRect->new( ax => 59, ay => 0, bx => 60, by => 19 )
+  );
+
+  my $term = TTerminal->new(
+    bounds     => $bounds,
+    hScrollBar => $hBar,
+    vScrollBar => $vBar,
+    bufSize    => 4096,
+  );
+
+  tie *TERM, TTerminal => (
+    bounds     => $bounds,
+    hScrollBar => $hBar,
+    vScrollBar => $vBar,
+    bufSize    => 4096,
+  );
+
+  print TERM "connected to remote host\n";
+  syswrite TERM, "login successful\n";
+  close TERM;
 
 =head1 DESCRIPTION
 
-C<TTerminal> is a simple, scrollable, write-only text view provided by Turbo 
-Vision. It acts as a terminal-like output device with an internal circular 
-buffer for storing text. The class extends C<TTextDevice> and adds buffer 
-management and scrolling capabilities.
+C<TTerminal> implements a simple, scrollable, write-only text view that behaves
+like a terminal output window. Text written to the terminal is stored in an
+internal circular buffer and displayed in a scrollable view with optional
+horizontal and vertical scroll bars.
 
-Typical use cases include:
+The terminal buffer automatically wraps around when it reaches its configured
+size, allowing older data to be discarded as new output is appended. Line
+boundaries are detected using line feed characters, which makes the terminal
+suitable for log output, console-style views, and similar streaming text use
+cases.
+
+C<TTerminal> extends C<TTextDevice> and is commonly used as a rendering target
+for redirected text output. Reading from the buffer is not supported by
+default and must be implemented explicitly by subclasses if required.
+
+=head2 Commonly Used Features
+
+In application code, C<TTerminal> is usually initialized once and then written
+through the text-device interface (C<print>, C<printf>, C<say>, C<syswrite>).
+When explicit capacity checks are needed before larger writes, C<canInsert>
+provides the primary guard.
+
+=head1 ATTRIBUTES
+
+The following attributes are exposed as read-only accessors and are intended
+for internal use by the terminal implementation. They reflect the current state
+of the circular buffer and should not be modified directly.
 
 =over
 
-=item Displaying output in a terminal-like view
+=item bufSize
 
-=item Implementing log or console windows in text-based applications
+Read-only size of the internal circular buffer in bytes (I<Int>).  
+This value is defined at construction time and does not change.
+
+=item buffer
+
+Read-only reference to the internal buffer storage.  
+The buffer is allocated and managed internally by the terminal.
+
+=item queFront
+
+Read-only index pointing to the first byte currently stored in the buffer.
+
+=item queBack
+
+Read-only index pointing to the most recently written byte in the buffer.
 
 =back
 
@@ -396,95 +473,139 @@ Typical use cases include:
 
 =head2 new
 
-  my $term = TTerminal->new(%args);
+  my $term = TTerminal->new(
+    bounds     => $bounds,
+    hScrollBar => $hBar,
+    vScrollBar => $vBar,
+    bufSize    => $bufSize
+  );
 
-Creates a new C<TTerminal> instance with the given arguments.
+Creates and initializes a new terminal view.
 
 =over
 
 =item bounds
 
-The bounds of the scroller (I<TRect>).
+Bounding rectangle of the terminal view (I<TRect>).  
+This parameter is required.
 
-=item aHScrollBar
+=item hScrollBar
 
-The horizontal scroll bar of the scroller (I<TScrollBar>).
+Horizontal scroll bar associated with the terminal (I<TScrollBar>).
 
-=item aVScrollBar
+This parameter must be provided, but its value may be C<undef> if no horizontal
+scroll bar is required.
 
-The vertical scroll bar of the scroller (I<TScrollBar>).
+=item vScrollBar
 
-=item aBufSize
+Vertical scroll bar associated with the terminal (I<TScrollBar>).
 
-Defines the buffer size (I<Int>).
+This parameter must be provided, but its value may be C<undef> if no vertical
+scroll bar is required.
+
+=item bufSize
+
+Size of the internal circular buffer in bytes (I<PositiveOrZeroInt>).  
+This parameter is required and determines how much text can be retained before
+older data is discarded.
 
 =back
 
 =head2 new_TTerminal
 
- my $term = new_TTerminal($bounds, $aHScrollBar, $aVScrollBar, $aBufSize);
+  my $term = new_TTerminal($bounds, $aHScrollBar, $aVScrollBar, $aBufSize);
 
-Factory constructor for creating a new terminal object.
-
-=head2 bufDec
-
- $self->bufDec(\$val);
-
-Decrements a buffer position in the circular buffer.
+Factory constructor for creating a terminal instance using positional
+parameters.
 
 =head2 bufInc
 
- $self->bufInc(\$val);
+  $self->bufInc(\$val);
 
-Increments a buffer position in the circular buffer.
+Advances a buffer index by one position, wrapping around to the beginning of
+the buffer if the end is reached.
+
+=head2 bufDec
+
+  $self->bufDec(\$val);
+
+Moves a buffer index one position backwards, wrapping around to the end of the
+buffer if necessary.
 
 =head2 canInsert
 
- my $bool = $self->canInsert($amount);
+  my $bool = $self->canInsert($amount);
 
-Checks if the buffer can insert the specified amount of data.
+Checks whether C<$amount> bytes can be inserted into the buffer without
+discarding existing data.
+
+Returns true if sufficient space is available, or false if insertion would
+require overwriting older content.
 
 =head2 do_sputn
 
- my $num = $self->do_sputn($s, $count);
+  my $num = $self->do_sputn($s, $count);
 
-Writes a string of a given length into the circular buffer and updates the view.
+Low-level output routine that writes C<$count> bytes from C<$s> into the
+terminal buffer and updates the view. Line feed characters mark the start of
+new lines in the scroll buffer.
 
-=head2 name
-
- my $name = $self->name();
-
-Returns the name of the class (C<"TTerminal">).
+This method is primarily an internal override point used by the text-device
+write path. Application code should normally write through C<print>, C<printf>,
+C<say>, or C<syswrite>.
 
 =head2 nextLine
 
- my $offset = $self->nextLine($pos);
+  my $pos = $self->nextLine($pos);
 
-Returns the position of the next line in the buffer.
+Scans forward from the given buffer position and returns the position of the
+next line start.
 
 =head2 prevLines
 
- my $offset = $self->prevLines($pos, $lines);
+  my $pos = $self->prevLines($pos, $lines);
 
-Moves backwards by a given number of lines in the buffer.
+Moves backwards from the given buffer position by the specified number of
+lines and returns the resulting position.
 
 =head2 queEmpty
 
- my $bool = $self->queEmpty();
+  my $bool = $self->queEmpty();
 
-Checks if the buffer queue is empty.
+Returns true if the buffer queue is empty, false otherwise.
+
+=head2 draw
+
+  $self->draw();
+
+Renders the contents of the terminal buffer into the view, taking the current
+scroll position into account.
+
+=head2 getPalette
+
+  my $palette = $self->getPalette();
+
+Returns the color palette used to draw the terminal view.
+
+=head2 DEMOLISH
+
+  DEMOLISH($in_global_destruction);
+
+Cleans up the terminal instance and releases the internal buffer. This method
+corresponds to the Turbo Vision destructor and is normally invoked
+automatically.
 
 =head1 SEE ALSO
 
-I<ttprvlns.asm>, I<ttprvlns.cpp>
+L<TUI::TextView::TextDevice>, L<TUI::Views::Scroller>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -502,7 +623,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

@@ -1449,7 +1449,12 @@ __END__
 
 =head1 NAME
 
-TView - Base class for all visual components in Turbo Vision
+TView - base class for all visual components in Turbo Vision
+
+=head1 HIERARCHY
+
+  TObject
+    TView
 
 =head1 SYNOPSIS
 
@@ -1461,65 +1466,170 @@ TView - Base class for all visual components in Turbo Vision
 
 =head1 DESCRIPTION
 
-The C<TView> class is the base class for all visual components in Turbo Vision. 
-It provides methods for drawing, event handling, and managing the state and 
-appearance of the view.
+C<TView> is the fundamental base class for all visible objects in Turbo Vision.
+Every visual component shown on the screen ultimately derives from C<TView>.
+
+The class provides the core infrastructure required for drawing, event
+handling, coordinate transformation, focus management, command processing,
+and interaction with the owning view hierarchy. Most applications do not use
+C<TView> directly but instead instantiate one of its many descendants such as
+dialogs, windows, list viewers, or menu views.
+
+C<TView> defines a large number of methods, many of which are intended for
+internal use or for implementation by subclasses. Application code typically
+interacts with C<TView> through state flags, command handling, drawing helpers,
+and event dispatch.
+
+The behavior and appearance of a view are controlled primarily through its
+state, options, event mask, and geometry attributes.
+
+=head2 Commonly Used Features
+
+In day-to-day application code, the most relevant configuration fields are
+C<growMode>, C<dragMode>, C<helpCtx>, C<state>, C<options>, and C<eventMask>.
+They define resize behavior, input handling, help context, and event routing.
+
+The methods most commonly touched outside framework internals are
+C<clearEvent>, C<commandEnabled>, C<dataSize>, C<disableCommands>, C<draw>,
+C<drawView>, C<enableCommands>, C<getColor>, C<getCommands>, C<getHelpCtx>,
+C<getPalette>, C<getState>, C<hideCursor>, C<normalCursor>, C<select>,
+C<setCommands>, C<setState>, C<show>, C<showCursor>, C<valid>, C<writeLine>,
+and C<writeStr>.
+
+=head1 VARIABLES
+
+The following global variables define default behavior and visual
+properties shared by all C<TView> objects.
+
+=head2 $shadowSize
+
+Default size of the view shadow, specified as a C<TPoint>.
+
+=head2 $shadowAttr
+
+Attribute value used when drawing view shadows.
+
+=head2 $showMarkers
+
+Controls whether focus and selection markers are displayed.
+
+=head2 $specialChars
+
+Array reference defining special navigation and marker characters.
+
+=head2 $errorAttr
+
+Attribute value used to render views in an error state.
+
+=head2 $commandSetChanged
+
+Indicates whether the active command set has been modified.
+
+=head2 $curCommandSet
+
+Holds the current default command set used for command enabling
+and dispatch.
 
 =head1 ATTRIBUTES
 
+The following attributes define the geometry, state, and ownership of a view.
+Unless otherwise noted, attributes are part of the public view state and may
+be read or modified by application code.
+
 =over
-
-=item cursor
-
-The position of the cursor in the view (TPoint).
-
-=item clip
-
-The clipping rectangle of the view (TRect).
-
-=item dragMode
-
-The drag mode of the view (Int).
-
-=item eventMask
-
-The event mask of the view (Int).
-
-=item growMode
-
-The grow mode of the view (Int).
-
-=item helpCtx
-
-The help context of the view (Int).
 
 =item next
 
-A reference to the next element in the view list (TView).
-
-=item options
-
-The options of the view (Int).
-
-=item origin
-
-The origin of the view (TPoint).
-
-=item owner
-
-The owner of the view (TGroup).
+Internal link to the next view in the owner's Z-ordered view list.
+This attribute is managed internally.
 
 =item size
 
-The size of the view (TPoint).
+Size of the view as a C<TPoint>.
+
+=item origin
+
+Upper-left corner of the view relative to its owner.
+
+=item cursor
+
+Current cursor position within the view.
+
+=item owner
+
+Owning group of this view (I<TGroup>). This reference is managed internally.
+
+=item options
+
+View option flags (I<Int>), typically a combination of C<ofXXXX> constants.
+
+=item eventMask
+
+Event mask controlling which event classes are accepted by the view.
 
 =item state
 
-The state of the view (Int).
+Current state flags of the view, such as visibility, selection, and cursor
+mode (C<sfXXXX> constants).
+
+=item growMode
+
+Grow mode flags controlling how the view resizes when its owner changes size
+(C<gfXXXX> constants).
+
+=item dragMode
+
+Drag behavior flags controlling how the view responds to mouse dragging
+(C<dmXXXX> constants).
+
+=item helpCtx
+
+Help context identifier associated with the view.
 
 =back
 
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $view = TView->new(bounds => $bounds);
+
+Creates and initializes a new view with the specified bounding rectangle.
+The view is created with default state, option, and event mask values.
+
+=over
+
+=item bounds
+
+Bounding rectangle of the view (I<TRect>).
+
+=back
+
+=head2 new_TView
+
+  my $view = new_TView($bounds);
+
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with the C<bounds> parameter
+and is provided for compatibility with traditional Turbo Vision construction
+patterns.
+
+=head1 DESTRUCTOR
+
+=head2 DEMOLISH
+
+  $self->DEMOLISH($in_global_destruction);
+
+Destroys the view and removes it from the screen and the view hierarchy.
+This method corresponds to the Turbo Vision destructor and is normally called
+automatically by the owning group.
+
 =head1 METHODS
+
+C<TView> defines a comprehensive set of methods for drawing, event handling,
+state management, and interaction with the view hierarchy. Many of these
+methods are intended to be used by subclasses or internally by the framework.
 
 =head2 new
 
@@ -1975,9 +2085,9 @@ Writes a string to the view.
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

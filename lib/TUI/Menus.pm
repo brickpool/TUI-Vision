@@ -48,4 +48,70 @@ sub unimport {
   TUI::Menus::StatusLine->unimport::out_of( $caller );
 }
 
-1;
+1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Menus - Menu and status line system for the TUI::Vision framework
+
+=head1 SYNOPSIS
+
+  use TUI::Menus;
+
+=head1 DESCRIPTION
+
+TUI::Menus provides the menu and status line subsystem for the
+TUI::Vision framework. It corresponds to the Turbo Vision menu
+architecture and includes all components required for building
+interactive menu bars, pull-down menus, popup menus, and status lines.
+
+This module re-exported a wide range of menu-related classes, including:
+
+=over 4
+
+=item * Const  
+Symbolic constants for menu behavior.
+
+=item * Menu, MenuItem, SubMenu  
+Core menu structures.
+
+=item * MenuView, MenuBar, MenuBox  
+Visual menu components.
+
+=item * StatusItem, StatusDef, StatusLine  
+Status line and hotkey definitions.
+
+=item * MenuPopup (planned)  
+Popup menu support, not yet included in the Perl port.
+
+=back
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+Contributors are documented in the POD of the respective framework modules.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2025-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
+

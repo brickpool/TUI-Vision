@@ -1,454 +1,146 @@
 =pod
 
-=head1 Turbo Vision
+=head1 NAME
 
-Turbo Vision is a character-mode text user interface framework.
+TUI::Vision - Turbo Vision inspired TUI framework for Perl
 
-Turbo Vision C++ is a framework developed by Borland. It is a text-based user 
-interface framework created in the early 1990s by Borland.
+=head1 SYNOPSIS
 
-Turbo Vision was integrated into Borland Pascal, Turbo Pascal, and Borland C++ 
-and was used to create integrated development environments (IDEs) for these 
-programming languages.
+  package MyApp;
 
-The framework offers various user interface elements such as edit fields, 
-list boxes, checkboxes, radio buttons, and menus, all of which have mouse 
-support.
-
-=head2 History
-
-Turbo Vision was originally written in Pascal and C++ and was intended for 
-MS-DOS and IBM PC compatible systems.
-
-It was later discontinued in favor of the Object Windows Library, the Win16 API,
-and the GUI tools of Borland Delphi. In 1997, Borland released the C++ source 
-code into the public domain.
-
-Although Turbo Vision was later released into the public domain and further 
-developed by an open-source community, there are no known ports to Perl.
-
-Most further developments and ports focused on other platforms, such as Unix 
-systems.
-
-=head2 TUI-Vision
-
-Starting in 2025, I made the previously private project public after 
-successfully porting the Turbo Vision C++ framework to Perl for the target 
-platform Windows 10 and 11 (after two failed attempts, see commits history for 
-details). 
-
-This port is based on the original codebase of Borland C++ 4.02
-(Turbo Vision 2.0 sources including bug fixes by Eric Woodruff: 
-L<tv2fixed.zip|http://www.sigala.it/sergio/tvision/source/tv2fixed.zip>).
-In addition, assembler routines that have been ported to C++ come from 
-I<magiblot>'s implementation I<"A modern port of Turbo Vision 2.0.">.
-
-TUI-Vision wanted to enable developers to use the powerful text-based user 
-interfaces of Turbo Vision in Perl. 
-
-=head3 Source Module Inventory
-
-  lib/TUI/
-    +-- App/      - TProgram, TApplication, TDeskTop, TBackground, etc.
-    +-- Dialogs/  - TDialog, TButton, TInputLine, TLabel, etc.
-    +-- Drivers/  - TEvent, TScreen, TEventQueue, THardwareInfo, etc.
-    +-- Editors/  - TEditor, TMemo, TFileEditor, TIndicator, etc.
-    +-- Gadgets/  - TClickTester, TEventViewer, THeapView, etc.
-    +-- Help/     - THelpFile, THelpTopic, THelpViewer, etc.
-    +-- Memory/   - Memory manager
-    +-- Menus/    - TMenuBar, TMenuBox, TStatusLine, etc.
-    +-- Objects/  - TObject, TPoint, TRect, TCollection, TSortedCollection, etc.
-    +-- StdDlg/   - TFileDialog, TChDirDialog, TDirListBox, etc.
-    +-- TextView/ - TTextDevice, TTerminal, etc.
-    +-- toolkit/  - Object toolkit
-    +-- Validate/ - TValidator, TFilterValidator, TPXPictureValidator, etc.
-    +-- Views/    - TDrawBuffer, TView, TGroup, TFrame, TScroller, TWindow, etc.
-
-This following checklist maps all Borland Turbo Vision classes to their Perl 
-equivalents in the TVision port. It reflects the actual state of the repository 
-as observed from the module tree.
-
-Each entry includes:
-
-=over
-
-=item * Borland class name
-
-=item * Perl module name (if present)
-
-=item * Porting status
-
-   [x] = implemented
-   [ ] = missing
-   [o] = partial
-
-=back
-
-=head3 Core Primitives
-
-  +----------------+---------------------------+-----------+
-  | TPoint         | TUI::Objects::Point        | [x]       |
-  | TRect          | TUI::Objects::Rect         | [x]       |
-  | TDrawBuffer    | TUI::Views::DrawBuffer     | [x]       |
-  | TPalette       | TUI::Views::Palette        | [x]       |
-  | TCommandSet    | TUI::Views::CommandSet     | [x]       |
-  +----------------+---------------------------+-----------+
-
-=head3 Event System
-
-  +----------------+---------------------------+-----------+
-  | TEvent         | TUI::Drivers::Event        | [x]       |
-  | KeyDownEvent   | TUI::Drivers::Event        | [x]       |
-  | MouseEvent     | TUI::Drivers::Event        | [x]       |
-  | MessageEvent   | TUI::Drivers::Event        | [x]       |
-  | TEventQueue    | TUI::Drivers::EventQueue   | [x]       |
-  +----------------+---------------------------+-----------+
-
-=head3 Platform Layer
-
-  +----------------+---------------------------+-----------+
-  | THWMouse       | TUI::Drivers::HWMouse      | [o]       |
-  | TMouse         | TUI::Drivers::Mouse        | [x]       |
-  | TSystemError   | TUI::Drivers::SystemError  | [o]       |
-  | TScreen        | TUI::Drivers::Screen       | [o]       |
-  | TDisplay       | TUI::Drivers::Display      | [o]       |
-  | THardwareInfo  | TUI::Drivers::HardwareInfo | [o]       |
-  +----------------+---------------------------+-----------+
-
-Win32 Console Driver, implemented in C<TUI::Drivers::HardwareInfo::Win32>.
-
-=head3 View Hierarchy
-
-  +----------------+---------------------------+-----------+
-  | TObject        | TUI::Objects::Object       | [x]       |
-  | TView          | TUI::Views::View           | [x]       |
-  | TGroup         | TUI::Views::Group          | [x]       |
-  | TFrame         | TUI::Views::Frame          | [x]       |
-  | TScrollBar     | TUI::Views::ScrollBar      | [x]       |
-  | TScroller      | TUI::Views::Scroller       | [x]       |
-  | TListViewer    | TUI::Views::ListViewer     | [x]       |
-  | TBackground    | TUI::App::Background       | [x]       |
-  +----------------+---------------------------+-----------+
-
-Hierarchical screen write system, implemented in C<TUI::Views::View::Write>.
-
-=head3 Application Framework
-
-  +----------------+---------------------------+-----------+
-  | TDeskInit      | TUI::App::DeskInit         | [x]       |
-  | TDeskTop       | TUI::App::DeskTop          | [x]       |
-  | TProgInit      | TUI::App::ProgInit         | [x]       |
-  | TProgram       | TUI::App::Program          | [x]       |
-  | TApplication   | TUI::App::Application      | [x]       |
-  | TWindowInit    | TUI::Views::WindowInit     | [x]       |
-  | TWindow        | TUI::Views::Window         | [x]       |
-  | TDialog        | TUI::Dialogs::Dialog       | [x]       |
-  +----------------+---------------------------+-----------+
-
-=head3 Dialog Controls
-
-Buttons and Clusters
-
-  +------------------+------------------------------+-----------+
-  | TButton          | TUI::Dialogs::Button          | [x]       |
-  | TSItem           | TUI::Dialogs::StrItem         | [x]       |
-  | TCluster         | TUI::Dialogs::Cluster         | [x]       |
-  | TRadioButtons    | TUI::Dialogs::RadioButtons    | [x]       |
-  | TCheckBoxes      | TUI::Dialogs::CheckBoxes      | [x]       |
-  | TMultiCheckBoxes | TUI::Dialogs::MultiCheckBoxes | [x]       |
-  +------------------+------------------------------+-----------+
-
-Input and Text
-
-  +----------------+---------------------------+-----------+
-  | TInputLine     | TUI::Dialogs::InputLine    | [x]       |
-  | TStaticText    | TUI::Dialogs::StaticText   | [x]       |
-  | TParamText     | TUI::Dialogs::ParamText    | [x]       |
-  | TLabel         | TUI::Dialogs::Label        | [x]       |
-  +----------------+---------------------------+-----------+
-
-Lists and History
-
-  +----------------+--------------------------------------+-----------+
-  | TListBox       | TUI::Dialogs::ListBox                 | [x]       |
-  | TListBoxRec    | TUI::Dialogs::ListBox                 | [x]       |
-  | TSortedListBox | TUI::StdDlg::SortedListBox            | [x]       |
-  | HistRec        | TUI::Dialogs::HistoryViewer::HistList | [x]       |
-  | THistoryViewer | TUI::Dialogs::HistoryViewer           | [x]       |
-  | THistInit      | TUI::Dialogs::HistInit                | [x]       |
-  | THistoryWindow | TUI::Dialogs::HistoryWindow           | [x]       |
-  | THistory       | TUI::Dialogs::History                 | [x]       |
-  +----------------+--------------------------------------+-----------+
-
-=head3 File/Directory Dialogs
-
-  +-----------------+----------------------------+-----------+
-  | ffblk/find_t    | TUI::StdDlg::Dos            | [x]       |
-  | FindFirstRec    | TUI::StdDlg::FindFirstRec   | [o]       |
-  | TSearchRec      | TUI::StdDlg::FileCollection | [x]       |
-  | TFileCollection | TUI::StdDlg::FileCollection | [x]       |
-  | TFileInputLine  | TUI::StdDlg::FileInputLine  | [x]       |
-  | TFileList       | TUI::StdDlg::FileList       | [x]       |
-  | TFileInfoPane   | TUI::StdDlg::FileInfoPane   | [x]       |
-  | TFileDialog     | TUI::StdDlg::FileDialog     | [x]       |
-  | TDirEntry       | TUI::StdDlg::DirEntry       | [x]       |
-  | TDirCollection  | TUI::StdDlg::DirCollection  | [x]       |
-  | TDirListBox     | TUI::StdDlg::DirListBox     | [x]       |
-  | TChDirDialog    | TUI::StdDlg::ChDirDialog    | [x]       |
-  +-----------------+----------------------------+-----------+
-
-Win32 FindFirstRec class, implemented in C<TUI::Drivers::FindFirstRec::Win32>.
-
-=head3 Menu System
-
-  +----------------+---------------------------+-----------+
-  | TMenuItem      | TUI::Menus::MenuItem       | [x]       |
-  | TMenu          | TUI::Menus::Menu           | [x]       |
-  | TMenuView      | TUI::Menus::MenuView       | [x]       |
-  | TMenuBar       | TUI::Menus::MenuBar        | [x]       |
-  | TMenuBox       | TUI::Menus::MenuBox        | [x]       |
-  | TMenuPopup     | (missing)                 | [ ]       |
-  | TSubMenu       | TUI::Menus::SubMenu        | [x]       |
-  | TStatusLine    | TUI::Menus::StatusLine     | [x]       |
-  | TStatusItem    | TUI::Menus::StatusItem     | [x]       |
-  | TStatusDef     | TUI::Menus::StatusDef      | [x]       |
-  +----------------+---------------------------+-----------+
-
-=head3 Message Box System
-
-  +------------------+-------------------------+-----------+
-  | messageBox()     | TUI::MsgBox::MsgBoxText  | [x]       |
-  | messageBoxRect() | TUI::MsgBox::MsgBoxText  | [x]       |
-  | inputBox()       | TUI::MsgBox::MsgBoxText  | [x]       |
-  | inputBoxRect()   | TUI::MsgBox::MsgBoxText  | [x]       |
-  +------------------+-------------------------+-----------+
-
-=head3 Validator System
-
-  +------------------------+-------------------+-----------+
-  | TValidator             | (missing)         | [ ]       |
-  | TFilterValidator       | (missing)         | [ ]       |
-  | TRangeValidator        | (missing)         | [ ]       |
-  | TLookupValidator       | (missing)         | [ ]       |
-  | TStringLookupValidator | (missing)         | [ ]       |
-  | TPXPictureValidator    | (missing)         | [ ]       |
-  +------------------------+-------------------+-----------+
-
-=head3 Collections Framework
-
-  +----------------------+---------------------------------+-----------+
-  | TNSCollection        | TUI::Objects::NSCollection       | [x]       |
-  | TNSSortedCollection  | TUI::Objects::NSSortedCollection | [x]       |
-  | TCollection          | TUI::Objects::Collection         | [x]       |
-  | TSortedCollection    | TUI::Objects::SortedCollection   | [x]       |
-  | TStringCollection    | TUI::Objects::StringCollection   | [x]       |
-  | TStringList          | (missing)                       | [ ]       |
-  | TStrListMaker        | (missing)                       | [ ]       |
-  | TResourceCollection  | (missing)                       | [ ]       |
-  | TResourceFile        | (missing)                       | [ ]       |
-  +----------------------+---------------------------------+-----------+
-
-=head3 Editor Modules
-
-  +----------------+---------------------------+-----------+
-  | TEditor        | (missing)                 | [ ]       |
-  | TMemo          | (missing)                 | [ ]       |
-  | TFileEditor    | (missing)                 | [ ]       |
-  | TEditWindow    | (missing)                 | [ ]       |
-  | TIndicator     | (missing)                 | [ ]       |
-  | TTextDevice    | TUI::TextView::TextDevice  | [x]       |
-  | TTerminal      | TUI::TextView::Terminal    | [x]       |
-  +----------------+---------------------------+-----------+
-
-=head3 Gadgets
-
-  +-----------------+--------------------------+-----------+
-  | TCalcDisplay    | (missing)                | [ ]       |
-  | TCalendarView   | (missing)                | [ ]       |
-  | TClickTester    | (missing)                | [ ]       |
-  | TClockView      | TUI::Gadgets::ClockView   | [x]       |
-  | TEventViewer    | TUI::Gadgets::EventViewer | [x]       |
-  | THeapView       | TUI::Gadgets::HeapView    | [o]       |
-  | TLineCollection | (missing)                | [ ]       |
-  | TPuzzleView     | (missing)                | [ ]       |
-  +-----------------+--------------------------+-----------+
-
-Win32 THeapView, implemented in C<TUI::Gadgets::HeapView::Win32>.
-
-=head3 Interpretation
-
-These following areas represent the bulk of Turbo Vision's higher-level UI 
-framework. 
-
-The project has completed the foundational subsystems:
-
-=over 4
-
-=item * Core primitives
-
-=item * Event system
-
-=item * Platform layer (partial)
-
-=item * View hierarchy (core)
-
-=item * Menu system
-
-=item * Status system
-
-=item * TextView subsystem
-
-=item * Dialog controls
-
-=item * Standard dialogs
-
-=back
-
-The remaining work is concentrated in:
-
-=over 4
-
-=item * Validators
-
-=item * Editors
-
-=item * Gadgets
-
-=item * Resource/collection extensions
-
-=back
-
-Summary
-
-  Total Borland classes/items tracked: 106
-  Implemented:                         78
-  Partial:                              7
-  Missing:                             21
-
-B<Notes>: Calculated from the full inventory of ~100 Turbo Vision classes, 
-dialogs, widgets, validators, and subsystems as defined in the mapping list.
-
-=head3 Porting notes
-
-Languages with automatic garbage collection (like Perl) have complementary 
-problems compared to languages without garbage collection (like C/C++). For 
-every issue, there is a bug characteristic of non-GC languages and a bug 
-characteristic of GC languages, along with programmer responsibilities in both 
-types.
-
-Perl programmers might think they are relieved from freeing objects, but objects
-hold other resources besides memory that often need to be released 
-appropriately. Where a C++ programmer might have a dangling reference (often 
-not a bug due to some flag or state marking it as not to be used), a Perl 
-programmer has a memory leak. Thus, the C++ programmer is responsible for 
-ensuring C<free/delete> is called appropriately, while the Perl programmer must 
-ensure unwanted references are nulled or otherwise disposed of properly.
-
-Perl 5 supports weak references so that programmers can deliberately avoid 
-creating reference cycles. If data structures contain reference cycles, these 
-are only reclaimed by the Perl runtime when the parent thread is switched off. 
-This is seen as a welcome compromise, as opposed to implementing overhead cycle 
-detection, which would slow down execution time.
-
-It is claimed that a few calls to C<weaken> or using 
-L<Proxy Objects|https://www.perl.com/pub/2002/08/07/proxyobject.html/> can 
-handle this. This might be true, but Turbo Vision sources use many dangling 
-references in various tree structures or collections. To break all these cycles 
-and ensure timely disposal of garbage memory, the Perl implementation must have 
-an intelligent scheme.
-
-Turbo Vision C++ code relies heavily on the convention of resource allocation 
-and ensures reliable and timely destructor calls. This is not possible in Perl, 
-which works with cycles. This poses some challenges during implementation. If 
-you interrupt a garbage cycle, you can't know which destructor to call first 
-without causing dependency problems - it might even be impossible, since there 
-are more cyclic dependencies than just memory references. All other resources 
-have to be cleaned up manually, like in Pascal or C++, without the advantages 
-of Perl.
-
-When porting C++ code to Perl, one common pitfall is accidentally replacing an 
-object reference instead of copying data into the existing object. In C++, 
-passing by reference ensures that assignments modify the caller's object, while 
-in Perl the same assignment simply rebinds a local scalar and discards the 
-caller's reference. This difference can silently break control flow, especially 
-in event-driven systems where modified objects must propagate back to the 
-caller.
-
-=head3 Key Features of the Port
-
-=over
-
-=item B<Compatibility>
-
-The port supports 32-bit and 64-bit Strawberry Perl versions >= 5.10 and covers 
-a wide range of Windows systems (Please note that not all combinations of 
-Windows versions and Perl versions could be checked by me).
-
-=item B<User Interfaces>
-
-All original user interface elements such as edit fields, list boxes, 
-checkboxes, radio buttons, and menus are available in Perl and offer full mouse 
-support (in the future, so please don't be angry that this is in progress; see 
-L<Coverage|/Source Module Inventory>).
-
-=item B<Extensibility>
-
-A I<Moo/s/e> based toolkit was used to ensure that the applications remain 
-efficient and portable. The toolkit enables developers to extend the 
-functionality of TUI-Vision easily and efficiently. The L<Moos> package (by 
-default), L<Moo> and L<Moose> are currently supported. 
-
-L<Moo> and L<Moose> are widely used libraries with a well-known API. It is 
-important to note that L<Moo> and L<Moose> are not required as prerequisites! 
-The default toolkit L<Moos> is compatible with this API and implemented in pure 
-Perl. 
-
-It's up to you what you want to use. Simply C<use Moo> in your application, 
-instead of C<use TUI::toolkit> if you want to use L<Moo>. TUI-Vision will then 
-use L<Moo> in its entirety (the same applies to L<Moose>, of course). 
-
-=back
-
-=head3 Installation and Usage
-
-The port can be installed via CPAN (Comprehensive Perl Archive Network). Simply
-run the following command:
-
-  cpan install TurboVision
-
-A simple example to create an application with Turbo Vision in Perl:
-
+  use Moo;
+  use TUI::Objects;
   use TUI::App;
+  use TUI::Menus;
+  use TUI::Dialogs;
+  use TUI::Views;
 
-  my $app = TApplication->new();
+  extends TApplication;
+
+  use constant {
+    cmAbout => 1001,
+  };
+
+  sub initMenuBar {
+    my ( $class, $r ) = @_;
+    $r->{b}{y} = $r->{a}{y} + 1;
+    return TMenuBar->new(
+      bounds => $r,
+      menu   => new_TSubMenu('~A~pp', kbAltA)
+                + new_TMenuItem('~A~bout...', cmAbout, kbNoKey)
+                + newLine()
+                + new_TMenuItem('E~x~it', cmQuit, kbAltX)
+    );
+  }
+
+  sub handleEvent {
+    my ( $self, $event ) = @_;
+    $self->SUPER::handleEvent($event);
+    return unless $event->{what} == evCommand;
+    return unless $event->{message}{command} == cmAbout;
+
+    my $dialog = TDialog->new(
+      bounds => TRect->new( ax => 20, ay => 6, bx => 60, by => 15 ),
+      title  => 'About'
+    );
+    $dialog->insert(
+      TStaticText->new(
+        bounds => TRect->new( ax => 3, ay => 3, bx => 35, by => 5 ),
+        text   => 'Hello from TUI::Vision'
+      )
+    );
+    $dialog->insert(
+      TButton->new(
+        bounds  => TRect->new( ax => 14, ay => 7, bx => 26, by => 9 ),
+        title   => '~O~K',
+        command => cmOK,
+        flags   => bfDefault
+      )
+    );
+
+    $deskTop->execView($dialog);
+    $self->destroy($dialog);
+    $self->clearEvent($event);
+    return;
+  }
+
+  package main;
+  my $app = MyApp->new();
   $app->run();
 
-=head3 Documentation and Support
+=head1 DESCRIPTION
 
-Detailed documentation and examples can be found in the CPAN or GitHub 
-repository of this port.
+TUI::Vision provides a Perl port of the classic Turbo Vision framework.
+It is designed as a modular and portable text user interface (TUI)
+framework for Perl applications, inspired by Turbo Vision 2.0.
 
-Please note that this is a very recent version of the port of the 
-Turbo Vision C++ framework to Perl. Although I have done my best to create a 
-stable and functional version, there may still be bugs and instabilities.
+The framework is a clean and native Perl implementation,
+adapted for contemporary Perl environments while preserving the
+original architectural concepts.
 
-However, I do my best to answer questions and bug fixes quickly and reliably. 
-Your feedback is extremely valuable to continuously improve the quality and 
-stability of this port. Please do not hesitate to contact me if you have any 
-problems or questions. For this use the GitHub issue tracker and the Github 
-discussion channel.
+The goal of TUI::Vision is to provide a complete and extensible TUI
+framework. All modules included in this release are under active
+development. Additional functionality will be delivered incrementally
+in future versions.
 
-I hope this port will facilitate the development of text-based applications in 
-Perl on Windows systems and look forward to feedback and contributions from the 
-developer community.
+The following framework modules and namespace entry points are included in the 
+distribution:
 
-=head1 Copyright and License
+=over 4
+
+=item * Core object system L<TUI::Objects>
+
+=item * View and windowing system L<TUI::Views>
+
+=item * Dialogs and widgets L<TUI::Dialogs>
+
+=item * Menus and status lines L<TUI::Menus>
+
+=item * Application framework L<TUI::App>
+
+=item * Drivers and hardware abstraction L<TUI::Drivers>
+
+=item * Gadgets and diagnostic tools L<TUI::Gadgets>
+
+=item * Standard dialogs L<TUI::StdDlg>
+
+=item * Message boxes L<TUI::MsgBox>
+
+=item * Text rendering subsystem L<TUI::TextView>
+
+=item * Memory utilities L<TUI::Memory>
+
+=item * Validation utilities L<TUI::Validate>
+
+=item * Unified OO toolkit L<TUI::toolkit>
+
+=back
+
+=head1 STATUS
+
+This distribution is under active development. 
+
+=head1 AUTHORS
+
+=over
+
+=item Turbo Vision Development Team
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+Contributors are documented in the POD of the respective framework modules.
+
+=head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 1990-1994, 1997 by Borland International
 
-Copyright (c) 2021-2026 the AUTHORS and CONTRIBUTORS as listed in the sources.
+Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is 
-part of the distribution). 
+part of the distribution).
 
 =cut

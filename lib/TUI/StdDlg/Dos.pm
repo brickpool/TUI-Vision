@@ -72,24 +72,154 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::Dos - defines structures and functions for use similar to MS-DOS
+TUI::StdDlg::Dos - DOS-style directory search structures and functions
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg::Dos;
+
+  my $blk = ffblk->new;
+
+  if ( _dos_findfirst('*.*', 0, $blk) == 0 ) {
+    do {
+      print $blk->ff_name, "\n";
+    } while ( _dos_findnext($blk) == 0 );
+  }
 
 =head1 DESCRIPTION
 
-The code base was taken from the framework
-I<"A modern port of Turbo Vision 2.0">.
+C<TUI::StdDlg::Dos> provides low-level data structures and helper functions used
+by the standard dialog subsystem to perform directory searches in a
+DOS-compatible manner.
+
+The module defines record-style structures representing directory entries and
+exposes search functions that iterate over matching filesystem objects. These
+facilities are used internally by directory and file selection dialogs.
+
+This module does not define any objects derived from C<TObject>.
+
+=head1 STRUCTURES
+
+=head2 ffblk
+
+Represents a directory search record compatible with the traditional DOS
+C<ffblk> structure.
+
+The structure contains the following fields:
+
+=over
+
+=item ff_name
+
+Name of the matched file or directory (I<Str>).
+
+=item ff_fsize
+
+Size of the file in bytes (I<Int>).
+
+=item ff_attrib
+
+Attribute flags of the matched entry (I<Int>).
+
+=item ff_ftime
+
+Time of last modification (I<Int>).
+
+=item ff_fdate
+
+Date of last modification (I<Int>).
+
+=back
+
+=head2 find_t
+
+Represents a directory search record compatible with the Microsoft C runtime
+C<find_t> structure.
+
+The structure contains the following fields:
+
+=over
+
+=item name
+
+Name of the matched file or directory (I<Str>).
+
+=item size
+
+Size of the file in bytes (I<Int>).
+
+=item attrib
+
+Attribute flags of the matched entry (I<Int>).
+
+=item wr_time
+
+Time of last modification (I<Int>).
+
+=item wr_date
+
+Date of last modification (I<Int>).
+
+=back
+
+=head1 FUNCTIONS
+
+=head2 _dos_findfirst
+
+  my $rc = _dos_findfirst($pattern, $attrib, $record);
+
+Initializes a directory search.
+
+=over
+
+=item pattern
+
+Search pattern, which may include wildcards (I<Str>).
+
+=item attrib
+
+Attribute mask used to filter matching entries (I<Int>).
+
+=item record
+
+A directory search record of type C<ffblk> or C<find_t> that will receive the
+first matching entry.
+
+=back
+
+Returns zero on success. A non-zero value indicates that no matching entry was
+found.
+
+=head2 _dos_findnext
+
+  my $rc = _dos_findnext($record);
+
+Advances the directory search to the next matching entry.
+
+=over
+
+=item record
+
+The directory search record previously initialized by C<_dos_findfirst>.
+
+=back
+
+Returns zero on success. A non-zero value indicates that no further matching
+entries are available.
 
 =head1 SEE ALSO
 
-I<dos.h>, I<dir.cpp>, 
+L<TUI::StdDlg::DirCollection>,
+L<TUI::StdDlg::DirListBox>,
+L<TUI::StdDlg::ChDirDialog>
 
 =head1 AUTHORS
 
 =over
 
-=item Turbo Vision Development Team
+=item Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org>
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -107,7 +237,7 @@ Copyright (c) 1987, 1993 by Borland International
 
 Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

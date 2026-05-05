@@ -253,3 +253,108 @@ sub printMouseEventFlags {
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Gadgets::PrintConstants - helpers for printing symbolic event constants
+
+=head1 SYNOPSIS
+
+  use TUI::Gadgets::PrintConstants qw(
+    printKeyCode
+    printControlKeyState
+    printEventCode
+    printMouseButtonState
+    printMouseWheelState
+    printMouseEventFlags
+  );
+
+  printKeyCode($out, $event->{keyDown}{keyCode});
+  printEventCode($out, $event->{what});
+
+=head1 DESCRIPTION
+
+C<TUI::Gadgets::PrintConstants> provides helper functions for printing symbolic
+representations of Turbo Vision constants.
+
+The functions translate numeric event, key, and mouse codes into their
+corresponding symbolic names and write the result to a supplied output object.
+If a value cannot be mapped to a known constant, its numeric representation is
+printed instead.
+
+This module is intended for debugging and diagnostic output and is commonly
+used by gadgets such as C<TEventViewer>.
+
+=head1 FUNCTIONS
+
+All functions write their output to the provided output object and do not return
+a value.
+
+=head2 printKeyCode
+
+  printKeyCode($out, $keyCode);
+
+Prints the symbolic name of a keyboard key code.
+
+=head2 printControlKeyState
+
+  printControlKeyState($out, $state);
+
+Prints the symbolic names of the control key state flags.
+
+Multiple flags are combined using C<|>.
+
+=head2 printEventCode
+
+  printEventCode($out, $eventCode);
+
+Prints the symbolic name of an event code.
+
+=head2 printMouseButtonState
+
+  printMouseButtonState($out, $state);
+
+Prints the symbolic names of mouse button state flags.
+
+=head2 printMouseWheelState
+
+  printMouseWheelState($out, $state);
+
+Prints the symbolic names of mouse wheel state flags.
+
+=head2 printMouseEventFlags
+
+  printMouseEventFlags($out, $flags);
+
+Prints the symbolic names of mouse event flags.
+
+=head1 SEE ALSO
+
+L<TUI::Drivers::Const>,
+L<TUI::Drivers::Event>,
+L<TUI::Gadgets::EventViewer>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

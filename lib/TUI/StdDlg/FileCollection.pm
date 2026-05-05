@@ -103,3 +103,148 @@ sub compare {    # $cmp ($key1, $key2)
 } #/ sub compare
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::StdDlg::FileCollection - sorted collection of file system entries
+
+=head1 HIERARCHY
+
+  TObject
+    TCollection
+      TSortedCollection
+        TFileCollection
+
+=head1 SYNOPSIS
+
+  use TUI::StdDlg;
+
+  my $files = new_TFileCollection(
+    50,   # limit
+    10    # delta
+  );
+
+=head1 DESCRIPTION
+
+C<TFileCollection> implements a sorted collection used by standard
+Turbo Vision dialogs to manage file and directory search results.
+
+The collection stores file system entries and maintains them in sorted order
+according to a comparison strategy defined by the class. It is primarily used
+internally by file selection and directory browsing dialogs.
+
+This class derives from C<TSortedCollection> and specializes the comparison
+logic for file-related data.
+
+=head1 STRUCTURES
+
+=head2 TSearchRec
+
+Represents a file search record.
+
+This structure stores metadata for a file system entry and is populated
+during directory and file searches performed by file collections.
+
+The structure contains the following fields:
+
+=over
+
+=item attr
+
+Attribute flags associated with the file entry (I<Int>).
+
+=item time
+
+Timestamp of the file entry (I<Int>).
+
+=item size
+
+Size of the file in bytes (I<Int>).
+
+=item name
+
+Name of the file entry (I<Str>).
+
+=back
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $collection = TUI::StdDlg::FileCollection->new(
+    limit => $limit,
+    delta => $delta
+  );
+
+Creates a new file collection.
+
+=over
+
+=item limit
+
+Initial capacity of the collection (I<Int>).
+
+=item delta
+
+Growth increment used when the collection exceeds its current capacity
+(I<Int>).
+
+=back
+
+=head2 new_TFileCollection
+
+  my $collection = new_TFileCollection($limit | undef, $delta | undef);
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 compare
+
+  my $cmp = $collection->compare($key1, $key2);
+
+Compares two file collection keys.
+
+This method defines the sort order of the collection and is invoked internally
+by the base sorted collection logic. It returns a negative, zero, or positive
+value depending on the ordering of the supplied keys.
+
+=head1 USAGE NOTES
+
+C<TFileCollection> is typically not used directly by application code.
+
+Instances of this class are created and managed by standard dialog components
+such as file selection dialogs. Application code interacts with the dialog
+rather than the underlying collection.
+
+=head1 SEE ALSO
+
+L<TUI::StdDlg::FileDialog>,
+L<TUI::Objects::SortedCollection>,
+L<TUI::StdDlg::Const>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
+

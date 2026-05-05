@@ -607,3 +607,119 @@ sub setCritErrorHandler {  # $bool ($class, $install)
 my $ctrlBreakHandler = sub { ... };
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Drivers::HardwareInfo::Win32 - Win32 hardware backend for Turbo Vision
+
+=head1 DESCRIPTION
+
+C<TUI::Drivers::HardwareInfo::Win32> provides the Windows-specific 
+implementation of the C<THardwareInfo> hardware interface used by the Turbo 
+Vision driver layer.
+
+The module encapsulates access to the Win32 console, keyboard, mouse, timer,
+and screen facilities. It maintains global process-level state and interfaces
+directly with the Windows Console API.
+
+This module is not instantiated. All interaction is performed through
+class-level method calls.
+
+Initialization of console resources is performed automatically when the module
+is loaded. Console state is restored automatically when the program terminates.
+
+=head1 VARIABLES
+
+The following variables are internal to the Win32 backend implementation and
+are not part of the portable C<THardwareInfo> interface.
+
+=head2 $insertState
+
+Tracks the current insert mode state.
+
+=head2 $platform
+
+Contains the platform identifier string. For this backend, the value is
+C<Windows>.
+
+=head2 @consoleHandle
+
+Holds the Win32 console handle objects used for input, output, and startup
+state.
+
+=head2 $ownsConsole
+
+Indicates whether the console was allocated by this module.
+
+=head2 $consoleMode
+
+Stores the console input mode.
+
+=head2 $pendingEvent
+
+Indicates whether a pending input event is buffered.
+
+=head2 @irBuffer
+
+Internal buffer for Win32 input records.
+
+=head2 @crInfo
+
+Stores console cursor information.
+
+=head2 @sbInfo
+
+Stores console screen buffer information.
+
+=head1 IMPLEMENTATION
+
+This module contains the Windows-specific implementation behind
+L<TUI::Drivers::HardwareInfo> (C<THardwareInfo>). Public API semantics and
+usage are documented in L<TUI::Drivers::HardwareInfo>.
+
+In this backend, those methods are mapped to Win32 console facilities for
+keyboard/mouse input, screen and caret control, timing, and control/error
+handling.
+
+The exact implementation details here are platform-specific and may differ from
+other backends.
+
+=head1 SEE ALSO
+
+L<TUI::Drivers::HardwareInfo>,
+L<TUI::Drivers::Screen>,
+L<TUI::Drivers::HWMouse>,
+L<TUI::Drivers::SystemError>
+
+=head1 AUTHORS
+
+=over
+
+=item Borland International (original Turbo Vision design)
+
+=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 CONTRIBUTORS
+
+=over
+
+=item magiblot <magiblot@hotmail.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
