@@ -1,10 +1,10 @@
 package TUI::Memory::Util;
-# ABSTRACT: defines various utility functions used throughout Turbo Vision
+# ABSTRACT: defines various memory-related utility functions
 
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -28,7 +28,7 @@ __END__
 
 =head1 NAME
 
-TUI::Memory::Util - memory-related utility functions for Turbo Vision
+TUI::Memory::Util - memory-related utility functions
 
 =head1 SYNOPSIS
 
@@ -44,7 +44,7 @@ TUI::Memory::Util - memory-related utility functions for Turbo Vision
 =head1 DESCRIPTION
 
 C<TUI::Memory::Util> provides low-level utility functions related to memory
-management within the Turbo Vision framework.
+management within the TUI::Vision framework.
 
 The functions in this module expose global state maintained by the runtime and
 are intended to support defensive behavior in views and application-level
@@ -98,9 +98,9 @@ L<TUI::Dialogs::Dialog>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

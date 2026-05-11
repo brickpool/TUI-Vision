@@ -3,9 +3,23 @@ package TUI::Validate;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
+
+use Import::Into;
+
+use TUI::Validate::Const;
+
+sub import {
+  my $target = caller;
+  TUI::Validate::Const->import::into( $target, qw( :all ) );
+}
+
+sub unimport {
+  my $caller = caller;
+  TUI::Validate::Const->unimport::out_of( $caller );
+}
 
 1
 
@@ -24,19 +38,19 @@ TUI::Validate - Validation utilities for the TUI::Vision framework
 =head1 DESCRIPTION
 
 TUI::Validate provides validation utilities for the TUI::Vision
-framework. This subsystem offered
-helpers for validating user input, dialog fields, and widget state.
+framework.
 
-This stub does not implement any validation logic yet.  
-It exists solely to reserve the namespace for the upcoming migration.
+This module is the validation-layer collector and currently re-exports
+L<TUI::Validate::Const> so applications can import validator constants from
+one entry point.
 
 =head1 AUTHORS
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

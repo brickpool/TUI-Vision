@@ -3,7 +3,7 @@ package TUI::Objects::Const;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -61,7 +61,7 @@ TUI::Objects::Const - constants for object and collection components
 
 =head1 DESCRIPTION
 
-C<TUI::Objects::Const> defines constants used by the Turbo Vision object and
+C<TUI::Objects::Const> defines constants used by the TUI::Vision object and
 collection infrastructure.
 
 The constants in this module are used by collection classes and related object
@@ -112,9 +112,9 @@ L<TUI::Objects::SortedCollection>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

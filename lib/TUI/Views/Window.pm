@@ -1,11 +1,11 @@
 package TUI::Views::Window;
-# ABSTRACT: A base class for managing windows in Turbo Vision 2.0.
+# ABSTRACT: A base class for managing windows
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -381,7 +381,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Window - base class for windows in Turbo Vision
+TUI::Views::Window - base class for windows in TUI::Vision
 
 =head1 HIERARCHY
 
@@ -402,7 +402,7 @@ TUI::Views::Window - base class for windows in Turbo Vision
 
 =head1 DESCRIPTION
 
-C<TWindow> is a core view class used to represent windows in a Turbo Vision
+C<TWindow> is a core view class used to represent windows in a TUI::Vision
 application. Windows may contain other views, display optional titles and
 window numbers, and support standard window operations such as moving,
 resizing, closing, and zooming.
@@ -593,9 +593,9 @@ L<TUI::Views::View>, L<TUI::Views::Group>, L<TUI::Views::Frame>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

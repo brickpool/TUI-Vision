@@ -1,5 +1,5 @@
 package TUI::Drivers::Util;
-# ABSTRACT: defines various utility functions used throughout Turbo Vision
+# ABSTRACT: defines various utility functions used throughout Drivers
 
 use strict;
 use warnings;
@@ -173,7 +173,7 @@ TUI::Drivers::Util - utility functions for keyboard and event handling
 =head1 DESCRIPTION
 
 C<TUI::Drivers::Util> provides a collection of low-level helper functions used
-by the Turbo Vision driver and event system.
+by the TUI::Vision driver and event system.
 
 The functions in this module operate on key codes and character values and are
 used to translate between control, alternate, and normal key representations.
@@ -190,8 +190,8 @@ between Alt key codes and characters via C<getAltCode()>/C<getAltChar()>, and
 translating between Ctrl key codes and characters via
 C<getCtrlCode()>/C<getCtrlChar()>.
 
-C<cstrlen()> is commonly used when text contains Turbo Vision marker
-characters (for example C<~>) and a marker-aware length is needed.
+C<cstrlen()> is commonly used when text contains TUI::Vision marker
+characters C<~> and a marker-aware length is needed.
 
 =head1 FUNCTIONS
 
@@ -249,9 +249,9 @@ L<TUI::Drivers::Event>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -1,0 +1,36 @@
+name: CI Smoke
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  smoke:
+    name: Smoke / Windows / Perl latest
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          distribution: strawberry
+          perl-version: latest
+
+      - shell: pwsh
+        run: perl -V
+
+      - shell: pwsh
+        run: >
+          cpanm --skip-satisfied --quiet --notest
+          Devel::StrictMode
+          Importer
+          Import::Into
+          UNIVERSAL::Object
+          Win32::Console::PatchForRT33513
+
+      - shell: pwsh
+        run: |
+          perl Makefile.PL
+          gmake test

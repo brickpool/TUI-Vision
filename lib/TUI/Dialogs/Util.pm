@@ -1,5 +1,5 @@
 package TUI::Dialogs::Util;
-# ABSTRACT: Various utility functions for Turbo Vision dialogs
+# ABSTRACT: Various utility functions for dialogs
 
 use 5.010;
 use strict;
@@ -72,7 +72,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::Util - Utility functions for Turbo Vision dialogs
+TUI::Dialogs::Util - Utility functions for dialogs
 
 =head1 SYNOPSIS
 
@@ -136,9 +136,9 @@ previous word exists, the function returns C<0>.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

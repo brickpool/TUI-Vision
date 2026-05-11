@@ -164,7 +164,7 @@ TUI::Drivers::Display - low-level display abstraction
 =head1 DESCRIPTION
 
 C<TDisplay> provides a low-level abstraction layer for screen and
-cursor operations used by the Turbo Vision driver subsystem.
+cursor operations used by the TUI::Vision driver subsystem.
 
 The module defines a set of class-level routines for querying and modifying
 display parameters such as screen size, cursor shape, and video mode. It does
@@ -172,7 +172,7 @@ not maintain any internal state of its own.
 
 C<TDisplay> is not an object-oriented class. It must not be instantiated.
 All interaction is performed via class method calls of the form
-C<TDisplay-E<gt>method>.
+C<< TDisplay->method >>.
 
 This module is primarily used internally by C<TScreen> and related driver
 components.
@@ -247,9 +247,9 @@ L<TUI::Drivers::HardwareInfo>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

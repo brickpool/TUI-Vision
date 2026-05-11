@@ -549,7 +549,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::Event - unified event structure for Turbo Vision input handling
+TUI::Drivers::Event - unified event structure for input handling
 
 =head1 HIERARCHY
 
@@ -573,7 +573,7 @@ TUI::Drivers::Event - unified event structure for Turbo Vision input handling
 
 =head1 DESCRIPTION
 
-C<TEvent> represents the central event structure used throughout Turbo Vision.
+C<TEvent> represents the central event structure used throughout TUI::Vision.
 It models all input and message events such as keyboard input, mouse activity,
 and broadcast messages.
 
@@ -640,8 +640,8 @@ C<what>.
 =head1 INTERNAL REPRESENTATION
 
 Internally, C<TEvent> is implemented as a tied hash that models the original
-Turbo Vision event union. The active event variant is selected by the value of
-the C<what> field.
+Turbo Vision C++ event union. The active event variant is selected by the value 
+of the C<what> field.
 
 Conceptually, the structure can be viewed as follows:
 
@@ -851,9 +851,9 @@ L<TUI::Views::View>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

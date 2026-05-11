@@ -1,11 +1,11 @@
 package TUI::Views::ListViewer;
-# ABSTRACT: Base class for list viewers in Turbo Vision
+# ABSTRACT: Base class for list viewers
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -589,7 +589,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::ListViewer - base class for list viewers in Turbo Vision
+TUI::Views::ListViewer - base class for list viewers
 
 =head1 HIERARCHY
 
@@ -631,7 +631,7 @@ TUI::Views::ListViewer - base class for list viewers in Turbo Vision
 
 =head1 DESCRIPTION
 
-C<TListViewer> is the Turbo Vision base class for list viewer controls. It
+C<TListViewer> is the TUI::Vision base class for list viewer controls. It
 implements the generic behavior required to display a list of items arranged
 in one or more columns, including keyboard navigation, mouse interaction, and
 scroll bar synchronization.
@@ -829,9 +829,9 @@ L<TUI::Views::View>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -839,7 +839,7 @@ L<TUI::Views::View>
 
 =over
 
-=item Eric Woodruff
+=item * Eric Woodruff
 
 =back
 

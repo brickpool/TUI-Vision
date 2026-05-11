@@ -1,11 +1,11 @@
 package TUI::Views::Util;
-# ABSTRACT: defines various utility functions used throughout Turbo Vision
+# ABSTRACT: defines various utility functions for views
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -63,7 +63,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Util - utility functions for Turbo Vision views
+TUI::Views::Util - utility functions for views
 
 =head1 SYNOPSIS
 
@@ -79,7 +79,7 @@ TUI::Views::Util - utility functions for Turbo Vision views
 =head1 DESCRIPTION
 
 C<TUI::Views::Util> provides low-level utility functions used throughout the
-Turbo Vision view system.
+TUI::Vision view system.
 
 The functions in this module operate on views and events and are intended to
 simplify common interaction patterns such as message dispatching and command
@@ -130,7 +130,7 @@ the sending view, depending on the semantics of the command.
 
 =head1 USAGE NOTES
 
-The C<message> function is a convenience wrapper around the Turbo Vision event
+The C<message> function is a convenience wrapper around the TUI::Vision event
 dispatch mechanism.
 
 Messages are delivered by invoking the C<handleEvent> method of the receiver.
@@ -140,7 +140,7 @@ views depending on the event type and view hierarchy.
 The return value indicates which view actually processed the message. This
 allows callers to detect whether a command was handled and by whom.
 
-This function is intended for use within a running Turbo Vision application.
+This function is intended for use within a running TUI::Vision application.
 Calling it outside of a valid view context will have no useful effect.
 
 =head1 SEE ALSO
@@ -153,9 +153,9 @@ L<TUI::Views::Group>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

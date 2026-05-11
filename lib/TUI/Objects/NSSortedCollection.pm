@@ -6,7 +6,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -131,7 +131,7 @@ TUI::Objects::NSSortedCollection - internal non-storable base for sorted coll's
 =head1 DESCRIPTION
 
 C<TNSSortedCollection> is the non-storable base variant of sorted collection
-classes in the Turbo Vision framework. It extends C<TNSCollection> with support
+classes in the TUI::Vision framework. It extends C<TNSCollection> with support
 for ordered insertion and lookup.
 
 This class exists primarily for internal use by the framework. Public-facing
@@ -160,9 +160,9 @@ L<TUI::Objects::NSCollection>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

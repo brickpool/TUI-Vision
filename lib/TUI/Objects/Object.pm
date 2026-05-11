@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -92,7 +92,7 @@ __END__
 
 =head1 NAME
 
-TUI::Objects::Object - root class for all Turbo Vision objects
+TUI::Objects::Object - root class for all TUI::Vision objects
 
 =head1 HIERARCHY
 
@@ -106,12 +106,12 @@ TUI::Objects::Object - root class for all Turbo Vision objects
 
 =head1 DESCRIPTION
 
-C<TObject> is the root class of the Turbo Vision object hierarchy. Nearly all
+C<TObject> is the root class of the TUI::Vision object hierarchy. Nearly all
 objects used by the framework are derived from C<TObject>, and all objects that
 can be written to streams must descend from it.
 
 The class defines the basic initialization and destruction semantics shared by
-all Turbo Vision objects. Descendant classes are expected to follow these rules
+all TUI::Vision objects. Descendant classes are expected to follow these rules
 by invoking their parent constructors and destructors appropriately.
 
 C<TObject> itself does not provide visible behavior and is not normally used
@@ -125,7 +125,7 @@ directly by application code.
 
 Creates a new object and performs base initialization.
 
-This constructor corresponds to the Turbo Vision C<Init> constructor. All
+This constructor corresponds to the Turbo Vision constructor. All
 derived classes must ensure that their base class constructor is invoked before
 performing class-specific initialization.
 
@@ -146,7 +146,7 @@ construction patterns and is primarily used internally.
 
 Destroys the object and releases associated resources.
 
-This method corresponds to the Turbo Vision C<Done> destructor. Descendant
+This method corresponds to the Turbo Vision destructor. Descendant
 classes should perform their cleanup before delegating to the base
 implementation.
 
@@ -181,9 +181,9 @@ L<TUI::Objects::Stream>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

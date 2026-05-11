@@ -1,11 +1,11 @@
 package TUI::StdDlg::FileDialog;
-# ABSTRACT: Common file dialog for Turbo Vision
+# ABSTRACT: Common file dialogs
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -536,7 +536,7 @@ TUI::StdDlg::FileDialog - common file selection dialog
   
 =head1 DESCRIPTION
 
-C<TFileDialog> implements the standard Turbo Vision file dialog used for
+C<TFileDialog> implements the standard TUI::Vision file dialog used for
 opening, replacing, or selecting files.
 
 The dialog combines several specialized views, including a file list, an input
@@ -709,9 +709,9 @@ L<TUI::Dialogs::Dialog>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -719,7 +719,7 @@ L<TUI::Dialogs::Dialog>
 
 =over
 
-=item Eric Woodruff
+=item * Eric Woodruff
 
 =back
 

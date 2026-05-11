@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -562,7 +562,7 @@ TUI::App::Program - central program object managing application execution
 
 =head1 DESCRIPTION
 
-C<TProgram> implements the core functionality of a Turbo Vision application.
+C<TProgram> implements the core functionality of a TUI::Vision application.
 It manages the event loop, screen initialization, desktop, menu bar, and status
 line.
 
@@ -622,9 +622,9 @@ Pending C<TEvent> object queued for later processing.
 
   my $program = TProgram->new();
 
-Creates a new program object and initializes Turbo Vision support.
+Creates a new program object and initializes TUI::Vision support.
 
-This constructor corresponds to the Turbo Vision C<Init> constructor and calls
+This constructor corresponds to the Turbo Vision 2.0 constructor and calls
 C<initScreen>, C<initDeskTop>, C<initMenuBar>, and C<initStatusLine>.
 
 =head2 new_TProgram
@@ -777,9 +777,9 @@ L<TUI::Views::Group>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

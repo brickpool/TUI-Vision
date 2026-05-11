@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -77,7 +77,7 @@ __END__
 
 =head1 NAME
 
-TStatusItem - status line item for Turbo Vision
+TStatusItem - status line item for status line definitions
 
 =head1 SYNOPSIS
 
@@ -91,7 +91,7 @@ TStatusItem - status line item for Turbo Vision
 
 =head1 DESCRIPTION
 
-C<TStatusItem> represents a single entry displayed on a Turbo Vision status
+C<TStatusItem> represents a single entry displayed on a TUI::Vision status
 line. Each item associates a text label with a keyboard shortcut and a command
 identifier that is sent when the item is activated.
 
@@ -178,9 +178,9 @@ L<TUI::Menus::StatusDef>, L<TUI::Menus::StatusLine>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

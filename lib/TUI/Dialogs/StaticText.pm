@@ -1,11 +1,11 @@
 package TUI::Dialogs::StaticText;
-# ABSTRACT: Displays fixed text inside a Turbo Vision dialog
+# ABSTRACT: Displays fixed text inside a dialog
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -180,7 +180,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::StaticText - displays fixed text inside a Turbo Vision dialog
+TUI::Dialogs::StaticText - displays fixed text inside a dialog
 
 =head1 HIERARCHY
 
@@ -304,9 +304,9 @@ Copies the internal text string into the supplied scalar.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

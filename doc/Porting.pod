@@ -308,14 +308,14 @@ identify and report on memory that has been allocated but not properly released.
     my $count = Devel::Leak::NoteSV($handle);
     my $count = Devel::Leak::CheckSV($handle);
 
-L</NoteSV> searches the Perl-internal table of assigned scalar values (which 
+C<NoteSV> searches the Perl-internal table of assigned scalar values (which 
 also contains arrays and hashes), and records their addresses in a table. It 
 returns a count of these I<things> and stores a reference to the table in its 
 argument.
 
-L</CheckSV> is passed an argument containing a reference to a table created by 
-L</NoteSV>. It runs through the Perl internals again and calls C<sv_dump()> for 
-all I<things> that were not yet present when L</NoteSV> was called. It returns 
+C<CheckSV> is passed an argument containing a reference to a table created by 
+C<NoteSV>. It runs through the Perl internals again and calls C<sv_dump()> for 
+all I<things> that were not yet present when C<NoteSV> was called. It returns 
 the  number of I<things> now assigned. 
 
 This is particularly useful if you want to check your application for memory 
@@ -328,6 +328,6 @@ leaks, as shown in this example code from L<Devel::Leak>:
   Devel::Leak::CheckSV($handle);
 
 B<Note>: This small Perl utility module is to be used as a replacement for the 
-Pascal implementation of I<SetMemTop>.
+Turbo Vision Pascal implementation of I<SetMemTop>.
 
 =cut

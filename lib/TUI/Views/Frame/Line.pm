@@ -4,7 +4,7 @@ package TUI::Views::Frame::Line;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -87,6 +87,10 @@ __END__
 
 =pod
 
+=head1 NAME
+
+TUI::Views::Frame::Line - TFrame frameLine member function.
+
 =head1 DESCRIPTION
 
 TFrame frameLine member functions.
@@ -102,9 +106,9 @@ I<framelin.asm>, I<framelin.cpp>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -112,7 +116,7 @@ I<framelin.asm>, I<framelin.cpp>
 
 =over
 
-=item magiblot <magiblot@hotmail.com>
+=item * magiblot <magiblot@hotmail.com>
 
 =back
 

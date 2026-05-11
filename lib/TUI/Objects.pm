@@ -3,7 +3,7 @@ package TUI::Objects;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -59,6 +59,18 @@ TUI::Objects - Base object classes for the TUI::Vision framework
 
   use TUI::Objects;
 
+  # Geometry primitives used across the framework.
+  my $p = TPoint->new( x => 10, y => 5 );
+  my $r = TRect->new( ax => 0, ay => 0, bx => 80, by => 25 );
+
+  # Classic constructor style is also available.
+  my $r2 = new_TRect( 5, 2, 60, 20 );
+
+  # Collection building with typed/sorted containers.
+  my $items = TStringCollection->new( limit => 10, delta => 5 );
+  $items->insert('One');
+  $items->insert('Two');
+
 =head1 DESCRIPTION
 
 TUI::Objects provides the foundational object layer for the TUI::Vision
@@ -67,31 +79,34 @@ serves as the central hub for all structural classes, including:
 
 =over 4
 
-=item * Object base class  
+=item * L<TObject|TUI::Objects::Object> base class -
 Lifecycle, ownership, and common behavior.
 
-=item * Geometry classes  
-Point, Rect, and related utilities.
+=item * Geometry classes -
+L<TPoint|TUI::Objects::Point>, L<TRect|TUI::Objects::Rect>, and related 
+utilities.
 
-=item * Collection classes  
-Typed and sorted collections, mirroring the original TVision design.
+=item * L<TCollection|TUI::Objects::Collection> classes -
+Typed and sorted collections, mirroring the original Turbo Vision design.
 
-=item * Constants and shared definitions  
-Symbolic constants used throughout the framework.
+=item * Constants and shared definitions -
+Symbolic L<constants|TUI::Objects::Const> used throughout the framework.
 
 =back
 
-In the original TV:: namespace, this module re-exported multiple
-submodules (Object, Point, Rect, Collection, SortedCollection, etc.)
-via C<import> and C<unimport>.
+This module re-exports multiple submodules (L<TObject|TUI::Objects::Object>, 
+L<TPoint|TUI::Objects::Point>, L<TRect|TUI::Objects::Rect>, 
+L<TCollection|TUI::Objects::Collection>, 
+L<TSortedCollection|TUI::Objects::SortedCollection>, etc.) via C<import> and 
+C<unimport>.
 
 =head1 AUTHORS
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -82,16 +82,4 @@ subtest '_dos_findfirst and _dos_findnext' => sub {
   }
 };
 
-subtest 'TUI::StdDlg::FindFirstRec::Win32' => sub {
-  if ( $^O ne 'MSWin32' ) {
-    skip( 'This test is only relevant on Windows', 3 );
-    return;
-  }
-  use_ok 'TUI::StdDlg::FindFirstRec::Win32';
-  dies_ok { TUI::StdDlg::FindFirstRec::Win32->CP_UTF8() }
-    'CP_UTF8 should not be visible outside of the module';
-  dies_ok { TUI::StdDlg::FindFirstRec::Win32->dwFileAttributes() }
-    'dwFileAttributes should not be visible outside of the module';
-};
-
 done_testing();

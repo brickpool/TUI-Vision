@@ -3,7 +3,7 @@ package TUI::Dialogs;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -87,7 +87,42 @@ TUI::Dialogs - Dialog components for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
+  use TUI::Objects;
+  use TUI::Views;
   use TUI::Dialogs;
+
+  # Typical modal dialog flow:
+  my $dlg = TDialog->new(
+    bounds => TRect->new( ax => 0, ay => 0, bx => 38, by => 12 ),
+    title  => 'Find',
+  );
+  $dlg->{options} |= ofCentered;
+
+  my $input = TInputLine->new(
+    bounds => TRect->new( ax => 3, ay => 3, bx => 32, by => 4 ),
+    maxLen => 80,
+  );
+  $dlg->insert($input);
+  $dlg->insert( TLabel->new(
+    bounds => TRect->new( ax => 2, ay => 2, bx => 15, by => 3 ),
+    text   => '~T~ext to find',
+    link   => $input,
+  ));
+
+  $dlg->insert( TButton->new(
+    bounds  => TRect->new( ax => 14, ay => 9, bx => 24, by => 11 ),
+    title   => 'O~K~',
+    command => cmOK,
+    flags   => bfDefault,
+  ));
+  $dlg->insert( TButton->new(
+    bounds  => TRect->new( ax => 26, ay => 9, bx => 36, by => 11 ),
+    title   => 'Cancel',
+    command => cmCancel,
+    flags   => bfNormal,
+  ));
+
+  my $result = $deskTop->execView($dlg);
 
 =head1 DESCRIPTION
 
@@ -95,26 +130,34 @@ TUI::Dialogs provides the dialog and widget layer for the TUI::Vision
 framework. It corresponds to the Turbo Vision dialog subsystem and
 includes a wide range of interactive UI components.
 
-This module re-exported numerous dialog-related classes, including:
+This module re-exports numerous dialog-related classes, including:
 
 =over 4
 
-=item * Const  
+=item * L<Const|TUI::Dialogs::Const>
 Symbolic constants for dialog behavior.
 
-=item * History and HistoryViewer  
-History lists, history windows, and history initialization.
+=item * History-related components - 
+L<THistory|TUI::Dialogs::History>, 
+L<THistoryViewer|TUI::Dialogs::HistoryViewer>, 
+L<THistList|TUI::Dialogs::HistoryViewer::HistList>, 
+L<THistoryWindow|TUI::Dialogs::HistoryWindow>, 
+and L<THistInit|TUI::Dialogs::HistInit>
 
-=item * Basic widgets  
-Button, Label, StaticText, InputLine, ParamText.
+=item * Basic widgets - 
+L<TButton|TUI::Dialogs::Button>, L<TLabel|TUI::Dialogs::Label>,
+L<TStaticText|TUI::Dialogs::StaticText>, L<TInputLine|TUI::Dialogs::InputLine>, 
+L<TParamText|TUI::Dialogs::ParamText>.
 
-=item * Selection widgets  
-CheckBoxes, MultiCheckBoxes, RadioButtons, Cluster.
+=item * Selection widgets - 
+L<TCheckBoxes|TUI::Dialogs::CheckBoxes>, 
+L<TMultiCheckBoxes|TUI::Dialogs::MultiCheckBoxes>, 
+L<TRadioButtons|TUI::Dialogs::RadioButtons>, L<TCluster|TUI::Dialogs::Cluster>.
 
-=item * List widgets  
-ListBox, StrItem.
+=item * List widgets - 
+L<TListBox|TUI::Dialogs::ListBox>, L<TStrItem|TUI::Dialogs::StrItem>.
 
-=item * Utility modules  
+=item * L<Utility|TUI::Dialogs::Util> modules - 
 Dialog helpers and internal utilities.
 
 =back
@@ -123,9 +166,9 @@ Dialog helpers and internal utilities.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

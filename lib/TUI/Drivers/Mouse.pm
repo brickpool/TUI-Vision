@@ -46,7 +46,7 @@ TUI::Drivers::Mouse - public mouse driver interface
 =head1 DESCRIPTION
 
 C<TUI::Drivers::Mouse> provides the public entry point for mouse handling in the
-Turbo Vision driver layer.
+TUI::Vision driver layer.
 
 The module exports the symbolic name C<TMouse>, which resolves to the underlying
 hardware mouse implementation. All mouse-related operations are delegated to
@@ -124,9 +124,9 @@ L<TUI::Drivers::HWMouse>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

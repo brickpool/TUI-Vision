@@ -41,7 +41,7 @@ TUI::Drivers::HardwareInfo - platform-independent hardware interface dispatcher
 =head1 DESCRIPTION
 
 C<THardwareInfo> provides the platform-independent entry point for
-hardware-related operations used by the Turbo Vision driver layer.
+hardware-related operations used by the TUI::Vision driver layer.
 
 This module does not implement any hardware access itself. Instead, it selects
 and loads a platform-specific backend at runtime and exposes it under the
@@ -230,9 +230,9 @@ L<TUI::Drivers::SystemError>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

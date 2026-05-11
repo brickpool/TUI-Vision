@@ -1,11 +1,11 @@
 package TUI::Views::Palette;
-# ABSTRACT: A class for managing color palettes in Turbo Vision 2.0.
+# ABSTRACT: A class for managing color palettes
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -131,8 +131,8 @@ TUI::Views::Palette - color palette representation based on string data
 
 =head1 DESCRIPTION
 
-C<TPalette> represents a color palette as used by Turbo Vision views. Unlike
-most Turbo Vision classes, C<TPalette> is not derived from C<TObject> and does
+C<TPalette> represents a color palette as used by TUI::Vision views. Unlike
+most TUI::Vision classes, C<TPalette> is not derived from C<TObject> and does
 not use a hash-based object layout. Instead, it is conceptually based on scalar
 string data.
 
@@ -218,9 +218,9 @@ L<TUI::Views::PaletteConst>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

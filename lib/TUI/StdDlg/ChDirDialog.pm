@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -389,7 +389,7 @@ TUI::StdDlg::ChDirDialog - common dialog for selecting a directory
 
 =head1 DESCRIPTION
 
-C<TChDirDialog> implements the standard Turbo Vision dialog used for selecting
+C<TChDirDialog> implements the standard TUI::Vision dialog used for selecting
 and changing directories.
 
 The dialog presents a directory list, an input line for the directory path,
@@ -515,9 +515,9 @@ L<TUI::Dialogs::Dialog>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -525,7 +525,7 @@ L<TUI::Dialogs::Dialog>
 
 =over
 
-=item Eric Woodruff
+=item * Eric Woodruff
 
 =back
 

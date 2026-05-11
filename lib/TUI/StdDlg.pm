@@ -3,7 +3,7 @@ package TUI::StdDlg;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -72,10 +72,28 @@ TUI::StdDlg - Standard dialogs for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
-    use TUI::StdDlg;
+  use TUI::App;
+  use TUI::StdDlg;
 
-    # Placeholder module.
-    # The full standard dialog set will be migrated from TV::StdDlg.
+  # Typical in a TProgram/TApplication command handler:
+  my @fileName = ('*.*');
+  my $fileDlg = TFileDialog->new(
+    wildCard  => $fileName[0],
+    title     => 'Open File',
+    inputName => '~F~ile Name',
+    options   => fdOpenButton,
+    histId    => 1,
+  );
+
+  if ( $application->executeDialog($fileDlg, \@fileName) != cmCancel ) {
+    # $fileName[0] now contains the selected file.
+  }
+
+  my $dirDlg = TChDirDialog->new(
+    options => 0,
+    histId  => 1,
+  );
+  $application->executeDialog($dirDlg, undef);
 
 =head1 DESCRIPTION
 
@@ -88,28 +106,29 @@ This module re-exported:
 
 =over 4
 
-=item * Const  
+=item * L<Const|TUI::StdDlg::Const> -
 Symbolic constants for standard dialog behavior.
 
-=item * FileCollection  
+=item * L<TFileCollection|TUI::StdDlg::FileCollection> / 
+L<TDirCollection|TUI::StdDlg::DirCollection> -
 Support structures for file and directory dialogs.
 
-=item * SortedListBox  
+=item * L<TSortedListBox|TUI::StdDlg::SortedListBox> -
 A list box widget with automatic sorting.
 
-=back
+=item * Additional standard dialogs -
+Like L<file dialog|TUI::StdDlg::FileDialog>, 
+L<directory dialog|TUI::StdDlg::ChDirDialog>, and related components.
 
-Additional Turbo Vision standard dialogs (file dialog, directory dialog,
-input dialogs, message dialogs, etc.) are planned but not yet included
-in the Perl port.
+=back
 
 =head1 AUTHORS
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

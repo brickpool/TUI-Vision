@@ -3,7 +3,7 @@ package TUI::Gadgets;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -45,7 +45,34 @@ TUI::Gadgets - Optional UI gadgets for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
+  use TUI::Objects;
   use TUI::Gadgets;
+
+  # Typical gadget setup inside a TApplication/TProgram subclass:
+  my $clock = TClockView->new(
+    bounds => TRect->new( ax => 71, ay => 0, bx => 80, by => 1 ),
+  );
+
+  my $heap = THeapView->new(
+    bounds => TRect->new( ax => 67, ay => 24, bx => 80, by => 25 ),
+  );
+
+  my $eventViewer = TEventViewer->new(
+    bounds  => TRect->new( ax => 5, ay => 2, bx => 75, by => 20 ),
+    bufSize => 32 * 1024,
+  );
+
+  $self->insert($clock);
+  $self->insert($heap);
+  $self->insert($eventViewer);
+
+  sub idle {
+    my $self = shift;
+    $self->SUPER::idle();
+    $self->{clock}->update();
+    $self->{heap}->update();
+    return;
+  }
 
 =head1 DESCRIPTION
 
@@ -58,19 +85,19 @@ including:
 
 =over 4
 
-=item * Const  
+=item * L<Const|TUI::Gadgets::Const> -
 Symbolic constants for gadget behavior.
 
-=item * PrintConstants  
+=item * L<PrintConstants|TUI::Gadgets::PrintConstants> -
 Utility for printing symbolic values.
 
-=item * ClockView  
+=item * L<TClockView|TUI::Gadgets::ClockView> -
 A live clock widget.
 
-=item * EventViewer  
+=item * L<TEventViewer|TUI::Gadgets::EventViewer> -
 A real-time event inspection tool.
 
-=item * HeapView  
+=item * L<THeapView|TUI::Gadgets::HeapView> -
 A memory usage visualization widget.
 
 =back
@@ -79,9 +106,9 @@ A memory usage visualization widget.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

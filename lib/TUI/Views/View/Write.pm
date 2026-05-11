@@ -4,7 +4,7 @@ package TUI::Views::View::Write;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -288,6 +288,10 @@ __END__
 
 =pod
 
+=head1 NAME
+
+TUI::Views::View::Write - TView write member functions.
+
 =head1 DESCRIPTION
 
 TView write member functions.
@@ -303,9 +307,9 @@ I<tvwrite.asm>, I<tvwrite.cpp>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -313,7 +317,7 @@ I<tvwrite.asm>, I<tvwrite.cpp>
 
 =over
 
-=item magiblot <magiblot@hotmail.com>
+=item * magiblot <magiblot@hotmail.com>
 
 =back
 

@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -105,7 +105,7 @@ TUI::App::ProgInit - program initialization helper
 
 =head1 DESCRIPTION
 
-C<TProgInit> encapsulates the initialization logic used by a Turbo Vision
+C<TProgInit> encapsulates the initialization logic used by a TUI::Vision
 application to create its main user interface components.
 
 The class stores factory callbacks for creating the status line, menu bar, and
@@ -190,9 +190,9 @@ L<TUI::App::DeskInit>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

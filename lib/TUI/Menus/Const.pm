@@ -1,10 +1,10 @@
 package TUI::Menus::Const;
-# ABSTRACT: constants for Turbo Vision menu classes
+# ABSTRACT: constants for menu classes
 
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -71,7 +71,7 @@ TUI::Menus::Const - constants for menu components
 
 =head1 DESCRIPTION
 
-C<TUI::Menus::Const> defines constants used by Turbo Vision menu components.
+C<TUI::Menus::Const> defines constants used by TUI::Vision menu components.
 
 The constants in this module are grouped by purpose and exported via tag-based
 export groups. They are used by menu views, menu boxes, menu bars, and status
@@ -127,9 +127,9 @@ L<TUI::Menus::StatusLine>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -3,7 +3,7 @@ package TUI::Views;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -66,7 +66,23 @@ TUI::Views - Core view classes for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
+  use TUI::Objects;
   use TUI::Views;
+
+  # Typical in a TProgram/TApplication method:
+  my $w = TWindow->new(
+    bounds => TRect->new( ax => 5, ay => 2, bx => 60, by => 18 ),
+    title  => 'Log',
+    number => 1,
+  );
+
+  my $vbar = TScrollBar->new(
+    bounds => TRect->new( ax => 53, ay => 1, bx => 54, by => 14 ),
+  );
+  $w->insert($vbar);
+
+  # Add the window to the current desktop/group owner.
+  $deskTop->insert($w);
 
 =head1 DESCRIPTION
 
@@ -75,41 +91,41 @@ TUI::Vision framework. It corresponds to the Turbo Vision view
 architecture and includes all fundamental UI components such as views,
 groups, frames, windows, palettes, and drawing buffers.
 
-This module re-exported a wide range of view-related classes, including:
+This module re-exports a wide range of view-related classes, including:
 
 =over 4
 
-=item * Const  
+=item * L<Const|TUI::Views::Const> -
 Symbolic constants for view behavior.
 
-=item * CommandSet  
+=item * L<TCommandSet|TUI::Views::CommandSet> -
 Command and hotkey definitions.
 
-=item * DrawBuffer  
+=item * L<TDrawBuffer|TUI::Views::DrawBuffer> -
 Low-level drawing buffer for character cell output.
 
-=item * Palette  
+=item * L<TPalette|TUI::Views::Palette> -
 Color palette definitions.
 
-=item * View  
+=item * L<TView|TUI::Views::View> -
 Base class for all visual components.
 
-=item * Group  
+=item * L<TGroup|TUI::Views::Group> - 
 Container for child views.
 
-=item * Frame  
+=item * L<TFrame|TUI::Views::Frame> -
 Window frame and border rendering.
 
-=item * ListViewer  
+=item * L<TListViewer|TUI::Views::ListViewer> -
 Scrollable list view.
 
-=item * ScrollBar  
+=item * L<TScrollBar|TUI::Views::ScrollBar> -
 Vertical and horizontal scroll bars.
 
-=item * WindowInit / Window  
+=item * L<TWindowInit|TUI::Views::WindowInit> / L<TWindow|TUI::Views::Window> -
 Window initialization and window objects.
 
-=item * Util  
+=item * L<Util|TUI::Views::Util> -
 Utility functions such as C<message>.
 
 =back
@@ -118,9 +134,9 @@ Utility functions such as C<message>.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

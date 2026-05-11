@@ -4,7 +4,7 @@ package TUI::MsgBox::Const;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -87,7 +87,7 @@ TUI::MsgBox::Const - constants for message box dialogs
 
 =head1 DESCRIPTION
 
-C<TUI::MsgBox::Const> defines constants used by Turbo Vision message box
+C<TUI::MsgBox::Const> defines constants used by TUI::Vision message box
 dialogs.
 
 The constants in this module are grouped by purpose and exported via tag-based
@@ -134,9 +134,9 @@ L<TUI::Dialogs::Button>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

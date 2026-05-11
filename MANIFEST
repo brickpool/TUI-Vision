@@ -1,4 +1,5 @@
 bin/overview.pl
+Changes
 doc/Color.pod
 doc/Constants.pod
 doc/Globals.pod
@@ -137,6 +138,7 @@ LICENSE
 Makefile.PL
 MANIFEST
 README.pod
+t/00-begin.t
 t/01Common/01load.t
 t/01Common/02Const.t
 t/02toolkit/01load.t
@@ -279,6 +281,7 @@ t/20Gadgets/13TClockView.t
 t/20Gadgets/14TEventViewer.t
 t/20Gadgets/15THeapView.t
 t/20Gadgets/99Gadgets.t
+t/99Vision.t
 xt/01Intro/05FirstDesktop.t
 xt/01Intro/10HelloWorld.t
 xt/01pod.t

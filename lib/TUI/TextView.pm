@@ -3,7 +3,7 @@ package TUI::TextView;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -36,7 +36,32 @@ TUI::TextView - Text rendering components for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
+  use TUI::Objects;
+  use TUI::Views;
   use TUI::TextView;
+
+  my $hbar = TScrollBar->new(
+    bounds => TRect->new( ax => 1, ay => 10, bx => 39, by => 11 ),
+  );
+  my $vbar = TScrollBar->new(
+    bounds => TRect->new( ax => 39, ay => 1, bx => 40, by => 10 ),
+  );
+
+  my $terminal = TTerminal->new(
+    bounds     => TRect->new( ax => 1, ay => 1, bx => 39, by => 10 ),
+    hScrollBar => $hbar,
+    vScrollBar => $vbar,
+    bufSize    => 4096,
+  );
+
+  # TextDevice/TTerminal can be used through tied-handle methods.
+  tie *TXT, TTerminal, (
+    bounds     => TRect->new( ax => 1, ay => 1, bx => 39, by => 10 ),
+    hScrollBar => $hbar,
+    vScrollBar => $vbar,
+    bufSize    => 4096,
+  );
+  print TXT "hello from terminal\n";
 
 =head1 DESCRIPTION
 
@@ -45,14 +70,14 @@ framework. It corresponds to the Turbo Vision text device and terminal
 abstraction layers and is responsible for low-level text output,
 character cell handling, and terminal interaction.
 
-This module re-exported:
+This module re-exports:
 
 =over 4
 
-=item * TextDevice  
+=item * L<TTextDevice|TUI::TextView::TextDevice> -
 A low-level abstraction for text output devices.
 
-=item * Terminal  
+=item * L<TTerminal|TUI::TextView::Terminal> -
 Terminal-specific rendering and control sequences.
 
 =back
@@ -61,9 +86,9 @@ Terminal-specific rendering and control sequences.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use utf8;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -328,7 +328,7 @@ TUI::StdDlg::DirListBox - list box view for directory entries
 
 =head1 DESCRIPTION
 
-C<TDirListBox> implements a specialized list box used by standard Turbo Vision
+C<TDirListBox> implements a specialized list box used by standard TUI::Vision
 dialogs to display and navigate directory entries.
 
 The list box presents directory items backed by a C<TDirCollection> and
@@ -452,9 +452,9 @@ L<TUI::Views::ListBox>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

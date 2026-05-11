@@ -1,11 +1,11 @@
 package TUI::Dialogs::ParamText;
-# ABSTRACT: displays formatted dynamic text inside a Turbo Vision dialog
+# ABSTRACT: displays formatted dynamic text inside a dialog
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -219,9 +219,9 @@ L<TUI::Dialogs::Dialog>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -1,9 +1,10 @@
 package TUI::Objects::SortedCollection;
+# ABSTRACT: sorted collection base class
 
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -34,7 +35,7 @@ __END__
 
 =head1 NAME
 
-TSortedCollection - sorted collection base class for Turbo Vision
+TUI::Objects::SortedCollection - sorted collection base class
 
 =head1 HIERARCHY
 
@@ -215,9 +216,9 @@ item would be inserted.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

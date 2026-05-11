@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -131,7 +131,7 @@ TUI::StdDlg::FileCollection - sorted collection of file system entries
 =head1 DESCRIPTION
 
 C<TFileCollection> implements a sorted collection used by standard
-Turbo Vision dialogs to manage file and directory search results.
+TUI::Vision dialogs to manage file and directory search results.
 
 The collection stores file system entries and maintains them in sorted order
 according to a comparison strategy defined by the class. It is primarily used
@@ -231,9 +231,9 @@ L<TUI::StdDlg::Const>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

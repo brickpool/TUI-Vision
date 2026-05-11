@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -378,7 +378,7 @@ TUI::App::DeskTop - manages the application desktop area and owned views
 
 =head1 DESCRIPTION
 
-C<TDeskTop> represents the desktop area of a Turbo Vision application. It manages
+C<TDeskTop> represents the desktop area of a TUI::Vision application. It manages
 the screen region between the menu bar and the status line and owns the
 background view as well as all top-level windows and dialogs.
 
@@ -506,9 +506,9 @@ L<TUI::Views::Group>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -198,8 +198,9 @@ TUI::Dialogs::HistoryViewer::HistList - TVision style input history functions
 =head1 DESCRIPTION
 
 C<TUI::Dialogs::HistoryViewer::HistList> provides a set of functions 
-implementing the Turbo Vision input history mechanism. It is used by dialog 
-controls such as input lines to store and retrieve previously entered values.
+implementing a Turbo Vision compatible input history mechanism. It is used by 
+dialog controls such as input lines to store and retrieve previously entered 
+values.
 
 History entries are grouped by numeric identifiers. Each group maintains an
 ordered list of strings. The implementation mirrors the behavior of the
@@ -325,7 +326,7 @@ but make the interface safer and more natural to use in Perl.
 
 =head1 IMPORTANT
 
-The history functions are intended for use within Turbo Vision applications
+The history functions are intended for use within TUI::Vision applications
 only. They depend on application-level initialization performed during program
 startup.
 
@@ -339,9 +340,9 @@ L<TUI::App::Application>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

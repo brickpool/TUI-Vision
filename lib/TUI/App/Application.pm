@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -118,7 +118,7 @@ TUI::App::Application - generic application base class
 
 =head1 DESCRIPTION
 
-C<TApplication> is the standard base class for Turbo Vision applications.
+C<TApplication> is the standard base class for TUI::Vision applications.
 It extends C<TProgram> with application-level initialization and shutdown
 behavior and integrates system services such as event handling, screen
 management, and history tracking.
@@ -141,7 +141,7 @@ C<TProgram> plus C<TApplication>-specific history initialization.
 
 The C<suspend()> and C<resume()> methods are primarily used when the
 application temporarily gives up control of screen/event processing (for
-example around external operations), then restores Turbo Vision services.
+example around external operations), then restores TUI::Vision services.
 
 =head1 CONSTRUCTOR
 
@@ -191,7 +191,7 @@ management.
 
 =head1 EXAMPLE
 
-The following example shows a minimal Turbo Vision application derived from
+The following example shows a minimal TUI::Vision application derived from
 C<TApplication>. It demonstrates menu creation, event handling, and the use of
 a dialog.
 
@@ -324,9 +324,9 @@ L<TUI::Views::Group>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -145,7 +145,7 @@ TUI::Drivers::Screen - global screen and video mode management
 =head1 DESCRIPTION
 
 C<TScreen> provides global screen and video mode management
-facilities used by the Turbo Vision driver layer.
+facilities used by the TUI::Vision driver layer.
 
 The module maintains global state describing the current screen configuration
 and provides class-level routines to suspend, resume, and reinitialize the
@@ -169,15 +169,15 @@ through C<TMouse> when mouse support is available.
 
 =head2 $startupMode
 
-Stores the screen mode that was active before Turbo Vision initialized the
+Stores the screen mode that was active before TUI::Vision initialized the
 video system.
 
-This value is used to restore the original screen mode when Turbo Vision
+This value is used to restore the original screen mode when TUI::Vision
 suspends or terminates.
 
 =head2 $startupCursor
 
-Stores the initial cursor shape before Turbo Vision modifies the cursor.
+Stores the initial cursor shape before TUI::Vision modifies the cursor.
 
 =head2 $screenMode
 
@@ -203,7 +203,7 @@ Indicates whether a high-resolution text mode is active.
 
 Controls CGA snow checking behavior.
 
-If true, Turbo Vision performs additional checks to avoid display artifacts on
+If true, TUI::Vision performs additional checks to avoid display artifacts on
 older CGA adapters. This variable should not be modified before application
 initialization has completed.
 
@@ -255,7 +255,7 @@ which performs additional updates such as palette and mouse repositioning.
 
   TScreen->suspend();
 
-Suspends Turbo Vision video support and restores the original screen state.
+Suspends TUI::Vision video support and restores the original screen state.
 
 This method is called automatically during application shutdown.
 
@@ -263,7 +263,7 @@ This method is called automatically during application shutdown.
 
   TScreen->resume();
 
-Initializes the Turbo Vision video subsystem and switches the display to the
+Initializes the TUI::Vision video subsystem and switches the display to the
 mode specified by C<$screenMode>.
 
 This method initializes C<$screenWidth>, C<$screenHeight>, C<$hiResScreen>,
@@ -279,9 +279,9 @@ L<TUI::Drivers::HardwareInfo>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

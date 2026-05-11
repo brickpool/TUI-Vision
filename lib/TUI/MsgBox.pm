@@ -3,7 +3,7 @@ package TUI::MsgBox;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -38,6 +38,27 @@ TUI::MsgBox - Message box utilities for the TUI::Vision framework
 
   use TUI::MsgBox;
 
+  my $answer = messageBox(
+    'Delete selected file?',
+    mfConfirmation | mfYesNoCancel,
+  );
+
+  if ( $answer == cmYes ) {
+    messageBox( 'File deleted.', mfInformation | mfOKButton );
+  }
+
+  my $string = '';
+  my $res = inputBox(
+    'The Title',
+    'Enter some text:',
+    $string,
+    30,
+  );
+
+  if ( $res != cmCancel ) {
+    # Process confirmed input.
+  }
+
 =head1 DESCRIPTION
 
 TUI::MsgBox provides message box and input box utilities for the
@@ -49,10 +70,10 @@ This module re-exported:
 
 =over 4
 
-=item * Const  
+=item * L<Const|TUI::MsgBox::Const> -
 Symbolic constants for message box types and button sets.
 
-=item * MsgBoxText  
+=item * L<MsgBoxText|TUI::MsgBox::MsgBoxText> -
 Functions such as C<messageBox> and C<inputBox>.
 
 =back
@@ -61,9 +82,9 @@ Functions such as C<messageBox> and C<inputBox>.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

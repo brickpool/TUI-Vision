@@ -4,7 +4,7 @@ package TUI::Views::View::Exposed;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -165,6 +165,10 @@ __END__
 
 =pod
 
+=NAME
+
+TUI::Views::View::Exposed - TView exposed member functions.
+
 =head1 DESCRIPTION
 
 TView exposed member functions.
@@ -180,9 +184,9 @@ I<tvexposd.asm>, I<tvexposd.cpp>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -190,7 +194,7 @@ I<tvexposd.asm>, I<tvexposd.cpp>
 
 =over
 
-=item magiblot <magiblot@hotmail.com>
+=item * magiblot <magiblot@hotmail.com>
 
 =back
 

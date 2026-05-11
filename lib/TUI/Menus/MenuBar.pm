@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -176,7 +176,7 @@ TUI::Menus::MenuBar - manages the menu bar at the top of the application
 
 =head1 DESCRIPTION
 
-C<TMenuBar> implements the menu bar displayed at the top of a Turbo Vision
+C<TMenuBar> implements the menu bar displayed at the top of a TUI::Vision
 application. In this Perl implementation, menu structures are created using
 a declarative, expression-based style rather than explicit builder calls.
 
@@ -267,9 +267,9 @@ L<TUI::Views::View>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

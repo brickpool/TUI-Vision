@@ -4,7 +4,7 @@ package TUI::Objects::Collection;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -70,7 +70,7 @@ TUI::Objects::Collection - dynamic container for managing collections of items
 
 C<TCollection> provides a dynamically sizable container for storing and
 accessing arbitrary items. It behaves similarly to a resizable array and is
-used throughout the Turbo Vision framework as the base class for specialized
+used throughout the TUI::Vision framework as the base class for specialized
 collection types.
 
 The collection automatically grows when its capacity is exceeded. Growth
@@ -300,9 +300,9 @@ L<TUI::Objects::Object>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

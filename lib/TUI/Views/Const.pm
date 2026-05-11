@@ -1,10 +1,10 @@
 package TUI::Views::Const;
-# ABSTRACT: defines various constants used throughout Turbo Vision
+# ABSTRACT: defines various constants used throughout views and windows
 
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -454,7 +454,7 @@ TUI::Views::Const - constants for view and window components
 
 =head1 DESCRIPTION
 
-C<TUI::Views::Const> defines constants used by Turbo Vision view, window, and
+C<TUI::Views::Const> defines constants used by TUI::Vision view, window, and
 scrollbar components.
 
 The constants in this module follow the naming conventions of Turbo Vision 2.0
@@ -577,9 +577,9 @@ L<TUI::Views::ScrollBar>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -1,10 +1,13 @@
-use 5.008;
 use strict;
 use warnings;
 
-use ExtUtils::MakeMaker 6.64;
+use ExtUtils::MakeMaker;
 
-WriteMakefile(
+unless ($^O eq "MSWin32" || $^O eq "cygwin") {
+  die "OS unsupported\n";
+}
+
+WriteMakefile1(
   NAME              => 'TUI::Vision',
   AUTHOR            => 'J. Schneider',
   VERSION_FROM      => 'lib/TUI/Vision.pm',
@@ -71,32 +74,66 @@ WriteMakefile(
 
     provides => {
         'TUI::Vision' 
-            => { file => 'lib/TUI/Vision.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/Vision.pm', version => '2.0.1' },
         'TUI::App' 
-            => { file => 'lib/TUI/App.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/App.pm', version => '2.0.1' },
         'TUI::Dialogs'
-            => { file => 'lib/TUI/Dialogs.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/Dialogs.pm', version => '2.0.1' },
         'TUI::Drivers'
-            => { file => 'lib/TUI/Drivers.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/Drivers.pm', version => '2.0.1' },
         'TUI::Gadgets'
-            => { file => 'lib/TUI/Gadgets.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/Gadgets.pm', version => '2.0.1' },
         'TUI::Memory'
-            => { file => 'lib/TUI/Memory.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/Memory.pm', version => '2.0.1' },
         'TUI::MsgBox'
-            => { file => 'lib/TUI/MsgBox.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/MsgBox.pm', version => '2.0.1' },
         'TUI::Objects' 
-            => { file => 'lib/TUI/Objects.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/Objects.pm', version => '2.0.1' },
         'TUI::StdDlg'
-            => { file => 'lib/TUI/StdDlg.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/StdDlg.pm', version => '2.0.1' },
         'TUI::TextView'
-            => { file => 'lib/TUI/TextView.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/TextView.pm', version => '2.0.1' },
         'TUI::Validate'
-            => { file => 'lib/TUI/Validate.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/Validate.pm', version => '2.0.1' },
         'TUI::Views'
-            => { file => 'lib/TUI/Views.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/Views.pm', version => '2.0.1' },
         'TUI::toolkit'
-            => { file => 'lib/TUI/toolkit.pm', version => '2.0.0' },
+            => { file => 'lib/TUI/toolkit.pm', version => '2.0.1' },
     },
 
   },
 );
+
+# Taken from eumm-upgrade by Alexandr Ciornii
+sub WriteMakefile1 { # void (%params)
+  my %params = @_;
+  my $eumm_version = $ExtUtils::MakeMaker::VERSION;
+  $eumm_version = eval $eumm_version;
+
+  if ($params{TEST_REQUIRES} and $eumm_version < 6.64) {
+    $params{BUILD_REQUIRES} = {
+      %{$params{BUILD_REQUIRES} || {}},
+      %{$params{TEST_REQUIRES}} 
+    };
+    delete $params{TEST_REQUIRES};
+  }
+  if ($params{BUILD_REQUIRES} and $eumm_version < 6.5503) {
+    #EUMM 6.5502 has problems with BUILD_REQUIRES
+    $params{PREREQ_PM} = {
+      %{$params{PREREQ_PM} || {}},
+      %{$params{BUILD_REQUIRES}} 
+    };
+    delete $params{BUILD_REQUIRES};
+  }
+
+  delete $params{CONFIGURE_REQUIRES} if $eumm_version < 6.52;
+  delete $params{MIN_PERL_VERSION} if $eumm_version < 6.48;
+  delete $params{META_MERGE} if $eumm_version < 6.46;
+  delete $params{META_ADD} if $eumm_version < 6.46;
+  delete $params{LICENSE} if $eumm_version < 6.31;
+  delete $params{AUTHOR} if $] < 5.005;
+  delete $params{ABSTRACT_FROM} if $] < 5.005;
+  delete $params{BINARY_LOCATION} if $] < 5.005;
+
+  WriteMakefile(%params);
+}

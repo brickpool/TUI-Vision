@@ -66,7 +66,7 @@ throughout the framework:
 
 Button Flags constants
 
-The C<bfXXXX> values are passed as a bit mask to TButton->new and specify 
+The C<bfXXXX> values are passed as a bit mask to C<< TButton->new >> and specify 
 button attributes, as shown in the table:
 
   Constant        Value   Usage
@@ -80,8 +80,8 @@ button attributes, as shown in the table:
                           TButton sends an evBroadcast message. If not set, 
                           TButton inserts a new event with putEvent.
 
-B<Note>: It's up to the programmer to ensure that each TGroup entity 
-(TDialog is descended from TGroup) has only one default button.
+B<Note>: It's up to the programmer to ensure that each C<TGroup> entity 
+(C<TDialog> is descended from C<TGroup>) has only one default button.
 
 =head2 cmXXXX
 

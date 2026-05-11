@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -279,7 +279,7 @@ TUI::Gadgets::PrintConstants - helpers for printing symbolic event constants
 =head1 DESCRIPTION
 
 C<TUI::Gadgets::PrintConstants> provides helper functions for printing symbolic
-representations of Turbo Vision constants.
+representations of TUI::Vision constants.
 
 The functions translate numeric event, key, and mouse codes into their
 corresponding symbolic names and write the result to a supplied output object.
@@ -342,9 +342,9 @@ L<TUI::Gadgets::EventViewer>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

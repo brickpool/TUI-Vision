@@ -1,11 +1,11 @@
 package TUI::StdDlg::Util;
-# ABSTRACT: defines utility functions used for Turbo Vision Standard Dialogs
+# ABSTRACT: defines utility functions used for Standard Dialogs
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -407,7 +407,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::Util - utility functions for Turbo Vision standard dialogs
+TUI::StdDlg::Util - utility functions for standard dialogs
 
 =head1 SYNOPSIS
 
@@ -501,9 +501,9 @@ L<TUI::StdDlg::ChDirDialog>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -1,0 +1,64 @@
+name: CI Nightly Extended
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # every night at 03:00 UTC
+  workflow_dispatch:      # manual trigger possible
+
+jobs:
+  extended-windows:
+    name: Extended / Windows ${{ matrix.os }} / Perl ${{ matrix.perl }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-2022, windows-latest ]
+        perl: [ "5.10", "5.12", "5.14", "5.16", "5.18", "5.20", "5.32", "5.36", "5.38", "5.40", "latest" ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shogo82148/actions-setup-perl@v1
+        with:
+          distribution: strawberry
+          perl-version: ${{ matrix.perl }}
+
+      - shell: pwsh
+        run: perl -V
+
+      - shell: pwsh
+        run: >
+          cpanm --skip-satisfied --quiet --notest
+          autodie::Scope::Guard
+          Carp~1.01
+          Class::Struct
+          Devel::StrictMode~0.003
+          Encode
+          Importer~0.026
+          Import::Into~1.002005
+          List::Util~1.33
+          Module::Loaded
+          Params::Check
+          Scalar::Util~1.36
+          UNIVERSAL::Object~0.17
+          Win32~0.59
+          Win32API::File~0.1101
+          Win32::API~0.84
+          Win32::Console~0.10
+          Win32::Console::PatchForRT33513~0.008
+          Test::Exception~0.43
+          Test::More~0.95
+          Devel::Refcount~0.10
+
+      - shell: pwsh
+        run: |
+          perl Makefile.PL
+          if (Get-Command gmake -ErrorAction SilentlyContinue) {
+            gmake test
+          } elseif (Get-Command dmake -ErrorAction SilentlyContinue) {
+            dmake test
+          } else {
+            make test
+          }

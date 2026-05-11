@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -303,7 +303,7 @@ TUI::StdDlg::FileList - list box view for file and directory entries
 =head1 DESCRIPTION
 
 C<TFileList> implements a specialized list box used by standard
-Turbo Vision file dialogs to display directory contents.
+TUI::Vision file dialogs to display directory contents.
 
 The list presents files and directories obtained from a C<TFileCollection>
 instance and supports keyboard and mouse navigation, selection, and activation
@@ -435,9 +435,9 @@ L<TUI::Views::ScrollBar>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -139,7 +139,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::StatusDef - status line definition entry for Turbo Vision
+TUI::Menus::StatusDef - status line definition entry
 
 =head1 SYNOPSIS
 
@@ -154,7 +154,7 @@ TUI::Menus::StatusDef - status line definition entry for Turbo Vision
 =head1 DESCRIPTION
 
 C<TStatusDef> represents a single definition entry used to describe the
-contents of a Turbo Vision status line. Each definition associates a range of
+contents of a TUI::Vision status line. Each definition associates a range of
 help context identifiers with a list of status line items.
 
 Multiple C<TStatusDef> objects can be linked together to form a definition
@@ -256,9 +256,9 @@ definition list using the C<+> operator.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

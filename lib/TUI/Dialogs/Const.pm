@@ -4,7 +4,7 @@ package TUI::Dialogs::Const;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -161,7 +161,7 @@ TUI::Dialogs::Const - constants for dialog components
 
 =head1 DESCRIPTION
 
-C<TUI::Dialogs::Const> defines constants used by Turbo Vision dialog components
+C<TUI::Dialogs::Const> defines constants used by TUI::Vision dialog components
 such as dialogs, buttons, labels, input lines, and history views.
 
 The constants in this module are grouped by purpose and exported via tag-based
@@ -241,9 +241,9 @@ L<TUI::Dialogs::History>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

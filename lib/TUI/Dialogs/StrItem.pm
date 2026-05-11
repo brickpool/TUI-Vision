@@ -1,11 +1,11 @@
 package TUI::Dialogs::StrItem;
-# ABSTRACT: Simple singly linked list node for Turbo Vision dialog data
+# ABSTRACT: Simple singly linked list node for dialog data
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -84,22 +84,22 @@ __END__
 
 =head1 NAME
 
-TSItem - simple singly linked list node for Turbo Vision dialog data
+TSItem - simple singly linked list node for  dialog data
 
 =head1 SYNOPSIS
 
   use TUI::Dialogs;
 
-  my $item3 = TSItem->new("third", undef);
-  my $item2 = TSItem->new("second", $item3);
-  my $item1 = TSItem->new("first",  $item2);
+  my $item3 = TSItem->new( value => "third",  next => undef );
+  my $item2 = TSItem->new( value => "second", next => $item3 );
+  my $item1 = TSItem->new( value => "first",  next => $item2 );
 
   my $value = $item1->value;   # "first"
   my $next  = $item1->next;    # $item2
 
 =head1 DESCRIPTION
 
-C<TSItem> represents a minimal singly linked list node used by Turbo Vision
+C<TSItem> represents a minimal singly linked list node used by TUI::Vision
 dialog infrastructure. Each node stores a string value and a reference to the
 next node in the list, or C<undef> if it is the last element.
 
@@ -169,9 +169,9 @@ reference to the next node.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -3,7 +3,7 @@ package TUI::Drivers;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -89,25 +89,25 @@ It re-exports symbols from the following components:
 
 =over 4
 
-=item * Const  
+=item * C<Const|TUI::Drivers::Const> - 
 Symbolic constants for driver and hardware behavior.
 
-=item * HardwareInfo  
-Platform-dependent hardware backend access via the C<THardwareInfo> symbol.
+=item * L<THardwareInfo|TUI::Drivers::HardwareInfo> -
+Platform-dependent hardware backend access.
 
-=item * Display / Screen  
+=item * L<TDisplay|TUI::Drivers::Display> / L<TScreen|TUI::Drivers::Screen> -
 Low-level display and global screen mode/state management.
 
-=item * SystemError  
+=item * L<TSystemError|TUI::Drivers::SystemError> -
 Driver-level Ctrl-Break/system handler coordination.
 
-=item * Event / EventQueue  
+=item * L<TEvent|TUI::Drivers::Event> / L<EventQueue|TUI::Drivers::EventQueue> -
 Keyboard, mouse, and system event handling.
 
-=item * Mouse  
+=item * L<TMouse|TUI::Drivers::Mouse> -
 Public mouse driver interface.
 
-=item * Util  
+=item * L<Util|TUI::Drivers::Util> -
 Driver utility functions for key-code conversions and related helpers.
 
 =back
@@ -116,9 +116,9 @@ Driver utility functions for key-code conversions and related helpers.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

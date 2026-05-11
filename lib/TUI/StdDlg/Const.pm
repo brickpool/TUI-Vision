@@ -3,7 +3,7 @@ package TUI::StdDlg::Const;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -205,7 +205,7 @@ TUI::StdDlg::Const - constants for standard dialog components
   
 =head1 DESCRIPTION
 
-C<TUI::StdDlg::Const> defines the constants used by the Turbo Vision standard
+C<TUI::StdDlg::Const> defines the constants used by the TUI::Vision standard
 dialog subsystem.
 
 The constants in this module are grouped by purpose and exported via tag-based
@@ -274,9 +274,9 @@ L<TUI::StdDlg::FileCollection>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

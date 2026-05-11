@@ -3,7 +3,7 @@ package TUI::Menus;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -60,7 +60,36 @@ TUI::Menus - Menu and status line system for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
+  use TUI::Objects;
+  use TUI::App;
   use TUI::Menus;
+
+  # Typical in a TApplication/TProgram subclass:
+  sub initMenuBar {
+    my ( $class, $r ) = @_;
+    $r->{b}{y} = $r->{a}{y} + 1;
+    return TMenuBar->new(
+      bounds => $r,
+      menu   =>
+        new_TSubMenu( '~F~ile', hcNoContext ) +
+          new_TMenuItem( '~O~pen...', cmOpen, kbF3, hcNoContext, 'F3' ) +
+          newLine +
+          new_TMenuItem( 'E~x~it', cmQuit, kbAltX, hcNoContext, 'Alt-X' ) +
+        new_TSubMenu( '~H~elp', hcNoContext ) +
+          new_TMenuItem( '~A~bout', cmAbout, hcNoContext ),
+    );
+  }
+
+  sub initStatusLine {
+    my ( $class, $r ) = @_;
+    $r->{a}{y} = $r->{b}{y} - 1;
+    return new_TStatusLine( $r,
+      new_TStatusDef( 0, 0xFFFF ) +
+        new_TStatusItem( '~Alt-X~ Exit', kbAltX, cmQuit ) +
+        new_TStatusItem( '~F10~ Menu', kbF10, cmMenu ) +
+        new_TStatusItem( '~F1~ Help', kbF1, cmHelp )
+    );
+  }
 
 =head1 DESCRIPTION
 
@@ -73,16 +102,19 @@ This module re-exported a wide range of menu-related classes, including:
 
 =over 4
 
-=item * Const  
+=item * L<Const|TUI::Menus::Const> - 
 Symbolic constants for menu behavior.
 
-=item * Menu, MenuItem, SubMenu  
+=item * L<TMenu|TUI::Menus::Menu>, L<TMenuItem|TUI::Menus::MenuItem>, 
+L<TSubMenu|TUI::Menus::SubMenu> -
 Core menu structures.
 
-=item * MenuView, MenuBar, MenuBox  
+=item * L<TMenuView|TUI::Menus::MenuView>, L<TMenuBar|TUI::Menus::MenuBar>, 
+L<TMenuBox|TUI::Menus::MenuBox> -
 Visual menu components.
 
-=item * StatusItem, StatusDef, StatusLine  
+=item * L<TStatusItem|TUI::Menus::StatusItem>, 
+L<TStatusDef|TUI::Menus::StatusDef>, L<TStatusLine|TUI::Menus::StatusLine> -
 Status line and hotkey definitions.
 
 =item * MenuPopup (planned)  
@@ -94,9 +126,9 @@ Popup menu support, not yet included in the Perl port.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

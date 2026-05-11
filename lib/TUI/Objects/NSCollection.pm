@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -375,7 +375,7 @@ TUI::Objects::NSCollection - internal non-storable collection base class
 
 =head1 DESCRIPTION
 
-C<TNSCollection> is the non-storable base variant of the Turbo Vision collection
+C<TNSCollection> is the non-storable base variant of the TUI::Vision collection
 classes. It exists primarily for internal use, most notably by the stream and
 resource management infrastructure.
 
@@ -420,9 +420,9 @@ L<TUI::Objects::StringCollection>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

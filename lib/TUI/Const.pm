@@ -4,7 +4,7 @@ package TUI::Const;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -17,6 +17,10 @@ our @EXPORT_OK = qw(
 
   maxFindStrLen
   maxReplaceStrLen
+);
+
+our %EXPORT_TAGS = (
+  all => \@EXPORT_OK,
 );
 
 use constant {
@@ -52,7 +56,7 @@ TUI::Const - system-wide configuration constants
 
 =head1 DESCRIPTION
 
-C<TUI::Const> defines system-wide constants used throughout the Turbo Vision
+C<TUI::Const> defines system-wide constants used throughout the TUI::Vision
 framework.
 
 The constants in this module provide common limits, sentinel values, and size
@@ -103,9 +107,9 @@ L<TUI::Dialogs::Const>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -474,7 +474,7 @@ TUI::Drivers::Const - constants for driver and event handling
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::Const> defines constants used by the Turbo Vision driver layer.
+C<TUI::Drivers::Const> defines constants used by the TUI::Vision driver layer.
 
 The constants in this module are grouped by purpose and exported via tag-based
 export groups. They are used by the event system, keyboard and mouse handling,
@@ -482,13 +482,14 @@ screen and video mode selection, and low-level driver logic.
 
 This module only defines constants. The semantic meaning and practical usage of
 these constants is documented in higher-level driver modules such as
-C<TUI::Drivers::Event>, C<TUI::Drivers::Screen>, and C<TUI::Drivers::HardwareInfo>.
+C<TUI::Drivers::Event>, C<TUI::Drivers::Screen>, and 
+C<TUI::Drivers::HardwareInfo>.
 
 =head1 CONSTANTS
 
 =head2 Event type constants (evXXXX)
 
-Event type and event mask constants used by the Turbo Vision event system.
+Event type and event mask constants used by the TUI::Vision event system.
 
 These constants identify mouse, keyboard, command, broadcast, and message
 events and are used when dispatching and filtering events.
@@ -563,9 +564,9 @@ L<TUI::Drivers::HardwareInfo>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

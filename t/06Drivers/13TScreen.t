@@ -20,6 +20,9 @@ BEGIN {
   sub getScreenMode   { return 3; }
   sub setScreenMode   { }
   sub getPlatform     { return $^O }
+  sub getButtonCount  { return 3; }
+  sub cursorOn        { return 1; }
+  sub cursorOff       { return 1; }
   $INC{"TUI/Drivers/HardwareInfo.pm"} = 1;
 } #/ BEGIN
 

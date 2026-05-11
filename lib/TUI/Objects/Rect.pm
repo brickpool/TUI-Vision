@@ -8,7 +8,7 @@ use warnings;
 use List::Util qw( min max );
 use TUI::Objects::Point;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -303,7 +303,7 @@ attribute C<a> specifies the upper-left corner and C<b> specifies the
 lower-right corner of the rectangle.
 
 C<TRect> is a lightweight value type and is not derived from C<TObject>. It is
-used throughout Turbo Vision to describe screen locations and sizes of views,
+used throughout TUI::Vision to describe screen locations and sizes of views,
 dialogs, and controls.
 
 The class provides a set of geometric operations such as moving, resizing,
@@ -476,9 +476,9 @@ L<TUI::Views::View>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

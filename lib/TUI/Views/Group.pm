@@ -1,11 +1,11 @@
 package TUI::Views::Group;
-# ABSTRACT: Base class for all group components in Turbo Vision
+# ABSTRACT: Base class for all group components
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -1009,7 +1009,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Group - base class for grouping views in Turbo Vision
+TUI::Views::Group - base class for grouping views in TUI::Vision
 
 =head1 HIERARCHY
 
@@ -1031,7 +1031,7 @@ TUI::Views::Group - base class for grouping views in Turbo Vision
 
 =head1 DESCRIPTION
 
-C<TGroup> is the structural backbone of Turbo Vision's view hierarchy. It
+C<TGroup> is the structural backbone of TUI::Vision's view hierarchy. It
 manages collections of subviews and coordinates drawing, event dispatch, and
 modal execution.
 
@@ -1361,9 +1361,9 @@ L<TUI::Views::View>, L<TUI::Views::Window>, L<TUI::Dialogs::Dialog>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -1371,7 +1371,7 @@ L<TUI::Views::View>, L<TUI::Views::Window>, L<TUI::Dialogs::Dialog>
 
 =over
 
-=item magiblot <magiblot@hotmail.com>
+=item * magiblot <magiblot@hotmail.com>
 
 =back
 

@@ -1,11 +1,11 @@
 package TUI::App::Background;
-# ABSTRACT: TBackground forms the background for the Turbo Vision applications.
+# ABSTRACT: TBackground forms the background for the applications.
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -99,7 +99,7 @@ __END__
 
 =head1 NAME
 
-TUI::App::Background - background view for Turbo Vision applications
+TUI::App::Background - forms the background for the applications
 
 =head1 HIERARCHY
 
@@ -119,7 +119,7 @@ TUI::App::Background - background view for Turbo Vision applications
 =head1 DESCRIPTION
 
 C<TBackground> represents the background view that forms the visual backdrop of
-a Turbo Vision application. It fills its bounding rectangle by repeatedly
+a TUI::Vision application. It fills its bounding rectangle by repeatedly
 drawing a single character pattern.
 
 Background views are typically created and managed automatically by the
@@ -233,9 +233,9 @@ L<TUI::Objects::Rect>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

@@ -1,11 +1,11 @@
 package TUI::Views::CommandSet;
-# ABSTRACT: A class for managing command sets in Turbo Vision 2.0.
+# ABSTRACT: A class for managing command sets
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -300,7 +300,7 @@ TUI::Views::CommandSet - value type for managing sets of commands
 =head1 DESCRIPTION
 
 C<TCommandSet> represents a set of command identifiers. It is used throughout
-Turbo Vision to enable, disable, and query commands associated with views.
+TUI::Vision to enable, disable, and query commands associated with views.
 
 This type is a lightweight value type and is not derived from C<TObject>.
 Internally, a command set represents up to 256 commands, corresponding to the
@@ -473,9 +473,9 @@ L<TUI::Drivers::Event>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

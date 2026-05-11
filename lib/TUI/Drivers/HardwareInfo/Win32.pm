@@ -3,7 +3,7 @@ package TUI::Drivers::HardwareInfo::Win32;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -216,21 +216,21 @@ INIT {
   # I<conctl.cpp>
   {
     my $console;
-    my $have_console = 0;
+    my $have_console = false;
 
     $console = Win32::Console->new( STD_INPUT_HANDLE );
     if ( $console && $console->$isValid() ) {
-      $have_console = 1;
+      $have_console = true;
       $consoleHandle[cnInput] = $console;
     }
     $console = Win32::Console->new( STD_OUTPUT_HANDLE );
     if ( $console && $console->$isValid() ) {
-      $have_console = 1;
+      $have_console = true;
       $consoleHandle[cnStartup] = $console;
     }
     $console = Win32::Console->new( STD_ERROR_HANDLE );
     if ( $console && $console->$isValid() ) {
-      $have_console = 1;
+      $have_console = true;
       $consoleHandle[cnStartup] = $console;
     }
 
@@ -244,8 +244,6 @@ INIT {
       # Create a new generic object
       $console = Win32::Console->new();
       if ( $console && $console->$isValid() ) {
-        # If object is a valid console, close the old handle
-        $console->Close();
         # Assign a handle created by CreateFile() to the object
         $console->{handle} = Win32API::File::createFile(
           'CONIN$',
@@ -261,7 +259,6 @@ INIT {
     unless ( $consoleHandle[cnStartup] ) {
       $console = Win32::Console->new();
       if ( $console && $console->$isValid() ) {
-        $console->Close();
         $console->{handle} = Win32API::File::createFile(
           'CONOUT$',
           {
@@ -276,7 +273,8 @@ INIT {
     $console = Win32::Console->new( GENERIC_READ | GENERIC_WRITE, 0 );
     if ( $console && $console->$isValid() ) {
       $consoleHandle[cnOutput] = $console;
-      if ( @sbInfo = $consoleHandle[cnStartup]->Info() ) {
+      if ( ref $consoleHandle[cnStartup] ) {
+        @sbInfo = $consoleHandle[cnStartup]->Info();
         # Force the screen buffer size to match the window size.
         # The Console API guarantees this, but some implementations
         # are not compliant (e.g. Wine).
@@ -298,7 +296,7 @@ INIT {
 
 END {
   $consoleHandle[cnStartup]->Display()
-    if $consoleHandle[cnStartup];
+    if ref $consoleHandle[cnStartup];
   Win32::Console::Free()
     if $ownsConsole;
 }
@@ -321,6 +319,7 @@ sub setCaretSize {    # void ($class, $size)
   my ( $class, $size ) = @_;
   assert ( $class and !ref $class );
   assert ( looks_like_number $size );
+  return unless ref $consoleHandle[cnOutput];
   @crInfo = $consoleHandle[cnOutput]->Cursor();
   if ( $size == 0 ) {
     $crInfo[bVisible] = 0;
@@ -344,6 +343,7 @@ sub setCaretPosition { # void ($class, $x, $y)
   assert ( $class and !ref $class );
   assert ( looks_like_number $x );
   assert ( looks_like_number $y );
+  return unless ref $consoleHandle[cnOutput];
   $consoleHandle[cnOutput]->Cursor($x, $y);
   return;
 }
@@ -382,6 +382,7 @@ sub setScreenMode {    # void ($class, $mode)
   my ( $class, $mode ) = @_;
   assert ( $class and !ref $class );
   assert ( looks_like_number $mode );
+  return unless ref $consoleHandle[cnOutput];
   my %newSize = ( X => 80, Y => 25 );
   my %rect    = ( Left => 0, Top => 0, Right => 79, Bottom => 24 );
 
@@ -416,6 +417,7 @@ sub clearScreen {    # void ($class, $w, $h);
   assert ( $class and !ref $class );
   assert ( looks_like_number $w );
   assert ( looks_like_number $h );
+  return unless ref $consoleHandle[cnOutput];
   $consoleHandle[cnOutput]->FillAttr( 0x07, $w * $h, 0, 0 );
   $consoleHandle[cnOutput]->FillChar( ' ', $w * $h, 0, 0 );
   return;
@@ -428,6 +430,7 @@ sub screenWrite {    # void ($class, $x, $y, $buf, $len)
   assert ( looks_like_number $y );
   assert ( ref $buf );
   assert ( looks_like_number $len );
+  return unless ref $consoleHandle[cnOutput];
   my %to = ( Left => $x, Top => $y, Right => $x + $len - 1, Bottom => $y );
 
   $consoleHandle[cnOutput]->WriteRect( 
@@ -466,6 +469,7 @@ sub getButtonCount {    # $num ($class)
 
 sub cursorOn {    # void ($class)
   assert ( $_[0] and !ref $_[0] );
+  return unless ref $consoleHandle[cnInput];
   # Disable the Quick Edit mode, which inhibits the mouse.
   local $consoleMode = $consoleMode;
   $consoleMode |= ENABLE_EXTENDED_FLAGS;
@@ -476,6 +480,7 @@ sub cursorOn {    # void ($class)
 
 sub cursorOff {    # void ($class)
   assert ( $_[0] and !ref $_[0] );
+  return unless ref $consoleHandle[cnInput];
   $consoleHandle[cnInput]->Mode( $consoleMode & ~ENABLE_MOUSE_INPUT );
   return;
 }
@@ -492,6 +497,7 @@ sub getMouseEvent {    # $bool ($class, $event)
   my ( $class, $event ) = @_;
   assert ( $class and !ref $class );
   assert ( blessed $event );
+  return unless ref $consoleHandle[cnInput];
   if ( !$pendingEvent ) {
     $pendingEvent = $consoleHandle[cnInput]->GetEvents();
     if ( $pendingEvent ) {
@@ -517,6 +523,7 @@ sub getKeyEvent {    # $bool ($class, $event)
   my ( $class, $event ) = @_;
   assert ( $class and !ref $class );
   assert ( blessed $event );
+  return unless ref $consoleHandle[cnInput];
   if ( !$pendingEvent ) {
     $pendingEvent = $consoleHandle[cnInput]->GetEvents();
     if ( $pendingEvent ) {
@@ -588,6 +595,7 @@ sub setCtrlBrkHandler { # $success ($class, $install)
   assert ( @_ == 2 );
   assert ( $class and !ref $class );
   assert ( !defined $install or !ref $install );
+  return unless ref $consoleHandle[cnInput];
   my $consoleMode = $consoleHandle[cnInput]->Mode() || return;
   return $consoleHandle[cnInput]->Mode(
     $install 
@@ -614,7 +622,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::HardwareInfo::Win32 - Win32 hardware backend for Turbo Vision
+TUI::Drivers::HardwareInfo::Win32 - Win32 hardware backend for THardwareInfo
 
 =head1 DESCRIPTION
 
@@ -699,9 +707,9 @@ L<TUI::Drivers::SystemError>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -709,7 +717,7 @@ L<TUI::Drivers::SystemError>
 
 =over
 
-=item magiblot <magiblot@hotmail.com>
+=item * magiblot <magiblot@hotmail.com>
 
 =back
 

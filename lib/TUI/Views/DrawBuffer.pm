@@ -1,11 +1,11 @@
 package TUI::Views::DrawBuffer;
-# ABSTRACT: TDrawBuffer stores a line of text for output in Turbo Vision 2.0.
+# ABSTRACT: TDrawBuffer stores a line of text for output in views
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -190,9 +190,7 @@ __END__
 
 =head1 NAME
 
-=head1 NAME
-
-TUI::Views::DrawBuffer - temporary line buffer for screen output
+TDrawBuffer - temporary line buffer for screen output
 
 =head1 HIERARCHY
 
@@ -286,9 +284,9 @@ L<TUI::Views::Window>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

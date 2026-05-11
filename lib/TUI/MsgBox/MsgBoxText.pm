@@ -255,17 +255,17 @@ TUI::MsgBox::MsgBoxText - message box and input box helper functions
 
 =head1 DESCRIPTION
 
-C<TUI::MsgBox::MsgBoxText> provides a set of convenience functions for displaying
-simple message boxes and input dialogs in Turbo Vision applications.
+C<TUI::MsgBox::MsgBoxText> provides a set of convenience functions for 
+displaying simple message boxes and input dialogs in TUI::Vision applications.
 
 This module implements functional equivalents of the Turbo Vision
-C<InputBox>, C<MessageBox>, and related helper routines found in the original
-MSGBOX.PAS demo sources.
+C<inputBox>, C<messageBox>, and related helper routines found in the original
+demo sources.
 
 All functions in this module are implemented as plain subroutines. No objects
 are created or required.
 
-These functions may only be used within a running Turbo Vision application.
+These functions may only be used within a running TUI::Vision application.
 
 =head1 VARIABLES
 
@@ -373,7 +373,7 @@ Returns either C<cmOk> or C<cmCancel>.
 
 Displays a formatted message box with configurable buttons and style.
 
-The message string and optional parameters are formatted using Turbo Vision
+The message string and optional parameters are formatted using TUI::Vision
 formatting rules.
 
 =over
@@ -481,8 +481,8 @@ C<mfOkCancel>
 
 =head1 IMPORTANT
 
-These functions require a running Turbo Vision application environment.
-They must not be used outside of a Turbo Vision program.
+These functions require a running TUI::Vision application environment.
+They must not be used outside of a TUI::Vision program.
 
 =head1 SEE ALSO
 
@@ -494,9 +494,9 @@ L<TUI::Dialogs::InputLine>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

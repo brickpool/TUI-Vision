@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -180,7 +180,7 @@ TUI::StdDlg::FileInfoPane - view displaying information about the focused file
 
 =head1 DESCRIPTION
 
-C<TFileInfoPane> implements a view used by standard Turbo Vision file dialogs to
+C<TFileInfoPane> implements a view used by standard TUI::Vision file dialogs to
 display information about the currently focused file or directory.
 
 The pane renders metadata such as name, size, date, and attributes of the
@@ -269,9 +269,9 @@ L<TUI::Views::DrawBuffer>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

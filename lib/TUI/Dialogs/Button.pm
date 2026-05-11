@@ -1,11 +1,11 @@
 package TUI::Dialogs::Button;
-# ABSTRACT: Pushbutton control for Turbo Vision dialogs
+# ABSTRACT: Pushbutton control for dialogs
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -450,7 +450,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::Button - pushbutton control for Turbo Vision dialogs
+TUI::Dialogs::Button - pushbutton control for dialogs
 
 =head1 HIERARCHY
 
@@ -489,7 +489,7 @@ TUI::Dialogs::Button - pushbutton control for Turbo Vision dialogs
 
 =head1 DESCRIPTION
 
-C<TButton> implements an interactive pushbutton control with full Turbo Vision
+C<TButton> implements an interactive pushbutton control with full TUI::Vision
 semantics. It supports highlighting, shadow rendering, pressing behavior,
 default-button logic, and command dispatch.
 
@@ -643,9 +643,9 @@ L<TUI::Views::View>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
@@ -653,7 +653,7 @@ L<TUI::Views::View>
 
 =over
 
-=item Eric Woodruff
+=item * Eric Woodruff
 
 =back
 

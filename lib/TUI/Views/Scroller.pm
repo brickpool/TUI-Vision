@@ -1,11 +1,11 @@
 package TUI::Views::Scroller;
-# ABSTRACT: Base class for scrolling text windows in Turbo Vision
+# ABSTRACT: Base class for scrolling text windows
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -277,7 +277,7 @@ __END__
 
 =head1 NAME
 
-TScroller - base class for scrollable views in Turbo Vision
+TUI::Views::Scroller - base class for scrollable views in TUI::Vision
 
 =head1 HIERARCHY
 
@@ -460,9 +460,9 @@ Shuts down the scroller and clears associated resources.
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

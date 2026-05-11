@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000_001';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -98,7 +98,7 @@ TUI::Dialogs::HistInit - initializer for history list viewer creation
 =head1 DESCRIPTION
 
 C<TUI::Dialogs::HistInit> encapsulates the initialization logic required to
-create history list viewer objects in Turbo Vision dialogs.
+create history list viewer objects in TUI::Vision dialogs.
 
 The class stores a user-supplied callback which is invoked whenever a list
 viewer needs to be constructed. This allows dialogs to customize the concrete
@@ -154,9 +154,9 @@ L<TUI::Dialogs::ListBox>
 
 =over
 
-=item Borland International (original Turbo Vision design)
+=item * Borland International (original Turbo Vision design)
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
