@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  require_ok 'Moos';
+  require_ok 'UNIVERSAL::Object';
   use_ok 'Devel::StrictMode';
   use_ok 'TUI::toolkit', qw( /^is_/ signature assert );
 }
@@ -49,9 +49,9 @@ use_ok 'Point3D';
 note "Toolkit is $TUI::toolkit::name";
 
 subtest 'Import' => sub {
-  ok( main->can('is_Moos'), 'symbol is_Moos exists' );
+  ok( main->can('is_UNIVERSAL'), 'symbol is_UNIVERSAL exists' );
   ok( main->can('signature'), 'signature is imported' );
-  ok is_Moos(), 'is_Moos is set to true';
+  ok is_UNIVERSAL(), 'is_UNIVERSAL is set to true';
 
   ok( Export::Ok->can( 'blessed' ), 'blessed was not deleted' );
   ok( !Export::Ok->can( 'confess' ), 'confess was not imported' );
