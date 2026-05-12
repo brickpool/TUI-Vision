@@ -4,6 +4,7 @@ package TUI::App::DeskTop;
 use 5.010;
 use strict;
 use warnings;
+use utf8;
 
 our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
@@ -16,6 +17,7 @@ our @EXPORT = qw(
 );
 
 use Carp ();
+use Encode qw( encode );
 use Scalar::Util qw( weaken );
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
@@ -44,7 +46,7 @@ sub new_TDeskTop { __PACKAGE__->from(@_) }
 extends ( TGroup, TDeskInit );
 
 # declare global variables
-our $defaultBkgrnd = "\xB0";
+our $defaultBkgrnd = encode( cp437 => "░" );
 
 # protected attributes
 has background        => ( is => 'ro' );

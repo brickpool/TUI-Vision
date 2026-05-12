@@ -24,6 +24,7 @@ use TUI::toolkit::Types qw(
   :is
   :types
 );
+use Win32;
 use Win32::API;
 use Win32API::File qw( INVALID_HANDLE_VALUE );
 
@@ -279,7 +280,10 @@ sub next {    # $bool ()
   while ( 1 ) {
     if ( $self->{hFindFile} == INVALID_HANDLE_VALUE ) {
       my $cFileName = "\0" x FILENAME_SIZE;
-      $MultiByteToWideChar->Call( CP_UTF8, 0,
+      # TODO: Our port currently uses code page 437. We therefore use 
+      # GetConsoleOutputCP() to determine the code page for converting the 
+      # filename to UTF-16. 
+      $MultiByteToWideChar->Call( Win32::GetConsoleOutputCP(), 0,
         $self->{fileName}, -1,
         $cFileName, MAXPATH );
       $self->{hFindFile} = $FindFirstFileW->Call( $cFileName, $findData );
@@ -300,7 +304,8 @@ sub next {    # $bool ()
         $self->{finfo}->[attrib] = $attr;
         $self->$cvtTime( $findData, $self->{finfo} );
         my $name = "\0" x MAXPATH;
-        $WideCharToMultiByte->Call( CP_UTF8, 0,
+        # TODO: workaround GetConsoleOutputCP(), see above
+        $WideCharToMultiByte->Call( Win32::GetConsoleOutputCP(), 0,
           $cFileName, -1,
           $name, MAXPATH,
           undef, undef );

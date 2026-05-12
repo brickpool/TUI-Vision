@@ -53,12 +53,15 @@ our $initFrame =
   "\x06\x0A\x0C\x05\x00\x05\x03\x0A\x09\x16\x1A\x1C\x15\x00\x15\x13\x1A\x19";
 
 # for UnitedStates code page
-our $frameChars = encode('cp437' => "   └ │┌├ ┘─┴┐┤┬┼   ╚ ║╔╟ ╝═╧╗╢╤ ");
+our $frameChars = encode( cp437 => "   └ │┌├ ┘─┴┐┤┬┼   ╚ ║╔╟ ╝═╧╗╢╤ ");
 
 our $closeIcon  = "[~\xFE~]";    # "[~■~]"
 our $zoomIcon   = "[~\x18~]";    # "[~↑~]"
 our $unZoomIcon = "[~\x12~]";    # "[~↕~]"
-our $dragIcon   = encode('cp437' => "~─┘~");
+# our $closeIcon  = encode( cp437 => "[~■~]" );
+# our $zoomIcon   = encode( cp437 => "[~↑~]" );
+# our $unZoomIcon = encode( cp437 => "[~↕~]" );
+our $dragIcon   = encode( cp437 => "~─┘~"  );
 
 # import frameLine
 require TUI::Views::Frame::Line;

@@ -124,9 +124,9 @@ This distribution is under active development.
 
 =over
 
-=item Turbo Vision Development Team
+=item * Turbo Vision Development Team
 
-=item J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 

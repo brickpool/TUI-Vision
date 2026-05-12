@@ -10,15 +10,18 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 use Import::Into;
 
 use TUI::Validate::Const;
+use TUI::Validate::Validator;
 
 sub import {
   my $target = caller;
   TUI::Validate::Const->import::into( $target, qw( :all ) );
+  TUI::Validate::Validator->import::into( $target );
 }
 
 sub unimport {
   my $caller = caller;
   TUI::Validate::Const->unimport::out_of( $caller );
+  TUI::Validate::Validator->unimport::out_of( $caller );
 }
 
 1

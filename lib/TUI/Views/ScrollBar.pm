@@ -16,6 +16,7 @@ our @EXPORT = qw(
   new_TScrollBar
 );
 
+use Encode qw( encode );
 use List::Util qw( min max );
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
@@ -51,6 +52,8 @@ extends TView;
 # declare global variables
 our $vChars = "\x1E\x1F\xB1\xFE\xB2";    # cp437: "▲▼░■▒"
 our $hChars = "\x11\x10\xB1\xFE\xB2";    # cp437: "◄►░■▒"
+# our $hChars = encode( cp437 => "◄►░■▒" );
+# our $vChars = encode( cp437 => "▲▼░■▒" );
 
 # public attributes
 has value  => ( is => 'rw', default => 0 );

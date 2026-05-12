@@ -25,7 +25,7 @@ our %EXPORT_TAGS = (
     voReserved
   )],
 
-  vtXXXX => [qw(
+  TVTransfer => [qw(
     vtDataSize
     vtSetData
     vtGetData
@@ -84,7 +84,7 @@ TUI::Validate::Const - constants for validator components
   use TUI::Validate::Const qw(:all);
 
   # or import specific constant groups
-  use TUI::Validate::Const qw(:vsXXXX :voXXXX :vtXXXX);
+  use TUI::Validate::Const qw(:vsXXXX :voXXXX :TVTransfer);
 
 =head1 DESCRIPTION
 
@@ -115,7 +115,7 @@ Option flags controlling validator behavior.
 These flags are used to configure validation and data transfer semantics,
 for example whether data should be filled or transferred.
 
-=head2 Validator transfer constants (vtXXXX)
+=head2 Validator transfer constants (TVTransfer)
 
 Constants defining data transfer operations between validators and
 associated data structures.
@@ -139,7 +139,7 @@ C<:voXXXX> - validator option flags
 
 =item *
 
-C<:vtXXXX> - validator transfer constants
+C<:TVTransfer> - validator transfer constants
 
 =item *
 

@@ -17,6 +17,7 @@ our @EXPORT = qw(
   new_TDirListBox
 );
 
+use Encode qw( encode );
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
@@ -49,12 +50,12 @@ sub new_TDirListBox { __PACKAGE__->from( @_ ) }
 extends TListBox;
 
 # declare global variables
-our $pathDir   = "\xC0\xC4\xC2";    # cp437: "└─┬";
-our $firstDir  = "\xC0\xC2\xC4";    # cp437:   "└┬─";
-our $middleDir = " \xC3\xC4";       # cp437:   " ├─";
-our $lastDir   = " \xC0\xC4";       # cp437:   " └─";
+our $pathDir   = encode( cp437 => "└─┬"   );
+our $firstDir  = encode( cp437 =>   "└┬─" );
+our $middleDir = encode( cp437 =>   " ├─" );
+our $lastDir   = encode( cp437 =>   " └─" );
 our $drives    = "Drives";
-our $graphics  = "\xC0\xC3\xC4";    # cp437: "└├─";
+our $graphics  = encode( cp437 => "└├─"   );
 
 # private attributes
 has dir => ( is => 'bare', default => EOS );

@@ -38,7 +38,7 @@ use TUI::Drivers::Const qw(
   meDoubleClick
 );
 use TUI::Drivers::Util qw( ctrlToArrow );
-use TUI::Validate::Const qw( :vtXXXX );
+use TUI::Validate::Const qw( :TVTransfer );
 use TUI::Views::Const qw(
   ofSelectable
   ofFirstClick

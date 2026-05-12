@@ -269,7 +269,7 @@ $printEvent = sub {    # void ($out, $ev)
     # 'text' and 'textLength' should be used (L</SEE ALSO>).
     my @text = $ev->{keyDown}{charScan}{charCode} ? 
       unpack( 'C*', bytes::substr(
-        decode( 'cp437', chr $ev->{keyDown}{charScan}{charCode} ),
+        decode( cp437 => chr $ev->{keyDown}{charScan}{charCode} ),
           0 )) : ();
     my $textLength = @text;
     print join(', ', map { sprintf "0x%02X", $_ } @text );
