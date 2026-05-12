@@ -203,14 +203,14 @@ Win32 FindFirstRec class, implemented in C<TUI::Drivers::FindFirstRec::Win32>.
 
 =head3 Validator System
 
- Class                   Perl Module                  Status
- ----------------------- ---------------------------- ------
- TValidator              (missing)                    [ ]
- TFilterValidator        (missing)                    [ ]
- TRangeValidator         (missing)                    [ ]
- TLookupValidator        (missing)                    [ ]
- TStringLookupValidator  (missing)                    [ ]
- TPXPictureValidator     (missing)                    [ ]
+ Class                   Perl Module                        Status
+ ----------------------- ---------------------------------- ------
+ TValidator              TUI::Validate::Validator           [x]
+ TFilterValidator        (missing)                          [ ]
+ TRangeValidator         (missing)                          [ ]
+ TLookupValidator        (missing)                          [ ]
+ TStringLookupValidator  (missing)                          [ ]
+ TPXPictureValidator     TUI::Validate::PXPictureValidator  [x]
 
 =head3 Collections Framework
 

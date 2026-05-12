@@ -11,17 +11,20 @@ use Import::Into;
 
 use TUI::Validate::Const;
 use TUI::Validate::Validator;
+use TUI::Validate::PXPictureValidator;
 
 sub import {
   my $target = caller;
   TUI::Validate::Const->import::into( $target, qw( :all ) );
   TUI::Validate::Validator->import::into( $target );
+  TUI::Validate::PXPictureValidator->import::into( $target );
 }
 
 sub unimport {
   my $caller = caller;
   TUI::Validate::Const->unimport::out_of( $caller );
   TUI::Validate::Validator->unimport::out_of( $caller );
+  TUI::Validate::PXPictureValidator->unimport::out_of( $caller );
 }
 
 1

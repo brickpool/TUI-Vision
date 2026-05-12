@@ -20,6 +20,8 @@ P3. Avoid leaking framework internals: do not document BUILD, BUILDARGS, DESTROY
     unless explicitly approved as a public API exception.
 P4. Private/internal attributes (is => 'bare') must not be documented as public attributes.
 P5. POD lists must use POD list markup (=over/=item/=back), not markdown dashes.
+P6. Do not claim stability/completeness (e.g. "stable", "production-ready", "fully migrated")
+    unless explicitly requested by the user or clearly verified by project policy.
 
 Naming Rules (critical)
 -----------------------
@@ -30,6 +32,21 @@ N2. HIERARCHY is conceptual Turbo Vision hierarchy WITHOUT namespace:
 N3. SYNOPSIS uses the public constructors/factories as actually used (e.g. new_T...),
     and should NOT be cluttered by namespace details.
 N4. SEE ALSO uses fully-qualified module names (L<TUI::...>) where appropriate.
+N5. SEE ALSO entries must reference modules that actually exist in this repository.
+
+SYNOPSIS and CUF Conventions
+----------------------------
+SC1. SYNOPSIS must be short and practical.
+SC2. SYNOPSIS examples should reflect real usage patterns from this repository
+    (tests/examples/current module API), not placeholder or pseudo-signatures.
+SC3. Prefer one realistic flow over many variants; move secondary details to
+    DESCRIPTION/METHODS.
+SC4. "Commonly Used Features" (CUF) must be documented as:
+    C<=head2 Commonly Used Features>
+    inside C<DESCRIPTION> (not as C<=head1>).
+SC5. CUF should be written as concise prose paragraphs, not as bullet lists.
+SC6. Avoid repeating per-method details in CUF that already belong in
+    C<METHODS>; CUF should summarize practical usage flow.
 
 Section Order (Standard)
 ------------------------
@@ -103,6 +120,11 @@ Platform-specific Backends
 PFB1. Base module documents platform-independent interface only.
 PFB2. Platform modules document implementation details only.
 
+Aggregator vs Implementation Modules
+------------------------------------
+AG1. Aggregator modules document collector/re-export behavior and public import surface.
+AG2. Implementation details belong to the concrete implementation modules, not the aggregator.
+
 NS* Internal Variants
 ---------------------
 NS1. NS variants are internal and non-storable.
@@ -117,7 +139,7 @@ E3. Keep SYNOPSIS short.
 
 Copyright and License
 ---------------------
-CL1. StdDlg modules use dual copyright:
+CL1. TUI::Vision modules use dual copyright:
      Borland (historical) + current AUTHORS.
 CL2. Follow the exact wording agreed in the project.
 
@@ -127,6 +149,8 @@ R1. Avoid foreign-language artifacts in POD.
 R2. Avoid REQUIRES sections in final docs.
 R3. Do not document internal helper subs unless explicitly requested.
 R4. If user POD skeleton is wrong, explain first unless user wants final POD only.
+R5. In .pm files that use C<__END__>, POD must be maintained only after C<__END__>.
+R6. Never inject POD into executable code sections.
 
 End of Policy
 -------------

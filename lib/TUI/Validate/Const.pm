@@ -31,6 +31,15 @@ our %EXPORT_TAGS = (
     vtGetData
   )], 
 
+  TPicResult => [qw(
+    prComplete
+    prIncomplete
+    prEmpty
+    prError
+    prSyntax
+    prAmbiguous
+    prIncompNoFill
+  )], 
 );
 
 # add all the other %EXPORT_TAGS ":class" tags to the ":all" class and
@@ -67,6 +76,18 @@ use constant {
   vtDataSize => 0,
   vtSetData  => 1,
   vtGetData  => 2,
+};
+
+# TPXPictureValidator result type TPicResult
+
+use constant {
+  prComplete     => 0,
+  prIncomplete   => 1,
+  prEmpty        => 2,
+  prError        => 3,
+  prSyntax       => 4,
+  prAmbiguous    => 5,
+  prIncompNoFill => 6,
 };
 
 1
@@ -122,6 +143,13 @@ associated data structures.
 
 These values are used internally by validators to identify transfer modes
 such as setting or retrieving data.
+
+=head2 TPXPictureValidator result type constants (TPicResult)
+
+Constants representing the result of picture-based validation operations. These 
+values indicate whether validation was complete, incomplete, empty,
+contained errors, had syntax issues, was ambiguous, or incomplete without 
+filling.
 
 =head1 EXPORT TAGS
 

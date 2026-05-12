@@ -92,6 +92,7 @@ the user interface.
  $warningText        Warning dialog title
  $errorText          Error dialog title
  $exitText           Exit command label
+ $errorMsg           Validation error message
 
 =head1 COMPLETE ALPHABETICAL REFERENCE
 
@@ -146,6 +147,7 @@ inventory.
 
   $emptyText           TListViewer            Empty list placeholder text
   $errorAttr           TView                  Error display attribute
+  $errorMsg            TPXPictureValidator    Picture validation error message
   $errorText           MsgBoxText             Error dialog title
   $exitText            TProgram               Exit command label text
 
