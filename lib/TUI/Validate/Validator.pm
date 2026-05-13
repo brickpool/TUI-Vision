@@ -57,7 +57,7 @@ sub isValid {    # $bool ($s)
   return true;
 }
 
-sub transfer {    # $value ($s, $buffer, $flags)
+sub transfer {    # $n ($s, $buffer, $flags)
   state $sig = signature(
     method => Object,
     pos    => [Str, Any, PositiveOrZeroInt],

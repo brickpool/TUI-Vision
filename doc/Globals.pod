@@ -93,6 +93,8 @@ the user interface.
  $errorText          Error dialog title
  $exitText           Exit command label
  $errorMsg           Validation error message
+ $validSignedChars   Validator pattern for signed numeric input
+ $validUnsignedChars Validator pattern for unsigned numeric input
 
 =head1 COMPLETE ALPHABETICAL REFERENCE
 
@@ -149,6 +151,7 @@ inventory.
   $errorAttr           TView                  Error display attribute
   $errorMsg            TFilterValidator       Filter validation error message
   $errorMsg            TPXPictureValidator    Picture validation error message
+  $errorText           TRangeValidator        Range validation error message
   $errorText           MsgBoxText             Error dialog title
   $exitText            TProgram               Exit command label text
 
@@ -226,6 +229,8 @@ inventory.
   $unZoomIcon          TFrame                 Unzoom window icon
 
   $vChars              TScrollBar             Vertical scrollbar characters
+  $validSignedChars    TRangeValidator        Validator signed numeric pattern
+  $validUnsignedChars  TRangeValidator        Validator unsigned numeric pattern
 
   $warningText         MsgBoxText             Warning dialog title
   $zoomIcon            TFrame                 Zoom window icon

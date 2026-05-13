@@ -9,6 +9,7 @@ BEGIN {
 
 isa_ok( new_TValidator(), TValidator );
 isa_ok( new_TPXPictureValidator( '##??', !!0 ), TPXPictureValidator );
-isa_ok( new_TFilterValidator( 'abc' ), TFilterValidator );
+isa_ok( new_TFilterValidator( undef ), TFilterValidator );
+isa_ok( new_TRangeValidator( 0, 100 ), TRangeValidator );
 
 done_testing();

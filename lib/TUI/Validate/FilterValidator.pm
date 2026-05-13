@@ -1,4 +1,5 @@
 package TUI::Validate::FilterValidator;
+# ABSTRACT: character-set validator for input fields
 
 use 5.010;
 use strict;
@@ -15,7 +16,10 @@ our @EXPORT = qw(
 );
 
 use TUI::toolkit;
-use TUI::toolkit::Types qw( :types );
+use TUI::toolkit::Types qw(
+  Maybe
+  :types
+);
 
 use TUI::MsgBox::Const qw(
   mfError
@@ -34,13 +38,13 @@ extends TValidator;
 our $errorMsg = "Invalid character in input";
 
 # protected attributes
-has validChars => ( is => 'ro', default => sub { die 'required' } );
+has validChars => ( is => 'ro', default => '' );
 
 sub BUILDARGS {    # \%args (%args)
   state $sig = signature(
     method => 1,
     named  => [
-      validChars => Str, { alias => 'aValidChars' },
+      validChars => Str, { optional => 1, alias => 'aValidChars' },
     ],
     caller_level => +1,
   );
@@ -48,13 +52,16 @@ sub BUILDARGS {    # \%args (%args)
   return { %$args };
 }
 
-sub from {    # $obj ($aValidChars)
+sub from {    # $obj ($aValidChars|undef)
   state $sig = signature(
     method => 1,
-    pos    => [Str],
+    pos    => [Maybe[Str]],
   );
   my ( $class, $aValidChars ) = $sig->( @_ );
-  return $class->new( validChars => $aValidChars );
+  return $class->new( defined $aValidChars 
+    ? ( validChars => $aValidChars ) 
+    : ()
+  );
 }
 
 sub DEMOLISH {    # void ($in_global_destruction)
