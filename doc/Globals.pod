@@ -147,6 +147,7 @@ inventory.
 
   $emptyText           TListViewer            Empty list placeholder text
   $errorAttr           TView                  Error display attribute
+  $errorMsg            TFilterValidator       Filter validation error message
   $errorMsg            TPXPictureValidator    Picture validation error message
   $errorText           MsgBoxText             Error dialog title
   $exitText            TProgram               Exit command label text

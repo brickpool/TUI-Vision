@@ -114,7 +114,7 @@ sub error {    # void ()
     pos    => [],
   );
   my ( $self ) = $sig->( @_ );
-  messageBox(mfError | mfOKButton, $errorMsg, $self->{pic} );
+  messageBox( mfError | mfOKButton, $errorMsg, $self->{pic} );
   return;
 }
 
@@ -807,10 +807,6 @@ L<TUI::Validate>
 =item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
-
-=head1 CONTRIBUTORS
-
-Contributors are documented in the POD of the respective framework modules.
 
 =head1 COPYRIGHT AND LICENSE
 

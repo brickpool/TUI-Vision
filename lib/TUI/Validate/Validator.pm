@@ -206,10 +206,6 @@ L<TUI::Objects::Object>
 
 =back
 
-=head1 CONTRIBUTORS
-
-Contributors are documented in the POD of the respective framework modules.
-
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 1990-1994, 1997 by Borland International
