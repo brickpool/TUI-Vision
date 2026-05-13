@@ -272,8 +272,7 @@ Returns C<1> on successful transfer and C<0> otherwise.
 
 L<TUI::Validate::FilterValidator>,
 L<TUI::Validate::Validator>,
-L<TUI::Validate::Const>,
-L<TUI::Validate>
+L<TUI::Validate::Const>
 
 =head1 AUTHORS
 

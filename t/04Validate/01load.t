@@ -9,6 +9,7 @@ BEGIN {
   use_ok 'TUI::Validate::PXPictureValidator';
   use_ok 'TUI::Validate::FilterValidator';
   use_ok 'TUI::Validate::RangeValidator';
+  use_ok 'TUI::Validate::LookupValidator';
 }
 
 isa_ok( TValidator->new(), TValidator );
@@ -16,5 +17,6 @@ isa_ok( TPXPictureValidator->new( pic => '##??', autoFill => !!0 ),
   TPXPictureValidator );
 isa_ok( TFilterValidator->new( validChars => 'abc' ), TFilterValidator );
 isa_ok( TRangeValidator->new( min => 0, max => 100 ), TRangeValidator );
+isa_ok( TLookupValidator->new(), TLookupValidator );
 
 done_testing();

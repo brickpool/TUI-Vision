@@ -115,6 +115,11 @@ lib/TUI/toolkit/UO/Antlers.pm
 lib/TUI/toolkit/UO/Base.pm
 lib/TUI/Validate.pm
 lib/TUI/Validate/Const.pm
+lib/TUI/Validate/FilterValidator.pm
+lib/TUI/Validate/LookupValidator.pm
+lib/TUI/Validate/PXPictureValidator.pm
+lib/TUI/Validate/RangeValidator.pm
+lib/TUI/Validate/Validator.pm
 lib/TUI/Views.pm
 lib/TUI/Views/CommandSet.pm
 lib/TUI/Views/Const.pm
@@ -164,6 +169,12 @@ t/03Objects/24TStringCollection.t
 t/03Objects/99Objects.t
 t/04Validate/01load.t
 t/04Validate/02Const.t
+t/04Validate/10TValidator.t
+t/04Validate/11TPXPictureValidator.t
+t/04Validate/12TFilterValidator.t
+t/04Validate/13TRangeValidator.t
+t/04Validate/14TLookupValidator.t
+t/04Validate/99Validate.t
 t/05Memory/01load.t
 t/05Memory/03Util.t
 t/05Memory/99Memory.t

@@ -11,6 +11,7 @@ use Import::Into;
 
 use TUI::Validate::Const;
 use TUI::Validate::FilterValidator;
+use TUI::Validate::LookupValidator;
 use TUI::Validate::PXPictureValidator;
 use TUI::Validate::RangeValidator;
 use TUI::Validate::Validator;
@@ -19,6 +20,7 @@ sub import {
   my $target = caller;
   TUI::Validate::Const->import::into( $target, qw( :all ) );
   TUI::Validate::FilterValidator->import::into( $target );
+  TUI::Validate::LookupValidator->import::into( $target );
   TUI::Validate::PXPictureValidator->import::into( $target );
   TUI::Validate::RangeValidator->import::into( $target );
   TUI::Validate::Validator->import::into( $target );
@@ -28,6 +30,7 @@ sub unimport {
   my $caller = caller;
   TUI::Validate::Const->unimport::out_of( $caller );
   TUI::Validate::FilterValidator->unimport::out_of( $caller );
+  TUI::Validate::LookupValidator->unimport::out_of( $caller );
   TUI::Validate::PXPictureValidator->unimport::out_of( $caller );
   TUI::Validate::RangeValidator->unimport::out_of( $caller );
   TUI::Validate::Validator->unimport::out_of( $caller );

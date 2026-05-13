@@ -795,8 +795,7 @@ comma-separated list.
 =head1 SEE ALSO
 
 L<TUI::Validate::Validator>,
-L<TUI::Validate::Const>,
-L<TUI::Validate>
+L<TUI::Validate::Const>
 
 =head1 AUTHORS
 
