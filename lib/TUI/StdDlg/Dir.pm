@@ -269,7 +269,7 @@ sub setdisk {    # $int ($drive)
     require Win32API::File;
     return -1 unless $drive >= 1 && $drive <= 26;
     my $letter = chr( ord( 'A' ) + $drive - 1 );
-	  Win32::SetCwd( "${letter}:\\" ) or return -1;
+    Win32::SetCwd( "${letter}:\\" ) or return -1;
     my $mask = Win32API::File::GetLogicalDrives();
     my $count = 0;
     $count++ while $mask &= $mask - 1;

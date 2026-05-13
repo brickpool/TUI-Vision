@@ -1,4 +1,5 @@
 package TUI::Vision;
+# ABSTRACT: Main module for the TUI::Vision framework
 
 use strict;
 use warnings;

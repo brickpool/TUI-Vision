@@ -40,6 +40,8 @@ use TUI::Drivers::Const qw(
 use TUI::Drivers::Util qw( ctrlToArrow );
 use TUI::Validate::Const qw( :TVTransfer );
 use TUI::Views::Const qw(
+  cmCancel
+  cmValid
   ofSelectable
   ofFirstClick
   :sfXXXX
@@ -434,6 +436,30 @@ sub setState {    # void ($aState, $enable)
   return;
 } #/ sub setState
 
+sub valid {    # $bool ($command)
+  state $sig = signature(
+    method => Object,
+    pos    => [PositiveOrZeroInt],
+  );
+  my ( $self, $command ) = $sig->( @_ );
+
+  if ( $self->{validator} ) {
+    if ( $command == cmValid ) {
+      my $status = $self->{validator}->can( 'status' )
+        ? $self->{validator}->status()
+        : 0;
+      return $status == 0;
+    }
+    elsif ( $command != cmCancel ) {
+      unless ( $self->{validator}->validate( $self->{data} ) ) {
+        $self->select();
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 sub setValidator {    # void ($aValid|undef)
   state $sig = signature(
     method => Object,
@@ -771,6 +797,12 @@ lines.
   $input->setValidator($validator);
 
 Installs or replaces the validator object used for input checking.
+
+=head2 valid
+
+  my $isValid = $input->valid($command);
+
+Checks the validity of the current input text based on the installed validator
 
 =head1 SEE ALSO
 

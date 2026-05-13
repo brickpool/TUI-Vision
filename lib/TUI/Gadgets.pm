@@ -1,4 +1,5 @@
 package TUI::Gadgets;
+# ABSTRACT: Gadget components for the TUI::Vision framework
 
 use strict;
 use warnings;

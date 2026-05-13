@@ -1,4 +1,5 @@
 package TUI::TextView;
+# ABSTRACT: TextView widget class for the TUI::Vision framework
 
 use strict;
 use warnings;

@@ -17,6 +17,7 @@ BEGIN {
     kbIns
   );
   use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Views::Const', qw( cmCancel cmOK cmValid );
   use_ok 'TUI::Views::Const', qw( :sfXXXX );
   use_ok 'TUI::Dialogs::InputLine';
   require_ok 'TUI::toolkit';
@@ -54,6 +55,20 @@ BEGIN {
     my ( $self, $data, $noAutoFill ) = @_;
     # Do not modify $data here; just indicate whether it is valid
     return $self->{valid_input};
+  }
+  sub validate {
+    my ( $self, $data ) = @_;
+    $self->{validate_called}++;
+    if ( $self->{validate_ok} // 1 ) {
+      return 1;
+    }
+    $self->error();
+    return 0;
+  }
+  sub error {
+    my ( $self ) = @_;
+    $self->{error_called}++;
+    return;
   }
   sub shutDown { return; }
 
@@ -182,6 +197,20 @@ subtest 'setValidator' => sub {
     'setValidator() lives';
 
   is( $input->{validator}, $v2, 'validator replaced with new instance' );
+};
+
+subtest 'valid with validator' => sub {
+  my $validator = MyValidator->new( validate_ok => 0 );
+  $input->{validator} = $validator;
+
+  ok( !$input->valid(cmOK), 'invalid input rejects non-cancel command' );
+  is( $validator->{validate_called}, 1, 'validate() called on non-cancel command' );
+  is( $validator->{error_called}, 1, 'error() called after failed validate()' );
+
+  is( $input->valid(cmCancel), 1, 'cancel bypasses final validation' );
+  is( $validator->{validate_called}, 1, 'validate() not called for cmCancel' );
+
+  is( $input->valid(cmValid), 1, 'cmValid returns true for default status' );
 };
 
 # Very basic handleEvent() test: no effect when not selected

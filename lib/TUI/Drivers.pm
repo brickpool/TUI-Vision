@@ -1,4 +1,5 @@
 package TUI::Drivers;
+# ABSTRACT: Driver components for the TUI::Vision framework
 
 use strict;
 use warnings;

@@ -1,4 +1,5 @@
 package TUI::Objects;
+# ABSTRACT: Base objects for the TUI::Vision framework
 
 use strict;
 use warnings;

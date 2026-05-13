@@ -1,4 +1,5 @@
 package TUI::StdDlg;
+# ABSTRACT: Standard dialog components for the TUI::Vision framework
 
 use strict;
 use warnings;

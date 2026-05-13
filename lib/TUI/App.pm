@@ -1,4 +1,5 @@
 package TUI::App;
+# ABSTRACT: Application framework for the TUI::Vision framework
 
 use strict;
 use warnings;

@@ -1,4 +1,5 @@
 package TUI::Validate;
+# ABSTRACT: Validation components for the TUI::Vision framework
 
 use strict;
 use warnings;
@@ -14,6 +15,7 @@ use TUI::Validate::FilterValidator;
 use TUI::Validate::LookupValidator;
 use TUI::Validate::PXPictureValidator;
 use TUI::Validate::RangeValidator;
+use TUI::Validate::StringLookupValidator;
 use TUI::Validate::Validator;
 
 sub import {
@@ -23,6 +25,7 @@ sub import {
   TUI::Validate::LookupValidator->import::into( $target );
   TUI::Validate::PXPictureValidator->import::into( $target );
   TUI::Validate::RangeValidator->import::into( $target );
+  TUI::Validate::StringLookupValidator->import::into( $target );
   TUI::Validate::Validator->import::into( $target );
 }
 
@@ -33,6 +36,7 @@ sub unimport {
   TUI::Validate::LookupValidator->unimport::out_of( $caller );
   TUI::Validate::PXPictureValidator->unimport::out_of( $caller );
   TUI::Validate::RangeValidator->unimport::out_of( $caller );
+  TUI::Validate::StringLookupValidator->unimport::out_of( $caller );
   TUI::Validate::Validator->unimport::out_of( $caller );
 }
 
@@ -44,20 +48,50 @@ __END__
 
 =head1 NAME
 
-TUI::Validate - Validation utilities for the TUI::Vision framework
+TUI::Validate - Validation components for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
   use TUI::Validate;
 
+  # Typical validator setup flow:
+  my $filter = TFilterValidator->new( validChars => '[0-9]' );
+  my $range  = TRangeValidator->new( min => 1, max => 9999 );
+
+  my $ok1 = $filter->isValid('1234');
+  my $ok2 = $range->isValid('42');
+
 =head1 DESCRIPTION
 
-TUI::Validate provides validation utilities for the TUI::Vision
-framework.
+TUI::Validate provides the validator layer for the TUI::Vision framework.
+It corresponds to the Turbo Vision validation subsystem and collects the
+validator base classes, concrete validators, and related constants.
 
-This module is the validation-layer collector and currently re-exports
-L<TUI::Validate::Const> so applications can import validator constants from
-one entry point.
+Importing this module re-exports the full validator surface, including:
+
+=over 4
+
+=item * L<Const|TUI::Validate::Const>
+Symbolic constants for validator status, options, and transfer flags.
+
+=item * Base and generic validator classes -
+L<TValidator|TUI::Validate::Validator>,
+L<TFilterValidator|TUI::Validate::FilterValidator>,
+L<TLookupValidator|TUI::Validate::LookupValidator>.
+
+=item * Lookup-based validator -
+L<TStringLookupValidator|TUI::Validate::StringLookupValidator>.
+
+=item * Numeric range validator -
+L<TRangeValidator|TUI::Validate::RangeValidator>.
+
+=item * Picture-mask validator -
+L<TPXPictureValidator|TUI::Validate::PXPictureValidator>.
+
+=back
+
+Calling C<no TUI::Validate;> forwards to the corresponding C<unimport>
+implementations of these modules.
 
 =head1 AUTHORS
 

@@ -1,4 +1,5 @@
 package TUI::Menus;
+# ABSTRACT: Menu components for the TUI::Vision framework
 
 use strict;
 use warnings;

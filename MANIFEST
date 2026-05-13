@@ -119,6 +119,7 @@ lib/TUI/Validate/FilterValidator.pm
 lib/TUI/Validate/LookupValidator.pm
 lib/TUI/Validate/PXPictureValidator.pm
 lib/TUI/Validate/RangeValidator.pm
+lib/TUI/Validate/StringLookupValidator.pm
 lib/TUI/Validate/Validator.pm
 lib/TUI/Views.pm
 lib/TUI/Views/CommandSet.pm
@@ -174,6 +175,7 @@ t/04Validate/11TPXPictureValidator.t
 t/04Validate/12TFilterValidator.t
 t/04Validate/13TRangeValidator.t
 t/04Validate/14TLookupValidator.t
+t/04Validate/15StringLookupValidator.t
 t/04Validate/99Validate.t
 t/05Memory/01load.t
 t/05Memory/03Util.t

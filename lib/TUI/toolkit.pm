@@ -1,4 +1,5 @@
 package TUI::toolkit;
+# ABSTRACT: Unified OO facade for the TUI::Vision framework
 
 use 5.010;
 use strict;

@@ -1,4 +1,5 @@
 package TUI::Views;
+# ABSTRACT: View components for the TUI::Vision framework
 
 use strict;
 use warnings;

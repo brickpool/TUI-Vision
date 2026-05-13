@@ -151,7 +151,8 @@ inventory.
   $errorAttr           TView                  Error display attribute
   $errorMsg            TFilterValidator       Filter validation error message
   $errorMsg            TPXPictureValidator    Picture validation error message
-  $errorText           TRangeValidator        Range validation error message
+  $errorMsg            TRangeValidator        Range validation error message
+  $errorMsg            TStringLookupValidator String lookup validation message
   $errorText           MsgBoxText             Error dialog title
   $exitText            TProgram               Exit command label text
 
