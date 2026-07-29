@@ -110,7 +110,7 @@ __END__
 
 =head1 NAME
 
-TUI::Validate::FilterValidator - character-set validator for input fields
+TFilterValidator - character-set validator for input fields
 
 =head1 HIERARCHY
 
@@ -223,7 +223,8 @@ interface compatibility but currently has no effect.
 
 =head1 SEE ALSO
 
-L<TUI::Validate::Validator>, L<TUI::Validate::Const>
+L<TValidator|TUI::Validate::Validator>, 
+L<TUI::Validate::Const>
 
 =head1 AUTHORS
 

@@ -218,7 +218,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::History - history browser for dialog input fields
+THistory - history browser for dialog input fields
 
 =head1 HIERARCHY
 
@@ -259,8 +259,9 @@ The following global variable affects the visual rendering of C<THistory>.
 
 =head2 $icon
 
-Defines the character sequence used to display the history indicator icon.
-The default value uses CP437 characters to render a framed arrow symbol.
+Defines the character sequence (I<Str>) used to display the history indicator 
+icon. The default value uses C<CP437> characters to render a framed arrow 
+symbol.
 
 =head1 ATTRIBUTES
 
@@ -363,7 +364,9 @@ Shuts down the history control and releases associated resources.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::Dialog>, L<TUI::Dialogs::InputLine>, L<TUI::Views::View>
+L<TDialog|TUI::Dialogs::Dialog>, 
+L<TInputLine|TUI::Dialogs::InputLine>, 
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

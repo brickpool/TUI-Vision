@@ -26,7 +26,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::HardwareInfo - platform-independent hardware interface dispatcher
+THardwareInfo - platform-independent hardware interface dispatcher
 
 =head1 SYNOPSIS
 
@@ -41,7 +41,7 @@ TUI::Drivers::HardwareInfo - platform-independent hardware interface dispatcher
 =head1 DESCRIPTION
 
 C<THardwareInfo> provides the platform-independent entry point for
-hardware-related operations used by the TUI::Vision driver layer.
+hardware-related operations used by the TVision driver layer.
 
 This module does not implement any hardware access itself. Instead, it selects
 and loads a platform-specific backend at runtime and exposes it under the
@@ -75,8 +75,13 @@ corresponding backend module.
 
 Current backend availability in this distribution:
 
-- Windows systems: C<TUI::Drivers::HardwareInfo::Win32>
-- Non-Windows systems: no backend module is currently shipped
+=over 4
+
+=item * Windows systems: C<TUI::Drivers::HardwareInfo::Win32>
+
+=item * Non-Windows systems: no backend module is currently shipped
+
+=back
 
 As of now, this dispatcher is effectively Win32-only. Attempting to load
 C<THardwareInfo> on unsupported platforms will fail until additional backend
@@ -222,9 +227,9 @@ Installs or removes the critical error handler.
 =head1 SEE ALSO
 
 L<TUI::Drivers::HardwareInfo::Win32>,
-L<TUI::Drivers::Screen>,
-L<TUI::Drivers::HWMouse>,
-L<TUI::Drivers::SystemError>
+L<TScreen|TUI::Drivers::Screen>,
+L<THWMouse|TUI::Drivers::HWMouse>,
+L<TSystemError|TUI::Drivers::SystemError>
 
 =head1 AUTHORS
 

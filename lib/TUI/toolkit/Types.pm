@@ -994,8 +994,6 @@ Predicates:
 
 =back
 
-=head2 Predicate example
-
 Predicate functions are well-suited for assertion frameworks or any
 situation where a simple boolean check is needed without throwing
 exceptions.

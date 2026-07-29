@@ -22,7 +22,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::Mouse - public mouse driver interface
+TMouse - public mouse driver interface
 
 =head1 SYNOPSIS
 
@@ -46,7 +46,7 @@ TUI::Drivers::Mouse - public mouse driver interface
 =head1 DESCRIPTION
 
 C<TUI::Drivers::Mouse> provides the public entry point for mouse handling in the
-TUI::Vision driver layer.
+TVision driver layer.
 
 The module exports the symbolic name C<TMouse>, which resolves to the underlying
 hardware mouse implementation. All mouse-related operations are delegated to
@@ -64,7 +64,7 @@ startup/shutdown (C<resume()>/C<suspend()>), query availability
 (C<present()>), and read raw mouse state (C<getEvent()>).
 
 For complete interface documentation and application-facing usage, see
-L<TUI::Drivers::Mouse>.
+L<TMouse|TUI::Drivers::Mouse>.
 
 =head1 METHODS
 
@@ -118,7 +118,7 @@ Disables mouse handling.
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::HWMouse>
+L<THWMouse|TUI::Drivers::HWMouse>
 
 =head1 AUTHORS
 

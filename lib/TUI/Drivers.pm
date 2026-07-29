@@ -1,5 +1,5 @@
 package TUI::Drivers;
-# ABSTRACT: Driver components for the TUI::Vision framework
+# ABSTRACT: Driver components for the TVision framework
 
 use strict;
 use warnings;
@@ -57,7 +57,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers - Driver abstraction layer for the TUI::Vision framework
+Drivers - Driver abstraction layer for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -76,7 +76,7 @@ TUI::Drivers - Driver abstraction layer for the TUI::Vision framework
 
 =head1 DESCRIPTION
 
-TUI::Drivers is the driver-layer collector for TUI::Vision.
+TUI::Drivers is the driver-layer collector for TVision
 
 Using C<use TUI::Drivers;> imports the common driver symbols from the
 individual driver modules into the caller package. This includes constants,

@@ -43,7 +43,7 @@ has items        => ( is => 'ro', default => [] );
 has count        => ( is => 'ro', default => 0 );
 has limit        => ( is => 'ro', default => 0 );
 has delta        => ( is => 'ro', default => 0 );
-has shouldDelete => ( is => 'ro', default => 0 );
+has shouldDelete => ( is => 'ro', default => false );
 
 # predeclare private methods
 my (
@@ -71,7 +71,7 @@ sub BUILD {    # void (\%args)
   return;
 } #/ sub BUILD
 
-sub from {    # $obj ($aLimit, $aDelta)
+sub from {    # $obj (|$aLimit, $aDelta)
   state $sig = signature(
     method => 1,
     pos => [
@@ -371,11 +371,11 @@ __END__
 
 =head1 NAME
 
-TUI::Objects::NSCollection - internal non-storable collection base class
+TNSCollection - internal non-storable collection base class
 
 =head1 DESCRIPTION
 
-C<TNSCollection> is the non-storable base variant of the TUI::Vision collection
+C<TNSCollection> is the non-storable base variant of the TVision collection
 classes. It exists primarily for internal use, most notably by the stream and
 resource management infrastructure.
 
@@ -412,9 +412,9 @@ be instantiated or subclassed directly outside of the framework itself.
 
 =head1 SEE ALSO
 
-L<TUI::Objects::Collection>,
-L<TUI::Objects::SortedCollection>,
-L<TUI::Objects::StringCollection>
+L<TCollection|TUI::Objects::Collection>,
+L<TSortedCollection|TUI::Objects::SortedCollection>,
+L<TStringCollection|TUI::Objects::StringCollection>
 
 =head1 AUTHORS
 

@@ -99,7 +99,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::ParamText - formatted dynamic text control for dialogs
+TParamText - formatted dynamic text control for dialogs
 
 =head1 HIERARCHY
 
@@ -148,6 +148,19 @@ C<setText>, so no separate data structure needs to be maintained. When the
 dialog data changes you simply call C<setText> again with the new values;
 C<getText> is rarely needed outside of tests.
 
+=head1 ATTRIBUTES
+
+The following attributes are managed internally and exposed as read-only
+accessors.
+
+=over
+
+=item str
+
+Internal formatted text buffer (I<Str>).
+
+=back
+
 =head1 CONSTRUCTOR
 
 =head2 new
@@ -175,19 +188,6 @@ Factory-style constructor using positional arguments.
 This constructor is provided for compatibility with traditional Turbo Vision
 construction patterns.
 
-=head1 ATTRIBUTES
-
-The following attributes are managed internally and exposed as read-only
-accessors.
-
-=over
-
-=item str
-
-Internal formatted text buffer (I<Str>).
-
-=back
-
 =head1 METHODS
 
 =head2 getText
@@ -211,9 +211,9 @@ redraw of the view.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::StaticText>,
-L<TUI::Dialogs::Label>,
-L<TUI::Dialogs::Dialog>
+L<TStaticText|TUI::Dialogs::StaticText>,
+L<TLabel|TUI::Dialogs::Label>,
+L<TDialog|TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 

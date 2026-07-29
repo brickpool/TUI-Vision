@@ -184,7 +184,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::SortedListBox - list box with automatic item sorting
+TSortedListBox - list box with automatic item sorting
 
 =head1 HIERARCHY
 
@@ -213,9 +213,6 @@ The list box maintains its contents in sorted order based on keys extracted
 from the item text. It is designed as a reusable base class for list views that
 require ordered presentation, such as file and directory lists.
 
-This class does not define its own construction parameters and relies on the
-standard C<TListBox> initialization.
-
 =head1 ATTRIBUTES
 
 =over
@@ -228,6 +225,9 @@ Current keyboard shift state used during incremental search and navigation
 =back
 
 =head1 CONSTRUCTOR
+
+This class does not define its own construction parameters and relies on the
+standard C<TListBox> initialization.
 
 =head2 new
 
@@ -249,7 +249,8 @@ Bounding rectangle defining the position and size of the list box (I<TRect>).
 
 =item vScrollBar
 
-Optional vertical scroll bar associated with the list box (I<TScrollBar>).
+Optional vertical scroll bar associated with the list box (I<TScrollBar> or 
+undef).
 
 =back
 
@@ -293,8 +294,8 @@ Assigns a new sorted collection to the list box and refreshes its contents.
 
 =head1 SEE ALSO
 
-L<TUI::Views::ListBox>,
-L<TUI::StdDlg::FileList>
+L<TListBox|TUI::Views::ListBox>,
+L<TFileList|TUI::StdDlg::FileList>
 
 =head1 AUTHORS
 

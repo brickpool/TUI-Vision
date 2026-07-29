@@ -277,7 +277,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Scroller - base class for scrollable views in TUI::Vision
+TScroller - base class for scrollable views in TVision
 
 =head1 HIERARCHY
 
@@ -343,11 +343,12 @@ Reference to the vertical scroll bar (I<TScrollBar>), if present.
 
 =item drawLock
 
-Internal counter used to suppress redraw operations during batch updates.
+Internal counter used to suppress redraw operations during batch updates 
+(I<Int>).
 
 =item drawFlag
 
-Indicates whether a redraw is pending once drawing is re-enabled.
+Indicates whether a redraw is pending once drawing is re-enabled (I<Bool>).
 
 =back
 
@@ -356,9 +357,9 @@ Indicates whether a redraw is pending once drawing is re-enabled.
 =head2 new
 
   my $scroller = TScroller->new(
-    bounds      => $bounds,
-    aHScrollBar => $hBar,
-    aVScrollBar => $vBar
+    bounds     => $bounds,
+    hScrollBar => $hBar | undef,
+    vScrollBar => $vBar | undef,
   );
 
 Creates a new scroller with the specified bounds and optional scroll bars.
@@ -369,11 +370,11 @@ Creates a new scroller with the specified bounds and optional scroll bars.
 
 Bounding rectangle of the scroller (I<TRect>).
 
-=item aHScrollBar
+=item hScrollBar
 
 Horizontal scroll bar associated with the scroller (I<TScrollBar> or undef).
 
-=item aVScrollBar
+=item vScrollBar
 
 Vertical scroll bar associated with the scroller (I<TScrollBar> or undef).
 
@@ -381,7 +382,8 @@ Vertical scroll bar associated with the scroller (I<TScrollBar> or undef).
 
 =head2 new_TScroller
 
-  my $scroller = new_TScroller($bounds, $hBar | undef, $vBar | undef);
+  my $scroller = new_TScroller($bounds, $aHScrollBar | undef, 
+    $aVScrollBar | undef);
 
 Factory-style constructor using positional arguments.
 

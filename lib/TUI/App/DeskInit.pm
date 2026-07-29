@@ -66,7 +66,7 @@ __END__
 
 =head1 NAME
 
-TUI::App::DeskInit - helper for desktop background initialization
+TDeskInit - helper for desktop background initialization
 
 =head1 SYNOPSIS
 
@@ -106,9 +106,9 @@ Creates a new desktop initialization helper.
 
 =item createBackground
 
-A code reference that is called with a C<TRect> argument and must return a
-C<TBackground> object. This callback defines how the desktop background view is
-constructed.
+A code reference (I<CodeRef>) that is called with a C<TRect> argument and must 
+return a C<TBackground> object. This callback defines how the desktop 
+background view is constructed.
 
 =back
 
@@ -129,8 +129,8 @@ for the specified rectangle.
 
 =head1 SEE ALSO
 
-L<TUI::App::DeskTop>,
-L<TUI::App::Background>
+L<TDeskTop|TUI::App::DeskTop>,
+L<TBackground|TUI::App::Background>
 
 =head1 AUTHORS
 

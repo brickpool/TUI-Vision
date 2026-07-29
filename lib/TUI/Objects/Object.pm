@@ -92,7 +92,7 @@ __END__
 
 =head1 NAME
 
-TUI::Objects::Object - root class for all TUI::Vision objects
+TObject - root class for all TVision objects
 
 =head1 HIERARCHY
 
@@ -106,12 +106,12 @@ TUI::Objects::Object - root class for all TUI::Vision objects
 
 =head1 DESCRIPTION
 
-C<TObject> is the root class of the TUI::Vision object hierarchy. Nearly all
+C<TObject> is the root class of the TVision object hierarchy. Nearly all
 objects used by the framework are derived from C<TObject>, and all objects that
 can be written to streams must descend from it.
 
 The class defines the basic initialization and destruction semantics shared by
-all TUI::Vision objects. Descendant classes are expected to follow these rules
+all TVision objects. Descendant classes are expected to follow these rules
 by invoking their parent constructors and destructors appropriately.
 
 C<TObject> itself does not provide visible behavior and is not normally used
@@ -173,9 +173,8 @@ method to release internal resources prior to destruction.
 
 =head1 SEE ALSO
 
-L<TUI::Views::View>,
-L<TUI::Objects::Collection>,
-L<TUI::Objects::Stream>
+L<TView|TUI::Views::View>,
+L<TCollection|TUI::Objects::Collection>
 
 =head1 AUTHORS
 

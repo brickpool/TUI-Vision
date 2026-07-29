@@ -454,7 +454,7 @@ TUI::Views::Const - constants for view and window components
 
 =head1 DESCRIPTION
 
-C<TUI::Views::Const> defines constants used by TUI::Vision view, window, and
+C<TUI::Views::Const> defines constants used by TVision view, window, and
 scrollbar components.
 
 The constants in this module follow the naming conventions of Turbo Vision 2.0
@@ -568,10 +568,10 @@ C<:all> - import all constants
 
 =head1 SEE ALSO
 
-L<TUI::Views>,
-L<TUI::Views::View>,
-L<TUI::Views::Window>,
-L<TUI::Views::ScrollBar>
+L<Views|TUI::Views>,
+L<TView|TUI::Views::View>,
+L<TWindow|TUI::Views::Window>,
+L<TScrollBar|TUI::Views::ScrollBar>
 
 =head1 AUTHORS
 

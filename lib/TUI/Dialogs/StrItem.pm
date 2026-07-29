@@ -99,7 +99,7 @@ TSItem - simple singly linked list node for  dialog data
 
 =head1 DESCRIPTION
 
-C<TSItem> represents a minimal singly linked list node used by TUI::Vision
+C<TSItem> represents a minimal singly linked list node used by TVision
 dialog infrastructure. Each node stores a string value and a reference to the
 next node in the list, or C<undef> if it is the last element.
 

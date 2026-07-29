@@ -139,7 +139,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::StatusDef - status line definition entry
+TStatusDef - status line definition entry
 
 =head1 SYNOPSIS
 
@@ -154,7 +154,7 @@ TUI::Menus::StatusDef - status line definition entry
 =head1 DESCRIPTION
 
 C<TStatusDef> represents a single definition entry used to describe the
-contents of a TUI::Vision status line. Each definition associates a range of
+contents of a TVision status line. Each definition associates a range of
 help context identifiers with a list of status line items.
 
 Multiple C<TStatusDef> objects can be linked together to form a definition

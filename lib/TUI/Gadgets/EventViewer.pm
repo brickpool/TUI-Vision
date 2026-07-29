@@ -297,7 +297,7 @@ __END__
 
 =head1 NAME
 
-TUI::Gadgets::EventViewer - terminal window for displaying received events
+TEventViewer - terminal window for displaying received events
 
 =head1 HIERARCHY
 
@@ -388,9 +388,9 @@ Releases window resources and stops event recording.
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::Event>,
-L<TUI::Views::Window>,
-L<TUI::Gadgets::HeapView>
+L<TEvent|TUI::Drivers::Event>,
+L<TWindow|TUI::Views::Window>,
+L<THeapView|TUI::Gadgets::HeapView>
 
 =head1 AUTHORS
 

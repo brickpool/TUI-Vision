@@ -81,7 +81,7 @@ __END__
 
 =head1 NAME
 
-TUI::App::Application - generic application base class
+TApplication - generic application base class
 
 =head1 HIERARCHY
 
@@ -118,7 +118,7 @@ TUI::App::Application - generic application base class
 
 =head1 DESCRIPTION
 
-C<TApplication> is the standard base class for TUI::Vision applications.
+C<TApplication> is the standard base class for TVision applications.
 It extends C<TProgram> with application-level initialization and shutdown
 behavior and integrates system services such as event handling, screen
 management, and history tracking.
@@ -141,7 +141,7 @@ C<TProgram> plus C<TApplication>-specific history initialization.
 
 The C<suspend()> and C<resume()> methods are primarily used when the
 application temporarily gives up control of screen/event processing (for
-example around external operations), then restores TUI::Vision services.
+example around external operations), then restores TVision services.
 
 =head1 CONSTRUCTOR
 
@@ -191,7 +191,7 @@ management.
 
 =head1 EXAMPLE
 
-The following example shows a minimal TUI::Vision application derived from
+The following example shows a minimal TVision application derived from
 C<TApplication>. It demonstrates menu creation, event handling, and the use of
 a dialog.
 
@@ -316,9 +316,9 @@ a dialog.
 
 =head1 SEE ALSO
 
-L<TUI::App::Program>,
-L<TUI::Views::View>,
-L<TUI::Views::Group>
+L<TProgram|TUI::App::Program>,
+L<TView|TUI::Views::View>,
+L<TGroup|TUI::Views::Group>
 
 =head1 AUTHORS
 

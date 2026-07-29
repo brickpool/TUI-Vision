@@ -610,7 +610,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::InputLine - editable single-line text input control for dialogs
+TInputLine - editable single-line text input control for dialogs
 
 =head1 HIERARCHY
 
@@ -806,10 +806,10 @@ Checks the validity of the current input text based on the installed validator
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::Dialog>,
-L<TUI::Dialogs::Label>,
-L<TUI::Dialogs::History>,
-L<TUI::Validators::Validator>
+L<TDialog|TUI::Dialogs::Dialog>,
+L<TLabel|TUI::Dialogs::Label>,
+L<THistory|TUI::Dialogs::History>,
+L<TValidator|TUI::Validate::Validator>
 
 =head1 AUTHORS
 

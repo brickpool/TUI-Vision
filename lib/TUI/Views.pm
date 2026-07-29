@@ -1,5 +1,5 @@
 package TUI::Views;
-# ABSTRACT: View components for the TUI::Vision framework
+# ABSTRACT: View components for the TVision framework
 
 use strict;
 use warnings;
@@ -63,7 +63,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views - Core view classes for the TUI::Vision framework
+Views - Core view classes for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -88,7 +88,7 @@ TUI::Views - Core view classes for the TUI::Vision framework
 =head1 DESCRIPTION
 
 TUI::Views provides the core view and windowing subsystem for the
-TUI::Vision framework. It corresponds to the Turbo Vision view
+TVision framework. It corresponds to the Turbo Vision view
 architecture and includes all fundamental UI components such as views,
 groups, frames, windows, palettes, and drawing buffers.
 

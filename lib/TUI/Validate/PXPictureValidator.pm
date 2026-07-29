@@ -638,7 +638,7 @@ __END__
 
 =head1 NAME
 
-TUI::Validate::PXPictureValidator - Picture-based validator for structured input
+TPXPictureValidator - Picture-based validator for structured input
 
 =head1 HIERARCHY
 
@@ -794,7 +794,7 @@ comma-separated list.
 
 =head1 SEE ALSO
 
-L<TUI::Validate::Validator>,
+L<TValidator|TUI::Validate::Validator>,
 L<TUI::Validate::Const>
 
 =head1 AUTHORS

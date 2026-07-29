@@ -348,7 +348,7 @@ __END__
 
 =head1 NAME
 
-TUI::App::DeskTop - manages the application desktop area and owned views
+TDeskTop - manages the application desktop area and owned views
 
 =head1 HIERARCHY
 
@@ -380,7 +380,7 @@ TUI::App::DeskTop - manages the application desktop area and owned views
 
 =head1 DESCRIPTION
 
-C<TDeskTop> represents the desktop area of a TUI::Vision application. It manages
+C<TDeskTop> represents the desktop area of a TVision application. It manages
 the screen region between the menu bar and the status line and owns the
 background view as well as all top-level windows and dialogs.
 
@@ -413,7 +413,7 @@ used by C<TDeskTop>.
 
 =head2 $defaultBkgrnd
 
-Defines the default background character used to fill the desktop area.
+Defines the default background character (I<Str>) used to fill the desktop area.
 
 =head1 ATTRIBUTES
 
@@ -428,7 +428,7 @@ The C<TBackground> object forming the visual backdrop of the desktop.
 
 =item tileColumnsFirst
 
-Boolean flag controlling whether tiling prefers columns before rows.
+Boolean flag (I<Bool>) controlling whether tiling prefers columns before rows.
 
 =back
 
@@ -441,6 +441,15 @@ Boolean flag controlling whether tiling prefers columns before rows.
   );
 
 Creates a new desktop object.
+
+=head2 new_TDeskTop
+
+  my $deskTop = new_TDeskTop($bounds);
+
+Factory-style constructor using positional arguments.
+
+This constructor is provided for compatibility with traditional Turbo Vision
+construction patterns.
 
 =over
 
@@ -499,10 +508,10 @@ Subclasses may override this method to report layout errors.
 
 =head1 SEE ALSO
 
-L<TUI::App::Background>,
-L<TUI::App::Program>,
-L<TUI::Views::Window>,
-L<TUI::Views::Group>
+L<TBackground|TUI::App::Background>,
+L<TProgram|TUI::App::Program>,
+L<TWindow|TUI::Views::Window>,
+L<TGroup|TUI::Views::Group>
 
 =head1 AUTHORS
 

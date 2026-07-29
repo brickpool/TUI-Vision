@@ -319,7 +319,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::StatusLine - defines the class TStatusLine
+TStatusLine - defines the class TStatusLine
 
 =head1 HIERARCHY
 
@@ -349,8 +349,8 @@ The following global variable affects the visual rendering of C<TStatusLine>.
 
 =head2 $hintSeparator
 
-Defines the character sequence used to separate individual hints
-in the status line. The default value uses a CP437 vertical separator.
+Defines the character sequence (I<Str>) used to separate individual hints
+in the status line. The default value uses a C<CP437> vertical separator.
 
 =head1 ATTRIBUTES
 
@@ -373,7 +373,7 @@ context changes.
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
@@ -406,12 +406,16 @@ Status definition list associated with this status line
 
 Factory constructor for creating a status line instance.
 
+=head1 DESTRUCTOR
+
 =head2 DEMOLISH
 
   $self->DEMOLISH($in_global_destruction);
 
 Performs cleanup of the status line object and disposes of associated resources.
 This method is normally called automatically by the owning view or application.
+
+=head1 METHODS
 
 =head2 disposeItems
 
@@ -484,7 +488,8 @@ while using Perl-specific operator overloading for clarity.
 
 =head1 SEE ALSO
 
-L<TUI::Menus::StatusDef>, L<TUI::Menus::StatusItem>
+L<TStatusDef|TUI::Menus::StatusDef>, 
+L<TStatusItem|TUI::Menus::StatusItem>
 
 =head1 AUTHORS
 

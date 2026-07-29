@@ -167,7 +167,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::ListBox - list box control for displaying collections in dialogs
+TListBox - list box control for displaying collections in dialogs
 
 =head1 HIERARCHY
 
@@ -346,9 +346,9 @@ Restores the list box state from the supplied record.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::ListViewer>,
-L<TUI::Dialogs::Dialog>,
-L<TUI::Views::View>
+L<TListViewer|TUI::Dialogs::ListViewer>,
+L<TDialog|TUI::Dialogs::Dialog>,
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

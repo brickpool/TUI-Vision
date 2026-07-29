@@ -279,7 +279,7 @@ sub remove {    # void ($p|undef)
   return;
 } #/ sub remove
 
-# The following subroutine was taken from the framework
+# The following subroutine was ported from the framework
 # "A modern port of Turbo Vision 2.0", which is licensed under MIT licence.
 #
 # Copyright 2019-2021 by magiblot <magiblot@hotmail.com>
@@ -1009,7 +1009,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Group - base class for grouping views in TUI::Vision
+TGroup - base class for grouping views in TVision
 
 =head1 HIERARCHY
 
@@ -1031,7 +1031,7 @@ TUI::Views::Group - base class for grouping views in TUI::Vision
 
 =head1 DESCRIPTION
 
-C<TGroup> is the structural backbone of TUI::Vision's view hierarchy. It
+C<TGroup> is the structural backbone of TVision's view hierarchy. It
 manages collections of subviews and coordinates drawing, event dispatch, and
 modal execution.
 
@@ -1066,12 +1066,12 @@ view hierarchy state.
 
 =head2 $TheTopView
 
-Holds a reference to the currently active top-level view.
+Holds a reference to the currently active top-level view (I<TView>).
 This variable is used during focus and event handling.
 
 =head2 $ownerGroup
 
-Holds a reference to the group currently owning a view.
+Holds a reference to the group (I<TGroup>) currently owning a view.
 It is used internally to manage parent-child relationships between views.
 
 =head1 ATTRIBUTES
@@ -1084,12 +1084,13 @@ internally and should not be modified directly.
 
 =item current
 
-Pointer to the currently selected subview (I<TView>).  
+Pointer to the currently selected subview (I<TView> or undef). 
 This attribute is managed internally.
 
 =item last
 
-Read-only pointer to the last subview in the Z-ordered view list.
+Read-only pointer to the last subview (I<TView> or undef) in the Z-ordered view 
+list.
 
 =item clip
 
@@ -1104,17 +1105,17 @@ is invoked.
 
 =item buffer
 
-Read-only reference to the internal screen cache buffer.  
+Read-only reference to the internal screen cache buffer (I<ArrayRef>).  
 Used to speed up redraw operations when buffering is enabled.
 
 =item lockFlag
 
 Lock counter used to suppress screen updates while batch operations are
-performed.
+performed (I<Int>).
 
 =item endState
 
-Command value used to terminate modal execution.
+Command value used to terminate modal execution (I<PositiveOrZeroInt>).
 
 =back
 
@@ -1140,7 +1141,7 @@ Bounding rectangle of the group (I<TRect>).
 
 Factory-style constructor using positional arguments.
 
-This constructor is equivalent to calling C<new> with the C<bounds> parameter
+This constructor is equivalent to calling C<new> with the $bounds parameter
 and is provided for compatibility with traditional Turbo Vision construction
 patterns.
 
@@ -1283,9 +1284,9 @@ Releases the internal cache buffer.
 
 =head2 getBuffer
 
-  my $buffer = $group->getBuffer();
+  $group->getBuffer();
 
-Returns the internal buffer used for cached drawing.
+Allocate the internal buffer used for cached drawing.
 
 =head2 handleEvent
 
@@ -1355,7 +1356,9 @@ Shuts down the group and releases associated resources.
 
 =head1 SEE ALSO
 
-L<TUI::Views::View>, L<TUI::Views::Window>, L<TUI::Dialogs::Dialog>
+L<TView|TUI::Views::View>, 
+L<TWindow|TUI::Views::Window>, 
+L<TDialog|TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 

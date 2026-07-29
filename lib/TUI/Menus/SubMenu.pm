@@ -115,7 +115,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::SubMenu - submenu item for menu bars and menu boxes
+TSubMenu - submenu item for menu bars and menu boxes
 
 =head1 HIERARCHY
 
@@ -145,25 +145,68 @@ structures to be built declaratively.
 
 =head1 CONSTRUCTOR
 
-=head2 new_TSubMenu
+This class does not define its own construction parameters and relies on the
+standard C<TMenuItem> initialization.
 
-  my $submenu = new_TSubMenu($title, $key | undef, $helpCtx | undef);
+=head2 new
+
+  my $item = TSubMenu->new(
+    name    => $name,
+    command => $command,
+    subMenu => $subMenu,
+    # optional ..
+    (
+      helpCtx => $helpCtx,
+      next    => $next,
+    )
+  );
 
 Creates a new submenu item.
 
 =over
 
-=item title
+=item name
 
-The displayed submenu title, usually containing a hotkey marker (I<Str>).
+Text displayed for the menu item (I<Str>).
 
-=item key
+=item command
 
-Optional keyboard shortcut associated with the submenu (I<Int>).
+Command identifier (I<PositiveOrZeroInt>). This parameter is optional for 
+submenu entries.
+
+=item subMenu
+
+Optional submenu associated with this item (I<Object>).
 
 =item helpCtx
 
-Optional help context identifier (I<Int>).
+Optional help context identifier (I<PositiveOrZeroInt>).
+
+=item next
+
+Optional reference to the next menu item (I<Object>).
+
+=back
+
+=head2 new_TSubMenu
+
+  my $submenu = new_TSubMenu($name, $key, $helpCtx = hcNoContext);
+
+Creates a new submenu item.
+
+=over
+
+=item name
+
+The displayed submenu name, usually containing a hotkey marker (I<Str>).
+
+=item key
+
+Keyboard shortcut associated with the submenu (I<PositiveOrZeroInt>).
+
+=item helpCtx
+
+Optional help context identifier (I<PositiveOrZeroInt>).
 
 =back
 
@@ -188,9 +231,9 @@ the original Turbo Vision menu construction style.
 
 =head1 SEE ALSO
 
-L<TUI::Menus::MenuItem>,
-L<TUI::Menus::MenuBar>,
-L<TUI::Menus::MenuBox>
+L<TMenuItem|TUI::Menus::MenuItem>,
+L<TMenuBar|TUI::Menus::MenuBar>,
+L<TMenuBox|TUI::Menus::MenuBox>
 
 =head1 AUTHORS
 

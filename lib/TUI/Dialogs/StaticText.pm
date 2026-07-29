@@ -180,7 +180,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::StaticText - displays fixed text inside a dialog
+TStaticText - displays fixed text inside a dialog
 
 =head1 HIERARCHY
 

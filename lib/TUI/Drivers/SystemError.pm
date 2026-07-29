@@ -49,7 +49,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::SystemError - system error and Ctrl-Break handling
+TSystemError - system error and Ctrl-Break handling
 
 =head1 SYNOPSIS
 
@@ -68,7 +68,7 @@ TUI::Drivers::SystemError - system error and Ctrl-Break handling
 =head1 DESCRIPTION
 
 C<TUI::Drivers::SystemError> provides system-level error handling facilities
-used by the TUI::Vision driver layer.
+used by the TVision driver layer.
 
 The module exposes global state related to Ctrl-Break handling and provides
 class methods to suspend and resume system-level interrupt processing. This
@@ -93,17 +93,20 @@ intentionally skipped.
 
 =head2 $ctrlBreakHit
 
-Indicates whether a Ctrl-Break event has occurred.
+Indicates whether a Ctrl-Break event has occurred (I<Bool>).
 
 This variable is set to a true value whenever the user triggers a Ctrl-Break
 interrupt. The flag may be cleared by assigning it a false value.
 
 =head2 $saveCtrlBreak
 
-Reserved internal state flag for Ctrl-Break handling compatibility.
+Compatibility variable (I<Bool>) from the original Turbo Vision DOS 
+implementation.
 
-It is declared as part of the driver state surface but is not actively
-modified by this module's current implementation.
+Historically it stored the previous DOS Ctrl-Break flag so that the system 
+state could be restored when Turbo Vision released control of the terminal. 
+The Perl port does not use this mechanism and the variable is retained only for 
+compatibility.
 
 =head1 METHODS
 
@@ -127,8 +130,8 @@ was active before C<suspend> was called.
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::HardwareInfo>,
-L<TUI::Drivers::Event>
+L<THardwareInfo|TUI::Drivers::HardwareInfo>,
+L<TEvent|TUI::Drivers::Event>
 
 =head1 AUTHORS
 

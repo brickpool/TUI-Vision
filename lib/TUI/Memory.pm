@@ -1,5 +1,5 @@
 package TUI::Memory;
-# ABSTRACT: Memory management components for the TUI::Vision framework
+# ABSTRACT: Memory management components for the TVision framework
 
 use strict;
 use warnings;
@@ -30,7 +30,7 @@ __END__
 
 =head1 NAME
 
-TUI::Memory - Memory utilities for the TUI::Vision framework
+Memory - Memory utilities for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -39,7 +39,7 @@ TUI::Memory - Memory utilities for the TUI::Vision framework
 =head1 DESCRIPTION
 
 TUI::Memory provides memory-related utility functions for the
-TUI::Vision framework. In the original Turbo Vision architecture,
+TVision framework. In the original Turbo Vision architecture,
 this subsystem offered lightweight helpers for detecting low-memory
 conditions and performing diagnostic checks.
 

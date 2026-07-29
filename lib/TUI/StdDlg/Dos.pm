@@ -209,9 +209,9 @@ entries are available.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::DirCollection>,
-L<TUI::StdDlg::DirListBox>,
-L<TUI::StdDlg::ChDirDialog>
+L<TDirCollection|TUI::StdDlg::DirCollection>,
+L<TDirListBox|TUI::StdDlg::DirListBox>,
+L<TChDirDialog|TUI::StdDlg::ChDirDialog>
 
 =head1 AUTHORS
 

@@ -205,7 +205,7 @@ TUI::StdDlg::Const - constants for standard dialog components
   
 =head1 DESCRIPTION
 
-C<TUI::StdDlg::Const> defines the constants used by the TUI::Vision standard
+C<TUI::StdDlg::Const> defines the constants used by the TVision standard
 dialog subsystem.
 
 The constants in this module are grouped by purpose and exported via tag-based
@@ -265,10 +265,10 @@ An additional C<:all> export tag is provided to import all constants at once.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg>,
-L<TUI::StdDlg::FileDialog>,
-L<TUI::StdDlg::ChDirDialog>,
-L<TUI::StdDlg::FileCollection>
+L<StdDlg|TUI::StdDlg>,
+L<TFileDialog|TUI::StdDlg::FileDialog>,
+L<TChDirDialog|TUI::StdDlg::ChDirDialog>,
+L<TFileCollection|TUI::StdDlg::FileCollection>
 
 =head1 AUTHORS
 

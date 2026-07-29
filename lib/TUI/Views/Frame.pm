@@ -269,7 +269,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Frame - frame class for window components
+TFrame - frame class for window components
 
 =head1 HIERARCHY
 
@@ -306,28 +306,28 @@ of C<TFrame>.
 
 =head2 $initFrame
 
-Initial frame definition table used to map frame styles and states.
+Initial frame definition table used to map frame styles and states (I<Str>).
 
 =head2 $frameChars
 
 Character set used to draw frame borders.
-The default value uses CP437 line-drawing characters.
+The default value uses C<CP437> line-drawing characters (I<Str>).
 
 =head2 $closeIcon
 
-Icon text used for the close window command.
+Icon text (I<Str>) used for the close window command.
 
 =head2 $zoomIcon
 
-Icon text used for the zoom window command.
+Icon text (I<Str>) used for the zoom window command.
 
 =head2 $unZoomIcon
 
-Icon text used for the unzoom window command.
+Icon text (I<Str>) used for the unzoom window command.
 
 =head2 $dragIcon
 
-Icon text used to indicate window dragging (CP437).
+Icon text (I<Str>) used to indicate window dragging (C<CP437>).
 
 =head1 CONSTRUCTOR
 
@@ -352,7 +352,7 @@ Bounding rectangle of the frame (I<TRect>).
 
 Factory-style constructor using positional arguments.
 
-This constructor is equivalent to calling C<new> with the C<bounds> parameter
+This constructor is equivalent to calling C<new> with the $bounds parameter
 and is provided for compatibility with traditional Turbo Vision construction
 patterns.
 
@@ -398,7 +398,7 @@ Handles interactive dragging of the owning window using the mouse.
 
 =head1 SEE ALSO
 
-L<TUI::Views::Window>, L<TUI::Views::View>
+L<TWindow|TUI::Views::Window>, L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

@@ -87,7 +87,7 @@ __END__
 
 =head1 NAME
 
-TUI::Validate::Validator - Abstract base class for validator objects
+TValidator - Abstract base class for validator objects
 
 =head1 HIERARCHY
 
@@ -193,8 +193,8 @@ returned.
 =head1 SEE ALSO
 
 L<TUI::Validate::Const>,
-L<TUI::Validate::PXPictureValidator>,
-L<TUI::Objects::Object>
+L<TPXPictureValidator|TUI::Validate::PXPictureValidator>,
+L<TObject|TUI::Objects::Object>
 
 =head1 AUTHORS
 

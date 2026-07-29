@@ -121,7 +121,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::FileInputLine - input line view for file dialog interaction
+TFileInputLine - input line view for file dialog interaction
 
 =head1 HIERARCHY
 
@@ -191,9 +191,9 @@ selection and dialog-level commands.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::FileDialog>,
-L<TUI::Dialogs::InputLine>,
-L<TUI::Views::View>
+L<TFileDialog|TUI::StdDlg::FileDialog>,
+L<TInputLine|TUI::Dialogs::InputLine>,
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

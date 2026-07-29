@@ -589,7 +589,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::ListViewer - base class for list viewers
+TListViewer - base class for list viewers
 
 =head1 HIERARCHY
 
@@ -631,7 +631,7 @@ TUI::Views::ListViewer - base class for list viewers
 
 =head1 DESCRIPTION
 
-C<TListViewer> is the TUI::Vision base class for list viewer controls. It
+C<TListViewer> is the TVision base class for list viewer controls. It
 implements the generic behavior required to display a list of items arranged
 in one or more columns, including keyboard navigation, mouse interaction, and
 scroll bar synchronization.
@@ -672,27 +672,27 @@ used internally by the list viewer.
 
 =item hScrollBar
 
-Horizontal scroll bar associated with the list viewer.
+Horizontal scroll bar (I<TScrollBar> or undef) associated with the list viewer.
 
 =item vScrollBar
 
-Vertical scroll bar associated with the list viewer.
+Vertical scroll bar  (I<TScrollBar> or undef) associated with the list viewer.
 
 =item numCols
 
-Number of columns used to display items.
+Number of columns used to display items (I<PositiveOrZeroInt>).
 
 =item topItem
 
-Index of the first visible item.
+Index of the first visible item (I<Int>).
 
 =item focused
 
-Index of the currently focused item.
+Index of the currently focused item (I<Int>).
 
 =item range
 
-Total number of items in the list.
+Total number of items in the list (I<Int>).
 
 =back
 
@@ -721,11 +721,11 @@ Number of columns used to display items (I<PositiveOrZeroInt>).
 
 =item hScrollBar
 
-Optional horizontal scroll bar (I<TScrollBar>).
+Optional horizontal scroll bar (I<TScrollBar> or undef).
 
 =item vScrollBar
 
-Optional vertical scroll bar (I<TScrollBar>).
+Optional vertical scroll bar (I<TScrollBar> or undef).
 
 =back
 
@@ -821,9 +821,9 @@ Releases scroll bar references and shuts down the view.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::ListBox>,
-L<TUI::Views::ScrollBar>,
-L<TUI::Views::View>
+L<TListBox|TUI::Dialogs::ListBox>,
+L<TScrollBar|TUI::Views::ScrollBar>,
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

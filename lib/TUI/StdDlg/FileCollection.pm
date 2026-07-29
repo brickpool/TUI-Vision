@@ -110,7 +110,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::FileCollection - sorted collection of file system entries
+TFileCollection - sorted collection of file system entries
 
 =head1 HIERARCHY
 
@@ -131,7 +131,7 @@ TUI::StdDlg::FileCollection - sorted collection of file system entries
 =head1 DESCRIPTION
 
 C<TFileCollection> implements a sorted collection used by standard
-TUI::Vision dialogs to manage file and directory search results.
+TVision dialogs to manage file and directory search results.
 
 The collection stores file system entries and maintains them in sorted order
 according to a comparison strategy defined by the class. It is primarily used
@@ -223,8 +223,8 @@ rather than the underlying collection.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::FileDialog>,
-L<TUI::Objects::SortedCollection>,
+L<TFileDialog|TUI::StdDlg::FileDialog>,
+L<TSortedCollection|TUI::Objects::SortedCollection>,
 L<TUI::StdDlg::Const>
 
 =head1 AUTHORS

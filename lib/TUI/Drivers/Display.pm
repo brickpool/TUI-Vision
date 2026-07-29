@@ -143,7 +143,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::Display - low-level display abstraction
+TDisplay - low-level display abstraction
 
 =head1 SYNOPSIS
 
@@ -164,7 +164,7 @@ TUI::Drivers::Display - low-level display abstraction
 =head1 DESCRIPTION
 
 C<TDisplay> provides a low-level abstraction layer for screen and
-cursor operations used by the TUI::Vision driver subsystem.
+cursor operations used by the TVision driver subsystem.
 
 The module defines a set of class-level routines for querying and modifying
 display parameters such as screen size, cursor shape, and video mode. It does
@@ -240,8 +240,8 @@ Updates the display's international character mappings.
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::Screen>,
-L<TUI::Drivers::HardwareInfo>
+L<TScreen|TUI::Drivers::Screen>,
+L<THardwareInfo|TUI::Drivers::HardwareInfo>
 
 =head1 AUTHORS
 

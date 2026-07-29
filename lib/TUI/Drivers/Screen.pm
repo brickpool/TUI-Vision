@@ -110,6 +110,7 @@ sub setVideoMode {    # void ($class, $mode)
   $class->setCrtMode( $class->fixCrtMode( $mode ) );
   $class->setCrtData();
   if ( TMouse->present() ) {
+    no warnings;
     TMouse->setRange( $class->getCols() - 1, $class->getRows() - 1 );
   }
   return;
@@ -123,7 +124,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::Screen - global screen and video mode management
+TScreen - global screen and video mode management
 
 =head1 SYNOPSIS
 
@@ -145,7 +146,7 @@ TUI::Drivers::Screen - global screen and video mode management
 =head1 DESCRIPTION
 
 C<TScreen> provides global screen and video mode management
-facilities used by the TUI::Vision driver layer.
+facilities used by the TVision driver layer.
 
 The module maintains global state describing the current screen configuration
 and provides class-level routines to suspend, resume, and reinitialize the
@@ -169,61 +170,64 @@ through C<TMouse> when mouse support is available.
 
 =head2 $startupMode
 
-Stores the screen mode that was active before TUI::Vision initialized the
-video system.
+Stores the screen mode (I<PositiveOrZeroInt>) that was active before TVision 
+initialized the video system.
 
-This value is used to restore the original screen mode when TUI::Vision
+This value is used to restore the original screen mode when TVision
 suspends or terminates.
 
 =head2 $startupCursor
 
-Stores the initial cursor shape before TUI::Vision modifies the cursor.
+Stores the initial cursor shape (I<PositiveOrZeroInt>) before TVision modifies 
+the cursor.
 
 =head2 $screenMode
 
-Holds the current screen mode requested by the application.
+Holds the current screen mode (I<PositiveOrZeroInt>) requested by the 
+application.
 
 =head2 $screenWidth
 
-Contains the current screen width in character columns.
+Contains the current screen width in character columns (I<PositiveOrZeroInt>).
 
 Typical values are 80 or similar.
 
 =head2 $screenHeight
 
-Contains the current screen height in text rows.
+Contains the current screen height in text rows (I<PositiveOrZeroInt>).
 
 Typical values are 25, 43, or 50 depending on the selected video mode.
 
 =head2 $hiResScreen
 
-Indicates whether a high-resolution text mode is active.
+Indicates whether a high-resolution text mode is active (I<Bool>).
 
 =head2 $checkSnow
 
-Controls CGA snow checking behavior.
+Controls CGA snow checking behavior (I<Bool>).
 
-If true, TUI::Vision performs additional checks to avoid display artifacts on
+If true, TVision performs additional checks to avoid display artifacts on
 older CGA adapters. This variable should not be modified before application
 initialization has completed.
 
 =head2 $screenBuffer
 
-Reference to the internal screen buffer.
+Reference to the internal screen buffer (I<ArrayRef>).
 
 This variable is initialized during screen setup and tracks the location of
 the video memory buffer.
 
 =head2 $cursorLines
 
-Encodes the current cursor shape.
+Encodes the current cursor shape (I<PositiveOrZeroInt>).
 
 The high nibble represents the top scan line, and the low nibble represents
 the bottom scan line of the cursor.
 
 =head2 $clearOnSuspend
 
-Controls whether the screen is cleared when the video subsystem is suspended.
+Controls whether the screen is cleared when the video subsystem is suspended 
+(I<Bool>).
 
 =head1 METHODS
 
@@ -255,7 +259,7 @@ which performs additional updates such as palette and mouse repositioning.
 
   TScreen->suspend();
 
-Suspends TUI::Vision video support and restores the original screen state.
+Suspends TVision video support and restores the original screen state.
 
 This method is called automatically during application shutdown.
 
@@ -263,7 +267,7 @@ This method is called automatically during application shutdown.
 
   TScreen->resume();
 
-Initializes the TUI::Vision video subsystem and switches the display to the
+Initializes the TVision video subsystem and switches the display to the
 mode specified by C<$screenMode>.
 
 This method initializes C<$screenWidth>, C<$screenHeight>, C<$hiResScreen>,
@@ -271,9 +275,9 @@ C<$checkSnow>, C<$screenBuffer>, and C<$cursorLines>.
 
 =head1 SEE ALSO
 
-L<TUI::App::Program>,
-L<TUI::Drivers::Display>,
-L<TUI::Drivers::HardwareInfo>
+L<TProgram|TUI::App::Program>,
+L<TDisplay|TUI::Drivers::Display>,
+L<THardwareInfo|TUI::Drivers::HardwareInfo>
 
 =head1 AUTHORS
 

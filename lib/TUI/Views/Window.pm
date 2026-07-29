@@ -381,7 +381,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Window - base class for windows in TUI::Vision
+TWindow - base class for windows in TVision
 
 =head1 HIERARCHY
 
@@ -402,7 +402,7 @@ TUI::Views::Window - base class for windows in TUI::Vision
 
 =head1 DESCRIPTION
 
-C<TWindow> is a core view class used to represent windows in a TUI::Vision
+C<TWindow> is a core view class used to represent windows in a TVision
 application. Windows may contain other views, display optional titles and
 window numbers, and support standard window operations such as moving,
 resizing, closing, and zooming.
@@ -587,7 +587,9 @@ L</zoomRect>.
 
 =head1 SEE ALSO
 
-L<TUI::Views::View>, L<TUI::Views::Group>, L<TUI::Views::Frame>
+L<TView|TUI::Views::View>, 
+L<TGroup|TUI::Views::Group>, 
+L<TFrame|TUI::Views::Frame>
 
 =head1 AUTHORS
 

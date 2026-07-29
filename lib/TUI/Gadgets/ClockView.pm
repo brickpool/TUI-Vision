@@ -81,7 +81,7 @@ __END__
 
 =head1 NAME
 
-TUI::Gadgets::ClockView - view displaying the current time
+TClockView - view displaying the current time
 
 =head1 HIERARCHY
 
@@ -147,8 +147,8 @@ changed.
 
 =head1 SEE ALSO
 
-L<TUI::Views::View>,
-L<TUI::Views::DrawBuffer>
+L<TView|TUI::Views::View>,
+L<TDrawBuffer|TUI::Views::DrawBuffer>
 
 =head1 AUTHORS
 

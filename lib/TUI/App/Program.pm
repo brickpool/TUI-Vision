@@ -516,7 +516,7 @@ __END__
 
 =head1 NAME
 
-TUI::App::Program - central program object managing application execution
+TProgram - central program object managing application execution
 
 =head1 HIERARCHY
 
@@ -562,7 +562,7 @@ TUI::App::Program - central program object managing application execution
 
 =head1 DESCRIPTION
 
-C<TProgram> implements the core functionality of a TUI::Vision application.
+C<TProgram> implements the core functionality of a TVision application.
 It manages the event loop, screen initialization, desktop, menu bar, and status
 line.
 
@@ -589,7 +589,7 @@ to access application state and top-level views.
 
 =head2 $exitText
 
-Label text for the standard application exit command, including optional
+Label text (I<Str>) for the standard application exit command, including optional
 accelerator markers.
 
 =head2 $application
@@ -610,7 +610,7 @@ Reference to the application's C<TDeskTop> container.
 
 =head2 $appPalette
 
-Index of the active application color palette.
+Index of the active application C<TPalette> color palette.
 
 =head2 $pending
 
@@ -622,7 +622,7 @@ Pending C<TEvent> object queued for later processing.
 
   my $program = TProgram->new();
 
-Creates a new program object and initializes TUI::Vision support.
+Creates a new program object and initializes TVision support.
 
 This constructor corresponds to the Turbo Vision 2.0 constructor and calls
 C<initScreen>, C<initDeskTop>, C<initMenuBar>, and C<initStatusLine>.
@@ -769,9 +769,9 @@ Validates a newly created view and handles low-memory conditions.
 
 =head1 SEE ALSO
 
-L<TUI::App::Application>,
-L<TUI::Views::View>,
-L<TUI::Views::Group>
+L<TApplication|TUI::App::Application>,
+L<TView|TUI::Views::View>,
+L<TGroup|TUI::Views::Group>
 
 =head1 AUTHORS
 

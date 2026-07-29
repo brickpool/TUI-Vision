@@ -474,7 +474,7 @@ TUI::Drivers::Const - constants for driver and event handling
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::Const> defines constants used by the TUI::Vision driver layer.
+C<TUI::Drivers::Const> defines constants used by the TVision driver layer.
 
 The constants in this module are grouped by purpose and exported via tag-based
 export groups. They are used by the event system, keyboard and mouse handling,
@@ -489,7 +489,7 @@ C<TUI::Drivers::HardwareInfo>.
 
 =head2 Event type constants (evXXXX)
 
-Event type and event mask constants used by the TUI::Vision event system.
+Event type and event mask constants used by the TVision event system.
 
 These constants identify mouse, keyboard, command, broadcast, and message
 events and are used when dispatching and filtering events.
@@ -555,10 +555,10 @@ C<:all> - import all constants
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::Event>,
-L<TUI::Drivers::Screen>,
-L<TUI::Drivers::Display>,
-L<TUI::Drivers::HardwareInfo>
+L<TEvent|TUI::Drivers::Event>,
+L<TScreen|TUI::Drivers::Screen>,
+L<TDisplay|TUI::Drivers::Display>,
+L<THardwareInfo|TUI::Drivers::HardwareInfo>
 
 =head1 AUTHORS
 

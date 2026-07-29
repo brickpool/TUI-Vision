@@ -439,7 +439,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::ScrollBar - scroll bar view components
+TScrollBar - scroll bar view components
 
 =head1 HIERARCHY
 
@@ -499,12 +499,12 @@ C<TScrollBar> elements.
 =head2 $vChars
 
 Defines the character set used for vertical scroll bars.
-The default value uses CP437 characters (up, down, track, thumb).
+The default value uses C<CP437> characters (I<Str>): up, down, track, thumb.
 
 =head2 $hChars
 
 Defines the character set used for horizontal scroll bars.
-The default value uses CP437 characters (left, right, track, thumb).
+The default value uses C<CP437> characters (I<Str>): left, right, track, thumb.
 
 =head1 ATTRIBUTES
 
@@ -556,7 +556,7 @@ Bounding rectangle of the scroll bar (I<TRect>).
 
 Factory-style constructor using positional arguments.
 
-This constructor is equivalent to calling C<new> with the C<bounds> parameter
+This constructor is equivalent to calling C<new> with the $bounds parameter
 and is provided for compatibility with traditional Turbo Vision construction
 patterns.
 

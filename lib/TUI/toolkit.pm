@@ -1,5 +1,5 @@
 package TUI::toolkit;
-# ABSTRACT: Unified OO facade for the TUI::Vision framework
+# ABSTRACT: Unified OO facade for the TVision framework
 
 use 5.010;
 use strict;
@@ -384,7 +384,7 @@ __END__
 
 =head1 NAME
 
-TUI::toolkit - Unified OO facade for the TUI::Vision framework
+toolkit - Unified OO facade for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -402,12 +402,11 @@ TUI::toolkit - Unified OO facade for the TUI::Vision framework
 
 =head1 DESCRIPTION
 
-TUI::toolkit provides a unified object system facade for the
-TUI::Vision framework. It corresponds to the functionality of
-C<TV::toolkit> and offers a consistent set of OO features regardless of
+C<TUI::toolkit> provides a unified object system facade for the
+TVision framework. It offers a consistent set of OO features regardless of
 which backend toolkit is available.
 
-C<TV::toolkit> dynamically selected an OO backend from:
+C<TUI::toolkit> dynamically selected an OO backend from:
 
 =over 4
 
@@ -472,10 +471,9 @@ No attempt is made to replace or extend the backend beyond injecting
 C<dump> and C<DESTROY> when appropriate.
 
 If none of Moos/Moo/Moose are loaded, a very small L<LUNIVERSAL::Object> based 
-OO layer is used. 
-
-This exists only to keep modules functional in environments where no of the 
-other toolkits are available. It is not intended to be a full object system.
+OO layer is used.  This exists only to keep modules functional in environments 
+where no of the other toolkits are available. It is not intended to be a full 
+object system.
 
 =head1 SEE ALSO
 

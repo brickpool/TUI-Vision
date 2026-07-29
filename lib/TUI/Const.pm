@@ -56,7 +56,7 @@ TUI::Const - system-wide configuration constants
 
 =head1 DESCRIPTION
 
-C<TUI::Const> defines system-wide constants used throughout the TUI::Vision
+C<TUI::Const> defines system-wide constants used throughout the TVision
 framework.
 
 The constants in this module provide common limits, sentinel values, and size

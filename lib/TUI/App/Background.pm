@@ -99,7 +99,7 @@ __END__
 
 =head1 NAME
 
-TUI::App::Background - forms the background for the applications
+TBackground - forms the background for the applications
 
 =head1 HIERARCHY
 
@@ -119,7 +119,7 @@ TUI::App::Background - forms the background for the applications
 =head1 DESCRIPTION
 
 C<TBackground> represents the background view that forms the visual backdrop of
-a TUI::Vision application. It fills its bounding rectangle by repeatedly
+a TVision application. It fills its bounding rectangle by repeatedly
 drawing a single character pattern.
 
 Background views are typically created and managed automatically by the
@@ -138,6 +138,19 @@ For custom backgrounds, the typical workflow is: derive a desktop class,
 override C<initBackground()> to create 
 C<<TBackground->new(bounds => ..., pattern => ... )>>, then return that desktop 
 from the application's C<initDeskTop()> override.
+
+=head1 ATTRIBUTES
+
+The following attributes are managed internally and exposed as read-only
+accessors.
+
+=over
+
+=item pattern
+
+The character pattern replicated to fill the background (I<Str>).
+
+=back
 
 =head1 CONSTRUCTOR
 
@@ -162,18 +175,14 @@ Single-character string used as the background pattern (I<Str>).
 
 =back
 
-=head1 ATTRIBUTES
+=head2 new
 
-The following attributes are managed internally and exposed as read-only
-accessors.
+  my $background = new_TBackground($bounds, $pattern);
 
-=over
+Factory-style constructor using positional arguments.
 
-=item pattern
-
-The character pattern replicated to fill the background (I<Str>).
-
-=back
+This constructor is provided for compatibility with traditional Turbo Vision
+construction patterns.
 
 =head1 METHODS
 
@@ -225,9 +234,9 @@ providing a custom C<TBackground> implementation.
 
 =head1 SEE ALSO
 
-L<TUI::App::DeskTop>,
-L<TUI::Views::View>,
-L<TUI::Objects::Rect>
+L<TDeskTop|TUI::App::DeskTop>,
+L<TView|TUI::Views::View>,
+L<TRect|TUI::Objects::Rect>
 
 =head1 AUTHORS
 

@@ -283,7 +283,7 @@ __END__
 
 =head1 NAME
 
-TUI::TextView::TextDevice - abstract base class for text output devices
+TTextDevice - abstract base class for text output devices
 
 =head1 HIERARCHY
 
@@ -317,40 +317,53 @@ internal use by the text device implementation.
 
 =item opened
 
-Indicates whether the device is considered open.  
+Indicates whether the device is considered open (I<Bool>).  
 This attribute defaults to true and is managed internally.
 
 =back
 
-The following attributes are private and not part of the public API. They are
-documented here for completeness only.
+=head1 CONSTRUCTOR
+
+This class does not define its own construction parameters and relies on the
+standard C<TScroller> initialization.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $scroller = TTextDevice->new(
+    bounds     => $bounds,
+    hScrollBar => $hBar | undef,
+    vScrollBar => $vBar | undef,
+  );
+
+Creates a new scroller with the specified bounds and optional scroll bars.
 
 =over
 
-=item egress
+=item bounds
 
-Internal output buffer used for staged writes.
+Bounding rectangle of the scroller (I<TRect>).
 
-=item esize
+=item hScrollBar
 
-Size of the internal output buffer (default: 2048 bytes).
+Horizontal scroll bar associated with the scroller (I<TScrollBar> or undef).
 
-=item autoflush
+=item vScrollBar
 
-Boolean flag controlling whether output is flushed automatically after each
-write operation.
+Vertical scroll bar associated with the scroller (I<TScrollBar> or undef).
 
 =back
-
-=head1 METHODS
 
 =head2 new_TTextDevice
 
   my $device = new_TTextDevice($bounds, $aHScrollBar, $aVScrollBar);
 
-Factory constructor for creating a new C<TTextDevice> instance. This constructor
-delegates initialization to C<TScroller> and prepares the object for use as a
-text output device.
+Factory constructor for creating a new C<TTextDevice> instance. This 
+constructor delegates initialization to C<TScroller> and prepares the object 
+for use as a text output device.
+
+=head1 METHODS
 
 =head2 autoflush
 
@@ -527,7 +540,8 @@ C<undef>.
 
 =head1 SEE ALSO
 
-L<TUI::TextView::Terminal>, L<TUI::Views::Scroller>
+L<TTerminal|TUI::TextView::Terminal>, 
+L<TScroller|TUI::Views::Scroller>
 
 =head1 AUTHORS
 

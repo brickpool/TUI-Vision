@@ -176,7 +176,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::HistoryViewer - list viewer for dialog input history
+THistoryViewer - list viewer for dialog input history
 
 =head1 HIERARCHY
 
@@ -301,9 +301,9 @@ Returns the width of the longest entry in the history list.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::History>,
-L<TUI::Dialogs::InputLine>,
-L<TUI::Views::ListViewer>
+L<THistory|TUI::Dialogs::History>,
+L<TInputLine|TUI::Dialogs::InputLine>,
+L<TListViewer|TUI::Views::ListViewer>
 
 =head1 AUTHORS
 

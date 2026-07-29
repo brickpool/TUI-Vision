@@ -277,8 +277,8 @@ Sets the character value at the specified buffer position.
 
 =head1 SEE ALSO
 
-L<TUI::Views::View>,
-L<TUI::Views::Window>
+L<TView|TUI::Views::View>,
+L<TWindow|TUI::Views::Window>
 
 =head1 AUTHORS
 

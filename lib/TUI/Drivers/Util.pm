@@ -173,7 +173,7 @@ TUI::Drivers::Util - utility functions for keyboard and event handling
 =head1 DESCRIPTION
 
 C<TUI::Drivers::Util> provides a collection of low-level helper functions used
-by the TUI::Vision driver and event system.
+by the TVision driver and event system.
 
 The functions in this module operate on key codes and character values and are
 used to translate between control, alternate, and normal key representations.
@@ -190,8 +190,8 @@ between Alt key codes and characters via C<getAltCode()>/C<getAltChar()>, and
 translating between Ctrl key codes and characters via
 C<getCtrlCode()>/C<getCtrlChar()>.
 
-C<cstrlen()> is commonly used when text contains TUI::Vision marker
-characters C<~> and a marker-aware length is needed.
+C<cstrlen()> is commonly used when text contains TVision marker
+characters C<'~'> and a marker-aware length is needed.
 
 =head1 FUNCTIONS
 
@@ -243,7 +243,7 @@ Returns the Ctrl-modified key code corresponding to the given character.
 =head1 SEE ALSO
 
 L<TUI::Drivers::Const>,
-L<TUI::Drivers::Event>
+L<TEvent|TUI::Drivers::Event>
 
 =head1 AUTHORS
 

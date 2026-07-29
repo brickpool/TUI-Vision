@@ -118,7 +118,7 @@ __END__
 
 =head1 NAME
 
-TUI::Validate::StringLookupValidator - lookup validator backed by a string list
+TStringLookupValidator - lookup validator backed by a string list
 
 =head1 HIERARCHY
 
@@ -220,9 +220,9 @@ removes the current list.
 
 =head1 SEE ALSO
 
-L<TUI::Validate::LookupValidator>,
-L<TUI::Validate::Validator>,
-L<TUI::Objects::StringCollection>
+L<TLookupValidator|TUI::Validate::LookupValidator>,
+L<TValidator|TUI::Validate::Validator>,
+L<TStringCollection|TUI::Objects::StringCollection>
 
 =head1 AUTHORS
 

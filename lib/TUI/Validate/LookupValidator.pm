@@ -52,7 +52,7 @@ __END__
 
 =head1 NAME
 
-TUI::Validate::LookupValidator - abstract base class for lookup-based validation
+TLookupValidator - abstract base class for lookup-based validation
 
 =head1 HIERARCHY
 
@@ -99,8 +99,8 @@ lookup validators (e.g., dictionary, enum, custom lookup table).
 
 =head1 SEE ALSO
 
-L<TUI::Validate::Validator>,
-L<TUI::Validate::StringLookupValidator>
+L<TValidator|TUI::Validate::Validator>,
+L<TStringLookupValidator|TUI::Validate::StringLookupValidator>
 
 =head1 AUTHORS
 

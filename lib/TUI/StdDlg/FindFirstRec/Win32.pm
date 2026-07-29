@@ -414,11 +414,13 @@ The implementation maps the generic search operations to the Win32
 C<FindFirstFile> and C<FindNextFile> APIs and updates the associated C<find_t>
 record accordingly.
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 allocate
 
 Win32-specific initialization of a directory search.
+
+=head1 METHODS
 
 =head2 get
 

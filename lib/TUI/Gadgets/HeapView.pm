@@ -93,7 +93,7 @@ __END__
 
 =head1 NAME
 
-TUI::Gadgets::HeapView - view displaying current heap usage
+THeapView - view displaying current heap usage
 
 =head1 HIERARCHY
 
@@ -154,7 +154,8 @@ Renders the heap usage information.
 
   my $total = $view->heapSize();
 
-Returns the total heap size currently available to the application.
+Returns the total heap size currently available to the application, or <0 if an 
+error occurs or the platform does not support heap size retrieval.
 
 =head2 update
 
@@ -165,8 +166,8 @@ Refreshes the internal heap statistics and updates the display.
 =head1 SEE ALSO
 
 L<TUI::Views::HelpView::Win32>,
-L<TUI::Views::View>,
-L<TUI::Views::DrawBuffer>
+L<TView|TUI::Views::View>,
+L<TDrawBuffer|TUI::Views::DrawBuffer>
 
 =head1 AUTHORS
 

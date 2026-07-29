@@ -121,7 +121,7 @@ Returns the total amount of virtual memory currently used by the process.
 
 =head1 SEE ALSO
 
-L<TUI::Gadgets::HeapView>
+L<THeapView|TUI::Gadgets::HeapView>
 
 =head1 AUTHORS
 

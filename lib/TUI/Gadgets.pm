@@ -1,5 +1,5 @@
 package TUI::Gadgets;
-# ABSTRACT: Gadget components for the TUI::Vision framework
+# ABSTRACT: Gadget components for the TVision framework
 
 use strict;
 use warnings;
@@ -42,7 +42,7 @@ __END__
 
 =head1 NAME
 
-TUI::Gadgets - Optional UI gadgets for the TUI::Vision framework
+Gadgets - Optional UI gadgets for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -77,7 +77,7 @@ TUI::Gadgets - Optional UI gadgets for the TUI::Vision framework
 
 =head1 DESCRIPTION
 
-TUI::Gadgets provides optional visual components for the TUI::Vision
+TUI::Gadgets provides optional visual components for the TVision
 framework. These modules extend the core UI with additional views and
 diagnostic tools, similar to the classic Turbo Vision gadget set.
 

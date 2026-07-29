@@ -35,7 +35,7 @@ __END__
 
 =head1 NAME
 
-TUI::Objects::SortedCollection - sorted collection base class
+TSortedCollection - sorted collection base class
 
 =head1 HIERARCHY
 
@@ -110,7 +110,7 @@ then adjusted as needed through C<duplicates>.
 
 =item duplicates
 
-Boolean flag controlling whether duplicate keys are permitted.  
+Boolean flag controlling whether duplicate keys are permitted (I<Bool>).  
 If false (the default), duplicate items are rejected. If true, duplicate items
 are inserted next to existing items with the same key.
 

@@ -138,7 +138,7 @@ __END__
 
 =head1 NAME
 
-TUI::Validate::RangeValidator - integer range validator for numeric input
+TRangeValidator - integer range validator for numeric input
 
 =head1 HIERARCHY
 
@@ -270,8 +270,8 @@ Returns C<1> on successful transfer and C<0> otherwise.
 
 =head1 SEE ALSO
 
-L<TUI::Validate::FilterValidator>,
-L<TUI::Validate::Validator>,
+L<TFilterValidator|TUI::Validate::FilterValidator>,
+L<TValidator|TUI::Validate::Validator>,
 L<TUI::Validate::Const>
 
 =head1 AUTHORS

@@ -110,7 +110,7 @@ TUI::Validate::Const - constants for validator components
 =head1 DESCRIPTION
 
 C<TUI::Validate::Const> defines constants used by validation components
-within the TUI::Vision framework.
+within the TVision framework.
 
 The constants in this module describe validator status codes, option flags,
 and data transfer operations. They are grouped by purpose and exported via
@@ -177,9 +177,9 @@ C<:all> - import all constants
 
 =head1 SEE ALSO
 
-L<TUI::Validate>,
-L<TUI::Objects>,
-L<TUI::Drivers::Event>
+L<Validate|TUI::Validate>,
+L<Objects|TUI::Objects>,
+L<TEvent|TUI::Drivers::Event>
 
 =head1 AUTHORS
 

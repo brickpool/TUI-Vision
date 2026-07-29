@@ -134,7 +134,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::HistoryWindow - window displaying input history entries
+THistoryWindow - window displaying input history entries
 
 =head1 HIERARCHY
 
@@ -232,9 +232,9 @@ Creates and initializes the internal history list viewer.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::History>,
-L<TUI::Dialogs::HistoryViewer>,
-L<TUI::Dialogs::InputLine>
+L<THistory|TUI::Dialogs::History>,
+L<TListBox|TUI::Dialogs::HistoryViewer>,
+L<TInputLine|TUI::Dialogs::InputLine>
 
 =head1 AUTHORS
 

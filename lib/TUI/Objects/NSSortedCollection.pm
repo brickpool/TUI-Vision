@@ -126,12 +126,12 @@ __END__
 
 =head1 NAME
 
-TUI::Objects::NSSortedCollection - internal non-storable base for sorted coll's
+TNSSortedCollection - internal non-storable base for sorted coll's
 
 =head1 DESCRIPTION
 
 C<TNSSortedCollection> is the non-storable base variant of sorted collection
-classes in the TUI::Vision framework. It extends C<TNSCollection> with support
+classes in the TVision framework. It extends C<TNSCollection> with support
 for ordered insertion and lookup.
 
 This class exists primarily for internal use by the framework. Public-facing
@@ -152,9 +152,9 @@ Derived public classes are expected to provide a concrete comparison strategy.
 
 =head1 SEE ALSO
 
-L<TUI::Objects::SortedCollection>,
-L<TUI::Objects::Collection>,
-L<TUI::Objects::NSCollection>
+L<TSortedCollection|TUI::Objects::SortedCollection>,
+L<TCollection|TUI::Objects::Collection>,
+L<TNSCollection|TUI::Objects::NSCollection>
 
 =head1 AUTHORS
 

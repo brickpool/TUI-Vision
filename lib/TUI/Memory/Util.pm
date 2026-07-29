@@ -44,7 +44,7 @@ TUI::Memory::Util - memory-related utility functions
 =head1 DESCRIPTION
 
 C<TUI::Memory::Util> provides low-level utility functions related to memory
-management within the TUI::Vision framework.
+management within the TVision framework.
 
 The functions in this module expose global state maintained by the runtime and
 are intended to support defensive behavior in views and application-level
@@ -60,39 +60,17 @@ This module is purely functional and does not define any classes or objects.
 
 Returns true if the application has entered a low-memory condition.
 
-A low-memory condition indicates that internal safety reserves have been used
-and that further memory allocation may fail or behave unpredictably.
-
-This function is typically consulted before creating new views or allocating
-additional resources.
-
-=head1 USAGE NOTES
-
-The low-memory state is maintained globally by the framework.
-
-Calling C<lowMemory> does not modify application state. It is intended as a
-query function only.
-
-Application code may use this information to display warnings, reject new
-operations, or gracefully reduce resource usage.
-
-=head1 COMPATIBILITY NOTES
-
-This module follows the Turbo Vision C++ memory model and preserves its
-behavioral semantics.
-
-Internally, the original implementation relied on a reserved safety area to
-detect memory exhaustion conditions. This Perl port retains the same logical
-signal while relying on Perl-native memory management.
-
 The observable behavior of C<lowMemory> matches the original model, while the
 underlying memory handling is adapted to the Perl runtime environment.
 
+B<Note:> This function is included for compatibility purposes and always 
+returns false.
+
 =head1 SEE ALSO
 
-L<TUI::App::Program>,
-L<TUI::App::Application>,
-L<TUI::Dialogs::Dialog>
+L<TProgram|TUI::App::Program>,
+L<TApplication|TUI::App::Application>,
+L<TDialog|TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 

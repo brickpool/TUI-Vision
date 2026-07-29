@@ -427,8 +427,8 @@ TUI::StdDlg::Util - utility functions for standard dialogs
 
 =head1 DESCRIPTION
 
-C<TUI::StdDlg::Util> provides a collection of helper functions used by Turbo
-Vision standard dialogs to validate paths, filenames, and directories.
+C<TUI::StdDlg::Util> provides a collection of helper functions used by 
+TVision standard dialogs to validate paths, filenames, and directories.
 
 The functions in this module operate on strings and filesystem-related data and
 do not maintain any internal state. They are intended to support file and
@@ -493,9 +493,9 @@ Returns true if the specified file name is valid.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::FileDialog>,
-L<TUI::StdDlg::DirListBox>,
-L<TUI::StdDlg::ChDirDialog>
+L<TFileDialog|TUI::StdDlg::FileDialog>,
+L<TDirListBox|TUI::StdDlg::DirListBox>,
+L<TChDirDialog|TUI::StdDlg::ChDirDialog>
 
 =head1 AUTHORS
 

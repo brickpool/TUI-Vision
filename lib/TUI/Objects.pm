@@ -1,5 +1,5 @@
 package TUI::Objects;
-# ABSTRACT: Base objects for the TUI::Vision framework
+# ABSTRACT: Base objects for the TVision framework
 
 use strict;
 use warnings;
@@ -54,7 +54,7 @@ __END__
 
 =head1 NAME
 
-TUI::Objects - Base object classes for the TUI::Vision framework
+Objects - Base object classes for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -74,7 +74,7 @@ TUI::Objects - Base object classes for the TUI::Vision framework
 
 =head1 DESCRIPTION
 
-TUI::Objects provides the foundational object layer for the TUI::Vision
+TUI::Objects provides the foundational object layer for the TVision
 framework. It corresponds to the classic Turbo Vision TObject system and
 serves as the central hub for all structural classes, including:
 

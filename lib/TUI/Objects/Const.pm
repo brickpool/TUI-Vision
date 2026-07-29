@@ -61,7 +61,7 @@ TUI::Objects::Const - constants for object and collection components
 
 =head1 DESCRIPTION
 
-C<TUI::Objects::Const> defines constants used by the TUI::Vision object and
+C<TUI::Objects::Const> defines constants used by the TVision object and
 collection infrastructure.
 
 The constants in this module are used by collection classes and related object
@@ -105,8 +105,8 @@ The C<:all> tag imports all constants defined by this module.
 
 =head1 SEE ALSO
 
-L<TUI::Objects::Collection>,
-L<TUI::Objects::SortedCollection>
+L<TCollection|TUI::Objects::Collection>,
+L<TSortedCollection|TUI::Objects::SortedCollection>
 
 =head1 AUTHORS
 

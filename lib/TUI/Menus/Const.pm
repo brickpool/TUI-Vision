@@ -71,7 +71,7 @@ TUI::Menus::Const - constants for menu components
 
 =head1 DESCRIPTION
 
-C<TUI::Menus::Const> defines constants used by TUI::Vision menu components.
+C<TUI::Menus::Const> defines constants used by TVision menu components.
 
 The constants in this module are grouped by purpose and exported via tag-based
 export groups. They are used by menu views, menu boxes, menu bars, and status
@@ -118,10 +118,10 @@ C<:all> - import all constants
 
 =head1 SEE ALSO
 
-L<TUI::Menus>,
-L<TUI::Menus::MenuView>,
-L<TUI::Menus::MenuBar>,
-L<TUI::Menus::StatusLine>
+L<Menus|TUI::Menus>,
+L<TMenuView|TUI::Menus::MenuView>,
+L<TMenuBar|TUI::Menus::MenuBar>,
+L<TStatusLine|TUI::Menus::StatusLine>
 
 =head1 AUTHORS
 

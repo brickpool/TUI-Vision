@@ -135,7 +135,7 @@ sub DEMOLISH {    # void ($in_global_destruction)
   return;
 }
 
-# The following subroutine was taken from the framework
+# The following subroutine was ported from the framework
 # "A modern port of Turbo Vision 2.0", which is licensed under MIT licence.
 #
 # Copyright 2019-2021 by magiblot <magiblot@hotmail.com>
@@ -758,7 +758,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::MenuView - abstract base class for menu views
+TMenuView - abstract base class for menu views
 
 =head1 HIERARCHY
 
@@ -823,7 +823,7 @@ Bounding rectangle of the menu view (I<TRect>).
 
 =item menu
 
-Menu data structure defining the menu items (I<TMenu>).
+Optional menu data structure defining the menu items (I<TMenu>).
 
 =item parentMenu
 
@@ -908,10 +908,10 @@ Gets or sets the parent menu view.
 
 =head1 SEE ALSO
 
-L<TUI::Menus::MenuBar>,
-L<TUI::Menus::MenuBox>,
-L<TUI::Menus::Menu>,
-L<TUI::Menus::MenuItem>
+L<TMenuBar|TUI::Menus::MenuBar>,
+L<TMenuBox|TUI::Menus::MenuBox>,
+L<TMenu|TUI::Menus::Menu>,
+L<TMenuItem|TUI::Menus::MenuItem>
 
 =head1 AUTHORS
 

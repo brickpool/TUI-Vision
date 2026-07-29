@@ -1,5 +1,5 @@
 package TUI::App;
-# ABSTRACT: Application framework for the TUI::Vision framework
+# ABSTRACT: Application framework for the TVision framework
 
 use strict;
 use warnings;
@@ -48,7 +48,7 @@ __END__
 
 =head1 NAME
 
-TUI::App - Application layer for the TUI::Vision framework
+App - Application layer for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -83,7 +83,7 @@ TUI::App - Application layer for the TUI::Vision framework
 
 =head1 DESCRIPTION
 
-TUI::App represents the application-level framework of TUI::Vision.
+TUI::App represents the application-level framework of TVision
 It corresponds to the Turbo Vision TProgram and TApplication layer and
 provides the structural foundation for building complete TUI programs.
 

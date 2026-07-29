@@ -206,7 +206,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::Label - descriptive label linked to another dialog control
+TLabel - descriptive label linked to another dialog control
 
 =head1 HIERARCHY
 

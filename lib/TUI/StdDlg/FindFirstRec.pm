@@ -59,7 +59,7 @@ interface and resolved transparently at runtime.
 Search contexts are typically created and consumed by higher-level components
 such as directory collections and list boxes.
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 allocate
 
@@ -71,6 +71,8 @@ The provided C<find_t> record is associated with the newly created search
 context and will be updated on each successful search step.
 
 The search parameters remain bound to the context for its entire lifetime.
+
+=head1 METHODS
 
 =head2 get
 
@@ -95,7 +97,7 @@ available, the method returns false.
 
 L<TUI::StdDlg::FindFirstRec::Win32>,
 L<TUI::StdDlg::Dos>,
-L<TUI::StdDlg::DirCollection>
+L<TDirCollection|TUI::StdDlg::DirCollection>
 
 =head1 AUTHORS
 

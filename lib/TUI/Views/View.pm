@@ -1449,7 +1449,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::View - base class for all visual components in TUI::Vision
+TView - base class for all visual components in TVision
 
 =head1 HIERARCHY
 
@@ -1466,7 +1466,7 @@ TUI::Views::View - base class for all visual components in TUI::Vision
 
 =head1 DESCRIPTION
 
-C<TView> is the fundamental base class for all visible objects in TUI::Vision.
+C<TView> is the fundamental base class for all visible objects in TVision
 Every visual component shown on the screen ultimately derives from C<TView>.
 
 The class provides the core infrastructure required for drawing, event
@@ -1611,7 +1611,7 @@ Bounding rectangle of the view (I<TRect>).
 
 Factory-style constructor using positional arguments.
 
-This constructor is equivalent to calling C<new> with the C<bounds> parameter
+This constructor is equivalent to calling C<new> with the $bounds parameter
 and is provided for compatibility with traditional Turbo Vision construction
 patterns.
 

@@ -125,7 +125,7 @@ TUI::Views::View::Cursor - TView resetCursor member functions.
 
 TView resetCursor member functions.
 
-The content was taken from the framework
+The content was ported from the framework
 "A modern port of Turbo Vision 2.0", which is licensed under MIT license.
 
 =head1 METHODS

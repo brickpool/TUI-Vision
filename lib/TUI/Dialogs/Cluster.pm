@@ -589,7 +589,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::Cluster - base class for clustered dialog controls
+TCluster - base class for clustered dialog controls
 
 =head1 HIERARCHY
 
@@ -635,17 +635,17 @@ C<TCluster> itself is not intended to be instantiated directly.
 =head2 Commonly Used Features
 
 Most application code uses one of TCluster's concrete subclasses:
-L<TUI::Dialogs::RadioButtons> for single-select clusters and
-L<TUI::Dialogs::CheckBoxes> for multi-select clusters. These subclasses inherit
-all navigation and state management from TCluster while providing their own
-C<mark()> and C<press()> implementations for distinct user interactions.
+C<TRadioButtons> for single-select clusters and C<TCheckBoxes> for multi-select 
+clusters. These subclasses inherit all navigation and state management from 
+C<TCluster> while providing their own C<mark()> and C<press()> implementations 
+for distinct user interactions.
 
 TCluster provides a common interface for cluster-type controls: manage
 selection via keyboard and mouse, track enabled/disabled items via an enable
 mask, and exchange selection state with dialogs using C<getData()> and
 C<setData()>. Typical workflow is to build a C<TSItem> linked-list, pass it to
-a subclass constructor, insert the resulting control into a L<TUI::Dialogs::Dialog>,
-then retrieve the final selection via C<getData()> after the dialog is closed.
+a subclass constructor, insert the resulting control into a C<TDialog>, then 
+retrieve the final selection via C<getData()> after the dialog is closed.
 
 =head1 ATTRIBUTES
 
@@ -655,7 +655,7 @@ The following attributes represent the internal state of the cluster.
 
 =item value
 
-Numeric value representing the current selection state.
+Numeric value (I<PositiveOrZeroInt>). representing the current selection state.
 
 For C<TRadioButtons>, this value contains the index of the selected item.
 For C<TCheckBoxes>, this value is a bit mask where each bit represents the state
@@ -697,7 +697,7 @@ Bounding rectangle defining the position and size of the cluster control
 =item strings
 
 Linked list of item descriptors consumed and converted into an internal string
-collection (I<TSItem>).
+collection (I<HashLike> e.g. C<TSItem>).
 
 =back
 
@@ -812,10 +812,10 @@ Handles view state changes and moves the selection if required.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::RadioButtons>,
-L<TUI::Dialogs::CheckBoxes>,
-L<TUI::Dialogs::Dialog>,
-L<TUI::Views::View>
+L<TRadioButtons|TUI::Dialogs::RadioButtons>,
+L<TCheckBoxes|TUI::Dialogs::CheckBoxes>,
+L<TDialog|TUI::Dialogs::Dialog>,
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

@@ -26,6 +26,11 @@ lives_ok { $mouse->resume() } 'resume() does not die';
 lives_ok { $mouse->suspend() } 'suspend() does not die';
 lives_ok { $mouse->show() } 'show() does not die';
 lives_ok { $mouse->hide() } 'hide() does not die';
+lives_ok {
+  use warnings FATAL => 'all';
+  no warnings THWMouse;
+  $mouse->setRange(80, 25);
+} 'setRange() does not die';
 lives_ok { $mouse->getEvent( {} ) } 'getEvent() does not die';
 ok( !$mouse->present(), 'present() returns false' );
 

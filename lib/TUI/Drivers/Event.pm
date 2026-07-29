@@ -549,7 +549,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::Event - unified event structure for input handling
+TEvent - unified event structure for input handling
 
 =head1 HIERARCHY
 
@@ -573,12 +573,12 @@ TUI::Drivers::Event - unified event structure for input handling
 
 =head1 DESCRIPTION
 
-C<TEvent> represents the central event structure used throughout TUI::Vision.
+C<TEvent> represents the central event structure used throughout TVision
 It models all input and message events such as keyboard input, mouse activity,
 and broadcast messages.
 
 This type is implemented as a tied hash and is not derived from C<TObject>.
-Its structure mirrors the Turbo Vision event union, with the active event
+Its structure mirrors the Turbo Vision C++ event union, with the active event
 variant selected by the C<what> field.
 
 Depending on the event type, one of the variant substructures is active and
@@ -618,19 +618,21 @@ A C<TEvent> object exposes the following top-level fields:
 
 =item what
 
-Event type bitmask indicating the active event variant.
+Event type bitmask indicating the active event variant (I<Int>).
 
 =item mouse
 
-Mouse event data, present when C<what> includes C<evMouse>.
+Mouse event data (I<MouseEventType>), present when C<what> includes C<evMouse>.
 
 =item keyDown
 
-Keyboard event data, present when C<what> includes C<evKeyboard>.
+Keyboard event data (I<KeyDownEvent>), present when C<what> includes 
+C<evKeyboard>.
 
 =item message
 
-Message event data, present when C<what> includes C<evMessage>.
+Message event data (I<MessageEvent>), present when C<what> includes 
+C<evMessage>.
 
 =back
 
@@ -843,9 +845,9 @@ process the corresponding data.
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::EventQueue>,
+L<TEventQueue|TUI::Drivers::EventQueue>,
 L<TUI::Drivers::Const>,
-L<TUI::Views::View>
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

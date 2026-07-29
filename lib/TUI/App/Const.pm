@@ -166,7 +166,7 @@ TUI::App::Const - constants for application-level components
 
 =head1 DESCRIPTION
 
-C<TUI::App::Const> defines constants used by TUI::Vision application-level
+C<TUI::App::Const> defines constants used by TVision application-level
 components such as the program object, application palettes, and help system.
 
 The constants in this module are grouped by purpose and exported via tag-based
@@ -226,9 +226,9 @@ C<:all> - import all constants
 
 =head1 SEE ALSO
 
-L<TUI::App>,
-L<TUI::App::Program>,
-L<TUI::App::Application>
+L<App|TUI::App>,
+L<TProgram|TUI::App::Program>,
+L<TApplication|TUI::App::Application>
 
 =head1 AUTHORS
 

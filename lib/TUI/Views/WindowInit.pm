@@ -66,7 +66,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::WindowInit - class for initializing a frame for TWindows.
+TWindowInit - class for initializing a frame for TWindows.
 
 =head1 SYNOPSIS
 
@@ -86,11 +86,11 @@ essential for setting up the user interface elements in a TWindow class.
 
 =item createFrame
 
-A subroutine reference used to create the frame for a window. (CodeRef)
+A subroutine reference used to create the frame for a window. (I<CodeRef>)
 
 =back
 
-=head1 METHODS
+=head1 CONSTRUCTOR
 
 =head2 new
 
@@ -102,15 +102,17 @@ Initializes the code reference for a frame.
 
 =item cFrame
 
-Required parameter to specify the frame creation subroutine. (CodeRef)
+Required parameter to specify the frame creation subroutine. (I<CodeRef>)
 
 =back
 
-=head2 from
+=head2 new_TWindowInit
 
-  my $obj = TWindowInit->from($cFrame);
+  my $obj = new_TWindowInit($cFrame);
 
 Creates a TWindowInit object from the specified frame creation subroutine.
+
+=head1 METHODS
 
 =head2 createFrame
 

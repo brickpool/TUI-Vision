@@ -208,7 +208,7 @@ INIT {
     $platform = 'Windows';
   }
 
-  # The following content was taken from the framework
+  # The following content was ported from the framework
   # "A modern port of Turbo Vision 2.0", which is licensed under MIT licence.
   #
   # Copyright 2019-2021 by magiblot <magiblot@hotmail.com>
@@ -647,12 +647,12 @@ are not part of the portable C<THardwareInfo> interface.
 
 =head2 $insertState
 
-Tracks the current insert mode state.
+Tracks the current insert mode state (I<Bool>).
 
 =head2 $platform
 
-Contains the platform identifier string. For this backend, the value is
-C<Windows>.
+Contains the platform identifier string (I<Str>). For this backend, the value 
+is C<'Windows'>.
 
 =head2 @consoleHandle
 
@@ -661,15 +661,15 @@ state.
 
 =head2 $ownsConsole
 
-Indicates whether the console was allocated by this module.
+Indicates whether the console was allocated by this module (I<Bool>).
 
 =head2 $consoleMode
 
-Stores the console input mode.
+Stores the console input mode (I<PositiveOrZeroInt>).
 
 =head2 $pendingEvent
 
-Indicates whether a pending input event is buffered.
+Indicates whether a pending input event is buffered (I<PositiveOrZeroInt>).
 
 =head2 @irBuffer
 
@@ -686,8 +686,8 @@ Stores console screen buffer information.
 =head1 IMPLEMENTATION
 
 This module contains the Windows-specific implementation behind
-L<TUI::Drivers::HardwareInfo> (C<THardwareInfo>). Public API semantics and
-usage are documented in L<TUI::Drivers::HardwareInfo>.
+L<THardwareInfo|TUI::Drivers::HardwareInfo> (C<THardwareInfo>). Public API semantics and
+usage are documented in L<THardwareInfo|TUI::Drivers::HardwareInfo>.
 
 In this backend, those methods are mapped to Win32 console facilities for
 keyboard/mouse input, screen and caret control, timing, and control/error
@@ -698,10 +698,10 @@ other backends.
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::HardwareInfo>,
-L<TUI::Drivers::Screen>,
-L<TUI::Drivers::HWMouse>,
-L<TUI::Drivers::SystemError>
+L<THardwareInfo|TUI::Drivers::HardwareInfo>,
+L<TScreen|TUI::Drivers::Screen>,
+L<THWMouse|TUI::Drivers::HWMouse>,
+L<TSystemError|TUI::Drivers::SystemError>
 
 =head1 AUTHORS
 

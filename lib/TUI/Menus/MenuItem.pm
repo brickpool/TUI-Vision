@@ -145,7 +145,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::MenuItem - represents a single menu item or submenu entry
+TMenuItem - represents a single menu item or submenu entry
 
 =head1 SYNOPSIS
 
@@ -226,14 +226,29 @@ Reference to the next menu item in the list (I<TMenuItem>).
 
 =head2 new
 
+  # Command item form
   my $item = TMenuItem->new(
     name    => $name,
     keyCode => $keyCode,
     command => $command,
+    # optional ..
+    (
+      helpCtx => $helpCtx,
+      param   => $param,
+      next    => $next,
+    )
+  );
+
+  # Submenu item form
+  my $item = TMenuItem->new(
+    name    => $name,
+    command => $command,
     subMenu => $subMenu,
-    helpCtx => $helpCtx,
-    param   => $param,
-    next    => $next
+    # optional ..
+    (
+      helpCtx => $helpCtx,
+      next    => $next,
+    )
   );
 
 Creates a new menu item.
@@ -242,51 +257,54 @@ Creates a new menu item.
 
 =item name
 
-Text displayed for the menu item.
+Text displayed for the menu item (I<Str>).
 
 =item keyCode
 
-Hot key scan code.
+Hot key scan code (I<PositiveOrZeroInt>).
 
 =item command
 
-Command identifier. This parameter is optional for submenu entries.
+Command identifier (I<PositiveOrZeroInt>). This parameter is optional for 
+submenu entries.
 
 =item subMenu
 
-Optional submenu associated with this item.
+Optional submenu associated with this item (I<Object>).
 
 =item helpCtx
 
-Optional help context identifier.
+Optional help context identifier (I<PositiveOrZeroInt>).
 
 =item param
 
-Optional parameter string displayed next to the item.
+Optional parameter string displayed next to the item (I<Str>).
 
 =item next
 
-Optional reference to the next menu item.
+Optional reference to the next menu item (I<Object>).
 
 =back
 
 =head2 new_TMenuItem
 
+  # Command item form
   my $item = new_TMenuItem(
     $name,
     $command,
     $keyCode,
-    | $helpCtx,
-    | $param,
-    | $next
+    $helpCtx = hcNoContext,
+    $param   = '',
+    $next    = undef,
   );
 
+  # Submenu item form
   my $item = new_TMenuItem(
     $name,
     $keyCode,
-    $subMenu,
-    | $helpCtx,
-    | $next
+    $subMenu | undef,
+    $helpCtx = hcNoContext,
+    $next    = undef,
   );
 
 Factory-style constructor for menu items.
@@ -344,9 +362,9 @@ to build a menu structure.
 
 =head1 SEE ALSO
 
-L<TUI::Menus::Menu>,
-L<TUI::Menus::MenuBar>,
-L<TUI::Menus::MenuBox>
+L<TMenu|TUI::Menus::Menu>,
+L<TMenuBar|TUI::Menus::MenuBar>,
+L<TMenuBox|TUI::Menus::MenuBox>
 
 =head1 AUTHORS
 

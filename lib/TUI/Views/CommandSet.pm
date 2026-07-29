@@ -271,7 +271,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::CommandSet - value type for managing sets of commands
+TCommandSet - value type for managing sets of commands
 
 =head1 HIERARCHY
 
@@ -300,7 +300,7 @@ TUI::Views::CommandSet - value type for managing sets of commands
 =head1 DESCRIPTION
 
 C<TCommandSet> represents a set of command identifiers. It is used throughout
-TUI::Vision to enable, disable, and query commands associated with views.
+TVision to enable, disable, and query commands associated with views.
 
 This type is a lightweight value type and is not derived from C<TObject>.
 Internally, a command set represents up to 256 commands, corresponding to the
@@ -324,7 +324,7 @@ Creates a new command set.
 
 =item copy_from
 
-Optional command set to copy from.
+Optional command set to copy from (I<TCommandSet> or undef).
 
 =back
 
@@ -466,8 +466,8 @@ C<!=> - inequality comparison
 
 =head1 SEE ALSO
 
-L<TUI::Views::View>,
-L<TUI::Drivers::Event>
+L<TView|TUI::Views::View>,
+L<TEvent|TUI::Drivers::Event>
 
 =head1 AUTHORS
 

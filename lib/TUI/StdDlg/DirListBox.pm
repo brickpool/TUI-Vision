@@ -308,7 +308,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::DirListBox - list box view for directory entries
+TDirListBox - list box view for directory entries
 
 =head1 HIERARCHY
 
@@ -329,7 +329,7 @@ TUI::StdDlg::DirListBox - list box view for directory entries
 
 =head1 DESCRIPTION
 
-C<TDirListBox> implements a specialized list box used by standard TUI::Vision
+C<TDirListBox> implements a specialized list box used by standard TVision
 dialogs to display and navigate directory entries.
 
 The list box presents directory items backed by a C<TDirCollection> and
@@ -345,31 +345,31 @@ by C<TDirListBox>.
 
 =head2 $pathDir
 
-Defines the character sequence used to display the path directory prefix.
+Defines the character sequence (I<Str>) used to display the path directory prefix.
 The default value uses CP437 line-drawing characters.
 
 =head2 $firstDir
 
-Defines the characters used to display the first directory entry
+Defines the characters (I<Str>) used to display the first directory entry
 in a directory tree (CP437).
 
 =head2 $middleDir
 
-Defines the characters used for intermediate directory entries
+Defines the characters (I<Str>) used for intermediate directory entries
 in the directory tree (CP437).
 
 =head2 $lastDir
 
-Defines the characters used for the last directory entry
+Defines the characters (I<Str>) used for the last directory entry
 in the directory tree (CP437).
 
 =head2 $drives
 
-Label text used for the drives list.
+Label text (I<Str>) used for the drives list.
 
 =head2 $graphics
 
-Defines additional line-drawing characters used for directory tree
+Defines additional line-drawing characters (I<Str>) used for directory tree
 rendering (CP437).
 
 =head1 CONSTRUCTOR
@@ -391,7 +391,8 @@ Bounding rectangle defining the position and size of the list box (I<TRect>).
 
 =item vScrollBar
 
-Optional vertical scroll bar associated with the list box (I<TScrollBar>).
+Optional vertical scroll bar associated with the list box (I<TScrollBar> or 
+undef).
 
 =back
 
@@ -444,10 +445,10 @@ Updates the list box state and refreshes the display if necessary.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::ChDirDialog>,
-L<TUI::StdDlg::DirCollection>,
-L<TUI::StdDlg::DirEntry>,
-L<TUI::Views::ListBox>
+L<TChDirDialog|TUI::StdDlg::ChDirDialog>,
+L<TDirCollection|TUI::StdDlg::DirCollection>,
+L<TDirEntry|TUI::StdDlg::DirEntry>,
+L<TListBox|TUI::Views::ListBox>
 
 =head1 AUTHORS
 

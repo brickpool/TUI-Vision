@@ -159,7 +159,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::MenuBar - manages the menu bar at the top of the application
+TMenuBar - manages the menu bar at the top of the application
 
 =head1 HIERARCHY
 
@@ -172,11 +172,29 @@ TUI::Menus::MenuBar - manages the menu bar at the top of the application
 
   use TUI::Menus;
 
+  # Common TVision style call 
   my $menuBar = new_TMenuBar($bounds, $menu);
+
+  # The following section demonstrates how to build a menu bar 
+  # using chained menu and submenu objects.
+  sub initMenuBar {
+    my ( $class, $r ) = @_;
+    $r->{b}{y} = $r->{a}{y} + 1;
+    return new_TMenuBar(
+      $r,
+      new_TSubMenu( '~F~ile', hcNoContext )
+        + new_TMenuItem( '~O~pen...', cmFileOpen, kbF3, hcNoContext, 'F3' )
+        + new_TMenuItem( '~S~ave as...', cmFileSave, hcNoContext )
+        + newLine
+        + new_TMenuItem( 'E~x~it', cmQuit, kbAltX, hcNoContext, 'Alt-X' )
+      + new_TSubMenu( '~H~elp', hcNoContext )
+        + new_TMenuItem( '~A~bout', cmAbout, hcNoContext )
+    );
+  }
 
 =head1 DESCRIPTION
 
-C<TMenuBar> implements the menu bar displayed at the top of a TUI::Vision
+C<TMenuBar> implements the menu bar displayed at the top of a TVision
 application. In this Perl implementation, menu structures are created using
 a declarative, expression-based style rather than explicit builder calls.
 
@@ -236,32 +254,12 @@ Returns the screen rectangle occupied by the specified menu item. This method
 is used internally to determine whether a mouse click occurred on a particular
 menu entry.
 
-=head1 EXAMPLE
-
-The following example shows how a menu bar can be constructed using chained
-menu and submenu objects.
-
-  sub initMenuBar {
-    my ( $class, $r ) = @_;
-    $r->{b}{y} = $r->{a}{y} + 1;
-    return new_TMenuBar(
-      $r,
-      new_TSubMenu( '~F~ile', hcNoContext )
-        + new_TMenuItem( '~O~pen...', cmFileOpen, kbF3, hcNoContext, 'F3' )
-        + new_TMenuItem( '~S~ave as...', cmFileSave, hcNoContext )
-        + newLine
-        + new_TMenuItem( 'E~x~it', cmQuit, kbAltX, hcNoContext, 'Alt-X' )
-      + new_TSubMenu( '~H~elp', hcNoContext )
-        + new_TMenuItem( '~A~bout', cmAbout, hcNoContext )
-    );
-  }
-
 =head1 SEE ALSO
 
-L<TUI::Menus::Menu>,
-L<TUI::Menus::MenuBox>,
-L<TUI::Menus::MenuView>,
-L<TUI::Views::View>
+L<TMenu|TUI::Menus::Menu>,
+L<TMenuBox|TUI::Menus::MenuBox>,
+L<TMenuView|TUI::Menus::MenuView>,
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

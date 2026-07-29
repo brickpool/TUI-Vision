@@ -1,5 +1,5 @@
 package TUI::Dialogs;
-# ABSTRACT: Dialog components for the TUI::Vision framework
+# ABSTRACT: Dialog components for the TVision framework
 
 use strict;
 use warnings;
@@ -84,7 +84,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs - Dialog components for the TUI::Vision framework
+Dialogs - Dialog components for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -127,7 +127,7 @@ TUI::Dialogs - Dialog components for the TUI::Vision framework
 
 =head1 DESCRIPTION
 
-TUI::Dialogs provides the dialog and widget layer for the TUI::Vision
+TUI::Dialogs provides the dialog and widget layer for the TVision
 framework. It corresponds to the Turbo Vision dialog subsystem and
 includes a wide range of interactive UI components.
 
@@ -146,7 +146,7 @@ L<THistoryWindow|TUI::Dialogs::HistoryWindow>,
 and L<THistInit|TUI::Dialogs::HistInit>
 
 =item * Basic widgets - 
-L<TButton|TUI::Dialogs::Button>, L<TLabel|TUI::Dialogs::Label>,
+L<TButton|TUI::Dialogs::Button>,, L<TLabel|TUI::Dialogs::Label>,
 L<TStaticText|TUI::Dialogs::StaticText>, L<TInputLine|TUI::Dialogs::InputLine>, 
 L<TParamText|TUI::Dialogs::ParamText>.
 

@@ -123,7 +123,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::Menu - container for menu item lists
+TMenu - container for menu item lists
 
 =head1 SYNOPSIS
 
@@ -208,9 +208,9 @@ Gets or sets the default menu item.
 
 =head1 SEE ALSO
 
-L<TUI::Menus::MenuItem>,
-L<TUI::Menus::MenuBar>,
-L<TUI::Menus::MenuBox>
+L<TMenuItem|TUI::Menus::MenuItem>,
+L<TMenuBar|TUI::Menus::MenuBar>,
+L<TMenuBox|TUI::Menus::MenuBox>
 
 =head1 AUTHORS
 

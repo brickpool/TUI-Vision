@@ -87,7 +87,7 @@ TUI::MsgBox::Const - constants for message box dialogs
 
 =head1 DESCRIPTION
 
-C<TUI::MsgBox::Const> defines constants used by TUI::Vision message box
+C<TUI::MsgBox::Const> defines constants used by TVision message box
 dialogs.
 
 The constants in this module are grouped by purpose and exported via tag-based
@@ -126,9 +126,9 @@ C<:all> - import all constants
 
 =head1 SEE ALSO
 
-L<TUI::MsgBox>,
-L<TUI::Dialogs::Dialog>,
-L<TUI::Dialogs::Button>
+L<MsgBox|TUI::MsgBox>,
+L<TDialog|TUI::Dialogs::Dialog>,
+L<TButton|TUI::Dialogs::Button>
 
 =head1 AUTHORS
 

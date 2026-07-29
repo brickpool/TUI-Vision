@@ -280,7 +280,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::FileList - list box view for file and directory entries
+TFileList - list box view for file and directory entries
 
 =head1 HIERARCHY
 
@@ -303,7 +303,7 @@ TUI::StdDlg::FileList - list box view for file and directory entries
 =head1 DESCRIPTION
 
 C<TFileList> implements a specialized list box used by standard
-TUI::Vision file dialogs to display directory contents.
+TVision file dialogs to display directory contents.
 
 The list presents files and directories obtained from a C<TFileCollection>
 instance and supports keyboard and mouse navigation, selection, and activation
@@ -327,7 +327,8 @@ The following global variable defines the error message used by C<TFileList>.
 
 =head2 $tooManyFiles
 
-Message text displayed when the number of files exceeds the supported limit.
+Message text (I<Str>) displayed when the number of files exceeds the supported 
+limit.
 
 =head1 CONSTRUCTOR
 
@@ -348,7 +349,8 @@ Bounding rectangle defining the position and size of the list box (I<TRect>).
 
 =item vScrollBar
 
-Optional vertical scroll bar associated with the list box (I<TScrollBar>).
+Optional vertical scroll bar associated with the list box (I<TScrollBar> or 
+undef).
 
 =back
 
@@ -426,10 +428,10 @@ Restores the selection state from external input.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::FileDialog>,
-L<TUI::StdDlg::FileCollection>,
-L<TUI::Views::ListBox>,
-L<TUI::Views::ScrollBar>
+L<TFileDialog|TUI::StdDlg::FileDialog>,
+L<TFileCollection|TUI::StdDlg::FileCollection>,
+L<TListBox|TUI::Views::ListBox>,
+L<TScrollBar|TUI::Views::ScrollBar>
 
 =head1 AUTHORS
 

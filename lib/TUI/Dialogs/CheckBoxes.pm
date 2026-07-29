@@ -67,7 +67,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::CheckBoxes - multi-item checkbox cluster control
+TCheckBoxes - multi-item checkbox cluster control
 
 =head1 HIERARCHY
 
@@ -115,8 +115,8 @@ The following global variable affects the visual rendering of C<TCheckBoxes>.
 
 =head2 $button
 
-Defines the character pattern used to display a single checkbox item,
-for example C< [ ] >.
+Defines the character pattern (I<Str>) used to display a single checkbox item,
+for example C<' [ ] '>.
 
 =head1 CONSTRUCTOR
 
@@ -172,9 +172,9 @@ Toggles the bit assigned to the given item index in the internal value mask.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::RadioButtons>,
-L<TUI::Dialogs::Dialog>,
-L<TUI::Views::Cluster>
+L<TRadioButtons|TUI::Dialogs::RadioButtons>,
+L<TDialog|TUI::Dialogs::Dialog>,
+L<TCluster|TUI::Views::Cluster>
 
 =head1 AUTHORS
 

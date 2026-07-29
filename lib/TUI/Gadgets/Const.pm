@@ -55,7 +55,7 @@ TUI::Gadgets::Const - constants for gadget components
 
 =head1 DESCRIPTION
 
-C<TUI::Gadgets::Const> defines constants used by TUI::Vision gadget components.
+C<TUI::Gadgets::Const> defines constants used by TVision gadget components.
 
 The constants in this module are grouped by purpose and exported via tag-based
 export groups. They are used by gadget views to identify commands and events
@@ -91,9 +91,9 @@ C<:all> - import all constants
 
 =head1 SEE ALSO
 
-L<TUI::Gadgets>,
-L<TUI::Gadgets::EventViewer>,
-L<TUI::Drivers::Event>
+L<Gadgets|TUI::Gadgets>,
+L<TEventViewer|TUI::Gadgets::EventViewer>,
+L<TEvent|TUI::Drivers::Event>
 
 =head1 AUTHORS
 

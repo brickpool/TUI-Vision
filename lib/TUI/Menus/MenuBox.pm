@@ -241,7 +241,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus::MenuBox - pull-down or pop-up menu box
+TMenuBox - pull-down or pop-up menu box
 
 =head1 HIERARCHY
 
@@ -301,7 +301,7 @@ C<TMenuView>.
 
 =head2 $frameChars
 
-Character sequence used to draw menu frames and borders.
+Character sequence (I<Str>) used to draw menu frames and borders.
 
 =head1 CONSTRUCTOR
 
@@ -359,10 +359,10 @@ menu entry.
 
 =head1 SEE ALSO
 
-L<TUI::Menus::MenuBar>,
-L<TUI::Menus::MenuView>,
-L<TUI::Menus::MenuItem>,
-L<TUI::Views::View>
+L<TMenuBar|TUI::Menus::MenuBar>,
+L<TMenuView|TUI::Menus::MenuView>,
+L<TMenuItem|TUI::Menus::MenuItem>,
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

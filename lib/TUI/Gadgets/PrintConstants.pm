@@ -279,7 +279,7 @@ TUI::Gadgets::PrintConstants - helpers for printing symbolic event constants
 =head1 DESCRIPTION
 
 C<TUI::Gadgets::PrintConstants> provides helper functions for printing symbolic
-representations of TUI::Vision constants.
+representations of TVision constants.
 
 The functions translate numeric event, key, and mouse codes into their
 corresponding symbolic names and write the result to a supplied output object.
@@ -335,8 +335,8 @@ Prints the symbolic names of mouse event flags.
 =head1 SEE ALSO
 
 L<TUI::Drivers::Const>,
-L<TUI::Drivers::Event>,
-L<TUI::Gadgets::EventViewer>
+L<TEvent|TUI::Drivers::Event>,
+L<TEventViewer|TUI::Gadgets::EventViewer>
 
 =head1 AUTHORS
 

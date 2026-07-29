@@ -60,6 +60,7 @@ sub resume {    # void ($class)
 
   $mouseEvents = true;
   eval {
+    no warnings;
     TMouse->setRange( 
       $TUI::Drivers::Screen::screenWidth - 1, 
       $TUI::Drivers::Screen::screenHeight - 1 
@@ -160,7 +161,7 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::EventQueue - internal mouse event queue and dispatcher
+TEventQueue - internal mouse event queue and dispatcher
 
 =head1 HIERARCHY
 
@@ -178,7 +179,7 @@ TUI::Drivers::EventQueue - internal mouse event queue and dispatcher
 =head1 DESCRIPTION
 
 C<TEventQueue> implements the low-level event queue responsible for collecting
-and dispatching mouse events within the TUI::Vision framework.
+and dispatching mouse events within the TVision framework.
 
 This module manages mouse state, button transitions, double-click detection,
 auto-repeat handling, and movement tracking. It serves as the bridge between
@@ -209,47 +210,51 @@ handling in C<TEventQueue>.
 
 =head2 $downTicks
 
-Counts the number of ticks since the last mouse button press.
+Counts the number of ticks since the last mouse button press 
+(I<PositiveOrZeroInt>).
 
 =head2 $mouseEvents
 
-Indicates whether mouse events are currently enabled.
+Indicates whether mouse events are currently enabled (I<Bool>).
 
 =head2 $mouseReverse
 
-Indicates whether mouse button order is reversed.
+Indicates whether mouse button order is reversed (I<Bool>).
 
 =head2 $doubleDelay
 
-Defines the delay (in ticks) used to detect double-click events.
+Defines the delay (in ticks) used to detect double-click events 
+(I<PositiveOrZeroInt>).
 
 =head2 $repeatDelay
 
-Defines the delay (in ticks) before auto-repeat events are generated.
+Defines the delay (in ticks) before auto-repeat events are generated 
+(I<PositiveOrZeroInt>).
 
 =head2 $autoTicks
 
-Counts ticks used for auto-repeat handling.
+Counts ticks used for auto-repeat handling (I<PositiveOrZeroInt>).
 
 =head2 $autoDelay
 
-Defines the delay before auto-repeat processing starts.
+Defines the delay before auto-repeat processing starts (I<PositiveOrZeroInt>).
 
 =head2 $mouse
 
-Holds the current C<TMouse> driver instance.
+Holds the current driver instance (I<TMouse>).
 
 =head2 $lastMouse
 
-Stores the previous mouse event state.
+Stores the previous mouse event state (I<MouseEventType>).
 
 =head2 $curMouse
 
-Stores the current mouse event state.
+Stores the current mouse event state (I<MouseEventType>).
 
 =head2 $downMouse
 
-Stores the mouse event state at the time the button was pressed.
+Stores the mouse event state at the time the button was pressed 
+ (I<MouseEventType>).
 
 =head1 METHODS
 
@@ -339,10 +344,10 @@ public API.
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::Event>,
+L<TEvent|TUI::Drivers::Event>,
 L<TUI::Drivers::Const>,
-L<TUI::Drivers::HardwareInfo>,
-L<TUI::Drivers::Mouse>
+L<THardwareInfo|TUI::Drivers::HardwareInfo>,
+L<TMouse|TUI::Drivers::Mouse>
 
 =head1 AUTHORS
 

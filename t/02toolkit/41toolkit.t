@@ -14,7 +14,7 @@ BEGIN {
   package Export::Ok;
   use Scalar::Util qw( blessed );
   use TUI::toolkit;
-  assert ( TUI::toolkit::is_Moos );
+  assert ( TUI::toolkit::is_UNIVERSAL );
   $INC{"Export/Ok.pm"} = 1;
 }
 

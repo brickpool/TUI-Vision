@@ -1,5 +1,5 @@
 package TUI::Menus;
-# ABSTRACT: Menu components for the TUI::Vision framework
+# ABSTRACT: Menu components for the TVision framework
 
 use strict;
 use warnings;
@@ -57,7 +57,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus - Menu and status line system for the TUI::Vision framework
+Menus - Menu and status line system for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -95,7 +95,7 @@ TUI::Menus - Menu and status line system for the TUI::Vision framework
 =head1 DESCRIPTION
 
 TUI::Menus provides the menu and status line subsystem for the
-TUI::Vision framework. It corresponds to the Turbo Vision menu
+TVision framework. It corresponds to the Turbo Vision menu
 architecture and includes all components required for building
 interactive menu bars, pull-down menus, popup menus, and status lines.
 

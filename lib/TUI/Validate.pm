@@ -1,5 +1,5 @@
 package TUI::Validate;
-# ABSTRACT: Validation components for the TUI::Vision framework
+# ABSTRACT: Validation components for the TVision framework
 
 use strict;
 use warnings;
@@ -48,7 +48,7 @@ __END__
 
 =head1 NAME
 
-TUI::Validate - Validation components for the TUI::Vision framework
+Validate - Validation components for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -63,7 +63,7 @@ TUI::Validate - Validation components for the TUI::Vision framework
 
 =head1 DESCRIPTION
 
-TUI::Validate provides the validator layer for the TUI::Vision framework.
+TUI::Validate provides the validator layer for the TVision framework.
 It corresponds to the Turbo Vision validation subsystem and collects the
 validator base classes, concrete validators, and related constants.
 

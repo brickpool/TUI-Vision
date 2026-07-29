@@ -1,5 +1,5 @@
 package TUI::Vision;
-# ABSTRACT: Main module for the TUI::Vision framework
+# ABSTRACT: Main module for the TVision framework
 
 use strict;
 use warnings;
@@ -69,7 +69,7 @@ __END__
 
 =head1 NAME
 
-TUI::Vision - Perl TUI Framework (Turbo Vision 2.0 Port)
+TVision - Perl TUI Framework (Turbo Vision 2.0 Port)
 
 =head1 SYNOPSIS
 
@@ -81,10 +81,10 @@ TUI::Vision - Perl TUI Framework (Turbo Vision 2.0 Port)
 
 =head1 DESCRIPTION
 
-TUI::Vision is the top-level umbrella module of the framework.
+TVision is the top-level umbrella module of the framework.
 
 It aggregates and re-exports the main subsystem modules through
-C<Import::Into>, so applications can import the common TUI::Vision surface via
+C<Import::Into>, so applications can import the common TVision surface via
 a single C<use TUI::Vision;> statement.
 
 =head1 AUTHORS

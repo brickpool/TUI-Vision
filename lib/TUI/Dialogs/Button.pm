@@ -450,7 +450,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::Button - pushbutton control for dialogs
+TButton - pushbutton control for dialogs
 
 =head1 HIERARCHY
 
@@ -489,7 +489,7 @@ TUI::Dialogs::Button - pushbutton control for dialogs
 
 =head1 DESCRIPTION
 
-C<TButton> implements an interactive pushbutton control with full TUI::Vision
+C<TButton> implements an interactive pushbutton control with full TVision
 semantics. It supports highlighting, shadow rendering, pressing behavior,
 default-button logic, and command dispatch.
 
@@ -514,11 +514,38 @@ The following global variables affect the visual rendering of C<TButton>.
 
 =head2 $shadows
 
-Defines the characters used to draw the button shadow.
+Defines the characters (I<Str>) used to draw the button shadow.
 
 =head2 $markers
 
-Defines the characters used as button markers, for example C<[]>.
+Defines the characters (I<Str>) used as button markers, for example C<'[]'>.
+
+=head1 ATTRIBUTES
+
+The following attributes are exposed as read-only accessors.
+
+=over
+
+=item title
+
+The caption displayed on the button (I<Str>).
+
+=item command
+
+The command identifier triggered when the button is pressed
+(I<PositiveOrZeroInt>).
+
+=item flags
+
+Bit-mask of behavioral settings such as default, broadcast, or selectable
+(I<PositiveOrZeroInt>).
+
+=item amDefault
+
+Boolean flag indicating whether the button is currently treated as the dialog's
+default button (I<Bool>).
+
+=back
 
 =head1 CONSTRUCTOR
 
@@ -561,33 +588,6 @@ Behavioral flags controlling default state, focus handling, and selection
   my $btn = new_TButton($bounds, $title, $command, $flags);
 
 Factory-style constructor using positional arguments.
-
-=head1 ATTRIBUTES
-
-The following attributes are exposed as read-only accessors.
-
-=over
-
-=item title
-
-The caption displayed on the button (I<Str>).
-
-=item command
-
-The command identifier triggered when the button is pressed
-(I<PositiveOrZeroInt>).
-
-=item flags
-
-Bit-mask of behavioral settings such as default, broadcast, or selectable
-(I<PositiveOrZeroInt>).
-
-=item amDefault
-
-Boolean flag indicating whether the button is currently treated as the dialog's
-default button (I<Bool>).
-
-=back
 
 =head1 METHODS
 
@@ -635,9 +635,9 @@ Updates the control's internal state and refreshes its appearance.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::Dialog>,
-L<TUI::Dialogs::Label>,
-L<TUI::Views::View>
+L<TDialog|TUI::Dialogs::Dialog>,
+L<TLabel|TUI::Dialogs::Label>,
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 

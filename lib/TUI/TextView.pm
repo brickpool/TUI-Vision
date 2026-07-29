@@ -1,5 +1,5 @@
 package TUI::TextView;
-# ABSTRACT: TextView widget class for the TUI::Vision framework
+# ABSTRACT: TextView widget class for the TVision framework
 
 use strict;
 use warnings;
@@ -33,7 +33,7 @@ __END__
 
 =head1 NAME
 
-TUI::TextView - Text rendering components for the TUI::Vision framework
+TextView - Text rendering components for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -66,7 +66,7 @@ TUI::TextView - Text rendering components for the TUI::Vision framework
 
 =head1 DESCRIPTION
 
-TUI::TextView provides the text rendering subsystem for the TUI::Vision
+TUI::TextView provides the text rendering subsystem for the TVision
 framework. It corresponds to the Turbo Vision text device and terminal
 abstraction layers and is responsible for low-level text output,
 character cell handling, and terminal interaction.

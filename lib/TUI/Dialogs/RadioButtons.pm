@@ -88,7 +88,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::RadioButtons - radio button cluster control
+TRadioButtons - radio button cluster control
 
 =head1 HIERARCHY
 
@@ -137,8 +137,8 @@ The following global variable affects the visual rendering of C<TRadioButtons>.
 
 =head2 $button
 
-Defines the character pattern used to display a single radio button item,
-for example C< ( ) >.
+Defines the character pattern (I<Str>) used to display a single radio button 
+item, for example C<' ( ) '>.
 
 =head1 CONSTRUCTOR
 
@@ -206,10 +206,10 @@ state accordingly.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::CheckBoxes>,
-L<TUI::Dialogs::Dialog>,
-L<TUI::Dialogs::Label>,
-L<TUI::Views::Cluster>
+L<TCheckBoxes|TUI::Dialogs::CheckBoxes>,
+L<TDialog|TUI::Dialogs::Dialog>,
+L<TLabel|TUI::Dialogs::Label>,
+L<TCluster|TUI::Views::Cluster>
 
 =head1 AUTHORS
 

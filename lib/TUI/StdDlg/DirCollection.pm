@@ -70,7 +70,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::DirCollection - collection of directory entries
+TDirCollection - collection of directory entries
 
 =head1 HIERARCHY
 
@@ -185,9 +185,9 @@ Removes the specified C<TDirEntry> from the collection without freeing it.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::DirListBox>,
-L<TUI::StdDlg::ChDirDialog>,
-L<TUI::Objects::Collection>
+L<TDirListBox|TUI::StdDlg::DirListBox>,
+L<TChDirDialog|TUI::StdDlg::ChDirDialog>,
+L<TCollection|TUI::Objects::Collection>
 
 =head1 AUTHORS
 

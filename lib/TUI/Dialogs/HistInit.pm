@@ -63,7 +63,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::HistInit - initializer for history list viewer creation
+THistInit - initializer for history list viewer creation
 
 =head1 SYNOPSIS
 
@@ -98,7 +98,7 @@ TUI::Dialogs::HistInit - initializer for history list viewer creation
 =head1 DESCRIPTION
 
 C<TUI::Dialogs::HistInit> encapsulates the initialization logic required to
-create history list viewer objects in TUI::Vision dialogs.
+create history list viewer objects in TVision dialogs.
 
 The class stores a user-supplied callback which is invoked whenever a list
 viewer needs to be constructed. This allows dialogs to customize the concrete
@@ -147,8 +147,8 @@ Invokes the stored callback and returns a newly created list viewer object.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::History>,
-L<TUI::Dialogs::ListBox>
+L<THistory|TUI::Dialogs::History>,
+L<TListBox|TUI::Dialogs::ListBox>
 
 =head1 AUTHORS
 

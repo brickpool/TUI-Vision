@@ -326,15 +326,15 @@ but make the interface safer and more natural to use in Perl.
 
 =head1 IMPORTANT
 
-The history functions are intended for use within TUI::Vision applications
+The history functions are intended for use within TVision applications
 only. They depend on application-level initialization performed during program
 startup.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::InputLine>,
-L<TUI::Dialogs::HistoryViewer>,
-L<TUI::App::Application>
+L<TInputLine|TUI::Dialogs::InputLine>,
+L<TListBox|TUI::Dialogs::HistoryViewer>,
+L<TApplication|TUI::App::Application>
 
 =head1 AUTHORS
 

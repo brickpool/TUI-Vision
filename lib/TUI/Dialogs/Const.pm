@@ -161,7 +161,7 @@ TUI::Dialogs::Const - constants for dialog components
 
 =head1 DESCRIPTION
 
-C<TUI::Dialogs::Const> defines constants used by TUI::Vision dialog components
+C<TUI::Dialogs::Const> defines constants used by TVision dialog components
 such as dialogs, buttons, labels, input lines, and history views.
 
 The constants in this module are grouped by purpose and exported via tag-based
@@ -231,11 +231,11 @@ C<:all> - import all constants
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs>,
-L<TUI::Dialogs::Dialog>,
-L<TUI::Dialogs::Button>,
-L<TUI::Dialogs::InputLine>,
-L<TUI::Dialogs::History>
+L<Dialogs|TUI::Dialogs>,
+L<TDialog|TUI::Dialogs::Dialog>,
+L<TButton|TUI::Dialogs::Button>,
+L<TInputLine|TUI::Dialogs::InputLine>,
+L<THistory|TUI::Dialogs::History>
 
 =head1 AUTHORS
 

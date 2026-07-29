@@ -504,7 +504,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::FileDialog - common file selection dialog
+TFileDialog - common file selection dialog
 
 =head1 HIERARCHY
 
@@ -536,7 +536,7 @@ TUI::StdDlg::FileDialog - common file selection dialog
   
 =head1 DESCRIPTION
 
-C<TFileDialog> implements the standard TUI::Vision file dialog used for
+C<TFileDialog> implements the standard TVision file dialog used for
 opening, replacing, or selecting files.
 
 The dialog combines several specialized views, including a file list, an input
@@ -551,39 +551,39 @@ used by C<TFileDialog>.
 
 =head2 $filesText
 
-Label text for the files list section.
+Label text for the files list section (I<Str>).
 
 =head2 $openText
 
-Label text for the open action.
+Label text for the open action (I<Str>).
 
 =head2 $okText
 
-Label text for the confirmation button.
+Label text for the confirmation button (I<Str>).
 
 =head2 $replaceText
 
-Label text for the replace action.
+Label text for the replace action (I<Str>).
 
 =head2 $clearText
 
-Label text for the clear action.
+Label text for the clear action (I<Str>).
 
 =head2 $cancelText
 
-Label text for the cancel action.
+Label text for the cancel action (I<Str>).
 
 =head2 $helpText
 
-Label text for the help command.
+Label text for the help command (I<Str>).
 
 =head2 $invalidDriveText
 
-Message text displayed for an invalid drive or directory.
+Message text displayed for an invalid drive or directory (I<Str>).
 
 =head2 $invalidFileText
 
-Message text displayed for an invalid file name.
+Message text displayed for an invalid file name (I<Str>).
 
 =head1 ATTRIBUTES
 
@@ -650,13 +650,7 @@ History identifier used for filename input history (I<Int>).
 
 =head2 new_TFileDialog
 
-  my $dlg = new_TFileDialog(
-    $wildCard,
-    $title,
-    $inputName,
-    $options,
-    $histId
-  );
+  my $dlg = new_TFileDialog($wildCard, $title, $inputName, $options, $histId);
 
 Factory-style constructor using positional arguments.
 
@@ -700,10 +694,10 @@ Checks whether the dialog should accept the specified command.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::FileList>,
-L<TUI::StdDlg::FileInputLine>,
-L<TUI::StdDlg::FileInfoPane>,
-L<TUI::Dialogs::Dialog>
+L<TFileList|TUI::StdDlg::FileList>,
+L<TFileInputLine|TUI::StdDlg::FileInputLine>,
+L<TFileInfoPane|TUI::StdDlg::FileInfoPane>,
+L<TDialog|TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 

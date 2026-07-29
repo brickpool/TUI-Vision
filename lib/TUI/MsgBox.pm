@@ -1,5 +1,5 @@
 package TUI::MsgBox;
-# ABSTRACT: Message box components for the TUI::Vision framework
+# ABSTRACT: Message box components for the TVision framework
 
 use strict;
 use warnings;
@@ -33,7 +33,7 @@ __END__
 
 =head1 NAME
 
-TUI::MsgBox - Message box utilities for the TUI::Vision framework
+MsgBox - Message box utilities for the TVision framework
 
 =head1 SYNOPSIS
 
@@ -63,7 +63,7 @@ TUI::MsgBox - Message box utilities for the TUI::Vision framework
 =head1 DESCRIPTION
 
 TUI::MsgBox provides message box and input box utilities for the
-TUI::Vision framework. It corresponds to the Turbo Vision message box
+TVision framework. It corresponds to the Turbo Vision message box
 subsystem and offers simple modal dialogs for displaying messages,
 warnings, confirmations, and text prompts.
 

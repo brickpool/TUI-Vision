@@ -95,7 +95,7 @@ TUI::Views::Frame::Line - TFrame frameLine member function.
 
 TFrame frameLine member functions.
 
-The content was taken from the framework
+The content was ported from the framework
 "A modern port of Turbo Vision 2.0", which is licensed under MIT license.
 
 =head1 SEE ALSO

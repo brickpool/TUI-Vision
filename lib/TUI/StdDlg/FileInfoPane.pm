@@ -162,7 +162,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::FileInfoPane - view displaying information about the focused file
+TFileInfoPane - view displaying information about the focused file
 
 =head1 HIERARCHY
 
@@ -180,7 +180,7 @@ TUI::StdDlg::FileInfoPane - view displaying information about the focused file
 
 =head1 DESCRIPTION
 
-C<TFileInfoPane> implements a view used by standard TUI::Vision file dialogs to
+C<TFileInfoPane> implements a view used by standard TVision file dialogs to
 display information about the currently focused file or directory.
 
 The pane renders metadata such as name, size, date, and attributes of the
@@ -197,15 +197,15 @@ rendering used by C<TFileInfoPane>.
 
 =head2 $pmText
 
-Text used to indicate post meridiem (PM) time.
+Text (I<Str>) used to indicate post meridiem (PM) time.
 
 =head2 $amText
 
-Text used to indicate ante meridiem (AM) time.
+Text (I<Str>) used to indicate ante meridiem (AM) time.
 
 =head2 $months
 
-Array reference containing abbreviated month names.
+Array reference containing abbreviated month names (I<ArrayRef[Str]>).
 The first element is unused to allow 1-based month indexing.
 
 =head1 CONSTRUCTOR
@@ -260,10 +260,10 @@ components.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::FileDialog>,
-L<TUI::StdDlg::FileList>,
-L<TUI::Views::View>,
-L<TUI::Views::DrawBuffer>
+L<TFileDialog|TUI::StdDlg::FileDialog>,
+L<TFileList|TUI::StdDlg::FileList>,
+L<TView|TUI::Views::View>,
+L<TDrawBuffer|TUI::Views::DrawBuffer>
 
 =head1 AUTHORS
 

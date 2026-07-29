@@ -52,7 +52,7 @@ sub new {    # \$obj (%args)
   return $self;
 }
 
-sub from {    # $obj ($x, $y)
+sub from {    # $obj ($txt, $dir)
   state $sig = signature(
     method => 1,
     pos => [Str, Str],
@@ -87,7 +87,7 @@ __END__
 
 =head1 NAME
 
-TUI::StdDlg::DirEntry - directory entry record used by standard dialogs
+TDirEntry - directory entry record used by standard dialogs
 
 =head1 SYNOPSIS
 
@@ -134,6 +134,12 @@ Filesystem path associated with this entry (I<Str>).
 
 =back
 
+=head2 new_TDirEntry
+
+  my $entry = new_TDirEntry($txt, $dir);
+
+Factory-style constructor using positional arguments.
+
 =head1 METHODS
 
 =head2 text
@@ -150,9 +156,9 @@ Returns the directory path associated with the entry.
 
 =head1 SEE ALSO
 
-L<TUI::StdDlg::DirCollection>,
-L<TUI::StdDlg::DirListBox>,
-L<TUI::StdDlg::ChDirDialog>
+L<TDirCollection|TUI::StdDlg::DirCollection>,
+L<TDirListBox|TUI::StdDlg::DirListBox>,
+L<TChDirDialog|TUI::StdDlg::ChDirDialog>
 
 =head1 AUTHORS
 

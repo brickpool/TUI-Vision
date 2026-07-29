@@ -188,7 +188,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::Dialog - base dialog window class for dialogs
+TDialog - base dialog window class for dialogs
 
 =head1 HIERARCHY
 
@@ -308,12 +308,12 @@ is valid.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::Button>,
-L<TUI::Dialogs::InputLine>,
-L<TUI::Dialogs::CheckBoxes>,
-L<TUI::Dialogs::RadioButtons>,
-L<TUI::Views::Window>,
-L<TUI::App::DeskTop>
+L<TButton|TUI::Dialogs::Button>,
+L<TInputLine|TUI::Dialogs::InputLine>,
+L<TCheckBoxes|TUI::Dialogs::CheckBoxes>,
+L<TRadioButtons|TUI::Dialogs::RadioButtons>,
+L<TWindow|TUI::Views::Window>,
+L<TDeskTop|TUI::App::DeskTop>
 
 =head1 AUTHORS
 

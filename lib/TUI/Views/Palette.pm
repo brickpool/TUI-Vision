@@ -108,7 +108,7 @@ __END__
 
 =head1 NAME
 
-TUI::Views::Palette - color palette representation based on string data
+TPalette - color palette representation based on string data
 
 =head1 HIERARCHY
 
@@ -131,8 +131,8 @@ TUI::Views::Palette - color palette representation based on string data
 
 =head1 DESCRIPTION
 
-C<TPalette> represents a color palette as used by TUI::Vision views. Unlike
-most TUI::Vision classes, C<TPalette> is not derived from C<TObject> and does
+C<TPalette> represents a color palette as used by TVision views. Unlike
+most TVision classes, C<TPalette> is not derived from C<TObject> and does
 not use a hash-based object layout. Instead, it is conceptually based on scalar
 string data.
 
@@ -211,8 +211,8 @@ Creates and returns a clone of the palette.
 
 =head1 SEE ALSO
 
-L<TUI::Views::View>,
-L<TUI::Views::PaletteConst>
+L<TView|TUI::Views::View>,
+L<TPalette|TUI::Views::Palette>
 
 =head1 AUTHORS
 

@@ -155,7 +155,7 @@ __END__
 
 =head1 NAME
 
-TUI::Dialogs::MultiCheckBoxes - multi-state checkbox cluster control
+TMultiCheckBoxes - multi-state checkbox cluster control
 
 =head1 HIERARCHY
 
@@ -232,8 +232,8 @@ Number of distinct states each item cycles through (I<Int>).
 
 =item flags
 
-Packed integer describing the bit mask and bit shift used for encoding item
-states.
+Packed integer (I<Int>) describing the bit mask and bit shift used for encoding 
+item states.
 
 The low byte defines the state mask, the high byte defines the bit shift per
 item.
@@ -339,10 +339,10 @@ these values after construction.
 
 =head1 SEE ALSO
 
-L<TUI::Dialogs::CheckBoxes>,
-L<TUI::Dialogs::RadioButtons>,
-L<TUI::Dialogs::Cluster>,
-L<TUI::Dialogs::Dialog>
+L<TCheckBoxes|TUI::Dialogs::CheckBoxes>,
+L<TRadioButtons|TUI::Dialogs::RadioButtons>,
+L<TCluster|TUI::Dialogs::Cluster>,
+L<TDialog|TUI::Dialogs::Dialog>
 
 =head1 AUTHORS
 

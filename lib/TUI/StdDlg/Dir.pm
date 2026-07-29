@@ -386,7 +386,7 @@ parameters are not treated as read-only.
 =head1 SEE ALSO
 
 L<TUI::StdDlg::Dos>,
-L<TUI::StdDlg::FindFirstRec>,
+L<FindFirstRec|TUI::StdDlg::FindFirstRec>,
 L<TUI::StdDlg::Util>
 
 =head1 AUTHORS

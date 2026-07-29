@@ -271,7 +271,7 @@ __END__
 
 =head1 NAME
 
-TUI::Objects::Rect - rectangular area defined by two points
+TRect - rectangular area defined by two points
 
 =head1 HIERARCHY
 
@@ -303,7 +303,7 @@ attribute C<a> specifies the upper-left corner and C<b> specifies the
 lower-right corner of the rectangle.
 
 C<TRect> is a lightweight value type and is not derived from C<TObject>. It is
-used throughout TUI::Vision to describe screen locations and sizes of views,
+used throughout TVision to describe screen locations and sizes of views,
 dialogs, and controls.
 
 The class provides a set of geometric operations such as moving, resizing,
@@ -317,6 +317,22 @@ coordinate arguments, then passes them into view and dialog constructors.
 For incremental layout changes, C<move> and C<grow> are the common operations,
 and C<clone> is useful when you need a temporary variant without mutating the
 original bounds object.
+
+=head1 ATTRIBUTES
+
+The following attributes define the rectangle geometry.
+
+=over
+
+=item a
+
+Upper-left corner of the rectangle (I<TPoint>).
+
+=item b
+
+Lower-right corner of the rectangle (I<TPoint>).
+
+=back
 
 =head1 CONSTRUCTOR
 
@@ -345,15 +361,15 @@ C<TPoint> objects automatically.
 
 =item a
 
-Upper-left corner as a C<TPoint>.
+Upper-left corner (I<TPoint>).
 
 =item b
 
-Lower-right corner as a C<TPoint>.
+Lower-right corner (I<TPoint>).
 
 =item ax, ay, bx, by
 
-Integer coordinates used to initialize the corner points.
+Integer coordinates used to initialize the corner points (I<Int>).
 
 =back
 
@@ -365,22 +381,6 @@ Factory-style constructor using positional arguments.
 
 This constructor is provided for compatibility with traditional Turbo Vision
 construction patterns.
-
-=head1 ATTRIBUTES
-
-The following attributes define the rectangle geometry.
-
-=over
-
-=item a
-
-Upper-left corner of the rectangle (I<TPoint>).
-
-=item b
-
-Lower-right corner of the rectangle (I<TPoint>).
-
-=back
 
 =head1 METHODS
 
@@ -469,8 +469,8 @@ C<!=> maps to C<not_equal>
 
 =head1 SEE ALSO
 
-L<TUI::Objects::Point>,
-L<TUI::Views::View>
+L<TPoint|TUI::Objects::Point>,
+L<TView|TUI::Views::View>
 
 =head1 AUTHORS
 
