@@ -1,4 +1,4 @@
-name: CI Smoke
+name: CI on Windows
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   smoke:
-    name: Smoke / Windows / Perl latest
+    name: Windows / Perl latest
     runs-on: windows-latest
 
     steps:
@@ -22,15 +22,13 @@ jobs:
         run: perl -V
 
       - shell: pwsh
-        run: >
-          cpanm --skip-satisfied --quiet --notest
-          Devel::StrictMode
-          Importer
-          Import::Into
-          UNIVERSAL::Object
-          Win32::Console::PatchForRT33513
+        run: |
+          cpanm --notest --installdeps .
 
       - shell: pwsh
+        env:
+          AUTOMATED_TESTING: 1
+          NONINTERACTIVE_TESTING: 1
         run: |
           perl Makefile.PL
           gmake test
