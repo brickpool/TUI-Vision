@@ -1,4 +1,5 @@
 package TUI::Drivers::HardwareInfo::Win32;
+# ABSTRACT: Win32 driver for TUI::Drivers::HardwareInfo
 
 use strict;
 use warnings;
@@ -6,11 +7,6 @@ use warnings;
 our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
-
-use Exporter 'import';
-our @EXPORT_OK = qw(
-  THardwareInfo
-);
 
 use PerlX::Assert::PP;
 use English qw( -no_match_vars );
@@ -36,8 +32,6 @@ use TUI::Drivers::Const qw(
   kbInsState
   kbCtrlC
 );
-
-sub THardwareInfo() { __PACKAGE__ }
 
 # We use variables to avoid polluting the namespace when importing Win32 API 
 # functions. 
@@ -368,7 +362,7 @@ sub getScreenCols { # $cols ($class)
 sub getScreenMode {    # $mode ($class)
   my $class = shift;
   assert ( $class and !ref $class );
-  my $mode  = 0;
+  my $mode = 0;
   if ( $platform eq 'Windows' ) {
     $mode = smCO80;    # B/W, mono not supported if running on Windows
   }
@@ -538,6 +532,13 @@ sub getKeyEvent {    # $bool ($class, $event)
       $event->{keyDown}{charScan}{scanCode} = $irBuffer[wVirtualScanCode];
       $event->{keyDown}{charScan}{charCode} = $irBuffer[uChar];
       $event->{keyDown}{controlKeyState}    = $irBuffer[dwControlKeyState1];
+
+      # Win32::OutputDebugString(sprintf(
+      #   "scan=%d char=%d ctrl=%#x",
+      #   $irBuffer[wVirtualScanCode],
+      #   $irBuffer[uChar],
+      #   $irBuffer[dwControlKeyState1],
+      # ));
 
       # Convert Windows style virtual scan codes to PC BIOS codes.
       if ( $event->{keyDown}{controlKeyState} &

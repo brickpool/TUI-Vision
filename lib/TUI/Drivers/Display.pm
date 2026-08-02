@@ -33,10 +33,12 @@ sub updateIntlChars {    # void ($class)
   my $class = shift;
   assert ( $class and !ref $class );
   my $cp = &$getCodePage();
-  # Some 8-bit code pages are supported directly.
+  # Some 8-bit code pages are supported directly and
+  # preserve the original CP437 frame characters when using UTF-8 with 
+  # Windows Virtual Terminal (VT) mode (CP65001).
   return 
     if $cp =~ /^(437|720|737|775|850|852|855|857|858|859|860|861|862|863|865)$/
-    || $cp =~ /^(866|869)$/;
+    || $cp =~ /^(866|869|65001)$/;
 
   require TUI::Views::Frame;
   require TUI::Views::ScrollBar;

@@ -32,6 +32,7 @@ WriteMakefile1(
     'Module::Loaded'                  => 0,
     'Params::Check'                   => 0,
     'Scalar::Util'                    => 1.36,
+    'Termbox::PP'                     => '0.6.0',
     'UNIVERSAL::Object'               => 0.17,
     'Win32'                           => 0.59,
     'Win32API::File'                  => 0.1101,

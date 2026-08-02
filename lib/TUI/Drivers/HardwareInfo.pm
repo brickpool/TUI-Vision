@@ -11,7 +11,11 @@ my %module = (
   MSWin32 => 'Win32',
 );
 
-my $module = $module{$^O} || 'Unix';
+# Use the Termbox backend by default. 
+my $module = $module{$^O} || 'Termbox';
+if ( $^O eq 'MSWin32' ) {
+  $module = $ENV{WT_SESSION} ? 'Termbox' : 'Win32';
+}
 
 sub THardwareInfo() { "TUI::Drivers::HardwareInfo::$module" }
 
@@ -79,9 +83,12 @@ Current backend availability in this distribution:
 
 =item * Windows systems: C<TUI::Drivers::HardwareInfo::Win32>
 
-=item * Non-Windows systems: no backend module is currently shipped
+=item * Non-Windows systems: C<TUI::Drivers::HardwareInfo::Termbox>
 
 =back
+
+B<Note:> On Windows, prefer the Termbox backend if running under Windows 
+Terminal (WT_SESSION).
 
 As of now, this dispatcher is effectively Win32-only. Attempting to load
 C<THardwareInfo> on unsupported platforms will fail until additional backend

@@ -16,7 +16,7 @@ our @EXPORT = qw(
 );
 
 require bytes;
-use Encode qw( decode );
+use Encode qw( encode decode );
 use Symbol ();
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
@@ -41,6 +41,8 @@ use TUI::Views::Const qw(
   wnNoNumber
 );
 use TUI::Views::Window;
+
+use constant _WIN32 => ($^O eq 'MSWin32') && !$ENV{WT_SESSION};
 
 sub TEventViewer() { __PACKAGE__ }
 sub name() { 'TEventViewer' }
@@ -204,7 +206,7 @@ my $printConstants = sub {    # void ($value, $doPrint)
     $os->$doPrint( $value );
     close $os;
   };
-  if ( !@! && $buf !~ /^0/ ) {
+  if ( !$@ && (split //, $buf)[0] ) {
     print " (", $buf, ")";
   }
   return;
@@ -264,13 +266,13 @@ $printEvent = sub {    # void ($out, $ev)
       \&printControlKeyState );
     print ",\n";
     print "    .text = {";
-    # TODO: The field {charScan}{charCode} contains characters from the CP437 
-    # code page in the original. For full Unicode support, the two new fields 
-    # 'text' and 'textLength' should be used (L</SEE ALSO>).
-    my @text = $ev->{keyDown}{charScan}{charCode} ? 
-      unpack( 'C*', bytes::substr(
-        decode( cp437 => chr $ev->{keyDown}{charScan}{charCode} ),
-          0 )) : ();
+    # NOTE: {charScan}{charCode} reflects the native character encoding
+    # used by the backend. For Win32 this is typically the legacy code page.
+    # The pseudo-fields 'text' and 'textLength' always show the UTF-8 byte
+    # sequence corresponding to the character.
+    my @text = $charCode
+      ? unpack( 'C*', bytes::substr( decode( 'cp437' => chr $charCode ), 0 ) )
+      : ();
     my $textLength = @text;
     print join(', ', map { sprintf "0x%02X", $_ } @text );
     print "},\n",

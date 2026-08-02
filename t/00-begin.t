@@ -73,6 +73,7 @@ use constant MANUAL_TESTS => exists($ENV{MANUAL_TESTS})
                           && !$ENV{NONINTERACTIVE_TESTING};
 
 use constant PERL_ONLY => exists($ENV{PERL_ONLY}) && $ENV{PERL_ONLY};
+use constant WT_SESSION => exists($ENV{WT_SESSION}) && $ENV{WT_SESSION};
 
 sub banner {
   diag( ' ' );
@@ -84,6 +85,7 @@ sub banner {
   diag( "  STRICT:       ", STRICT       ? "enabled"  : "not enabled"  );
   diag( "  MANUAL_TESTS: ", MANUAL_TESTS ? "enabled"  : "not enabled"  );
   diag( "  PERL_ONLY:    ", PERL_ONLY    ? "enabled"  : "not enabled"  );
+  diag( "  WT_SESSION:   ", WT_SESSION   ? "set"      : "not set"      );
   diag( ' ' );
   diag( '# ' x 36 );
 }
@@ -123,6 +125,7 @@ __DATA__
 Devel::StrictMode
 Importer
 Import::Into
+Termbox/Termbox::PP
 UNIVERSAL::Object
 Win32::API
 Win32::Console
@@ -180,3 +183,4 @@ $PERL_PLATFORM_OVERRIDE
 
 $PERLX_ASSERT_PP_FILTER
 $PERL_ONLY
+$WT_SESSION

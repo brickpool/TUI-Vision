@@ -32,6 +32,8 @@ use TUI::Drivers::Const qw(
   :meXXXX
 );
 
+use constant _WIN32 => ($^O eq 'MSWin32') && !$ENV{WT_SESSION};
+
 {
   no strict 'refs';
   sub NM ($) { ( &{ $_[0] }() => $_[0] ) }
@@ -99,20 +101,14 @@ my %keyCodes = (
 );
 
 my %controlKeyStateFlags = (
-  NM( 'kbLeftShift' ),
-  NM( 'kbRightShift' ),
-  NM( 'kbCtrlShift' ),
-  NM( 'kbAltShift' ),
-  NM( 'kbShift' ),
+  _WIN32 ? ( NM( 'kbLeftShift' ), NM( 'kbRightShift' ) ) : NM( 'kbShift' ),
+  _WIN32 ? ( NM( 'kbLeftCtrl' ),  NM( 'kbRightCtrl' ) )  : NM( 'kbCtrlShift' ),
+  _WIN32 ? ( NM( 'kbLeftAlt' ),   NM( 'kbRightAlt' ) )   : NM( 'kbAltShift' ),
   NM( 'kbScrollState' ),
-  NM( 'kbLeftCtrl' ),
-  NM( 'kbRightCtrl' ),
-  NM( 'kbLeftAlt' ),
-  NM( 'kbRightAlt' ),
   NM( 'kbNumState' ),
   NM( 'kbCapsState' ),
+  _WIN32 ? NM( 'kbEnhanced' ) : (),
   NM( 'kbInsState' ),
-  NM( 'kbEnhanced' ),
   # NM( 'kbPaste' ),
   NMEND(),
 );
@@ -200,7 +196,7 @@ $printCode = sub {
 
 sub printKeyCode {
   state $sig = signature(
-    pos => [ Object, PositiveOrZeroInt ],
+    pos => [ FileHandle, PositiveOrZeroInt ],
   );
   my ( $os, $keyCode ) = $sig->( @_ );
   &$printCode( $os, $keyCode, \%keyCodes );
@@ -209,7 +205,7 @@ sub printKeyCode {
 
 sub printControlKeyState {
   state $sig = signature(
-    pos => [ Object, PositiveOrZeroInt ],
+    pos => [ FileHandle, PositiveOrZeroInt ],
   );
   my ( $os, $controlKeyState ) = $sig->( @_ );
   &$printFlags( $os, $controlKeyState, \%controlKeyStateFlags );
@@ -218,7 +214,7 @@ sub printControlKeyState {
 
 sub printEventCode {
   state $sig = signature(
-    pos => [ Object, PositiveOrZeroInt ],
+    pos => [ FileHandle, PositiveOrZeroInt ],
   );
   my ( $os, $eventCode ) = $sig->( @_ );
   &$printCode( $os, $eventCode, \%eventCodes );
@@ -227,7 +223,7 @@ sub printEventCode {
 
 sub printMouseButtonState {
   state $sig = signature(
-    pos => [ Object, PositiveOrZeroInt ],
+    pos => [ FileHandle, PositiveOrZeroInt ],
   );
   my ( $os, $buttonState ) = $sig->( @_ );
   &$printFlags( $os, $buttonState, \%mouseButtonFlags );
@@ -236,7 +232,7 @@ sub printMouseButtonState {
 
 sub printMouseWheelState {
   state $sig = signature(
-    pos => [ Object, PositiveOrZeroInt ],
+    pos => [ FileHandle, PositiveOrZeroInt ],
   );
   my ( $os, $wheelState ) = $sig->( @_ );
   &$printFlags( $os, $wheelState, \%mouseWheelFlags );
@@ -245,7 +241,7 @@ sub printMouseWheelState {
 
 sub printMouseEventFlags {
   state $sig = signature(
-    pos => [ Object, PositiveOrZeroInt ],
+    pos => [ FileHandle, PositiveOrZeroInt ],
   );
   my ( $os, $eventFlags ) = $sig->( @_ );
   &$printFlags( $os, $eventFlags, \%mouseEventFlags );

@@ -32,7 +32,8 @@ use vars qw(
   *screenBuffer = \${ TScreen . '::screenBuffer' };
 }
 
-use constant HIDEMOUSE => 0;
+use constant HIDEMOUSE => !!0;
+use constant LEGACY => THardwareInfo->isa('TUI::Drivers::HardwareInfo::Win32');
 
 my $X       = 0;
 my $Y       = 0;
@@ -223,7 +224,9 @@ sub L50 {
     copyShort( $dst, $src );
   }
   else {
-    copyShort2CharInfo( $dst, $src );
+    LEGACY 
+      ? copyShort2CharInfo( $dst, $src )
+      : copyShort2Cell( $dst, $src );
     THardwareInfo->screenWrite( $X, $Y, $dst, $Count - $X );
   }
   return;
@@ -265,6 +268,28 @@ sub copyShort2CharInfo {
   }
   return;
 } #/ sub copyShort2CharInfo
+
+sub copyShort2Cell {
+  my ( $dst, $src ) = @_;
+  my $i;
+  if ( $edx == 0 ) {
+    # Expand character/attribute pair
+    my $n = $Count - $X;
+    for my $i ( 0 .. $n - 1 ) {
+      my ( $char, $attr ) = unpack 'CC' => pack 'v' => $src->[$i];
+      $dst->[$i] = [ $char, $attr ];
+    }
+  }
+  else {
+    # Mix in shadow attribute
+    for ( $i = 0 ; $i < $Count - $X ; ++$i ) {
+      my ( $char, $attr ) = unpack 'CC' => pack 'v' => $src->[$i];
+      $dst->[$i] = [ $char, applyShadow($attr) ];
+    }
+  }
+  return;
+} #/ sub copyShort2Cell
+
 
 sub applyShadow {
   my ( $attr ) = @_;

@@ -223,8 +223,8 @@ our %EXPORT_TAGS = (
       @EXPORT_OK;
 }
 
-use constant _WINDOWS => $^O eq 'MSWin32';
-use if _WINDOWS, 'Win32::Console';
+use constant _WIN32 => ($^O eq 'MSWin32') && !$ENV{WT_SESSION};
+use if _WIN32, 'Win32::Console';
 
 use constant {
   eventQSize  => 16,
@@ -426,18 +426,18 @@ use constant {
 
 use constant {
   # Keyboard state and shift masks
-  kbLeftShift   => _WINDOWS ? Win32::Console::SHIFT_PRESSED()      : 0x0001,
-  kbRightShift  => _WINDOWS ? Win32::Console::SHIFT_PRESSED()      : 0x0002,
-  kbLeftCtrl    => _WINDOWS ? Win32::Console::LEFT_CTRL_PRESSED()  : 0x0004,
-  kbRightCtrl   => _WINDOWS ? Win32::Console::RIGHT_CTRL_PRESSED() : 0x0004,
-  kbLeftAlt     => _WINDOWS ? Win32::Console::LEFT_ALT_PRESSED()   : 0x0008,
-  kbRightAlt    => _WINDOWS ? Win32::Console::RIGHT_ALT_PRESSED()  : 0x0008,
-  kbScrollState => _WINDOWS ? Win32::Console::SCROLLLOCK_ON()      : 0x0010,
-  kbNumState    => _WINDOWS ? Win32::Console::NUMLOCK_ON()         : 0x0020,
-  kbCapsState   => _WINDOWS ? Win32::Console::CAPSLOCK_ON()        : 0x0040,
-  kbEnhanced    => _WINDOWS ? Win32::Console::ENHANCED_KEY()       : undef,
+  kbLeftShift   => _WIN32 ? Win32::Console::SHIFT_PRESSED()      : 0x0001,
+  kbRightShift  => _WIN32 ? Win32::Console::SHIFT_PRESSED()      : 0x0002,
+  kbLeftCtrl    => _WIN32 ? Win32::Console::LEFT_CTRL_PRESSED()  : 0x0004,
+  kbRightCtrl   => _WIN32 ? Win32::Console::RIGHT_CTRL_PRESSED() : 0x0004,
+  kbLeftAlt     => _WIN32 ? Win32::Console::LEFT_ALT_PRESSED()   : 0x0008,
+  kbRightAlt    => _WIN32 ? Win32::Console::RIGHT_ALT_PRESSED()  : 0x0008,
+  kbScrollState => _WIN32 ? Win32::Console::SCROLLLOCK_ON()      : 0x0010,
+  kbNumState    => _WIN32 ? Win32::Console::NUMLOCK_ON()         : 0x0020,
+  kbCapsState   => _WIN32 ? Win32::Console::CAPSLOCK_ON()        : 0x0040,
+  kbEnhanced    => _WIN32 ? Win32::Console::ENHANCED_KEY()       : undef,
   # Ensure this doesn't overlap above values
-  kbInsState    => _WINDOWS ? 0x200                                : 0x0080,   
+  kbInsState    => _WIN32 ? 0x200                                : 0x0080,   
 };
 
 # On some operating systems, distinguishing between the right and left shift
