@@ -4,6 +4,11 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
+BEGIN {
+  plan skip_all => 'The Legacy Win32 Console Backend is not selected.' 
+    unless $^O eq 'MSWin32' && !$ENV{WT_SESSION};
+}
+
 # Mocking 'Win32*' modules for testing purposes
 BEGIN {
   no warnings 'redefine';

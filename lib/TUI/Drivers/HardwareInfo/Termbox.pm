@@ -725,14 +725,13 @@ sub getKeyEvent {    # $bool ($class, $event)
   $event->{what} = evKeyDown;
 
   # Set the key code and character code in the event structure.
-  my $charCode = 0;
   my $keyCode = _tb_event_to_key_code($tb_event);
   $event->{keyDown}{keyCode} = $keyCode;
-  if ($keyCode == kbNoKey) {
-    $charCode = _tb_event_to_char_code($tb_event);
+  if ( $keyCode == kbNoKey ) {
+    my $charCode = _tb_event_to_char_code( $tb_event );
     $event->{keyDown}{charScan}{charCode} = $charCode;
-  } elsif ($keyCode == kbIns) {
-    # Set the key code in the event structure.
+  }
+  elsif ( $keyCode == kbIns ) {
     $insertState = !$insertState;
   }
 
