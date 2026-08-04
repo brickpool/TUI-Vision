@@ -207,8 +207,16 @@ our %EXPORT_TAGS = (
     kbCtrlShift
     kbAltShift
   )],
-);
 
+  slXXXX => [qw(
+    slBold
+    slItalic
+    slUnderline
+    slBlink
+    slReverse
+    slStrike
+  )],
+);
 
 # add all the other %EXPORT_TAGS ":class" tags to the ":all" class and
 # @EXPORT_OK, deleting duplicates
@@ -455,6 +463,19 @@ use constant {
   kbAltShift  => kbLeftAlt | kbRightAlt,
 };
 
+# TColorAttr Style masks
+use constant {
+  slBold      => 0x001,
+  slItalic    => 0x002,
+  slUnderline => 0x004,
+  slBlink     => 0x008,
+  slReverse   => 0x010,
+  slStrike    => 0x020,
+
+  # Private masks
+  slNoShadow  => 0x200,    # Don't draw window shadows over this cell.
+};
+
 1
 
 __END__
@@ -521,6 +542,14 @@ These include control key combinations, function keys, extended keys, and
 keyboard state masks. They are used by the keyboard and event handling logic
 to interpret raw input.
 
+=head2 Style masks constants (slXXXX)
+
+Constants representing text style attributes for screen cells.
+
+These values are used to define bold, italic, underline, blink, reverse, and 
+strike-through text styles. They are used in conjunction with color attributes 
+to control the appearance of text in the user interface.
+
 =head1 EXPORT TAGS
 
 Constants are exported using the following tag-based export groups:
@@ -579,5 +608,10 @@ Copyright (c) 2026 the L</AUTHORS> as listed above.
 This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
-=cut
+=head1 ACKNOWLEDGEMENTS
 
+Style mask constants and their usage are not part of the original Turbo Vision 
+design by Borland International. The constants are taken from 
+"A modern port of Turbo Vision 2.0", which is licensed under the MIT License.
+
+=cut
