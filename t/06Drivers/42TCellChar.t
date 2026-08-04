@@ -12,9 +12,9 @@ subtest 'default constructor' => sub {
   my $ch = TCellChar->new();
   isa_ok( $ch, TCellChar );
 
-  is( $ch->getText, '', 'default text' );
-  is( $ch->size,    0,  'default size' );
-  ok( !$ch->isWideCharTrail, 'default value is not a trail' );
+  is( $ch->getText, "\0", 'default text' );
+  is( $ch->size,    1,    'default size' );
+  ok( !$ch->isWide, 'default cell is not wide' );
 };
 
 subtest 'text constructor' => sub {

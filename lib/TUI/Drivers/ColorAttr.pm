@@ -14,6 +14,12 @@ our @EXPORT = qw(
   TColorAttr
 );
 
+use PerlX::Assert::PP;
+use Scalar::Util qw(
+  blessed
+  looks_like_number
+);
+
 use TUI::Drivers::Const qw( :slXXXX );
 
 sub TColorAttr() { __PACKAGE__ }
@@ -27,7 +33,8 @@ sub new {    # $attr (|%args)
 
   # TColorAttr->new( bios => Int )
   if ( @args == 2 && $args[0] eq 'bios' ) {
-    my $bios = 0+ $args[1];
+    my $bios = $args[1];
+    assert ( looks_like_number $bios );
     
     my $fg = $bios          & 0x0f;
     my $bg = ( $bios >> 4 ) & 0x0f;
@@ -52,9 +59,12 @@ sub new {    # $attr (|%args)
     unless @args % 2 == 0;
   my %args = @args;
   if ( exists $args{fg} && exists $args{bg} ) {
-    my $fg    = 0+ $args{fg};
-    my $bg    = 0+ $args{bg};
-    my $style = 0+ ( $args{style} || 0 );
+    my $fg    = $args{fg};
+    my $bg    = $args{bg};
+    my $style = $args{style} // 0;
+    assert ( looks_like_number $fg );
+    assert ( looks_like_number $bg );
+    assert ( looks_like_number $style );
 
     my $v = ( $style & 0x3ff ) 
           | ( ( $fg & 0x7ffffff ) << 10 )
@@ -67,25 +77,29 @@ sub new {    # $attr (|%args)
 } #/ sub new
 
 sub getStyle {    # sytle ()
+  assert ( blessed $_[0] );
   return ${ $_[0] } & 0x3ff;
 }
 
 sub getFore {    # $fg ()
+  assert ( blessed $_[0] );
   return ( ${ $_[0] } >> 10 ) & 0x7ffffff;
 }
 
 sub getBack {    # $bg ()
+  assert ( blessed $_[0] );
   return ( ${ $_[0] } >> 37 ) & 0x7ffffff;
 }
 
 sub isBIOS {    # $bool ()
   my ( $self ) = @_;
+  assert ( blessed $self );
 
   my $style = ${$self} & 0x3ff;
   my $fg    = ( ${$self} >> 10 ) & 0x7ffffff;
   my $bg    = ( ${$self} >> 37 ) & 0x7ffffff;
 
-return $fg <= 0x0f && $bg <= 0x0f
+  return $fg <= 0x0f && $bg <= 0x0f
     && ( $style & ~( slBold | slBlink ) ) == 0
     && ( ( $style & slBold  ) xor !( $fg & 0x08 ) )
     && ( ( $style & slBlink ) xor !( $bg & 0x08 ) );
@@ -93,6 +107,7 @@ return $fg <= 0x0f && $bg <= 0x0f
 
 sub asBIOS {    # $attr ()
   my ( $self ) = @_;
+  assert ( blessed $self );
 
   # $$self must be a BIOS attribute. If it is not, the result will be
   # bogus but harmless. The important is that the result isn't '\x0'
@@ -106,6 +121,7 @@ sub asBIOS {    # $attr ()
 
 sub toBIOS {    # $attr ()
   my ( $self ) = @_;
+  assert ( blessed $self );
 
   return $self->asBIOS
     if $self->isBIOS;
@@ -133,11 +149,11 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::ColorAttr - color attribute value type for screen cells
+TColorAttr - color attribute value type for screen cells
 
 =head1 SYNOPSIS
 
-  use TUI::Drivers::ColorAttr;
+  use TUI::Drivers;
 
   my $attr = TColorAttr->new(
     bios => 0x3D,

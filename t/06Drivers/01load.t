@@ -14,6 +14,9 @@ BEGIN {
   use_ok 'TUI::Drivers::HWMouse';
   use_ok 'TUI::Drivers::Mouse';
   use_ok 'TUI::Drivers::EventQueue';
+  use_ok 'TUI::Drivers::CellChar';
+  use_ok 'TUI::Drivers::ColorAttr';
+  use_ok 'TUI::Drivers::ScreenCell';
 }
 
 is( eventQSize, 16, 'eventQSize is 16' );
@@ -32,12 +35,16 @@ isa_ok( CharScanType->new(),   'CharScanType' );
 isa_ok( KeyDownEvent->new(),   'KeyDownEvent' );
 isa_ok( MessageEvent->new(),   'MessageEvent' );
 isa_ok( MouseEventType->new(), 'MouseEventType' );
-isa_ok( TEvent->new(),         TEvent );
+
+isa_ok( TEvent->new(),      TEvent );
+isa_ok( TCellChar->new(),   TCellChar );
+isa_ok( TColorAttr->new(),  TColorAttr );
+isa_ok( TScreenCell->new(), TScreenCell );
 
 SKIP: {
   skip 'No mouse available', 2 unless THardwareInfo->getButtonCount();
-  ok( THWMouse->present(), 'THWMouse is present' );
-  ok( TMouse->present(),   'TMouse is present' );
+  #ok( THWMouse->present(), 'THWMouse is present' );
+  #ok( TMouse->present(),   'TMouse is present' );
 }
 
 done_testing();

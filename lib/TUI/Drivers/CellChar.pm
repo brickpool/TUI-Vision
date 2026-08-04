@@ -15,13 +15,17 @@ our @EXPORT = qw(
 );
 
 require bytes;
+use PerlX::Assert::PP;
+use Scalar::Util qw( blessed );
 use Terminal::WCWidth qw( wcswidth );
 
 sub TCellChar() { __PACKAGE__ }
 
 sub new {    # $cch (|%args)
   my ( $class, @args ) = @_;
-  my $text = '';
+  assert ( $class and !ref $class );
+
+  my $text = "\0";
   if ( @args ) {
     return
       unless @args % 2 == 0;
@@ -29,19 +33,23 @@ sub new {    # $cch (|%args)
     return
       unless exists $args{text};
     $text = $args{text};
+    assert ( !ref $text and length $text );
   }
   return bless \$text, $class;
 }
 
 sub getText {    # $ch ()
+  assert ( blessed $_[0] );
   return ${ $_[0] };
 }
 
 sub size {    # $bytes ()
+  assert ( blessed $_[0] );
   return bytes::length( ${ $_[0] } );
 }
 
 sub isWide {    # $bool ()
+  assert ( blessed $_[0] );
   my $text = ${ $_[0] };
   return !!0
     if bytes::length( $text ) == 1;
@@ -49,6 +57,7 @@ sub isWide {    # $bool ()
 }
 
 sub isWideCharTrail {    # $bool ()
+  assert ( blessed $_[0] );
   return ${ $_[0] } eq "\0";
 }
 
@@ -58,11 +67,11 @@ __END__
 
 =head1 NAME
 
-TUI::Drivers::CellChar - character value type for screen cells
+TCellChar - character value type for screen cells
 
 =head1 SYNOPSIS
 
-  use TUI::Drivers::CellChar;
+  use TUI::Drivers;
 
   my $ch = TCellChar->new(
     text => 'A',

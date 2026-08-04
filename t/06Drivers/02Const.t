@@ -9,6 +9,7 @@ BEGIN {
     :evXXXX
     :mbXXXX
     :meXXXX
+    :slXXXX
   );
 }
 
@@ -31,5 +32,8 @@ is( mbRightButton, 0x02,   'mbRightButton is 0x02' );
 
 is( meMouseMoved,  0x01,   'meMouseMoved is 0x01' );
 is( meDoubleClick, 0x02,   'meDoubleClick is 0x02' );
+
+is( slBold,        0x01,   'slBold is 0x01' );
+is( slBlink,       0x08,   'slBlink is 0x08' );
 
 done_testing();
