@@ -687,7 +687,7 @@ Stores console screen buffer information.
 =head1 IMPLEMENTATION
 
 This module contains the Windows-specific implementation behind
-L<THardwareInfo|TUI::Drivers::HardwareInfo> (C<THardwareInfo>). Public API semantics and
+C<THardwareInfo>. Public API semantics and usage are documented in
 usage are documented in L<THardwareInfo|TUI::Drivers::HardwareInfo>.
 
 In this backend, those methods are mapped to Win32 console facilities for

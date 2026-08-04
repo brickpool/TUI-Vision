@@ -9,7 +9,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '0.001000';
+our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -880,3 +880,105 @@ sub _tb_event_to_key_code {    # $keyCode ($event)
 }
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Drivers::HardwareInfo::Termbox - Termbox hardware backend for THardwareInfo
+
+=head1 DESCRIPTION
+
+C<TUI::Drivers::HardwareInfo::Termbox> provides the Termbox-based
+implementation of the C<THardwareInfo> hardware interface used by the Turbo
+Vision driver layer.
+
+The module maps keyboard, mouse, screen, caret, timer, and terminal services
+to the facilities provided by C<Termbox>.
+
+Depending on availability, either the native Termbox FFI implementation or the
+pure Perl fallback implementation is used transparently.
+
+This module is not instantiated. All interaction is performed through
+class-level method calls.
+
+Terminal resources are initialized automatically when the module is loaded and
+released automatically when the program terminates.
+
+=head1 VARIABLES
+
+The following variables are internal to the Termbox backend implementation and
+are not part of the portable C<THardwareInfo> interface.
+
+=head2 $insertState
+
+Tracks the current insert mode state (I<Bool>).
+
+=head2 $platform
+
+Contains the platform classification string (I<Str>) determined at module
+initialization.
+
+=head2 $pendingEvent
+
+Indicates whether a Termbox input event has been buffered
+(I<PositiveOrZeroInt>).
+
+=head2 $doubleDelay
+
+Maximum interval, in Turbo Vision clock ticks, used for mouse double-click
+detection (I<PositiveInt>).
+
+=head1 IMPLEMENTATION
+
+=head1 IMPLEMENTATION
+
+This module contains the Termbox-specific implementation behind
+C<THardwareInfo>. Public API semantics and usage are documented in
+L<THardwareInfo|TUI::Drivers::HardwareInfo>.
+
+In this backend, those methods are mapped to Termbox facilities for terminal
+input handling, screen output, cursor management, timing, and mouse support.
+
+The implementation provides translation between Turbo Vision key codes,
+character codes, mouse events, and the corresponding Termbox event model.
+
+When the pure Perl L<Termbox::PP> backend is used, additional compatibility
+handling is available for standalone C<Esc> key detection and WinVT-specific
+input processing. These facilities are currently not available when using the
+native FFI-based L<Termbox> implementation.
+
+The exact implementation details here are backend-specific and may differ from
+other platform implementations.
+
+=head1 SEE ALSO
+
+L<THardwareInfo|TUI::Drivers::HardwareInfo>,
+L<TScreen|TUI::Drivers::Screen>,
+L<THWMouse|TUI::Drivers::HWMouse>,
+L<TSystemError|TUI::Drivers::SystemError>,
+L<Termbox::PP>, 
+L<Termbox>
+
+=head1 AUTHORS
+
+=over
+
+=item * Borland International (original Turbo Vision design)
+
+=item * J. Schneider <brickpool@cpan.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2019-2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
