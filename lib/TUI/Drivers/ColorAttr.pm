@@ -18,7 +18,7 @@ use TUI::Drivers::Const qw( :slXXXX );
 
 sub TColorAttr() { __PACKAGE__ }
 
-sub new { # $attr (|%args)
+sub new {    # $attr (|%args)
   my ( $class, @args ) = @_;
 
   # TColorAttr->new()
@@ -48,8 +48,9 @@ sub new { # $attr (|%args)
   #   bg    => Int,
   #   | style => Int
   # )
+  return 
+    unless @args % 2 == 0;
   my %args = @args;
-
   if ( exists $args{fg} && exists $args{bg} ) {
     my $fg    = 0+ $args{fg};
     my $bg    = 0+ $args{bg};
@@ -219,34 +220,25 @@ Returns a BIOS color attribute for this value.
 
 =head1 SEE ALSO
 
-L<TUI::Drivers::Const>
+L<TUI::Drivers::Const>,
+L<TScreenCell|TUI::Drivers::ScreenCell>,
+L<TCellChar|TUI::Drivers::CellChar>
 
 =head1 AUTHORS
 
 =over
 
-=item * Borland International (original Turbo Vision design)
+=item * magiblot <magiblot@hotmail.com> (original color attribute design)
 
 =item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
-=head1 CONTRIBUTORS
-
-=over
-
-=item * magiblot <magiblot@hotmail.com>
-
-=back
-
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 1990-1994, 1997 by Borland International
-
-Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
+Copyright (c) 2019-2026 the L</AUTHORS> listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut
-
