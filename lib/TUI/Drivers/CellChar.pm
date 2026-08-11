@@ -25,40 +25,78 @@ sub new {    # $cch (|%args)
   my ( $class, @args ) = @_;
   assert ( $class and !ref $class );
 
-  my $text = "\0";
-  if ( @args ) {
-    return
-      unless @args % 2 == 0;
-    my %args = @args;
-    return
-      unless exists $args{text};
-    $text = $args{text};
+  # TCellChar->new()
+  my $text;
+  if ( !@args ) {
+    $text = '';
+  }
+
+  # TCellChar->new( text => Str )
+  elsif ( @args == 2 && $args[0] eq 'text' ) {
+    $text = $args[1];
     assert ( !ref $text and length $text );
   }
+
+  else {
+    return;
+  }
+
   return bless \$text, $class;
 }
 
-sub getText {    # $ch ()
-  assert ( blessed $_[0] );
-  return ${ $_[0] };
+sub moveChar {    # void ($ch)
+  my ( $self, $ch ) = @_;
+  assert( blessed $self );
+  assert( !ref $ch );
+  assert( bytes::length($ch) == 1 );
+  ${$self} = $ch;
+  return;
 }
 
-sub size {    # $bytes ()
-  assert ( blessed $_[0] );
-  return bytes::length( ${ $_[0] } );
+sub moveMultiByteChar {    # void ($text)
+  my ( $self, $text ) = @_;
+  assert( blessed $self );
+  assert( !ref $text );
+  ${$self} = $text;
+  return;
+}
+
+sub moveWideCharTrail {    # void ()
+  assert( blessed $_[0] );
+  ${ $_[0] } = "\0";
+  return;
 }
 
 sub isWide {    # $bool ()
   assert ( blessed $_[0] );
   my $text = ${ $_[0] };
   return !!0
-    if bytes::length( $text ) == 1;
-  return wcswidth( ${ $_[0] } ) != 1;
+    if bytes::length( $text ) <= 1;
+  return wcswidth( ${ $_[0] } ) >= 2;
 }
 
 sub isWideCharTrail {    # $bool ()
   assert ( blessed $_[0] );
   return ${ $_[0] } eq "\0";
+}
+
+sub appendZeroWidthChar {    # void ($mbc)
+  my ( $self, $mbc ) = @_;
+  assert( blessed $self );
+  assert( !ref $mbc );
+  ${$self} .= $mbc;
+  return;
+}
+
+sub getText {    # $ch ()
+  assert ( blessed $_[0] );
+  return ${ $_[0] } || "\0";
+}
+
+sub size {    # $bytes ()
+  assert ( blessed $_[0] );
+  # There is always at least one character, even if it is a NUL
+  return bytes::length( ${ $_[0] } ) || 1;
 }
 
 1;
@@ -81,25 +119,39 @@ TCellChar - character value type for screen cells
 
 =head1 DESCRIPTION
 
-C<TCellChar> represents the text stored in a screen cell.
+C<TCellChar> represents the text stored in a single screen cell.
 
-The stored value is one of:
+A cell may contain:
 
 =over
 
 =item *
 
-ASCII or extended ASCII text occupying a single screen column.
+A single-byte ASCII or extended ASCII character.
 
 =item *
 
-Multi-byte text occupying one or more screen columns.
+A UTF-8 character or character sequence occupying one or two screen columns.
 
 =item *
 
-A special wide-character trail placeholder represented by C<"\0">.
+A special wide-character trail marker representing the trailing cell of a wide
+character.
 
 =back
+
+The stored text always contains a visible character, unless the value
+represents a wide-character trail marker. Zero-width Unicode characters may
+therefore only appear as part of a character sequence attached to a visible
+base character.
+
+Wide-character trail markers are internal placeholders used to represent the
+additional screen cell occupied by a wide character. They do not contribute
+visible text of their own.
+
+Applications may construct and manipulate C<TCellChar> values directly, but
+screen text is usually written through the functions provided by
+L<TText|TUI::Drivers::Text>.
 
 =head1 CONSTRUCTOR
 
@@ -125,6 +177,15 @@ Construct a wide-character trail placeholder:
 
 =head1 METHODS
 
+=head2 appendZeroWidthChar
+
+  $self->appendZeroWidthChar($text);
+
+Appends a zero-width Unicode character sequence to the stored text.
+
+The resulting value continues to represent a single screen cell and must still 
+contain at least one visible character.
+
 =head2 getText
 
  my $ch = $self->getText();
@@ -142,6 +203,28 @@ Returns true if the stored text does not occupy exactly one screen column.
  my $bool = $self->isWideCharTrail();
 
 Returns true if the value represents a wide-character trail placeholder.
+
+=head2 moveChar
+
+  $self->moveChar($ch);
+
+Replaces the stored text with a single-byte character.
+
+=head2 moveMultiByteChar
+
+  $self->moveMultiByteChar($text);
+
+Replaces the stored text with a UTF-8 character or character sequence.
+
+The resulting value may occupy one or two screen columns.
+
+=head2 moveWideCharTrail
+
+  $self->moveWideCharTrail();
+
+Replaces the stored text with a special wide-character trail marker.
+
+This value is used internally as the trailing cell occupied by a wide character.
 
 =head2 size
 

@@ -20,7 +20,7 @@ subtest 'default constructor' => sub {
 };
 
 subtest 'bios constructor' => sub {
-  my $cell = TScreenCell->new( bios => 0x1F );
+  my $cell = TScreenCell->new( bios => ( 0x1F << 8 ) | ord('A') );
   isa_ok( $cell, TScreenCell );
 
   isa_ok( $cell->getAttr, TColorAttr );

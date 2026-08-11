@@ -25,7 +25,7 @@ use TUI::Drivers::CellChar;
 
 sub TScreenCell() { __PACKAGE__ }
 
-sub new {
+sub new {    # $cell (|%args)
   my ( $class, @args ) = @_;
   assert ( $class and !ref $class );
 
@@ -37,16 +37,36 @@ sub new {
 
   # TScreenCell( bios => Int )
   if ( @args == 2 && $args[0] eq 'bios' ) {
-    my $attr = $args[1];
-    assert ( blessed $attr or looks_like_number $attr );
+    assert ( looks_like_number $args[1] );
+    my $bios = $args[1];
+    my $attr = ( $bios >> 8 ) & 0xff;
+    my $ch = $bios & 0xff;
     return bless [
-      blessed( $attr ) ? $attr : TColorAttr->new( bios => $attr ),
-      TCellChar->new(),
+      TColorAttr->new( bios => $attr ),
+      TCellChar->new( text => $ch ),
     ], $class;
   }
 
   return;
 }
+
+sub isWide {    # $bool ()
+  assert ( blessed $_[0] );
+  return $_[0]->[1]->isWide;
+}
+
+sub equals {    # $bool ($other)
+  my ( $self, $other ) = @_;
+  assert ( blessed $self );
+  assert ( blessed $other );
+  return ref $self eq ref $other
+      && ${ $self->[0] } == ${ $other->[0] }
+      && ${ $self->[1] } eq ${ $other->[1] };
+}
+
+use overload
+  '==' => \&equals,
+  fallback => 1;
 
 sub getAttr {    # $attr ()
   assert ( blessed $_[0] );
@@ -72,7 +92,7 @@ sub setChar {    # void ($ch)
   assert ( blessed $cell );
   assert ( blessed $ch or !ref $ch && length $ch );
 
-  $cell->[1] = blessed( $ch ) 
+  $cell->[1] = ref( $ch )
              ? $ch
              : TCellChar->new( text => $ch );
   return;
@@ -80,27 +100,10 @@ sub setChar {    # void ($ch)
 
 sub setCell {    # void ($ch, $attr)
   my ( $cell, $ch, $attr ) = @_;
-  setChar( $cell, $ch );
-  setAttr( $cell, $attr );
+  $cell->setChar( $ch );
+  $cell->setAttr( $attr );
   return;
 }
-
-sub isWide {    # $bool ()
-  assert ( blessed $_[0] );
-  return $_[0]->[1]->isWide;
-}
-
-sub equals {    # $bool ($other)
-  my ( $self, $other ) = @_;
-  assert ( blessed $self );
-
-  return blessed $other
-      && ${ $self->[0] } == ${ $other->[0] }
-      && ${ $self->[1] } eq ${ $other->[1] };
-}
-
-use overload
-  '==' => \&equals;
 
 1;
 

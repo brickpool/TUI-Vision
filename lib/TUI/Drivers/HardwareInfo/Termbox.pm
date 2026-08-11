@@ -39,6 +39,9 @@ use TUI::Drivers::Const qw(
   :meXXXX
   :mbXXXX
 );
+use TUI::Drivers::CellChar;
+use TUI::Drivers::ColorAttr;
+use TUI::Drivers::ScreenCell;
 
 # -------------------------------------------------------------------------
 # Define constants
@@ -153,8 +156,10 @@ my @CP437_TO_UTF8 = (
   ord "\x{00b0}", ord "\x{2219}", ord "\x{00b7}", ord "\x{221a}",
   ord "\x{207f}", ord "\x{00b2}", ord "\x{25a0}", ord "\x{00a0}",
 );
+my %CP437 = map { $CP437_TO_UTF8[$_] => $_ } 0..255;
+my @UTF8  = map { chr } @CP437_TO_UTF8;
 
-# [ mod, key, ch ]
+# TVision to termbox event translation table.
 my %TV_TO_TB = (
   # Control keys
   kbCtrlA() => [ TB_MOD_CTRL, TB_KEY_CTRL_A, 0 ],
@@ -337,6 +342,47 @@ my %TV_TO_TB = (
   # kbGrayPlus()  => collides with '+'
   # kbCtrlPrtSc() => no event generated (effectively collides with kbNoKey())
 );
+my %TB_TO_TV; {
+  while ( my ( $tv_key, $tb_key ) = each %TV_TO_TB ) {
+    my ( $mod, $key, $ch ) = @$tb_key;
+
+    # Default: first mapping wins.
+    # This avoids accidental replacement caused by hash iteration order.
+    my $id = join( ':', ( $mod, $key, $ch ) );
+    $TB_TO_TV{$id} = $tv_key
+      unless exists $TB_TO_TV{$id};
+  }
+
+  # VT control-code collisions.
+  #
+  # VT stream     TV keys                 Preferred
+  # ------------------------------------------------
+  # 0x08          Ctrl-H, Ctrl-Back       Ctrl-Back
+  # 0x09          Ctrl-I, Tab             Tab
+  # 0x0A          Ctrl-J, Ctrl-Enter      Ctrl-Enter
+  # 0x0D          Ctrl-M, Enter           Enter
+  $TB_TO_TV{ join( ':', TB_MOD_CTRL, TB_KEY_BACKSPACE, 0 ) }
+    = kbCtrlBack();
+  $TB_TO_TV{ join( ':', TB_MOD_CTRL, TB_KEY_TAB, 0 ) }
+    = kbTab();
+  $TB_TO_TV{ join( ':', TB_MOD_CTRL, TB_KEY_CTRL_J, 0 ) }
+    = kbCtrlEnter();
+  $TB_TO_TV{ join( ':', TB_MOD_CTRL, TB_KEY_ENTER, 0 ) }
+    = kbEnter();
+}
+
+# Termbox color attribute table.
+my @TB_COLORS = (
+  TB_BLACK,
+  TB_BLUE,
+  TB_GREEN,
+  TB_CYAN,
+  TB_RED,
+  TB_MAGENTA,
+  TB_YELLOW,
+  TB_WHITE,
+);
+my %TB_ATTR = ();
 
 # -------------------------------------------------------------------------
 # Initialization and cleanup
@@ -470,9 +516,9 @@ sub setCaretPosition {    # void ($class, $x, $y)
 sub isCaretVisible {    # $visible ($class)
   assert ( $_[0] and !ref $_[0] );
   return not (
-    ($cursorLines & 0x2000)
+    ( $cursorLines & 0x2000 )
       ||
-    (($cursorLines >> 8) > ($cursorLines & 0xff))
+    ( ( $cursorLines >> 8 ) > ( $cursorLines & 0xff ) )
   );
 }
 
@@ -537,18 +583,22 @@ sub screenWrite {         # void ($class, $x, $y, $buf, $len)
   assert ( ref $buf );
   assert ( looks_like_number $len );
 
-  state %TB_ATTR;
   for ( my $i = 0 ; $i < $len ; ++$i, ++$x ) {
-    my $screenCell = $buf->[$i];
-    my $colorAttr = $TB_ATTR{ $screenCell->[1] } //= 
-      _bios_attr_to_tb_attr( $screenCell->[1] );
+    my $cell = $buf->[$i];
 
-    tb_set_cell(
-      $x, $y,
-      chr( $CP437_TO_UTF8[ $screenCell->[0] & 0xff ] ),
-      $colorAttr->[0],    # fg
-      $colorAttr->[1],    # bg
-    );
+    # Fast path equivalent of the code below.
+    #   my $dosChar = $cell->getChar()->getText();
+    #   my $ch = Encode::decode( cp437 => $dosChar );
+    my $dosChar = ${ $cell->[1] };
+    my $ch = $UTF8[ ord( $dosChar ) & 0xff ];
+
+    #   my $bios = $cell->getAttr()->toBIOS();
+    #   my $attr = _bios_to_tb_attr( $bios );
+    my $bits = ${ $cell->[0] };
+    my $attr = $TB_ATTR{$bits} //= 
+      _bios_to_tb_attr( $cell->getAttr()->asBIOS() );
+
+    tb_set_cell( $x, $y, $ch, @$attr );
   }
 
   tb_present();
@@ -568,7 +618,7 @@ sub allocateScreenBuffer {    # \@buffer ($class)
   $cols = 80 if $cols < 80;
   $rows = 50 if $rows < 50;
 
-  return [ map [ 0, 0 ], 1 .. $cols * $rows ];
+  return [ map { TScreenCell->new() } 1 .. $cols * $rows ];
 }
 
 sub freeScreenBuffer {        # void ($class, \@buffer)
@@ -587,7 +637,7 @@ sub getButtonCount {    # $num ($class)
 
   # Termbox reports mouse events, but not a physical button count.
   # Return a practical compatibility value.
-  return 3;
+  return $initialized ? 3 : 0;
 }
 
 sub cursorOn {    # void ($class)
@@ -725,7 +775,7 @@ sub getKeyEvent {    # $bool ($class, $event)
   $event->{what} = evKeyDown;
 
   # Set the key code and character code in the event structure.
-  my $keyCode = _tb_event_to_key_code($tb_event);
+  my $keyCode = _tb_event_to_key_code( $tb_event );
   $event->{keyDown}{keyCode} = $keyCode;
   if ( $keyCode == kbNoKey ) {
     my $charCode = _tb_event_to_char_code( $tb_event );
@@ -779,35 +829,20 @@ sub setCritErrorHandler {    # $bool ($class, $install)
 # Private helper functions
 # -------------------------------------------------------------------------
 
-sub _bios_attr_to_tb_attr {    # \@colors ($attr)
-  my $attr = shift;
+sub _bios_to_tb_attr {    # \@attr ($bios)
+  my ( $bios ) = @_;
 
-  state $colors = [
-    TB_BLACK,
-    TB_BLUE,
-    TB_GREEN,
-    TB_CYAN,
-    TB_RED,
-    TB_MAGENTA,
-    TB_YELLOW,
-    TB_WHITE,
-  ];
+  my $fg = $TB_COLORS[   $bios        & 0x07 ];
+  my $bg = $TB_COLORS[ ( $bios >> 4 ) & 0x07 ];
 
-  my $fg = $colors->[ $attr & 0x07 ];
-  my $bg = $colors->[ ( $attr >> 4 ) & 0x07 ];
+  $fg |= TB_BOLD  if $bios & 0x08;
+  $fg |= TB_BLINK if $bios & 0x80;
 
-  $fg |= TB_BOLD  if $attr & 0x08;
-  $fg |= TB_BLINK if $attr & 0x80;
-
-  return [ $fg, $bg ];
-} #/ sub _bios_attr_to_tb_attr
+  [ $fg, $bg ];
+}
 
 sub _tb_event_to_char_code {    # $charCode ($event)
-  my $event = shift;
-
-  state $CP437 = {
-    map { $CP437_TO_UTF8[$_] => $_ } (0..255)
-  };
+  my ( $event ) = @_;
 
   my $cp = $event->ch;
 
@@ -815,8 +850,8 @@ sub _tb_event_to_char_code {    # $charCode ($event)
   return 0x10 if $cp == ord "\x{25ba}";
   return 0x11 if $cp == ord "\x{25c4}";
 
-  return $CP437->{$cp}
-    if $cp && exists $CP437->{$cp};
+  return $CP437{$cp}
+    if $cp && exists $CP437{$cp};
 
   my $key = $event->key;
 
@@ -826,44 +861,8 @@ sub _tb_event_to_char_code {    # $charCode ($event)
   return 0;
 }
 
-sub _build_tb_to_tv_key_map {    # \%map ()
-  my %tb_to_tv;
-
-  my $id;
-  while (my ($tv_key, $tb_key) = each %TV_TO_TB) {
-    my ($mod, $key, $ch) = @$tb_key;
-
-    # Default: first mapping wins.
-    # This avoids accidental replacement caused by hash iteration order.
-    $id = join(':', ($mod, $key, $ch));
-    $tb_to_tv{$id} = $tv_key
-      unless exists $tb_to_tv{$id};
-  }
-
-  # VT control-code collisions.
-  #
-  # VT stream     TV keys                 Preferred
-  # ------------------------------------------------
-  # 0x08          Ctrl-H, Ctrl-Back       Ctrl-Back
-  # 0x09          Ctrl-I, Tab             Tab
-  # 0x0A          Ctrl-J, Ctrl-Enter      Ctrl-Enter
-  # 0x0D          Ctrl-M, Enter           Enter
-  $tb_to_tv{ join(':', TB_MOD_CTRL, TB_KEY_BACKSPACE, 0) }
-    = kbCtrlBack();
-  $tb_to_tv{ join(':', TB_MOD_CTRL, TB_KEY_TAB, 0) }
-    = kbTab();
-  $tb_to_tv{ join(':', TB_MOD_CTRL, TB_KEY_CTRL_J, 0) }
-    = kbCtrlEnter();
-  $tb_to_tv{ join(':', TB_MOD_CTRL, TB_KEY_ENTER, 0) }
-    = kbEnter();
-
-  return \%tb_to_tv;
-}
-
 sub _tb_event_to_key_code {    # $keyCode ($event)
-  my $event = shift;
-
-  state $TB_TO_TV = _build_tb_to_tv_key_map();
+  my ( $event ) = @_;
 
   my $mod = $event->mod;
   my $key = $event->key;
@@ -873,8 +872,8 @@ sub _tb_event_to_key_code {    # $keyCode ($event)
   $mod &= TB_MOD_ALT | TB_MOD_CTRL | TB_MOD_SHIFT;
 
   my $id = join(':', ($mod, $key, $ch));
-  return $TB_TO_TV->{$id}
-    if exists $TB_TO_TV->{$id};
+  return $TB_TO_TV{$id}
+    if exists $TB_TO_TV{$id};
 
   return kbNoKey();
 }

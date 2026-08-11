@@ -21,6 +21,7 @@ use Scalar::Util qw(
 );
 
 use TUI::Drivers::Const qw( :slXXXX );
+use TUI::Drivers::ColorDesired;
 
 sub TColorAttr() { __PACKAGE__ }
 
@@ -28,119 +29,156 @@ sub new {    # $attr (|%args)
   my ( $class, @args ) = @_;
 
   # TColorAttr->new()
-  return bless( \( my $v = 0 ), $class )
-    unless @args;
+  my $v;
+  if ( !@args ) {
+    $v = 0;
+  }
 
   # TColorAttr->new( bios => Int )
-  if ( @args == 2 && $args[0] eq 'bios' ) {
-    my $bios = $args[1];
+  elsif ( @args == 2 && $args[0] eq 'bios' ) {
+    my $bios = $args[1] & 0xff;
     assert ( looks_like_number $bios );
-    
-    my $fg = $bios          & 0x0f;
-    my $bg = ( $bios >> 4 ) & 0x0f;
-    
-    my $style = 0;
-    $style |= slBold if $fg  & 0x08;
-    $style |= slBlink if $bg & 0x08;
 
-    my $v = ( $style & 0x3ff )
-          | ( ( $fg & 0x7ffffff ) << 10 )
-          | ( ( $bg & 0x7ffffff ) << 37 );
+    my $fg = TColorDesired->new( bios => $bios & 0xf )->bitCast();
+    my $bg = TColorDesired->new( bios => $bios >> 4 )->bitCast();
 
-    return bless \$v, $class;
+    $v = ( ( $fg & 0x7ffffff ) << 10 )
+       | ( ( $bg & 0x7ffffff ) << 37 );
   }
 
   # TColorAttr->new(
-  #   fg    => Int,
-  #   bg    => Int,
+  #   fg => TColorDesired,
+  #   bg => TColorDesired,
   #   | style => Int
   # )
-  return 
-    unless @args % 2 == 0;
-  my %args = @args;
-  if ( exists $args{fg} && exists $args{bg} ) {
-    my $fg    = $args{fg};
-    my $bg    = $args{bg};
+  elsif ( @args % 2 == 0 ) {
+    my %args = @args;
+
     my $style = $args{style} // 0;
-    assert ( looks_like_number $fg );
-    assert ( looks_like_number $bg );
+    my $fg = $args{fg};
+    my $bg = $args{bg};
+
     assert ( looks_like_number $style );
+    assert ( blessed $fg );
+    assert ( blessed $bg );
 
-    my $v = ( $style & 0x3ff ) 
-          | ( ( $fg & 0x7ffffff ) << 10 )
-          | ( ( $bg & 0x7ffffff ) << 37 );
-
-    return bless \$v, $class;
+    $v = ( $style & 0x3ff ) 
+       | ( ( $fg->bitCast & 0x7ffffff ) << 10 )
+       | ( ( $bg->bitCast & 0x7ffffff ) << 37 );
   }
 
-  return;
+  else {
+    return;
+  }
+  
+  return bless \$v, $class;
 } #/ sub new
+
+sub isBIOS {    # $bool ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  return $self->getFore->isBIOS() 
+      && $self->getBack->isBIOS() 
+      && !$self->getStyle();
+}
+
+# Quantization
+sub toBIOS {    # $attr ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $fg = $self->getFore();
+  my $bg = $self->getBack();
+  return ( $fg->toBIOS( 1 ) | ( $bg->toBIOS( 0 ) << 4 ) ) & 0xff;
+}
+
+# Result is meaningful only if it actually is BIOS.
+sub asBIOS {    # $attr ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+
+  # $$self must be a BIOS attribute. If it is not, the result will be
+  # bogus but harmless. The important is that the result isn't \x0
+  # unless this is BIOS attribute \x0.
+  my $fg = ( ${$self} >> 10 ) & 0x0f;
+  my $bg = ( ${$self} >> 37 ) & 0x0f;
+  my $bios = $fg | ( $bg << 4 );
+  return $self->isBIOS ? $bios : 0x5f;
+}
+
+sub equals {    # $bool ($other|$bios)
+  my ( $self, $other ) = @_;
+  assert ( blessed $self );
+  assert ( blessed $other or looks_like_number $other );
+  return ref $other
+    ? $$self == $$other 
+    : $self->asBIOS == $other;
+}
+
+use overload
+  '0+' => \&asBIOS,
+  '==' => \&equals,
+  fallback => 1;
+
+sub getFore {    # $fg ()
+  assert ( blessed $_[0] );
+  my $color = TColorDesired->new();
+  $color->bitCast( ( ${ $_[0] } >> 10 ) & 0x7ffffff );
+  return $color;
+}
+
+sub getBack {    # $bg ()
+  assert ( blessed $_[0] );
+  my $color = TColorDesired->new();
+  $color->bitCast( ( ${ $_[0] } >> 37 ) & 0x7ffffff );
+  return $color;
+}
 
 sub getStyle {    # sytle ()
   assert ( blessed $_[0] );
   return ${ $_[0] } & 0x3ff;
 }
 
-sub getFore {    # $fg ()
-  assert ( blessed $_[0] );
-  return ( ${ $_[0] } >> 10 ) & 0x7ffffff;
+sub setFore {    # void ($color)
+  my ( $self, $color ) = @_;
+  assert( blessed $self );
+  assert( blessed $color );
+  ${$self} = ( ${$self} & ~( 0x7ffffff << 10 ) )
+           | ( ( $color->bitCast & 0x7ffffff ) << 10 );
+  return;
 }
 
-sub getBack {    # $bg ()
-  assert ( blessed $_[0] );
-  return ( ${ $_[0] } >> 37 ) & 0x7ffffff;
+sub setBack {    # void ($color)
+  my ( $self, $color ) = @_;
+  assert( blessed $self );
+  assert( blessed $color );
+  ${$self} = ( ${$self} & ~( 0x7ffffff << 37 ) )
+           | ( ( $color->bitCast & 0x7ffffff ) << 37 );
+  return;
 }
 
-sub isBIOS {    # $bool ()
+sub setStyle {    # void ($style)
+  my ( $self, $style ) = @_;
+  assert( blessed $self );
+  assert( looks_like_number $style );
+  ${$self} = ( ${$self} & ~0x3ff )
+           | ( $style & 0x3ff );
+  return;
+}
+
+sub reverseAttribute {    # $attr ()
   my ( $self ) = @_;
-  assert ( blessed $self );
-
-  my $style = ${$self} & 0x3ff;
-  my $fg    = ( ${$self} >> 10 ) & 0x7ffffff;
-  my $bg    = ( ${$self} >> 37 ) & 0x7ffffff;
-
-  return $fg <= 0x0f && $bg <= 0x0f
-    && ( $style & ~( slBold | slBlink ) ) == 0
-    && ( ( $style & slBold  ) xor !( $fg & 0x08 ) )
-    && ( ( $style & slBlink ) xor !( $bg & 0x08 ) );
-}
-
-sub asBIOS {    # $attr ()
-  my ( $self ) = @_;
-  assert ( blessed $self );
-
-  # $$self must be a BIOS attribute. If it is not, the result will be
-  # bogus but harmless. The important is that the result isn't '\x0'
-  # unless this is BIOS attribute '\x0'.
-  my $fg = ( ${$self} >> 10 ) & 0x0f;
-  my $bg = ( ${$self} >> 37 ) & 0x0f;
-
-  my $bios = $fg | ( $bg << 4 );
-  return $self->isBIOS ? $bios : 0x5F;
-}
-
-sub toBIOS {    # $attr ()
-  my ( $self ) = @_;
-  assert ( blessed $self );
-
-  return $self->asBIOS
-    if $self->isBIOS;
-
-  my $fg = ( ${$self} >> 10 ) & 0x7ffffff;
-  my $bg = ( ${$self} >> 37 ) & 0x7ffffff;
-
-  # TODO: RGB -> BIOS or XTerm256 -> BIOS quantization is not yet implemented. 
-  # This is a non-trivial task, as it requires mapping the RGB/Xterm color 
-  # space to the limited BIOS color palette. 
-  #
-  # A possible approach could involve calculating the closest match in the 
-  # BIOS palette for the given RGB values, but this would require additional 
-  # logic and possibly a predefined mapping to BIOS colors.
-  my $bios_fg = 0;
-  my $bios_bg = 0;
-  ...;
-
-  return ( $bios_bg << 4 ) | $bios_fg;
+  my $fg = $self->getFore();
+  my $bg = $self->getBack();
+  # The 'slReverse' attribute is represented differently by every terminal,
+  # so it is better to swap the colors manually unless any of them is default.
+  if ( $fg->isDefault() || $bg->isDefault() ) {
+    $self->setStyle( $self->getStyle() ^ slReverse );
+  }
+  else {
+    $self->setFore( $bg );
+    $self->setBack( $fg );
+  }
+  return $self;
 }
 
 1;
@@ -194,6 +232,8 @@ With explicit foreground, background, and optional style information:
     style => $style,
   );
 
+The C<$fg> and C<$bg> arguments must be a C<TColorDesired> values.
+
 =head1 METHODS
 
 =head2 asBIOS
@@ -228,17 +268,71 @@ Returns the style flags component.
 
 Returns true if this value is represented as a BIOS color attribute.
 
+=head2 reverseAttribute
+
+  my $attr = $self->reverseAttribute();
+
+Reverses the visual foreground and background colors.
+
+The C<slReverse> style attribute is interpreted differently by different
+terminal implementations. Therefore, explicit foreground and background colors
+are swapped whenever possible.
+
+If either color is the terminal default color, the color values are left
+unchanged and the C<slReverse> style flag is toggled instead.
+
+Returns C<$self>.
+
+=head2 setFore
+
+  $self->setFore($color);
+
+Sets the foreground color component.
+
+The argument must be a C<TColorDesired> value.
+
+=head2 setBack
+
+  $self->setBack($color);
+
+Sets the background color component.
+
+The argument must be a C<TColorDesired> value.
+
+=head2 setStyle
+
+  $self->setStyle($style);
+
+Sets the style flags component.
+
+Only the style bits defined by the C<TColorAttr> representation are stored.
+
 =head2 toBIOS
 
  my $attr = $self->toBIOS();
 
 Returns a BIOS color attribute for this value.
 
+=head1 OPERATORS
+
+=head2 Numeric equality
+
+  $a == $b
+
+Returns true when C<TColorDesired> values contain identical data; support 
+typecast of C<$b> to a BIOS value if it is a number.
+
+=head2 Numeric conversion
+
+  my $bios = 0+ $a;
+
+Returns the BIOS color attribute equivalent to this value.
+
 =head1 SEE ALSO
 
 L<TUI::Drivers::Const>,
-L<TScreenCell|TUI::Drivers::ScreenCell>,
-L<TCellChar|TUI::Drivers::CellChar>
+L<TColorDesired|TUI::Drivers::ColorDesired>,
+L<TScreenCell|TUI::Drivers::ScreenCell>
 
 =head1 AUTHORS
 

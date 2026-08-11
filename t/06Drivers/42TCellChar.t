@@ -12,8 +12,10 @@ subtest 'default constructor' => sub {
   my $ch = TCellChar->new();
   isa_ok( $ch, TCellChar );
 
-  is( $ch->getText, "\0", 'default text' );
-  is( $ch->size,    1,    'default size' );
+  is( length( $$ch ), 0,    'length of default text is zero' );
+  is( $ch->getText,   "\0", 'default text' );
+  is( $ch->size,      1,    'default size' );
+
   ok( !$ch->isWide, 'default cell is not wide' );
 };
 
@@ -79,6 +81,36 @@ subtest 'UTF-8 byte length semantics' => sub {
   my $wide = TCellChar->new( text => "\x{754C}" );
   isa_ok( $wide, TCellChar );
   is( $wide->size, 3, 'CJK character occupies three UTF-8 bytes' );
+};
+
+subtest 'mutation methods' => sub {
+  my $ch = TCellChar->new();
+  isa_ok( $ch, TCellChar );
+
+  $ch->moveChar( 'A' );
+  is( $ch->getText, 'A', 'moveChar' );
+  is( $ch->size,    1,   'moveChar size' );
+  ok( !$ch->isWide, 'moveChar is not wide' );
+
+  $ch->moveMultiByteChar( "\x{754C}" );    # 界
+  is( $ch->getText, "\x{754C}", 'moveMultiByteChar' );
+  ok( $ch->isWide, 'moveMultiByteChar is wide' );
+
+  $ch->moveWideCharTrail();
+  ok( $ch->isWideCharTrail, 'moveWideCharTrail' );
+  is( $ch->getText, "\0", 'trail marker text' );
+};
+
+subtest 'appendZeroWidthChar' => sub {
+  my $ch = TCellChar->new( text => 'e' );
+
+  $ch->appendZeroWidthChar(
+    "\x{301}",    # COMBINING ACUTE ACCENT
+  );
+
+  is( $ch->getText, "e\x{301}", 'zero-width character appended' );
+  ok( !$ch->isWide, 'resulting EGC occupies one column' );
+  is( $ch->size, 3, 'UTF-8 byte length preserved' );
 };
 
 done_testing();

@@ -6,6 +6,7 @@ use Test::More;
 BEGIN {
   use_ok 'TUI::Drivers::Const', qw( eventQSize );
   use_ok 'TUI::Drivers::Util';
+  use_ok 'TUI::Drivers::Colors';
   use_ok 'TUI::Drivers::HardwareInfo';
   use_ok 'TUI::Drivers::Display';
   use_ok 'TUI::Drivers::Screen';
@@ -43,8 +44,8 @@ isa_ok( TScreenCell->new(), TScreenCell );
 
 SKIP: {
   skip 'No mouse available', 2 unless THardwareInfo->getButtonCount();
-  #ok( THWMouse->present(), 'THWMouse is present' );
-  #ok( TMouse->present(),   'TMouse is present' );
+  ok( THWMouse->present(), 'THWMouse is present' );
+  ok( TMouse->present(),   'TMouse is present' );
 }
 
 done_testing();

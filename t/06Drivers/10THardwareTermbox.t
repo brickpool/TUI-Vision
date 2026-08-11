@@ -3,6 +3,7 @@ use warnings;
 
 use Test::More;
 use Test::Exception;
+use Scalar::Util qw( reftype );
 
 BEGIN {
   eval {
@@ -127,7 +128,7 @@ isa_ok(
 if ( @$buffer ) {
 
   is(
-    ref( $buffer->[0] ),
+    reftype( $buffer->[0] ),
     'ARRAY',
     'screen cell is arrayref'
   );

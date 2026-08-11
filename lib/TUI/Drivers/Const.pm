@@ -208,6 +208,13 @@ our %EXPORT_TAGS = (
     kbAltShift
   )],
 
+  ctXXXX => [qw(
+    ctDefault
+    ctBIOS
+    ctRGB
+    ctXTerm
+  )],
+
   slXXXX => [qw(
     slBold
     slItalic
@@ -461,6 +468,14 @@ use constant {
   kbShift     => kbLeftShift | kbRightShift,
   kbCtrlShift => kbLeftCtrl | kbRightCtrl,
   kbAltShift  => kbLeftAlt | kbRightAlt,
+};
+
+# TColorDesired
+use constant {
+  ctDefault => 0x0,    # Terminal default.
+  ctBIOS    => 0x1,    # TColorBIOS.
+  ctRGB     => 0x2,    # TColorRGB.
+  ctXTerm   => 0x3,    # TColorXTerm.
 };
 
 # TColorAttr Style masks

@@ -16,7 +16,7 @@ our @EXPORT = qw(
 );
 
 require bytes;
-use Encode qw( encode decode );
+use Encode qw( decode );
 use Symbol ();
 use TUI::toolkit;
 use TUI::toolkit::Types qw(

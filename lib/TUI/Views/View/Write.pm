@@ -10,9 +10,12 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 
 use Scalar::Util qw( weaken );
 
+use TUI::Drivers::ColorAttr;
 use TUI::Drivers::HardwareInfo;
 use TUI::Drivers::HWMouse;
 use TUI::Drivers::Screen;
+use TUI::Drivers::ScreenCell;
+
 use TUI::Views::Const qw(
   sfVisible
   sfShadow
@@ -269,6 +272,8 @@ sub copyShort2CharInfo {
   return;
 } #/ sub copyShort2CharInfo
 
+my @ATTR = map { ${ TColorAttr->new( bios => $_ ) } } 0 .. 255;
+
 sub copyShort2Cell {
   my ( $dst, $src ) = @_;
   my $i;
@@ -276,20 +281,27 @@ sub copyShort2Cell {
     # Expand character/attribute pair
     my $n = $Count - $X;
     for my $i ( 0 .. $n - 1 ) {
-      my ( $char, $attr ) = unpack 'CC' => pack 'v' => $src->[$i];
-      $dst->[$i] = [ $char, $attr ];
+      # Fast path equivalent of the code below.
+      #   my ( $char, $attr ) = unpack 'aC' => pack 'v' => $src->[$i];
+      #   $dst->[$i]->setCell( $char, TColorAttr->new( bios => $attr ) );
+      my $cell  = $dst->[$i];
+      my $short = $src->[$i] & 0xffff;
+      ${ $cell->[0] } = $ATTR[ $short >> 8 ];
+      ${ $cell->[1] } = chr( $short & 0xff );
     }
   }
   else {
     # Mix in shadow attribute
-    for ( $i = 0 ; $i < $Count - $X ; ++$i ) {
-      my ( $char, $attr ) = unpack 'CC' => pack 'v' => $src->[$i];
-      $dst->[$i] = [ $char, applyShadow($attr) ];
+    my $n = $Count - $X;
+    for my $i ( 0 .. $n - 1 ) {
+      my $cell  = $dst->[$i];
+      my $short = $src->[$i] & 0xffff;
+      ${ $cell->[0] } = $ATTR[ applyShadow( $short >> 8 ) ];
+      ${ $cell->[1] } = chr( $short & 0xff );
     }
   }
   return;
 } #/ sub copyShort2Cell
-
 
 sub applyShadow {
   my ( $attr ) = @_;
