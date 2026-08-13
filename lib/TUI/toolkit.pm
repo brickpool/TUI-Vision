@@ -63,7 +63,7 @@ BEGIN { $] >= 5.010 ? require mro : require MRO::Compat }
 BEGIN { require Devel::GlobalDestruction unless $] >= 5.014 }
 BEGIN { *PERL_ONLY = $ENV{PERL_ONLY} ? sub() { !!1 } : sub() { !!0 } }
 BEGIN { sub XS_ASSERT () { eval q[ require PerlX::Assert ]; !$@ } }
-BEGIN { sub XS_PARAMS () { eval q[ require Type::Params  ]; !$@ } }
+BEGIN { sub XS_PARAMS () { eval q[ use Type::Params 2    ]; !$@ } }
 BEGIN { sub SUB_UTIL  () { eval q[ require Sub::Util     ]; !$@ } }
 
 our $name;

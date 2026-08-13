@@ -3,7 +3,7 @@ use warnings;
 
 use ExtUtils::MakeMaker;
 
-unless ($^O eq "MSWin32" || $^O eq "cygwin") {
+if ($^O eq "cygwin") {
   die "OS unsupported\n";
 }
 
@@ -21,25 +21,20 @@ WriteMakefile1(
   },
 
   PREREQ_PM => {
-    'autodie::Scope::Guard'           => 0,
-    'Carp'                            => 1.01,
-    'Class::Struct'                   => 0,
-    'Devel::StrictMode'               => 0.003,
-    'Encode'                          => 0,
-    'Importer'                        => 0.026,
-    'Import::Into'                    => 1.002005,
-    'List::Util'                      => 1.33,
-    'Module::Loaded'                  => 0,
-    'Params::Check'                   => 0,
-    'Scalar::Util'                    => 1.36,
-    'Termbox::PP'                     => '0.6.0',
-    'Terminal::WCWidth'               => 0,
-    'UNIVERSAL::Object'               => 0.17,
-    'Win32'                           => 0.59,
-    'Win32API::File'                  => 0.1101,
-    'Win32::API'                      => 0.84,
-    'Win32::Console'                  => '0.10',
-    'Win32::Console::PatchForRT33513' => 0.008,
+    'autodie::Scope::Guard' => 0,
+    'Carp'                  => 1.01,
+    'Class::Struct'         => 0,
+    'Devel::StrictMode'     => 0.003,
+    'Encode'                => 0,
+    'Importer'              => 0.026,
+    'Import::Into'          => 1.002005,
+    'List::Util'            => 1.33,
+    'Module::Loaded'        => 0,
+    'Params::Check'         => 0,
+    'Scalar::Util'          => 1.36,
+    'Termbox::PP'           => '0.6.0',
+    'Terminal::WCWidth'     => 0,
+    'UNIVERSAL::Object'     => 0.17,
   },
 
   TEST_REQUIRES => {
@@ -62,47 +57,55 @@ WriteMakefile1(
   clean => { FILES => 'TUI-Vision-*'  },
 
   META_MERGE => {
-    'meta-spec' => { version => 2 },
-
+    'meta-spec' => {
+      version => 2
+    },
+    homepage  => 'http://brickpool.de',
     resources => {
       repository  => {
         type => 'git',
         url  => 'https://github.com/brickpool/TUI-Vision.git',
         web  => 'https://github.com/brickpool/TUI-Vision',
       },
-      bugtracker  => { web => 'https://github.com/brickpool/TUI-Vision/issues' },
-      homepage    => 'http://brickpool.de',
+      bugtracker  => {
+        web => 'https://github.com/brickpool/TUI-Vision/issues'
+      },
     },
-
     provides => {
-        'TUI::Vision' 
-            => { file => 'lib/TUI/Vision.pm', version => '2.0.1' },
-        'TUI::App' 
-            => { file => 'lib/TUI/App.pm', version => '2.0.1' },
-        'TUI::Dialogs'
-            => { file => 'lib/TUI/Dialogs.pm', version => '2.0.1' },
-        'TUI::Drivers'
-            => { file => 'lib/TUI/Drivers.pm', version => '2.0.1' },
-        'TUI::Gadgets'
-            => { file => 'lib/TUI/Gadgets.pm', version => '2.0.1' },
-        'TUI::Memory'
-            => { file => 'lib/TUI/Memory.pm', version => '2.0.1' },
-        'TUI::MsgBox'
-            => { file => 'lib/TUI/MsgBox.pm', version => '2.0.1' },
-        'TUI::Objects' 
-            => { file => 'lib/TUI/Objects.pm', version => '2.0.1' },
-        'TUI::StdDlg'
-            => { file => 'lib/TUI/StdDlg.pm', version => '2.0.1' },
-        'TUI::TextView'
-            => { file => 'lib/TUI/TextView.pm', version => '2.0.1' },
-        'TUI::Validate'
-            => { file => 'lib/TUI/Validate.pm', version => '2.0.1' },
-        'TUI::Views'
-            => { file => 'lib/TUI/Views.pm', version => '2.0.1' },
-        'TUI::toolkit'
-            => { file => 'lib/TUI/toolkit.pm', version => '2.0.1' },
+      'TUI::Vision' 
+        => { file => 'lib/TUI/Vision.pm', version => '2.0.1' },
+      'TUI::App' 
+        => { file => 'lib/TUI/App.pm', version => '2.0.1' },
+      'TUI::Dialogs'
+        => { file => 'lib/TUI/Dialogs.pm', version => '2.0.1' },
+      'TUI::Drivers'
+        => { file => 'lib/TUI/Drivers.pm', version => '2.0.1' },
+      'TUI::Gadgets'
+        => { file => 'lib/TUI/Gadgets.pm', version => '2.0.1' },
+      'TUI::Memory'
+        => { file => 'lib/TUI/Memory.pm', version => '2.0.1' },
+      'TUI::MsgBox'
+        => { file => 'lib/TUI/MsgBox.pm', version => '2.0.1' },
+      'TUI::Objects' 
+        => { file => 'lib/TUI/Objects.pm', version => '2.0.1' },
+      'TUI::StdDlg'
+        => { file => 'lib/TUI/StdDlg.pm', version => '2.0.1' },
+      'TUI::TextView'
+        => { file => 'lib/TUI/TextView.pm', version => '2.0.1' },
+      'TUI::Validate'
+        => { file => 'lib/TUI/Validate.pm', version => '2.0.1' },
+      'TUI::Views'
+        => { file => 'lib/TUI/Views.pm', version => '2.0.1' },
+      'TUI::toolkit'
+        => { file => 'lib/TUI/toolkit.pm', version => '2.0.1' },
     },
-
+    prereqs => {
+      runtime => {
+        recommends => {
+          'Type::Params' => 2.000001,
+        },
+      },
+    },
   },
 );
 
@@ -111,6 +114,14 @@ sub WriteMakefile1 { # void (%params)
   my %params = @_;
   my $eumm_version = $ExtUtils::MakeMaker::VERSION;
   $eumm_version = eval $eumm_version;
+
+  if ($^O eq 'MSWin32') {
+    $params{PREREQ_PM}->{'Win32'}                           = 0.59;
+    $params{PREREQ_PM}->{'Win32API::File'}                  = 0.1101;
+    $params{PREREQ_PM}->{'Win32::API'}                      = 0.84;
+    $params{PREREQ_PM}->{'Win32::Console::PatchForRT33513'} = 0.008;
+    $params{PREREQ_PM}->{'Win32::Console'}                  = 0.10;
+  }
 
   if ($params{TEST_REQUIRES} and $eumm_version < 6.64) {
     $params{BUILD_REQUIRES} = {

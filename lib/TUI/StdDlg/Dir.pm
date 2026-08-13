@@ -21,10 +21,7 @@ our %EXPORT_TAGS = (
   all => \@EXPORT_OK,
 );
 
-use Cwd qw(
-  getcwd
-  getdcwd
-);
+use Cwd qw( getcwd );
 use List::Util qw( min );
 use Scalar::Util qw(
   blessed
@@ -215,7 +212,7 @@ sub getcurdir {   # $int ($drive, $direc|undef)
     return -1 if $idx < 0 || $idx > 25;
 
     my $letter = chr( ord( 'A' ) + $idx );
-    my $full   = getdcwd( $letter . ':' );
+    my $full   = Cwd::getdcwd( $letter . ':' );
     return -1 if !defined( $full ) || $full eq '';
 
     $full =~ tr{\/}{\\};
@@ -230,7 +227,7 @@ sub getcurdir {   # $int ($drive, $direc|undef)
 
   return -1 unless $drive == 0 || ( $drive - 1 ) == getdisk();
 
-  my $cwd = getcwd();
+  my $cwd = Cwd::getcwd();
   return -1 unless length $cwd;
 
   $cwd =~ tr{/}{\\};

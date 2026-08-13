@@ -52,7 +52,7 @@ sub draw {    # void ()
   my $c   = $self->getColor( 2 );
 
   $buf->moveChar( 0, ' ', $c, $self->{size}{x} );
-  $buf->moveStr( 0, $self->{heapStr}, $c );
+  $buf->moveStr( 0, $self->{heapStr} // '', $c );
   $self->writeLine( 0, 0, $self->{size}{x}, 1, $buf );
   return;
 } #/ sub draw

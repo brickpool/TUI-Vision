@@ -24,7 +24,6 @@ terms as the Perl 5 programming language system itself.
 use strict;
 use warnings;
 
-use Win32;
 use Test::More;
 
 sub diag_version {
@@ -72,8 +71,12 @@ use constant MANUAL_TESTS => exists($ENV{MANUAL_TESTS})
                           && !$ENV{AUTOMATED_TESTING}
                           && !$ENV{NONINTERACTIVE_TESTING};
 
-use constant PERL_ONLY => exists($ENV{PERL_ONLY}) && $ENV{PERL_ONLY};
+use constant _WIN32     => $^O eq 'MSWin32';
+use constant PERL_ONLY  => exists($ENV{PERL_ONLY}) && $ENV{PERL_ONLY};
 use constant WT_SESSION => exists($ENV{WT_SESSION}) && $ENV{WT_SESSION};
+
+use if _WIN32, 'Win32';
+use if PERL_ONLY, 'Termbox::PP';
 
 sub banner {
   diag( ' ' );
@@ -81,7 +84,7 @@ sub banner {
   diag( ' ' );
   diag( "  OS:           $^O" );
   diag( "  PERL:         $]" );
-  diag( "  CP:           ", Win32::GetConsoleOutputCP() );
+  diag( "  CP:           ", Win32::GetConsoleOutputCP() ) if _WIN32;
   diag( "  STRICT:       ", STRICT       ? "enabled"  : "not enabled"  );
   diag( "  MANUAL_TESTS: ", MANUAL_TESTS ? "enabled"  : "not enabled"  );
   diag( "  PERL_ONLY:    ", PERL_ONLY    ? "enabled"  : "not enabled"  );
@@ -94,6 +97,7 @@ banner();
 
 while (<DATA>) {
   chomp;
+  s/\r\z//;
     
   if (/^#\s*(.*)$/ or /^$/) {
     diag($1 || "");
@@ -125,7 +129,7 @@ __DATA__
 Devel::StrictMode
 Importer
 Import::Into
-Termbox/Termbox::PP
+Termbox
 UNIVERSAL::Object
 Win32::API
 Win32::Console
@@ -168,6 +172,9 @@ namespace::sweep
 PerlX::Assert
 Sub::Util
 Type::Tiny/Types::Standard
+
+$LANG
+$LOCALE
 
 $AUTOMATED_TESTING
 $NONINTERACTIVE_TESTING

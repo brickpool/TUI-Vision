@@ -17,7 +17,8 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 # Import modules
 # -------------------------------------------------------------------------
 
-BEGIN { sub FFI () { eval { require Termbox; Termbox->VERSION(2); 1 } } }
+use constant PERL_ONLY => ( exists $ENV{PERL_ONLY} && $ENV{PERL_ONLY} )
+  || not eval { require Termbox; Termbox->VERSION(2); 1 };
 
 use PerlX::Assert::PP;
 use English qw( -no_match_vars );
@@ -27,7 +28,7 @@ use Scalar::Util qw(
   looks_like_number
   readonly
 );
-use if !FFI, 'Termbox::PP';
+use if PERL_ONLY, 'Termbox::PP';
 use Termbox qw( :all );
 use Time::HiRes qw( time );
 use TUI::toolkit::boolean;
@@ -49,6 +50,44 @@ use TUI::Drivers::ScreenCell;
 
 use constant TB_NONE => 0;
 use constant ESC_WAIT_DELAY => 100; # ms
+
+# The Termbox FFI version doesn't define all keys and attributes, 
+# so we define it here for use in the translation tables.
+use if !PERL_ONLY, constant => {
+  TB_KEY_CTRL_A     => 0x01,
+  TB_KEY_CTRL_B     => 0x02,
+  TB_KEY_CTRL_C     => 0x03,
+  TB_KEY_CTRL_D     => 0x04,
+  TB_KEY_CTRL_E     => 0x05,
+  TB_KEY_CTRL_F     => 0x06,
+  TB_KEY_CTRL_G     => 0x07,
+  TB_KEY_BACKSPACE  => 0x08,
+  TB_KEY_CTRL_H     => 0x08,
+  TB_KEY_TAB        => 0x09,
+  TB_KEY_CTRL_I     => 0x09,
+  TB_KEY_CTRL_J     => 0x0a,
+  TB_KEY_CTRL_K     => 0x0b,
+  TB_KEY_CTRL_L     => 0x0c,
+  TB_KEY_ENTER      => 0x0d,
+  TB_KEY_CTRL_M     => 0x0d,
+  TB_KEY_CTRL_N     => 0x0e,
+  TB_KEY_CTRL_O     => 0x0f,
+  TB_KEY_CTRL_P     => 0x10,
+  TB_KEY_CTRL_Q     => 0x11,
+  TB_KEY_CTRL_R     => 0x12,
+  TB_KEY_CTRL_S     => 0x13,
+  TB_KEY_CTRL_T     => 0x14,
+  TB_KEY_CTRL_U     => 0x15,
+  TB_KEY_CTRL_V     => 0x16,
+  TB_KEY_CTRL_W     => 0x17,
+  TB_KEY_CTRL_X     => 0x18,
+  TB_KEY_CTRL_Y     => 0x19,
+  TB_KEY_CTRL_Z     => 0x1a,
+  TB_KEY_ESC        => 0x1b,
+  TB_KEY_SPACE      => 0x20,
+  TB_KEY_BACKSPACE2 => 0x7f,
+  TB_BRIGHT         => tb_has_truecolor() ? 0x40000000 : 0x4000,
+};
 
 # -------------------------------------------------------------------------
 # Declare global variables
@@ -410,7 +449,7 @@ INIT {
   # ($global->{inbuf}). 
   # The tb_set_func() API itself is backend-independent, but the raw
   # escape buffer is currently only available in the PP backend.
-  unless (FFI) {
+  if ( PERL_ONLY ) {
     no warnings 'deprecated';
     $err = tb_set_func( TB_FUNC_EXTRACT_PRE, sub {
       my ( $event, $consumed_ref ) = @_;
@@ -445,7 +484,7 @@ INIT {
 
 END {
   if ( $initialized ) {
-    tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) unless FFI;
+    tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) if PERL_ONLY;
     tb_shutdown();
   }
 }
@@ -863,7 +902,7 @@ sub _bios_to_tb_attr {    # \@attr ($bios)
     $fg = $bios & 0x07 ? TB_WHITE : TB_BLACK;
     $bg = $bios & 0x70 ? TB_WHITE : TB_BLACK;
 
-    $fg |= TB_BRIGHT if $bios & 0x08;
+    $fg |= TB_BOLD   if $bios & 0x08;
     $bg |= TB_BRIGHT if $bios & 0x80;
     $fg |= TB_UNDERLINE
       if ( ( $screenMode & 0xff ) == smMono
@@ -873,8 +912,8 @@ sub _bios_to_tb_attr {    # \@attr ($bios)
     $fg = $TB_COLORS[ $bios & 0x07 ];
     $bg = $TB_COLORS[ ( $bios >> 4 ) & 0x07 ];
 
-    $fg |= TB_BRIGHT if $bios & 0x08;
-    $fg |= TB_BLINK  if $bios & 0x80;
+    $fg |= TB_BOLD  if $bios & 0x08;
+    $fg |= TB_BLINK if $bios & 0x80;
   }
 
   return [ $fg, $bg ];
