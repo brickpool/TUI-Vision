@@ -30,6 +30,7 @@ extends TApplication;
 use constant {
   cmAboutCmd     => 100,
   cmEventViewCmd => 112,
+  cmVideoMode    => 2002,
 };
 
 # Constants for TVDemo help
@@ -60,15 +61,17 @@ sub BUILD {
   my $self = shift;
 
   my $r = $self->getExtent();    # Create the clock view.
-  $r->{a}{x}    = $r->{b}{x} - 9;
-  $r->{b}{y}    = $r->{a}{y} + 1;
+  $r->{a}{x} = $r->{b}{x} - 9;
+  $r->{b}{y} = $r->{a}{y} + 1;
   $self->{clock} = new_TClockView( $r );
+  $self->{clock}{growMode} = gfGrowLoX | gfGrowHiX;
   $self->insert( $self->{clock} );
 
   $r = $self->getExtent();    # Create the heap view.
-  $r->{a}{x}    = $r->{b}{x} - 13;
-  $r->{a}{y}    = $r->{b}{y} - 1;
+  $r->{a}{x} = $r->{b}{x} - 13;
+  $r->{a}{y} = $r->{b}{y} - 1;
   $self->{heap} = new_THeapView( $r );
+  $self->{heap}{growMode} = gfGrowAll;
   $self->insert( $self->{heap} );
 
   return;
@@ -87,9 +90,9 @@ sub getEvent {    # void ($event)
   $self->SUPER::getEvent( $event );
   $self->printEvent( $event );
 
-  q[*
   SWITCH: for ( $event->{what} ) {
-    evCommand == $_ and do {
+    case: evCommand == $_ and do {
+  q[*
       if ( $event->{message}{command} == cmHelp && !$helpInUse ) {
         $helpInUse = 1;
 
@@ -113,19 +116,20 @@ sub getEvent {    # void ($event)
         $helpInUse = 0;
       } #/ if ( $event->{message}...)
       elsif ( $event->{message}{command} == cmVideoMode ) {
-        my $newMode = TScreen::screenMode() ^ TDisplay::smFont8x8();
+  q*] if 0;
+      if ( $event->{message}{command} == cmVideoMode ) {
+        my $newMode = $TUI::Drivers::Screen::screenMode ^ smFont8x8;
         $self->setScreenMode( $newMode );
       }
       last;
     };
-    evMouseDown == $_ and do {
+    case: evMouseDown == $_ and do {
       if ( $event->{mouse}{buttons} == mbRightButton ) {
         $event->{what} = evNothing;
       }
       last;
     }
   } #/ SWITCH: for ( $event->{what} )
-  q*] if 0;
   return;
   } #/ alias: for my $event
 } #/ sub getEvent
@@ -175,6 +179,8 @@ sub initMenuBar {
   
   my $sub1 = 
     new_TSubMenu( "~\360~", 0, hcSystem ) +
+      new_TMenuItem( "~V~ideo mode", cmVideoMode, kbNoKey, hcNoContext, "" ) +
+      newLine() +
       new_TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
       newLine() +
       new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 

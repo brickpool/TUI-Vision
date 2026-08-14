@@ -405,7 +405,7 @@ sub setScreenMode { # void ($mode)
   TScreen->setVideoMode( $mode );
   $self->initScreen();
   $self->{buffer} = $screenBuffer;
-  $r = TRect->new( ax => 0, bx => 0, ay => $screenWidth, by => $screenHeight );
+  $r = TRect->new( ax => 0, ay => 0, bx => $screenWidth, by => $screenHeight );
   $self->changeBounds( $r );
   $self->setState( sfExposed, 0 );
   $self->setState( sfExposed, 1 );

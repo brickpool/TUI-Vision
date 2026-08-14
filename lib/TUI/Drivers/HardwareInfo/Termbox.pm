@@ -83,9 +83,10 @@ use vars qw(
 # Local variables
 # -------------------------------------------------------------------------
 
+my $screenMode  = 0;
 my $initialized = false;
 my $cursorLines = 0x0607;
-my $tb_event = Termbox::Event->new();
+my $tb_event    = Termbox::Event->new();
 
 # Codepage 437 to Unicode translation map.
 my @CP437_TO_UTF8 = (
@@ -389,7 +390,6 @@ my %TB_ATTR = ();
 # -------------------------------------------------------------------------
 
 INIT {
-  # Determine the platform type for compatibility with TUI::Drivers::SystemInfo.
   if ( eval { require Perl::OSType; 1 } ) {
     $platform = Perl::OSType::os_type( $OSNAME );
   } elsif ( $OSNAME eq 'MSWin32' ) {
@@ -444,7 +444,7 @@ INIT {
 }
 
 END {
-  if ($initialized) {
+  if ( $initialized ) {
     tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) unless FFI;
     tb_shutdown();
   }
@@ -478,7 +478,7 @@ sub setCaretSize {    # void ($class, $size)
     tb_hide_cursor();
   } elsif ( $size > 0 ) {
     # 1..99 -> BIOS-style cursor shape
-    my $scan_row_start = 0x07 - int( $size * 7.0 / (100 - 1) + 0.5 );
+    my $scan_row_start = 0x07 - int( $size * 7.0 / ( 100 - 1 ) + 0.5 );
     my $scan_row_end = 0x07;
     $cursorLines = $scan_row_start << 8 | $scan_row_end;
 
@@ -496,7 +496,9 @@ sub getCaretSize {    # $size ($class)
   my $scan_row_start = $cursorLines >> 8 & 0xff;
   my $scan_row_end   = $cursorLines & 0xff;
 
-  my $size = int(($scan_row_end - $scan_row_start) / 7.0 * (100 - 1) + 0.5) + 1;
+  my $size =
+	  int( ( $scan_row_end - $scan_row_start ) / 7.0 * ( 100 - 1 ) + 0.5 ) + 1;
+
   $size = 15  if $size < 1;
   $size = 50  if $size == 58;
   $size = 100 if $size > 100;
@@ -542,13 +544,22 @@ sub getScreenCols {       # $cols ($class)
 
 sub getScreenMode {       # $mode ($class)
   assert ( $_[0] and !ref $_[0] );
+
   my $rows = tb_height();
-  my $mode = 0;
-  if ( $rows > 0 ) {
-    $mode = tb_set_output_mode(TB_OUTPUT_CURRENT) == TB_OUTPUT_GRAYSCALE
-          ? smBW80
-          : smCO80;
+  return 0 unless $rows > 0;
+
+  # Invalid or unspecified mode.
+  my $mode = $screenMode & 0xff;
+  if ( $mode != smCO80
+    && $mode != smBW80
+    && $mode != smMono
+  ) {
+      # https://no-color.org/
+      $mode = exists $ENV{NO_COLOR} && $ENV{NO_COLOR}
+            ? smMono
+            : smCO80;
   }
+
   $mode |= smFont8x8 if $rows > 25;
   return $mode;
 }
@@ -557,12 +568,23 @@ sub setScreenMode {       # void ($class, $mode)
   my ( $class, $mode ) = @_;
   assert ( $class and !ref $class );
   assert ( looks_like_number $mode );
-  $mode &= ~smFont8x8;
-  tb_set_output_mode(
-    $mode == smBW80
-      ? TB_OUTPUT_GRAYSCALE
-      : TB_OUTPUT_NORMAL
-  );
+
+  return unless tb_height() > 0;
+
+  # Fix the requested mode to a valid output mode.
+  my $base = $mode & 0xff;
+  if ( $base != smCO80
+    && $base != smBW80
+    && $base != smMono
+  ) {
+    $mode = ( $mode & 0xff00 ) | smCO80;
+  }
+
+  # Clear the attribute cache, since the color mapping has changed.
+  %TB_ATTR = () 
+    if ( $mode & 0xff ) != ( $screenMode & 0xff );
+
+  $screenMode = $mode;
   return;
 }
 
@@ -670,7 +692,7 @@ sub getMouseEvent {    # $bool ($class, $event)
   assert ( blessed $event );
 
   # Check for pending events
-  unless ($pendingEvent) {
+  unless ( $pendingEvent ) {
     my $rv = tb_peek_event( $tb_event, 0 );
     $pendingEvent = 1 if $rv == TB_OK;
   }
@@ -680,7 +702,7 @@ sub getMouseEvent {    # $bool ($class, $event)
     unless $pendingEvent;
 
   # Handle resize events immediately
-  if ($tb_event->type == TB_EVENT_RESIZE ) {
+  if ( $tb_event->type == TB_EVENT_RESIZE ) {
     tb_invalidate();
     $pendingEvent = 0;
     return false;
@@ -752,7 +774,7 @@ sub getKeyEvent {    # $bool ($class, $event)
   assert ( blessed $event );
 
   # Check for pending events
-  unless ($pendingEvent) {
+  unless ( $pendingEvent ) {
     my $rv = tb_peek_event( $tb_event, 0 );
     $pendingEvent = 1 if $rv == TB_OK;
   }
@@ -832,13 +854,30 @@ sub setCritErrorHandler {    # $bool ($class, $install)
 sub _bios_to_tb_attr {    # \@attr ($bios)
   my ( $bios ) = @_;
 
-  my $fg = $TB_COLORS[   $bios        & 0x07 ];
-  my $bg = $TB_COLORS[ ( $bios >> 4 ) & 0x07 ];
+  my $fg = TB_DEFAULT;
+  my $bg = TB_DEFAULT;
 
-  $fg |= TB_BOLD  if $bios & 0x08;
-  $fg |= TB_BLINK if $bios & 0x80;
+  if ( ( $screenMode & 0xff ) == smMono 
+    || ( $screenMode & 0xff ) == smBW80
+  ) {
+    $fg = $bios & 0x07 ? TB_WHITE : TB_BLACK;
+    $bg = $bios & 0x70 ? TB_WHITE : TB_BLACK;
 
-  [ $fg, $bg ];
+    $fg |= TB_BRIGHT if $bios & 0x08;
+    $bg |= TB_BRIGHT if $bios & 0x80;
+    $fg |= TB_UNDERLINE
+      if ( ( $screenMode & 0xff ) == smMono
+      && ( $bios & 0x07 ) == 0x01 );
+  }
+  else {
+    $fg = $TB_COLORS[ $bios & 0x07 ];
+    $bg = $TB_COLORS[ ( $bios >> 4 ) & 0x07 ];
+
+    $fg |= TB_BRIGHT if $bios & 0x08;
+    $fg |= TB_BLINK  if $bios & 0x80;
+  }
+
+  return [ $fg, $bg ];
 }
 
 sub _tb_event_to_char_code {    # $charCode ($event)
@@ -871,7 +910,7 @@ sub _tb_event_to_key_code {    # $keyCode ($event)
   # Keep only keyboard modifier bits relevant for the key mapping.
   $mod &= TB_MOD_ALT | TB_MOD_CTRL | TB_MOD_SHIFT;
 
-  my $id = join(':', ($mod, $key, $ch));
+  my $id = join( ':', $mod, $key, $ch );
   return $TB_TO_TV{$id}
     if exists $TB_TO_TV{$id};
 
@@ -929,8 +968,6 @@ Indicates whether a Termbox input event has been buffered
 
 Maximum interval, in Turbo Vision clock ticks, used for mouse double-click
 detection (I<PositiveInt>).
-
-=head1 IMPLEMENTATION
 
 =head1 IMPLEMENTATION
 

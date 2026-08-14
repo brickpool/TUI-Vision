@@ -75,12 +75,15 @@ sub fixCrtMode {    # $mode ($class, $mode)
   my ( $class, $mode ) = @_;
   assert ( $class and !ref $class );
   assert ( looks_like_number $mode );
-  if ( THardwareInfo->getPlatform() eq 'Windows' ) {
+  if ( THardwareInfo->isa( 'TUI::Drivers::HardwareInfo::Win32' ) ) {
     $mode = ( $mode & smFont8x8 ) ? smCO80 | smFont8x8 : smCO80;
     return $mode;
   }
   if ( ( $mode & 0xff ) == smMono ) {    # Strip smFont8x8 if necessary.
     return smMono;
+  }
+  if ( ( $mode & 0xff ) != smCO80 && ( $mode & 0xff ) != smBW80 ) {
+    $mode = ( $mode & smFont8x8 ) | smCO80;
   }
   return $mode;
 } #/ sub fixCrtMode
