@@ -15,6 +15,7 @@ our @EXPORT = qw(
   new_TDrawBuffer
 );
 
+use List::Util qw( max );
 use TUI::toolkit qw( :utils );
 use TUI::toolkit::Types qw(
   :is
@@ -24,7 +25,19 @@ use TUI::toolkit::Types qw(
 sub TDrawBuffer() { __PACKAGE__ }
 sub new_TDrawBuffer { __PACKAGE__->from(@_) }
 
+use TUI::Drivers::Screen;
 use TUI::Views::Const qw( maxViewWidth );
+
+# import global variables
+use vars qw(
+  $screenHeight
+  $screenWidth
+);
+{
+  no strict 'refs';
+  *screenHeight = \${ TScreen . '::screenHeight' };
+  *screenWidth  = \${ TScreen . '::screenWidth' };
+}
 
 my $setAttr = sub {    # void ($cell, $attr)
   assert ( @_ == 2 );
@@ -57,13 +70,32 @@ my $setCell = sub {    # void ($cell, $ch, $attr)
   return;
 };
 
+# The following subroutine was ported from the framework
+# "A modern port of Turbo Vision 2.0", which is licensed under MIT licence.
+#
+# Copyright 2019-2021 by magiblot <magiblot@hotmail.com>
+#
+# I<drivers.cpp>
+#
+my $allocData = sub {    # \@data ()
+  assert ( @_ == 0 );
+  # This makes it possible to create TDrawBuffers for screens wider than 
+  # 'maxViewWidth'. 
+  # We must take the greatest of the screen's dimensions, because we cannot 
+  # assume that 'screenWidth > screenHeight' and TDrawBuffer can also be used 
+  # to draw vertical views (e.g. TScrollBar).
+  # In addition, give some room for views that might exceed the screen size.
+  my $len = max( 8 + max( $screenWidth, $screenHeight ), maxViewWidth );
+  return [ ( 0 ) x $len ];
+};
+
 sub new {    # $obj ()
   state $sig = signature(
     method => 1,
     pos    => [],
   );
   my ( $class ) = $sig->( @_ );
-  my $self  = [ ( 0 ) x maxViewWidth ];
+  my $self  = &$allocData();
   return bless $self, $class;
 }
 
@@ -223,8 +255,8 @@ combines a character and its visual attributes.
 
 C<TDrawBuffer> is primarily used inside C<TView> drawing routines. Text and
 attributes are written into the buffer using helper methods, and the buffer is
-then passed to C<TView> methods such as C<writeLine> or C<writeBuf> to render the
-output on screen.
+then passed to C<TView> methods such as C<writeLine> or C<writeBuf> to render 
+the output on screen.
 
 =head1 CONSTRUCTOR
 
@@ -290,13 +322,21 @@ L<TWindow|TUI::Views::Window>
 
 =back
 
+=head1 CONTRIBUTORS
+
+=over
+
+=item * magiblot <magiblot@hotmail.com>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 1990-1994, 1997 by Borland International
 
-Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
+Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is
+This software is licensed under the MIT license (see the LICENSE file, which is 
 part of the distribution).
 
 =cut

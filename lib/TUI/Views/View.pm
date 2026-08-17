@@ -1316,7 +1316,7 @@ sub writeStr {    # void ($x, $y, $str, $color)
     my $length = length( $str );
     if ( $length > 0 ) {
       my $attr = $self->mapColor( $color );
-      my $buf  = [ ( 0 ) x maxViewWidth ];
+      my $buf  = [ ( 0 ) x $length ];
       my $i    = 0;
       foreach my $c ( split //, $str ) {
         &$setCell( $buf->[$i], ord( $c ), $attr );
