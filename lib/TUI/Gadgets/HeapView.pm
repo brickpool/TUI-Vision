@@ -52,7 +52,7 @@ sub draw {    # void ()
   my $c   = $self->getColor( 2 );
 
   $buf->moveChar( 0, ' ', $c, $self->{size}{x} );
-  $buf->moveStr( 0, $self->{heapStr} // '', $c );
+  $buf->moveStr( 0, $self->{heapStr}, $c );
   $self->writeLine( 0, 0, $self->{size}{x}, 1, $buf );
   return;
 } #/ sub draw
@@ -72,17 +72,20 @@ sub update {    # void ()
 } #/ sub update
 
 sub heapSize {    # $total ()
-  state $sig = signature(
-    method => Object,
-    pos    => [],
-  );
-  my ( $self ) = $sig->( @_ );
-
+  no warnings 'redefine';
   if ( $^O eq 'MSWin32' ) {
     require TUI::Gadgets::HeapView::Win32;
-    goto &TUI::Gadgets::HeapView::Win32::heapSize;
+    *heapSize = \&TUI::Gadgets::HeapView::Win32::heapSize;
   }
-  return -1;
+  elsif ( $^O eq 'linux' ) {
+    require TUI::Gadgets::HeapView::Linux;
+    *heapSize = \&TUI::Gadgets::HeapView::Linux::heapSize;
+  }
+  else {
+    require TUI::Gadgets::HeapView::Unix;
+    *heapSize = \&TUI::Gadgets::HeapView::Unix::heapSize;
+  }
+  goto &heapSize;
 }
 
 1

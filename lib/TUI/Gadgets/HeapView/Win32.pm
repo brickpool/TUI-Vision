@@ -9,7 +9,6 @@ our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
-
 use Config;
 use TUI::toolkit qw( :utils );
 use TUI::toolkit::Types qw( Object );
@@ -117,7 +116,8 @@ The module is not intended to be used directly by application code.
 
   my $total = TUI::Gadgets::HeapView::Win32->heapSize;
 
-Returns the total amount of virtual memory currently used by the process.
+Returns the amount of private virtual memory currently committed
+to the process, as reported by PROCESS_MEMORY_COUNTERS_EX::PrivateUsage.
 
 =head1 SEE ALSO
 
