@@ -272,6 +272,10 @@ sub copyShort2CharInfo {
   return;
 } #/ sub copyShort2CharInfo
 
+# On Unix, the top one buffer corresponds to the TScreenCell structure used by 
+# the backend. The TScreenCell structure contains a TCellChar and a TColorAttr 
+# object, which is used to store the character and the attribute for every cell. 
+
 my @ATTR = map { ${ TColorAttr->new( bios => $_ ) } } 0 .. 255;
 
 sub copyShort2Cell {

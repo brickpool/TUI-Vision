@@ -13,6 +13,7 @@ use Import::Into;
 use TUI::Drivers::Const;
 use TUI::Drivers::CellChar;
 use TUI::Drivers::ColorAttr;
+use TUI::Drivers::ColorDesired;
 use TUI::Drivers::ScreenCell;
 use TUI::Drivers::HardwareInfo;
 use TUI::Drivers::Display;
@@ -29,6 +30,7 @@ sub import {
   TUI::Drivers::Const->import::into( $target, qw( :all ) );
   TUI::Drivers::CellChar->import::into( $target );
   TUI::Drivers::ColorAttr->import::into( $target );
+  TUI::Drivers::ColorDesired->import::into( $target );
   TUI::Drivers::ScreenCell->import::into( $target );
   TUI::Drivers::HardwareInfo->import::into( $target );
   TUI::Drivers::Display->import::into( $target );
@@ -46,6 +48,7 @@ sub unimport {
   TUI::Drivers::Const->unimport::out_of( $caller );
   TUI::Drivers::CellChar->unimport::out_of( $caller );
   TUI::Drivers::ColorAttr->unimport::out_of( $caller );
+  TUI::Drivers::ColorDesired->unimport::out_of( $caller );
   TUI::Drivers::ScreenCell->unimport::out_of( $caller );
   TUI::Drivers::HardwareInfo->unimport::out_of( $caller );
   TUI::Drivers::Display->unimport::out_of( $caller );

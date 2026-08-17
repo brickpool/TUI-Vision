@@ -51,6 +51,7 @@ lib/TUI/Drivers/Const.pm
 lib/TUI/Drivers/Display.pm
 lib/TUI/Drivers/Event.pm
 lib/TUI/Drivers/EventQueue.pm
+lib/TUI/Drivers/HardwareInfo.pm
 lib/TUI/Drivers/HardwareInfo/Termbox.pm
 lib/TUI/Drivers/HardwareInfo/Win32.pm
 lib/TUI/Drivers/HWMouse.pm
@@ -64,6 +65,8 @@ lib/TUI/Gadgets/ClockView.pm
 lib/TUI/Gadgets/Const.pm
 lib/TUI/Gadgets/EventViewer.pm
 lib/TUI/Gadgets/HeapView.pm
+lib/TUI/Gadgets/HeapView/Linux.pm
+lib/TUI/Gadgets/HeapView/Unix.pm
 lib/TUI/Gadgets/HeapView/Win32.pm
 lib/TUI/Gadgets/PrintConstants.pm
 lib/TUI/Memory.pm
@@ -106,6 +109,7 @@ lib/TUI/StdDlg/FileInfoPane.pm
 lib/TUI/StdDlg/FileInputLine.pm
 lib/TUI/StdDlg/FileList.pm
 lib/TUI/StdDlg/FindFirstRec.pm
+lib/TUI/StdDlg/FindFirstRec/Unix.pm
 lib/TUI/StdDlg/FindFirstRec/Win32.pm
 lib/TUI/StdDlg/SortedListBox.pm
 lib/TUI/StdDlg/Util.pm

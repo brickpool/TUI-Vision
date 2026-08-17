@@ -4,6 +4,16 @@ use warnings;
 use Test::More;
 
 BEGIN {
+  if ( $^O ne 'MSWin32' ) { 
+    plan skip_all => 'No TTY available'
+      unless -t STDIN
+          && -t STDOUT
+          && defined( $ENV{TERM} )
+          && $ENV{TERM} ne 'dumb';
+  }
+}
+
+BEGIN {
   use_ok 'TUI::Drivers::Const', qw( eventQSize );
   use_ok 'TUI::Drivers::Util';
   use_ok 'TUI::Drivers::Colors';
@@ -17,6 +27,7 @@ BEGIN {
   use_ok 'TUI::Drivers::EventQueue';
   use_ok 'TUI::Drivers::CellChar';
   use_ok 'TUI::Drivers::ColorAttr';
+  use_ok 'TUI::Drivers::ColorDesired';
   use_ok 'TUI::Drivers::ScreenCell';
 }
 
@@ -37,10 +48,11 @@ isa_ok( KeyDownEvent->new(),   'KeyDownEvent' );
 isa_ok( MessageEvent->new(),   'MessageEvent' );
 isa_ok( MouseEventType->new(), 'MouseEventType' );
 
-isa_ok( TEvent->new(),      TEvent );
-isa_ok( TCellChar->new(),   TCellChar );
-isa_ok( TColorAttr->new(),  TColorAttr );
-isa_ok( TScreenCell->new(), TScreenCell );
+isa_ok( TEvent->new(),        TEvent );
+isa_ok( TCellChar->new(),     TCellChar );
+isa_ok( TColorAttr->new(),    TColorAttr );
+isa_ok( TColorDesired->new(), TColorDesired );
+isa_ok( TScreenCell->new(),   TScreenCell );
 
 SKIP: {
   skip 'No mouse available', 2 unless THardwareInfo->getButtonCount();

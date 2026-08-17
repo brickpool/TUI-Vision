@@ -1,4 +1,5 @@
 package TUI::Gadgets::HeapView::Unix;
+# ABSTRACT: Determine memory usage based on the 'ps' command
 
 use 5.010;
 use strict;

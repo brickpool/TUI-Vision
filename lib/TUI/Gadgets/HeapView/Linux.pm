@@ -1,4 +1,5 @@
 package TUI::Gadgets::HeapView::Linux;
+# ABSTRACT: Use the data stored in /proc/self/statm to monitor memory usage
 
 use 5.010;
 use strict;
@@ -8,8 +9,12 @@ our $VERSION = '2.000001';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
+use POSIX qw( sysconf _SC_PAGESIZE );
+
 use TUI::toolkit qw( :utils );
 use TUI::toolkit::Types qw( Object );
+
+use constant PAGE_SIZE_KB => eval { sysconf( _SC_PAGESIZE ) / 1024 } || 4;
 
 sub heapSize {
   state $sig = signature(
@@ -32,18 +37,12 @@ sub heapSize {
 
   $totalStr = "     No heap";
 
-  open my $fh, '<', "/proc/$$/status"
-    or return -1;
-  my ( $vmdata, $vmrss );
-  while ( <$fh> ) {
-    $vmdata = $1 if /^VmData:\s+(\d+)\s+kB/i;
-    $vmrss  = $1 if /^VmRSS:\s+(\d+)\s+kB/i;
-  }
-  my $kb = $vmdata // $vmrss;
+  open my $fh, '<', '/proc/self/statm' or return -1;
+  my ( undef, $resident ) = split ' ', <$fh>;
   close $fh;
-  return -1 unless defined $kb;
+  return -1 unless $resident;
 
-  $bytes = $kb * 1024;
+  $bytes = $resident * PAGE_SIZE_KB * 1024;
   $totalStr = sprintf( "%12d", $bytes );
 
   return $bytes;
@@ -83,8 +82,7 @@ The module is not intended to be used directly by application code.
 
 Returns the amount of memory currently used by the process.
 
-On Linux, the value is obtained from C<VmData> in F</proc/PID/status>.
-If C<VmData> is unavailable, C<VmRSS> is used as a fallback.
+On Linux, the value is obtained from C</proc/self/statm>.
 
 The returned value is expressed in bytes.
 

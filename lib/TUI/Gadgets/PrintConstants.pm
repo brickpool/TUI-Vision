@@ -158,7 +158,7 @@ sub _printFlags { goto &$printFlags }
 $printFlags = sub {
   my ( $os, $flags, $constants ) = @_;
   assert ( @_ == 3 );
-  assert ( is_Object $os );
+  assert ( is_FileHandle $os );
   assert ( is_PositiveOrZeroInt $flags );
   assert ( is_HashRef $constants );
 
@@ -181,7 +181,7 @@ sub _printCode { goto &$printCode }
 $printCode = sub {
   my ( $os, $code, $constants ) = @_;
   assert ( @_ == 3 );
-  assert ( is_Object $os );
+  assert ( is_FileHandle $os );
   assert ( is_PositiveOrZeroInt $code );
   assert ( is_HashRef $constants );
 

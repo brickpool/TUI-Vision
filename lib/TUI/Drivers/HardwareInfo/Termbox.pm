@@ -435,58 +435,71 @@ INIT {
     $platform = 'Windows';
   }
   $platform ||= 'Unix';
+  __PACKAGE__->resume();
+}
 
-  # Initialize Termbox and set the input/output modes.
-  my $err = tb_init();
-  die tb_strerror( $err ) if $err != TB_OK;
-  $err = tb_set_input_mode( TB_INPUT_ALT | TB_INPUT_MOUSE );
-  die tb_strerror( $err ) if $err != TB_OK;
-  $err = tb_set_output_mode( TB_OUTPUT_NORMAL );
-  die tb_strerror( $err ) if $err != TB_OK;
+sub resume {     # void ($class)
+  assert ( $_[0] and !ref $_[0] );
+  unless ( $initialized ) {
+    # Initialize Termbox and set the input/output modes.
+    my $err = tb_init();
+    return if $err != TB_OK;
+    $err = tb_set_input_mode( TB_INPUT_ALT | TB_INPUT_MOUSE );
+    return if $err != TB_OK;
+    $err = tb_set_output_mode( TB_OUTPUT_NORMAL );
+    return if $err != TB_OK;
 
-  # NOTE: The following workaround for detecting a single TB_KEY_ESC relies on 
-  # deprecated function tb_set_func() and Termbox::PP internals 
-  # ($global->{inbuf}). 
-  # The tb_set_func() API itself is backend-independent, but the raw
-  # escape buffer is currently only available in the PP backend.
-  if ( PERL_ONLY ) {
-    no warnings 'deprecated';
-    $err = tb_set_func( TB_FUNC_EXTRACT_PRE, sub {
-      my ( $event, $consumed_ref ) = @_;
+    # NOTE: The following workaround for detecting a single TB_KEY_ESC relies 
+    # on deprecated function tb_set_func() and Termbox::PP internals. 
+    # The tb_set_func() API itself is backend-independent, but the access to 
+    # raw input buffer is currently only available in the PP backend.
+    if ( PERL_ONLY ) {
+      no warnings 'deprecated';
+      $err = tb_set_func( TB_FUNC_EXTRACT_PRE, sub {
+        my ( $event, $consumed_ref ) = @_;
 
-      state $esc_seen_at;
-      if ( $Termbox::global->{inbuf} eq "\e" ) {
-        my $now = int(( time() - $BASETIME ) * 1000);
-        $esc_seen_at //= $now;
-        my $elapsed = $now - $esc_seen_at;
+        state $esc_seen_at;
+        if ( $Termbox::global->{inbuf} eq "\e" ) {
+          my $now = int(( time() - $BASETIME ) * 1000);
+          $esc_seen_at //= $now;
+          my $elapsed = $now - $esc_seen_at;
 
-        return TB_ERR_NEED_MORE
-          if $elapsed < ESC_WAIT_DELAY;
+          return TB_ERR_NEED_MORE
+            if $elapsed < ESC_WAIT_DELAY;
 
-        $$consumed_ref = 1;
+          $$consumed_ref = 1;
 
-        $event->{type} = TB_EVENT_KEY;
-        $event->{mod}  = TB_NONE;
-        $event->{key}  = TB_KEY_ESC;
-        $event->{ch}   = 0;
+          $event->{type} = TB_EVENT_KEY;
+          $event->{mod}  = TB_NONE;
+          $event->{key}  = TB_KEY_ESC;
+          $event->{ch}   = 0;
 
+          $esc_seen_at = undef;
+          return TB_OK;
+        }
         $esc_seen_at = undef;
-        return TB_OK;
-      }
-      $esc_seen_at = undef;
-      return TB_ERR;
-    });
-    die tb_strerror( $err ) if $err != TB_OK;
-  }
+        return TB_ERR;
+      });
+      return tb_strerror( $err ) if $err != TB_OK;
+    }
 
-  $initialized = true;
+    $initialized = true;
+  }
+  return;
 }
 
 END {
+  __PACKAGE__->suspend();
+}
+
+sub suspend {    # void ($class)
+  assert ( $_[0] and !ref $_[0] );
   if ( $initialized ) {
     tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) if PERL_ONLY;
     tb_shutdown();
+    $initialized = false;
   }
+  return;
 }
 
 # -------------------------------------------------------------------------
@@ -512,6 +525,7 @@ sub setCaretSize {    # void ($class, $size)
   my ( $class, $size ) = @_;
   assert ( $class and !ref $class );
   assert ( looks_like_number $size );
+  assert ( $initialized );
   if ( $size <= 0 ) {
     $cursorLines = 0x2000;    # hidden
     tb_hide_cursor();
@@ -550,6 +564,7 @@ sub setCaretPosition {    # void ($class, $x, $y)
   assert ( $class and !ref $class );
   assert ( looks_like_number $x );
   assert ( looks_like_number $y );
+  assert ( $initialized );
   tb_set_cursor( $x, $y );
   return;
 }
@@ -569,6 +584,7 @@ sub isCaretVisible {    # $visible ($class)
 
 sub getScreenRows {    # $rows ($class)
   assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
   my $rows = tb_height();
   return 25 
     if $rows == 0;    # Borland's compatibility DOS default (only for rows)
@@ -577,12 +593,14 @@ sub getScreenRows {    # $rows ($class)
 
 sub getScreenCols {       # $cols ($class)
   assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
   my $cols = tb_width();
   return $cols > 0 ? $cols : 0;
 }
 
 sub getScreenMode {       # $mode ($class)
   assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
 
   my $rows = tb_height();
   return 0 unless $rows > 0;
@@ -607,6 +625,7 @@ sub setScreenMode {       # void ($class, $mode)
   my ( $class, $mode ) = @_;
   assert ( $class and !ref $class );
   assert ( looks_like_number $mode );
+  assert ( $initialized );
 
   return unless tb_height() > 0;
 
@@ -632,6 +651,7 @@ sub clearScreen {         # void ($class, $w, $h)
   assert ( $class and !ref $class );
   assert ( looks_like_number $w );
   assert ( looks_like_number $h );
+  assert ( $initialized );
   tb_clear();
   return;
 }
@@ -643,6 +663,7 @@ sub screenWrite {         # void ($class, $x, $y, $buf, $len)
   assert ( looks_like_number $y );
   assert ( ref $buf );
   assert ( looks_like_number $len );
+  assert ( $initialized );
 
   for ( my $i = 0 ; $i < $len ; ++$i, ++$x ) {
     my $cell = $buf->[$i];
@@ -668,6 +689,7 @@ sub screenWrite {         # void ($class, $x, $y, $buf, $len)
 
 sub allocateScreenBuffer {    # \@buffer ($class)
   assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
 
   my $cols = tb_width();
   my $rows = tb_height();
@@ -703,6 +725,7 @@ sub getButtonCount {    # $num ($class)
 
 sub cursorOn {    # void ($class)
   assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
   my $mode = tb_set_input_mode( TB_INPUT_CURRENT );
   tb_set_input_mode( $mode | TB_INPUT_MOUSE );
   return;
@@ -710,6 +733,7 @@ sub cursorOn {    # void ($class)
 
 sub cursorOff {    # void ($class)
   assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
   my $mode = tb_set_input_mode( TB_INPUT_CURRENT );
   tb_set_input_mode( $mode & ~TB_INPUT_MOUSE );
   return;
@@ -729,6 +753,7 @@ sub getMouseEvent {    # $bool ($class, $event)
   my ( $class, $event ) = @_;
   assert ( $class and !ref $class );
   assert ( blessed $event );
+  assert ( $initialized );
 
   # Check for pending events
   unless ( $pendingEvent ) {
@@ -767,7 +792,7 @@ sub getMouseEvent {    # $bool ($class, $event)
   my @where = ( $tb_event->x, $tb_event->y );
   my $doubleClick = false;
   if ( $buttons != 0 && $lastButtons == 0 ) {
-    my $ticks = getTickCount();
+    my $ticks = __PACKAGE__->getTickCount();
     $doubleClick = !(
       $buttons != $downButtons
         or
@@ -795,7 +820,7 @@ sub getMouseEvent {    # $bool ($class, $event)
     if $doubleClick;
 
   # Mouse modifier state.
-  $event->{keyDown}{controlKeyState} = $insertState ? kbInsState : 0;
+  $event->{controlKeyState} = $insertState ? kbInsState : 0;
 
   # Save the last button state and position for double-click detection
   $lastButtons = $buttons;
@@ -811,6 +836,7 @@ sub getKeyEvent {    # $bool ($class, $event)
   my ( $class, $event ) = @_;
   assert ( $class and !ref $class );
   assert ( blessed $event );
+  assert ( $initialized );
 
   # Check for pending events
   unless ( $pendingEvent ) {

@@ -47,7 +47,8 @@ sub diag_version {
     return diag sprintf('  %-40s    undef', $module);
   }
 
-  my ($major, $rest) = split /\./, $version;
+  my ($major, @rest) = split /\./, $version;
+  my $rest = join('.', @rest);
   $major =~ s/^v//;
   return "$major\.$rest" if $return;
   return diag sprintf('  %-40s % 4d.%s', $module, $major, $rest);
@@ -76,7 +77,11 @@ use constant PERL_ONLY  => exists($ENV{PERL_ONLY}) && $ENV{PERL_ONLY};
 use constant WT_SESSION => exists($ENV{WT_SESSION}) && $ENV{WT_SESSION};
 
 use if _WIN32, 'Win32';
-use if PERL_ONLY, 'Termbox::PP';
+
+BEGIN {
+  eval { require Termbox     } unless $ENV{PERL_ONLY};
+  eval { require Termbox::PP } unless $INC{Termbox};
+}
 
 sub banner {
   diag( ' ' );

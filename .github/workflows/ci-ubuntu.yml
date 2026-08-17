@@ -1,0 +1,36 @@
+name: CI on Ubuntu
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  smoke:
+    name: Ubuntu / Perl latest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: latest
+
+      - name: Verify Perl Runtime
+        run: |
+          perl -V:version
+
+      - name: Install dependencies
+        run: |
+          cpanm --notest --installdeps .
+
+      - name: Run tests (headless, CPAN-style)
+        env:
+          AUTOMATED_TESTING: 1
+          NONINTERACTIVE_TESTING: 1
+        run: |
+          perl Makefile.PL
+          make test
