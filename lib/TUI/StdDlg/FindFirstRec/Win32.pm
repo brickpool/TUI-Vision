@@ -10,6 +10,7 @@ $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
 require bytes;
+use Config;
 use Hash::Util::FieldHash qw( fieldhash );
 use Scalar::Util qw(
   refaddr
@@ -26,7 +27,6 @@ use TUI::toolkit::Types qw(
 );
 use Win32;
 use Win32::API;
-use Win32API::File qw( INVALID_HANDLE_VALUE );
 
 use TUI::StdDlg::Const qw(
   MAXPATH
@@ -109,6 +109,8 @@ BEGIN {
 
 PRIVATE: {
   namespace::sweep->import( -also => [qw(
+    INVALID_HANDLE_VALUE
+
     CP_UTF8
     SPECIAL_BITS
 
@@ -136,6 +138,16 @@ PRIVATE: {
     wr_date
     name
   )] ) if eval { require namespace::sweep };
+
+  # We cannot import INVALID_HANDLE_VALUE from Win32API::File.
+  # That module defines INVALID_HANDLE_VALUE as a 32-bit value, while
+  # Win32::API::More returns HANDLE values using the native pointer size.
+  # Define the constant using the current pointer size so that HANDLE
+  # comparisons work correctly on both 32-bit and 64-bit Perls.
+  use constant INVALID_HANDLE_VALUE => do {
+    my $t = $Config{ptrsize} == 8 ? 'Q' : 'L';
+    unpack $t => pack $t => ~0;
+  };
 
   use constant CP_UTF8      => 65001;
   use constant SPECIAL_BITS => _A_SUBDIR | _A_HIDDEN | _A_SYSTEM;
