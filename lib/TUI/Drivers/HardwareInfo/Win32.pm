@@ -30,8 +30,11 @@ use TUI::Drivers::Const qw(
   kbShift
   kbIns
   kbInsState
+  kbCtrlA
   kbCtrlC
+  kbCtrlZ
 );
+use TUI::Drivers::Util qw( getAltCode );
 
 # We use variables to avoid polluting the namespace when importing Win32 API 
 # functions. 
@@ -545,8 +548,13 @@ sub getKeyEvent {    # $bool ($class, $event)
         ( kbShift | kbAltShift | kbCtrlShift ) 
       ) {
         my $index = $irBuffer[wVirtualScanCode];
-
-        if ( ( $event->{keyDown}{controlKeyState} & kbShift )
+        if ( ( $event->{keyDown}{controlKeyState} & kbAltShift ) 
+          && ( $event->{keyDown}{controlKeyState} & kbCtrlShift ) 
+        ) {
+          # AltGr is usually reported as Ctrl+Alt on Win32 consoles.
+          # Do not translate through AltCvt/CtrlCvt in that case.
+        }
+        elsif ( ( $event->{keyDown}{controlKeyState} & kbShift )
           && $ShiftCvt[$index] 
         ) {
           $event->{keyDown}{keyCode} = $ShiftCvt[$index];
@@ -554,12 +562,30 @@ sub getKeyEvent {    # $bool ($class, $event)
         elsif ( ( $event->{keyDown}{controlKeyState} & kbCtrlShift )
           && $CtrlCvt[$index] 
         ) {
-          $event->{keyDown}{keyCode} = $CtrlCvt[$index];
+          my $charCode = $event->{keyDown}{charScan}{charCode};
+          if ( $charCode >= kbCtrlA && $charCode <= kbCtrlZ ) {
+            # Do not translate through CtrlCvt if the charCode is already a 
+            # control character.
+            $event->{keyDown}{keyCode} = $charCode;
+          } else {
+            # Borland default behavior is to translate the charCode through 
+            # CtrlCvt if the Ctrl key is pressed.
+            $event->{keyDown}{keyCode} = $CtrlCvt[$index];
+          }
         }
         elsif ( ( $event->{keyDown}{controlKeyState} & kbAltShift )
           && $AltCvt[$index] 
         ) {
-          $event->{keyDown}{keyCode} = $AltCvt[$index];
+          my $ch = chr $event->{keyDown}{charScan}{charCode};
+          if ( $ch =~ /^[A-Za-z]$/ ) {
+            # Do not translate through AltCvt if the charCode is already a 
+            # letter. Translate to kbAltA..kbAltZ instead.
+            $event->{keyDown}{keyCode} = getAltCode( $ch );
+          } else {
+            # Borland default behavior is to translate the charCode through 
+            # AltCvt if the Alt key is pressed.
+            $event->{keyDown}{keyCode} = $AltCvt[$index];
+          }
         }
       } #/ if ( $event->{keyDown}...)
 

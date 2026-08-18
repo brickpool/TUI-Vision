@@ -979,6 +979,25 @@ sub _tb_event_to_key_code {    # $keyCode ($event)
   return $TB_TO_TV{$id}
     if exists $TB_TO_TV{$id};
 
+  # Some Alt/Ctrl key combinations have no dedicated Borland key code.
+  # Map them to the corresponding unmodified key.
+  if ( $mod & ( TB_MOD_CTRL | TB_MOD_ALT ) ) {
+    return kbUp    if $key == TB_KEY_ARROW_UP;
+    return kbDown  if $key == TB_KEY_ARROW_DOWN;
+    return kbIns   if $key == TB_KEY_INSERT;
+    return kbDel   if $key == TB_KEY_DELETE;
+    return kbTab   if $key == TB_KEY_TAB;
+    return kbEnter if $key == TB_KEY_ENTER;
+  }
+  if ( $mod & TB_MOD_ALT ) {
+    return kbLeft  if $key == TB_KEY_ARROW_LEFT;
+    return kbRight if $key == TB_KEY_ARROW_RIGHT;
+    return kbHome  if $key == TB_KEY_HOME;
+    return kbEnd   if $key == TB_KEY_END;
+    return kbPgUp  if $key == TB_KEY_PGUP;
+    return kbPgDn  if $key == TB_KEY_PGDN;
+  }
+
   return kbNoKey();
 }
 
