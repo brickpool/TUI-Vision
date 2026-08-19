@@ -1045,8 +1045,35 @@ initialization.
 
 =head2 $pendingEvent
 
-Indicates whether a Termbox input event has been buffered
+Indicates whether a Termbox input event has been buffered(I<PositiveOrZeroInt>).
+
+=head2 $lastButtons
+
+Stores the most recently observed mouse button state (I<PositiveOrZeroInt>).
+
+=head2 $downButtons
+
+Stores the mouse button state recorded when the current button press began
 (I<PositiveOrZeroInt>).
+
+=head2 $lastDouble
+
+Indicates whether the previous mouse event was recognized as a double-click
+(I<Bool>).
+
+=head2 @lastWhere
+
+Contains the screen coordinates associated with the most recent completed
+mouse action.
+
+=head2 @downWhere
+
+Contains the screen coordinates where the current mouse button press began.
+
+=head2 $downTicks
+
+Stores the Turbo Vision clock tick value at which the current mouse button
+press began (I<PositiveOrZeroInt>).
 
 =head2 $doubleDelay
 

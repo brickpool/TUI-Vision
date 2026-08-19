@@ -1,0 +1,237 @@
+=pod
+
+=encoding utf8
+
+=head1 Windows and Dialogs
+
+Most interactive work in a Turbo Vision application takes place within
+windows and dialogs.
+
+Unlike menu bars and status lines, which form a permanent application
+framework, windows and dialogs occupy the desktop and represent the
+working environments of an application. They provide the space in
+which views are combined to create user interfaces, display data and
+interact with the user.
+
+Although they often appear similar on screen, windows and dialogs are
+designed for different purposes. A window typically provides a
+persistent workspace, while a dialog usually accompanies a specific
+interaction such as entering data, changing options or confirming an
+operation.
+
+Both build upon the same view architecture and share many of the same
+mechanisms. Understanding how they relate to one another is key to
+understanding how Turbo Vision applications are assembled from smaller
+views.
+
+=head1 Windows as View Containers
+
+A C<TWindow> is much more than a rectangular area on the desktop.
+While it provides a frame, a title and the controls required for
+moving, resizing and managing a window, its primary purpose is to act
+as a container for other views.
+
+Unlike C<TDesktop>, C<TMenuBar> and C<TStatusLine>, which exist as permanent 
+parts of the application framework, windows provide workspaces in which
+application-specific functionality is assembled from smaller building blocks.
+
+A typical window might appear as follows:
+
+    Icon
+    ╔═[■]══════════════ Title ═══════════════[↑]═╗
+    ║                                            ▲
+    ║                                            ▒
+    ║                                            ▒
+    ║                                            ▒ TScrollBar
+    ║                                            ▒
+    ║                                            ■
+    ║                                            ▒
+    ║                                            ▼
+    ╚═══════════════════════════════════════════─┘
+    Frame
+
+Viewed as a single screen element, this appears to be an ordinary
+window containing scrollable text. Internally, however, the visible
+result is typically composed from several cooperating views.
+
+    TWindow
+        |
+        +-- Window Frame
+        |     |
+        |     +-- Title
+        |     +-- Number
+        |     +-- Icon
+        |     +-- Zoom Indicator
+        |
+        +-- TScroller
+            |
+            +-- TScrollBar (horizontal)
+            +-- TScrollBar (vertical)
+
+It is useful to distinguish between the visual elements provided by
+the window itself and the additional views inserted into the window.
+
+The frame, title and icon are part of the window representation and
+are managed by C<TWindow>. Scrollbars, scrollers and application-
+specific controls, on the other hand, are typically implemented as
+separate views inserted into the window's view hierarchy.
+
+As a result, a window often appears to be a single object while
+internally consisting of several cooperating views.
+
+This distinction becomes important when constructing application
+interfaces. Features such as scrolling, list handling or custom data
+presentation are usually implemented through additional views inserted
+into a window rather than by extending the window itself.
+
+=head1 A Typical Window
+
+A newly created C<TWindow> is usually only an empty workspace. It has
+a frame, a title and the mechanisms required to participate in the
+desktop environment, but it does not yet provide application-specific
+behaviour.
+
+The following example creates such a plain window and inserts it into
+the desktop:
+
+    sub newWindow {
+        my $self = shift;
+
+        my $r   = new_TRect( 0, 0, 60, 20 );
+        my $win = new_TWindow( $r, 'Window', wnNoNumber );
+
+        $deskTop->insert( $win )
+            if $self->validView( $win );
+
+        return;
+    }
+
+This code creates a visible window, but the resulting object is still
+largely a frame around an empty interior. It can be moved, selected
+and managed by the desktop, but it does not yet display any useful
+content.
+
+=head2 Building a custom Window
+
+In practical applications, a window normally becomes useful only after
+one or more additional views have been inserted into it.
+
+    TWindow
+        |
+        +-- application-specific TView
+
+This is the point where the distinction between a window and the
+views contained within it becomes important. The window provides the
+workspace. The inserted view provides the behaviour.
+
+A simplified event viewer window might be organised as follows:
+
+    TEventViewer
+        |
+        +-- TWindow
+              |
+              +-- TScrollBar
+              |
+              +-- TTerminal
+
+Here C<TEventViewer> is a specialised window. It derives from
+C<TWindow>, creates a vertical scrollbar and inserts a terminal-like
+view into its interior. The terminal view is responsible for
+displaying the event text, while the window provides the surrounding
+desktop object.
+
+A reduced version of such an initialisation may look like this:
+
+    package TUI::Gadgets::EventViewer;
+
+    extends TWindow;
+
+    sub BUILD {
+        my ( $self, $args ) = @_;
+
+        $self->{scrollBar} =
+            $self->standardScrollBar( sbVertical | sbHandleKeyboard );
+
+        my $r = $self->getExtent();
+        $r->grow( -1, -1 );
+
+        $self->{interior} = TTerminal->new(
+            bounds      => $r,
+            hScrollBar => undef,
+            vScrollBar => $self->{scrollBar},
+            bufSize    => $args->{bufSize},
+        );
+
+        $self->insert( $self->{interior} );
+
+        return;
+    }
+
+The important detail is not the event viewer itself, but the way the
+window is assembled.
+
+    TWindow
+        |
+        +-- standardScrollBar(...)
+        |
+        +-- TTerminal
+              |
+              +-- uses vertical scrollbar
+
+The C<TWindow> does not print the events directly. Instead, it creates
+and owns a view that is responsible for displaying them. The window
+acts as the container and coordinator, while the embedded view brings
+the workspace to life.
+
+The same approach can be seen throughout Turbo Vision. Application
+windows are often implemented as specialised subclasses of C<TWindow>,
+while their contents are provided by additional views created and
+inserted during initialisation.
+
+This allows application-specific behaviour, data presentation and user
+interaction to be separated into smaller, reusable components that can
+cooperate within the same window.
+
+The window provides the workspace. The inserted views provide the 
+functionality.
+
+=head1 Dialogs as Specialized Windows
+
+A C<TDialog> is a specialised form of C<TWindow>. Like ordinary
+windows, dialogs participate in the desktop environment and act as
+containers for other views.
+
+The role of a dialog is usually more focused than that of a window.
+While windows often provide long-lived workspaces, dialogs typically
+support a specific interaction such as entering data, selecting
+options or confirming an action.
+
+For this reason, dialogs are commonly assembled from many small views.
+
+A simple dialog might appear as follows:
+
+    ╔═[■]═══════ Parameter ═══════════╗
+    ║                                 ║
+    ║                                 ║
+    ║                                 ║
+    ║                                 ║
+    ║                                 ║
+    ║                                 ║
+    ║                                 ║
+    ║       [  OK  ]   »[Cancel]«     ║
+    ║                                 ║
+    ╚═════════════════════════════════╝
+
+Internally, even a very simple dialog is assembled from individual
+views. In this example the visible interface consists almost entirely
+of button views inserted into the dialog.
+
+    TDialog
+        |
+        +-- TButton "OK"
+        |
+        +-- TButton "Cancel"
+
+
+
+=cut

@@ -43,9 +43,10 @@ throughout the framework:
   ------  ----------------------- --------------------------------------
   ap      Application palette     apColor
   bf      Button flag             bfDefault
-  cp      Color palettes          cpListViewer
   cm      Command constant        cmOk
   co      Collection codes        coOverflow
+  cp      Color palettes          cpListViewer
+  ct      Color types             ctBIOS
   dm      Drag mode               dmDragGrow
   ev      Event constant          evCommand
   gf      Grow mode flag          gfGrowAll
@@ -57,6 +58,7 @@ throughout the framework:
   sb      Scroll bar              sbRightArrow
   sf      State flag              sfActive
   sm      Screen mode constant    smFont8x8
+  sl      Style masks             slBold
   st      Stream code             stOk
   T       Object type             TCollection
   wf      Window flags            wfMove
@@ -185,6 +187,20 @@ called, with the Code parameter having one of the values shown in the table.
                       invalid index.
   coOverflow      -2  The collection could not be expanded any further.
 
+=head2 ctXXXX
+
+Desired color format constants
+
+Use the constants from the table below to select the color representation
+stored in a C<TColorDesired> value.
+
+  Constant   Value   Usage
+  ---------- ------- --------------------------------------
+  ctDefault  0x0000  Terminal default color
+  ctBIOS     0x0001  BIOS color attribute
+  ctRGB      0x0002  24-bit RGB color
+  ctXTerm    0x0003  XTerm 256-color palette index
+  
 =head2 dmXXXX
 
 Drag Mode constants
@@ -626,6 +642,25 @@ values in TView->state directly.
 B<See>: C<blockCursor>, C<exposed>, C<hide>, C<hideCursor>,
 C<normalCursor>, C<setState>, C<show>, C<showCursor> from C<TView>.
 
+=head2 slXXXX
+
+Style attribute constants
+
+Use the constants from the table below to set or test style attributes in
+a C<TColorAttr> value.
+
+  Constant     Value   Usage
+  ------------ ------- --------------------------------------------
+  slBold       0x001   Bold text
+  slItalic     0x002   Italic text
+  slUnderline  0x004   Underlined text
+  slBlink      0x008   Blinking text
+  slReverse    0x010   Reverse foreground and background
+  slStrike     0x020   Strikethrough text
+  slNoShadow * 0x200   Suppress window shadow rendering
+  
+[*] Private masks.
+
 =head2 smXXXX
 
 Screen Mode constants
@@ -633,7 +668,6 @@ Screen Mode constants
 Use the constants from the table below when selecting Black & White, Color or
 Monochrome color palettes, or switching between 25 and 43- or 50 line display
 modes. 
-
 
   Constant  Value   Usage
   --------- ------- --------------------------------------------------

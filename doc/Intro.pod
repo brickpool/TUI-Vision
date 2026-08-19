@@ -14,7 +14,7 @@ details).
 The port can be installed via CPAN (Comprehensive Perl Archive Network). Simply
 run the following command:
 
-  cpan install TurboVision
+  cpan TUI::Vision
 
 A simple example to create an application with Turbo Vision in Perl:
 

@@ -96,6 +96,24 @@ the user interface.
  $validSignedChars   Validator pattern for signed numeric input
  $validUnsignedChars Validator pattern for unsigned numeric input
 
+=head2 Platform Backends
+
+These variables are maintained by platform-specific backend
+implementations and are not part of the portable framework API.
+
+ $insertState        Insert/overwrite mode state
+ $platform           Platform identifier string
+ $pendingEvent       Pending backend event flag
+
+ $lastButtons        Previous mouse button state
+ $downButtons        Mouse button state at button press
+ $downTicks          Tick count recorded at button press
+ $doubleDelay        Maximum double-click interval
+ $lastDouble         Double-click detection state
+
+ @lastWhere          Coordinates of the previous mouse action
+ @downWhere          Coordinates where the button was pressed
+
 =head1 COMPLETE ALPHABETICAL REFERENCE
 
 The following table lists all global variables used across the framework,
@@ -108,7 +126,9 @@ inventory.
 
   @consoleHandle       HardwareInfo::Win32    Console handle list
   @crInfo              HardwareInfo::Win32    Console cursor information
+  @downWhere           HardwareInfo::Termbox  Mouse press coordinates
   @irBuffer            HardwareInfo::Win32    Input record buffer
+  @lastWhere           HardwareInfo::Termbox  Last mouse action coordinates
   @sbInfo              HardwareInfo::Win32    Screen buffer information
 
   $amText              TFileInfoPane          AM time indicator
@@ -141,8 +161,11 @@ inventory.
   $dirNameText         TChDirDialog           Directory name label
   $dirTreeText         TChDirDialog           Directory tree label
   $doubleDelay         TEventQueue            Double-click delay
+  $doubleDelay         HardwareInfo::Termbox  Double-click delay
+  $downButtons         HardwareInfo::Termbox  Mouse button state at press time
   $downMouse           TEventQueue            Mouse-down state
   $downTicks           TEventQueue            Ticks since mouse press
+  $downTicks           HardwareInfo::Termbox  Tick count at mouse press
   $dragIcon            TFrame                 Drag window icon
   $drives              TDirListBox            Drives label text
   $drivesText          TChDirDialog           Drives label
@@ -175,12 +198,14 @@ inventory.
   $icon                THistory               History indicator icon
   $informationText     MsgBoxText             Information dialog title
   $initFrame           TFrame                 Frame initialization table
-  $insertState         HardwareInfo::Win32    Insert/overwrite input mode
+  $insertState         HardwareInfo::*        Insert/overwrite input mode
   $invalidDriveText    TFileDialog            Invalid drive message
   $invalidFileText     TFileDialog            Invalid file message
   $invalidText         TChDirDialog           Invalid directory message
 
+  $lastButtons         HardwareInfo::Termbox  Previous mouse button state
   $lastDir             TDirListBox            Last directory tree element
+  $lastDouble          HardwareInfo::Termbox  Double-click detection state
   $lastMouse           TEventQueue            Previous mouse state
   $leftArrow           TInputLine             Left overflow indicator
 
@@ -203,8 +228,8 @@ inventory.
 
   $pathDir             TDirListBox            Path directory prefix graphics
   $pending             TProgram               Pending event object
-  $pendingEvent        HardwareInfo::Win32    Pending console event indicator
-  $platform            HardwareInfo::Win32    Platform identifier string
+  $pendingEvent        HardwareInfo::*        Buffered input event indicator
+  $platform            HardwareInfo::*        Platform identifier string
   $pmText              TFileInfoPane          PM time indicator
 
   $repeatDelay         TEventQueue            Auto-repeat delay

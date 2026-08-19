@@ -28,9 +28,10 @@ of major Turbo Vision classes in the Perl port. The status reflects
 practical usability rather than theoretical completeness.
 
  Status legend:
+  [ ] Not implemented
   [x] Implemented
   [o] Partially implemented
-  [ ] Not implemented
+  [+] Port extension
 
 The status table is intended as a practical guide rather than a strict
 feature checklist.
@@ -38,6 +39,12 @@ feature checklist.
 The meanings of the status indicators are as follows:
 
 =over 4
+
+=item [ ] Not implemented
+
+The class does not exist in the Perl port. References to this class are
+documented for transparency and orientation only. No compatibility is
+provided.
 
 =item [x] Implemented
 
@@ -51,11 +58,12 @@ The class exists and provides limited functionality. Common use cases
 may work, but parts of the API, platform-specific behavior or advanced
 features are missing or incomplete. Use with care.
 
-=item [ ] Not implemented
+=item [+] Port extension
 
-The class does not exist in the Perl port. References to this class are
-documented for transparency and orientation only. No compatibility is
-provided.
+The class is specific to the Perl port and has no direct equivalent in the
+original Turbo Vision implementation. It was introduced to support
+additional functionality provided by modern terminals, color handling or
+the Perl implementation architecture.
 
 =back
 
@@ -74,6 +82,16 @@ detail.
  TPalette           TUI::Views::Palette          [x]
  TCommandSet        TUI::Views::CommandSet       [x]
 
+=head3 Color and Screen Primitives
+
+ Class              Perl Module                  Status
+ ------------------ ---------------------------- ------
+ TColorAttr         TUI::Drivers::ColorAttr      [+]
+ TColorDesired      TUI::Drivers::ColorDesired   [+]
+ TColors            TUI::Drivers::Colors         [+]
+ TCellChar          TUI::Drivers::CellChar       [+]
+ TScreenCell        TUI::Drivers::ScreenCell     [+]
+
 =head3 Event System
 
  Class              Perl Module                  Status
@@ -91,11 +109,9 @@ detail.
  THWMouse           TUI::Drivers::HWMouse        [o]
  TMouse             TUI::Drivers::Mouse          [x]
  TSystemError       TUI::Drivers::SystemError    [o]
- TScreen            TUI::Drivers::Screen         [o]
- TDisplay           TUI::Drivers::Display        [o]
- THardwareInfo      TUI::Drivers::HardwareInfo   [o]
-
-Win32 Console Driver, implemented in C<TUI::Drivers::HardwareInfo::Win32>.
+ TScreen            TUI::Drivers::Screen         [x]
+ TDisplay           TUI::Drivers::Display        [x]
+ THardwareInfo      TUI::Drivers::HardwareInfo   [x]
 
 =head3 View Hierarchy
 
@@ -163,7 +179,7 @@ Lists and History
  Class              Perl Module                  Status
  ------------------ ---------------------------- ------
  ffblk/find_t       TUI::StdDlg::Dos             [x]
- FindFirstRec       TUI::StdDlg::FindFirstRec    [o]
+ FindFirstRec       TUI::StdDlg::FindFirstRec    [x]
  TSearchRec         TUI::StdDlg::FileCollection  [x]
  TFileCollection    TUI::StdDlg::FileCollection  [x]
  TFileInputLine     TUI::StdDlg::FileInputLine   [x]
@@ -174,8 +190,6 @@ Lists and History
  TDirCollection     TUI::StdDlg::DirCollection   [x]
  TDirListBox        TUI::StdDlg::DirListBox      [x]
  TChDirDialog       TUI::StdDlg::ChDirDialog     [x]
-
-Win32 FindFirstRec class, implemented in C<TUI::Drivers::FindFirstRec::Win32>.
 
 =head3 Menu System
 
@@ -247,11 +261,9 @@ Win32 FindFirstRec class, implemented in C<TUI::Drivers::FindFirstRec::Win32>.
  TClickTester       (missing)                    [ ]
  TClockView         TUI::Gadgets::ClockView      [x]
  TEventViewer       TUI::Gadgets::EventViewer    [x]
- THeapView          TUI::Gadgets::HeapView       [o]
+ THeapView          TUI::Gadgets::HeapView       [x]
  TLineCollection    (missing)                    [ ]
  TPuzzleView        (missing)                    [ ]
-
-Win32 THeapView, implemented in C<TUI::Gadgets::HeapView::Win32>.
 
 =head2 Memory Management and Resource Handling
 
