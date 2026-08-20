@@ -10,6 +10,9 @@
 pod2htmd.tmp
 TUI-Vision*
 
+# GitHub
+/.github/**/*.md
+
 # Devel::Cover
 cover_db/
 

@@ -35,11 +35,12 @@ isa_ok( KeyDownEvent->new(),   'KeyDownEvent' );
 isa_ok( MessageEvent->new(),   'MessageEvent' );
 isa_ok( MouseEventType->new(), 'MouseEventType' );
 
-isa_ok( new_TEvent(),         TEvent );
-isa_ok( TCellChar->new(),     TCellChar );
-isa_ok( TColorAttr->new(),    TColorAttr );
-isa_ok( TColorDesired->new(), TColorDesired );
-isa_ok( TScreenCell->new(),   TScreenCell );
+isa_ok( new_TEvent(),       TEvent );
+isa_ok( TCellChar->new(),   TCellChar );
+isa_ok( TColorAttr->new(),  TColorAttr );
+isa_ok( TColor->new(),      TColor );
+isa_ok( TAttrPair->new(),   TAttrPair );
+isa_ok( TScreenCell->new(), TScreenCell );
 
 SKIP: {
   skip 'No mouse available', 2 unless THardwareInfo->getButtonCount();

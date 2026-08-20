@@ -93,7 +93,10 @@ subtest '&$printEvent output for keyboard event' => sub {
   like( $output, qr/TEvent \{/,  'Output starts with TEvent block' );
   like( $output, qr/keyCode/,    'Output contains keyCode field' );
   like( $output, qr/charCode/,   'Output contains charCode field' );
-  like( $output, qr/0xC3, 0xB1/, 'Output contains UTF-8 hex bytes for "n~"' );
+  like(
+    $output, 
+    qr/'\\xC3', '\\xB1'/, 'Output contains UTF-8 hex bytes for "n~"'
+  );
 }; #/ '&$printEvent output for keyboard event' => sub
 
 subtest '&$printEvent output for mouse event' => sub {

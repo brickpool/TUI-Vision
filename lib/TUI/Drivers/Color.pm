@@ -1,5 +1,5 @@
-package TUI::Drivers::ColorDesired;
-# ABSTRACT: union type representing a desired foreground or background color
+package TUI::Drivers::Color;
+# ABSTRACT: Represents a color in any of the supported color types
 
 use 5.010;
 use strict;
@@ -11,7 +11,7 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 
 use Exporter 'import';
 our @EXPORT = qw(
-  TColorDesired
+  TColor
 );
 
 use PerlX::Assert::PP;
@@ -27,19 +27,24 @@ use TUI::Drivers::Colors qw(
   XTerm16toBIOS
 );
 
-sub TColorDesired() { __PACKAGE__ }
+sub TColor() { __PACKAGE__ }
+
+# predeclare private methods
+my (
+  $type,
+);
 
 sub new {    # $cell (|%args)
   my ( $class, @args ) = @_;
   assert ( $class and !ref $class );
 
-  # TColorDesired->new()
+  # TColor->new()
   my $bits;
   if (!@args) {
     $bits = 0;
   }
 
-  # TColorDesired->new( bios => Int )
+  # TColor->new( bios => Int )
   elsif ( @args == 2 && $args[0] eq 'bios' ) {
     my $bios = $args[1];
     assert ( looks_like_number $bios );
@@ -47,19 +52,19 @@ sub new {    # $cell (|%args)
           | ( ctBIOS << 24 );
   }
 
-  # TColorDesired->new( rgb => Int | ArrayRef )
+  # TColor->new( rgb => Int | ArrayRef )
   elsif ( @args == 2 && $args[0] eq 'rgb' ) {
     my $rgb = $args[1];
     if ( ref $rgb eq 'ARRAY' ) {
       assert ( @$rgb == 3 );
-      $rgb = unpack 'V', pack 'C4', ( @$rgb, 0 )
+      $rgb = ( ( ( $rgb->[0] << 8 ) | $rgb->[1] ) << 8 ) | $rgb->[2];
     }
     assert ( looks_like_number $rgb );
     $bits = ( $rgb & 0x00ffffff )
           | ( ctRGB << 24 );
   }
 
-  # TColorDesired->new( xterm => Int )
+  # TColor->new( xterm => Int )
   elsif ( @args == 2 && $args[0] eq 'xterm' ) {
     my $xterm = $args[1];
     assert ( looks_like_number $xterm );
@@ -74,52 +79,52 @@ sub new {    # $cell (|%args)
   return bless \$bits, $class;
 }
 
-sub type {   # $type ()
+$type = sub {   # $type ()
   assert ( blessed $_[0] );
   return ${ $_[0] } >> 24;
-}
+};
 
 sub isDefault {    # $bool ()
   assert ( blessed $_[0] );
-  return $_[0]->type == ctDefault;
+  return $_[0]->$type == ctDefault;
 }
 
 sub isBIOS {    # $bool ()
   assert ( blessed $_[0] );
-  return $_[0]->type == ctBIOS;
+  return $_[0]->$type == ctBIOS;
 }
 
 sub isRGB {    # $bool ()
   assert ( blessed $_[0] );
-  return $_[0]->type == ctRGB;
+  return $_[0]->$type == ctRGB;
 }
 
 sub isXTerm {    # $bool ()
   assert ( blessed $_[0] );
-  return $_[0]->type == ctXTerm;
+  return $_[0]->$type == ctXTerm;
 }
 
 sub asBIOS {    # $bios ()
   assert ( blessed $_[0] );
-  return ${ $_[0] };
+  return ${ $_[0] } & 0x0f;
 }
 
 sub asRGB {    # $rgb ()
   assert ( blessed $_[0] );
-  return ${ $_[0] };
+  return ${ $_[0] } & 0x00ffffff;
 }
 
 sub asXTerm {    # $xterm ()
   assert ( blessed $_[0] );
-  return ${ $_[0] };
+  return ${ $_[0] } & 0xff;
 }
 
-# Quantization to TColorBIOS.
+# Quantization to TColor BIOS.
 sub toBIOS {    # $bios ($isForeground)
   my ( $self, $isForeground ) = @_;
   assert ( blessed $self );
 
-  switch: for ( $self->type ) {
+  switch: for ( $self->$type ) {
     case: ctBIOS == $_ and 
       return $self->asBIOS();
     case: ctRGB == $_ and
@@ -139,23 +144,16 @@ sub toBIOS {    # $bios ($isForeground)
 sub equals {    # $bool ($other)
   my ( $self, $other ) = @_;
   assert ( blessed $self );
-  assert ( blessed $other );
-  return $$self == $$other;
+  assert ( blessed $other or looks_like_number $other );
+  return ref $other
+    ? $$self == $$other
+    : $$self == $other;
 }
 
 use overload
   '==' => \&equals,
+  '0+' => sub { ${$_[0]} },
   fallback => 1;
-
-sub bitCast {    # $bits|undef (|$bits)
-  assert ( blessed $_[0] );
-  if ( @_ > 1 ) {
-    assert ( looks_like_number $_[1] );
-    ${ $_[0] } = $_[1] & 0xffffffff;
-    return;
-  }
-  return ${ $_[0] };
-}
 
 1;
 
@@ -163,23 +161,23 @@ __END__
 
 =head1 NAME
 
-TColorDesired - union type representing a desired foreground or background color
+TColor - represents a color in any of the supported color types
 
 =head1 SYNOPSIS
 
   use TUI::Drivers;
 
-  my $default = TColorDesired->new();
+  my $default = TColor->new();
 
-  my $bios = TColorDesired->new(
+  my $bios = TColor->new(
     bios => 0xF,
   );
 
-  my $rgb = TColorDesired->new(
+  my $rgb = TColor->new(
     rgb => 0x7F00BB,
   );
 
-  my $xterm = TColorDesired->new(
+  my $xterm = TColor->new(
     xterm => 196,
   );
 
@@ -191,10 +189,8 @@ TColorDesired - union type representing a desired foreground or background color
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::ColorDesired> provides C<TColorDesired>, a value type that
-represents one desired color.
-
-A C<TColorDesired> may represent one of several color kinds:
+C<TUI::Drivers::Color> provides C<TColor>, a value type that represents one of 
+several color kinds:
 
 =over
 
@@ -230,29 +226,29 @@ Creates a desired color value.
 
 With no arguments, a default terminal color is created:
 
-  my $color = TColorDesired->new();
+  my $color = TColor->new();
 
 Create a BIOS color:
 
-  my $color = TColorDesired->new(
+  my $color = TColor->new(
     bios => 0xF,
   );
 
 Create an RGB color:
 
-  my $color = TColorDesired->new(
+  my $color = TColor->new(
     rgb => 0x7F00BB,
   );
 
 An RGB color may also be specified as an RGB triplet:
 
-  my $color = TColorDesired->new(
+  my $color = TColor->new(
     rgb => [ 127, 0, 187 ],
   );
 
 Create an XTerm color:
 
-  my $color = TColorDesired->new(
+  my $color = TColor->new(
     xterm => 196,
   );
 
@@ -337,26 +333,22 @@ When the value represents the terminal default color, the returned value is
 the standard foreground or background BIOS color depending on the value of
 C<$isForeground>.
 
-=head2 type
-
-  my $type = $self->type();
-
-Returns the color type.
-
-The return value is one of, exported by L<TUI::Drivers::Const>:
-
-  ctDefault
-  ctBIOS
-  ctRGB
-  ctXTerm
-
 =head1 OPERATORS
 
 =head2 Numeric equality
 
   $a == $b
 
-Returns true when two C<TColorDesired> values contain identical data.
+Returns true when C<TColor> values contain identical data; support 
+typecast to a C<TColor> value if one is a number.
+
+=head2 Numeric conversion
+
+  my $bits = 0+ $color;
+
+Returns the encoded color value as an integer.
+
+The returned value contains both the color type and color data.
 
 =head1 SEE ALSO
 

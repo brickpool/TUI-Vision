@@ -24,7 +24,11 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Drivers::Const qw( :evXXXX );
+use TUI::Drivers::Const qw(
+  kbCtrlShift
+  kbAltShift
+  :evXXXX
+);
 use TUI::Gadgets::Const qw( cmFndEventView );
 use TUI::Gadgets::PrintConstants qw(
   printKeyCode
@@ -270,11 +274,11 @@ $printEvent = sub {    # void ($out, $ev)
     # used by the backend. For Win32 this is typically the legacy code page.
     # The pseudo-fields 'text' and 'textLength' always show the UTF-8 byte
     # sequence corresponding to the character.
-    my @text = $charCode
+    my @text = $charCode && !( $ev->{keyDown}{controlKeyState} & ( kbCtrlShift | kbAltShift ) )
       ? unpack( 'C*', bytes::substr( decode( 'cp437' => chr $charCode ), 0 ) )
       : ();
     my $textLength = @text;
-    print join(', ', map { sprintf "0x%02X", $_ } @text );
+    print join(', ', map { sprintf "'\\x%02X'", $_ } @text );
     print "},\n",
           "    .textLength = ", $textLength, "\n", 
           "  }\n";

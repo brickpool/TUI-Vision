@@ -192,7 +192,7 @@ called, with the Code parameter having one of the values shown in the table.
 Desired color format constants
 
 Use the constants from the table below to select the color representation
-stored in a C<TColorDesired> value.
+stored in a C<TColor> value.
 
   Constant   Value   Usage
   ---------- ------- --------------------------------------

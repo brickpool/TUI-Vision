@@ -470,7 +470,7 @@ use constant {
   kbAltShift  => kbLeftAlt | kbRightAlt,
 };
 
-# TColorDesired
+# TColor
 use constant {
   ctDefault => 0x0,    # Terminal default.
   ctBIOS    => 0x1,    # TColorBIOS.

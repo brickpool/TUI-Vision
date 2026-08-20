@@ -87,8 +87,8 @@ detail.
  Class              Perl Module                  Status
  ------------------ ---------------------------- ------
  TColorAttr         TUI::Drivers::ColorAttr      [+]
- TColorDesired      TUI::Drivers::ColorDesired   [+]
- TColors            TUI::Drivers::Colors         [+]
+ TColor             TUI::Drivers::Color          [+]
+ TAttrPairs         TUI::Drivers::AttrPairs      [+]
  TCellChar          TUI::Drivers::CellChar       [+]
  TScreenCell        TUI::Drivers::ScreenCell     [+]
 

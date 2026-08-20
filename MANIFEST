@@ -43,9 +43,10 @@ lib/TUI/Dialogs/StaticText.pm
 lib/TUI/Dialogs/StrItem.pm
 lib/TUI/Dialogs/Util.pm
 lib/TUI/Drivers.pm
+lib/TUI/Drivers/AttrPair.pm
 lib/TUI/Drivers/CellChar.pm
+lib/TUI/Drivers/Color.pm
 lib/TUI/Drivers/ColorAttr.pm
-lib/TUI/Drivers/ColorDesired.pm
 lib/TUI/Drivers/Colors.pm
 lib/TUI/Drivers/Const.pm
 lib/TUI/Drivers/Display.pm
@@ -206,10 +207,11 @@ t/06Drivers/24MessageEvent.t
 t/06Drivers/25TEvent.t
 t/06Drivers/32TMouse.t
 t/06Drivers/33TEventQueue.t
-t/06Drivers/40TColorDesired.t
+t/06Drivers/40TColor.t
 t/06Drivers/41TColorAttr.t
 t/06Drivers/42TCellChar.t
 t/06Drivers/43TScreenCell.t
+t/06Drivers/44TAttrPair.t
 t/06Drivers/99Drivers.t
 t/07Views/01load.t
 t/07Views/02Const.t

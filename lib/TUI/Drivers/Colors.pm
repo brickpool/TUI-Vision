@@ -336,7 +336,7 @@ Approximates an XTerm256 color using the closest XTerm16 color.
 
 =head1 SEE ALSO
 
-L<TColorDesired|TUI::Drivers::ColorDesired>,
+L<TColor|TUI::Drivers::Color>,
 L<TColorAttr|TUI::Drivers::ColorAttr>
 
 =head1 AUTHORS
