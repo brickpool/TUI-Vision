@@ -264,8 +264,8 @@ sub is_FileHandle ($) {
   return !!0;
 }
 
-sub is_ArrayLike ($) { defined($_[0]) && reftype($_[0]) eq 'ARRAY' }
-sub is_HashLike  ($) { defined($_[0]) && reftype($_[0]) eq 'HASH' }
+sub is_ArrayLike ($) { ref($_[0]) && reftype($_[0]) eq 'ARRAY' }
+sub is_HashLike  ($) { ref($_[0]) && reftype($_[0]) eq 'HASH' }
 
 # ----------------------------------------------------------------------
 # Type constructors (non-parametric)
