@@ -25,8 +25,8 @@ P6. Do not claim stability/completeness (e.g. "stable", "production-ready", "ful
 
 Naming Rules (critical)
 -----------------------
-N1. =head1 NAME uses the fully-qualified Perl module name:
-    Example: "TUI::StdDlg::FileList - ..."
+N1. =head1 NAME uses not the fully-qualified Perl module name:
+    Example: "TUI::StdDlg::FileList - ..." should be "TFileList - ..."
 N2. HIERARCHY is conceptual Turbo Vision hierarchy WITHOUT namespace:
     Example: TObject -> TView -> TGroup -> TListBox -> TFileList
 N3. SYNOPSIS uses the public constructors/factories as actually used (e.g. new_T...),

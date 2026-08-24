@@ -33,7 +33,9 @@ use TUI::Drivers::Const qw(
   :evXXXX
   :kbXXXX
 );
+use TUI::Drivers::ColorAttr;
 use TUI::Drivers::Event;
+use TUI::Drivers::ScreenCell;
 use TUI::Views::Const qw(
   maxViewWidth
   :phaseType
@@ -404,7 +406,7 @@ sub calcBounds {    # void ($bounds, $delta);
 
   my $grow = sub {    # ($i)
     if ( $self->{growMode} & gfGrowRel ) {
-      $_[0] = ( $_[0] * $s + ( ( $s - $d ) >> 1 ) ) / ( $s - $d );
+      $_[0] = int( ( $_[0] * $s + ( ( $s - $d ) >> 1 ) ) / ( $s - $d ) );
     }
     else {
       $_[0] += $d;
@@ -1270,15 +1272,6 @@ sub writeBuf {    # void ($x, $y, $w, $h, $b)
   return;
 }
 
-my $setCell = sub {    # void ($cell, $ch, $attr)
-  assert ( @_ == 3 );
-  assert ( is_ScalarRef \$_[0] );
-  assert ( is_Int $_[1] );
-  assert ( is_Int $_[2] );
-  $_[0] = ( ( $_[2] & 0xff ) << 8 ) | $_[1] & 0xff;
-  return;
-};
-
 sub writeChar {    # void ($x, $y, $c, $color, $count)
   state $sig = signature(
     method => Object,
@@ -1287,8 +1280,10 @@ sub writeChar {    # void ($x, $y, $c, $color, $count)
   my ( $self, $x, $y, $c, $color, $count ) = $sig->( @_ );
   my $attr = $self->mapColor( $color );
   if ( $count > 0 ) {
-    &$setCell( my $cell, ord( $c ), $attr );
-    my $buf = [ ( $cell ) x $count ];
+    my $buf = [ map { TScreenCell->new() } 1 .. $count ];
+    for my $cell ( @$buf ) {
+      $cell->setCell( $c, $attr );
+    }
     $self->$writeView( $x, $y, $count, $buf );
   }
   return;
@@ -1316,10 +1311,10 @@ sub writeStr {    # void ($x, $y, $str, $color)
     my $length = length( $str );
     if ( $length > 0 ) {
       my $attr = $self->mapColor( $color );
-      my $buf  = [ ( 0 ) x $length ];
+      my $buf  = [ map { TScreenCell->new() } 1 .. $length ];
       my $i    = 0;
       foreach my $c ( split //, $str ) {
-        &$setCell( $buf->[$i], ord( $c ), $attr );
+        $buf->[$i]->setCell( $c, $attr );
         $i++;
       }
       $self->$writeView( $x, $y, $length, $buf );

@@ -10,12 +10,12 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 
 use Scalar::Util qw( weaken );
 
+use TUI::Drivers::Const qw( slNoShadow );
 use TUI::Drivers::ColorAttr;
 use TUI::Drivers::HardwareInfo;
 use TUI::Drivers::HWMouse;
 use TUI::Drivers::Screen;
 use TUI::Drivers::ScreenCell;
-
 use TUI::Views::Const qw(
   sfVisible
   sfShadow
@@ -54,8 +54,8 @@ use subs qw(
   L30
   L40
   L50
-  copyShort
-  copyShort2CharInfo
+  copyCell
+  copyCell2CharInfo
   applyShadow
   reverseAttribute
 );
@@ -224,103 +224,85 @@ sub L50 {
   };
   no warnings 'uninitialized';
   if ( $owner->{buffer} != $screenBuffer ) {
-    copyShort( $dst, $src );
+    copyCell( $dst, $src );
   }
   else {
     LEGACY 
-      ? copyShort2CharInfo( $dst, $src )
-      : copyShort2Cell( $dst, $src );
+      ? copyCell2CharInfo( $dst, $src )
+      : copyCell( $dst, $src );
     THardwareInfo->screenWrite( $X, $Y, $dst, $Count - $X );
   }
   return;
 } #/ sub L50
 
-# On Windows and DOS, Turbo Vision stores a byte of text and a byte of
-# attributes for every cell. On Windows, all TGroup buffers follow this scheme, 
-# with the exception of the top one, which corresponds to the Win32 console API.
+# Our Turbo Vision port stores a TCellChar for text and a TColorAttr for
+# attributes for every cell. On Windows, all TGroup buffers follow this schema
+# except the topmost one, which interfaces with the Win32 Console API.
 
-sub copyShort {
-  my ( $dst, $src ) = @_;
-  if ( $edx == 0 ) {
-    my $n = $Count - $X;
-    @$dst[ 0 .. $n - 1 ] = @$src[ 0 .. $n - 1 ];
-  }
-  else {
-    for ( my $i = 0 ; $i < $Count - $X ; ++$i ) {
-      my ( $c, $color ) = unpack 'CC' => pack 'v'  => $src->[$i];
-      $dst->[$i]        = unpack 'v'  => pack 'CC' => $c, applyShadow( $color );
-    }
-  }
-  return;
-} #/ sub copyShort
-
-sub copyShort2CharInfo {
+sub copyCell2CharInfo {
   my ( $dst, $src ) = @_;
   my $i;
   if ( $edx == 0 ) {
     # Expand character/attribute pair
-    my $n = $Count - $X;
-    @$dst[ 0 .. 2 * $n - 1 ] = unpack 'C*' => pack "v*" => @$src[ 0 .. $n - 1 ];
+    for ( $i = 0 ; $i < $Count - $X ; ++$i ) {
+      my $c = $src->[$i];
+      my $ch = ord $c->getChar()->getText();
+      my $attr = $c->getAttr()->asBIOS();
+      splice( @$dst, 2 * $i, 2, $ch, $attr );
+    }
   }
   else {
     # Mix in shadow attribute
     for ( $i = 0 ; $i < $Count - $X ; ++$i ) {
-      my ( $c, $color ) = unpack 'CC' => pack 'v' => $src->[$i];
-      splice( @$dst, 2 * $i, 2, $c, applyShadow( $color ) );
+      my $c = TScreenCell->new();
+      $c->setChar( $src->[$i]->getChar() );
+      $c->setAttr( applyShadow( $src->[$i]->getAttr() ) );
+      my $ch = ord $c->getChar()->getText();
+      my $attr = $c->getAttr()->asBIOS();
+      splice( @$dst, 2 * $i, 2, $ch, $attr );
     }
   }
   return;
-} #/ sub copyShort2CharInfo
+} #/ sub copyCell2CharInfo
 
-# On Unix, the top one buffer corresponds to the TScreenCell structure used by 
-# the backend. The TScreenCell structure contains a TCellChar and a TColorAttr 
-# object, which is used to store the character and the attribute for every cell. 
-
-my @ATTR = map { ${ TColorAttr->new( bios => $_ ) } } 0 .. 255;
-
-sub copyShort2Cell {
+sub copyCell {
   my ( $dst, $src ) = @_;
-  my $i;
   if ( $edx == 0 ) {
-    # Expand character/attribute pair
-    my $n = $Count - $X;
-    for my $i ( 0 .. $n - 1 ) {
-      # Fast path equivalent of the code below.
-      #   my ( $char, $attr ) = unpack 'aC' => pack 'v' => $src->[$i];
-      #   $dst->[$i]->setCell( $char, TColorAttr->new( bios => $attr ) );
-      my $cell  = $dst->[$i];
-      my $short = $src->[$i] & 0xffff;
-      ${ $cell->[0] } = $ATTR[ $short >> 8 ];
-      ${ $cell->[1] } = chr( $short & 0xff );
+    for ( my $i = 0 ; $i < $Count - $X ; ++$i ) {
+      ${ $dst->[$i][0] } = ${ $src->[$i][0] };
+      ${ $dst->[$i][1] } = ${ $src->[$i][1] };
     }
   }
   else {
-    # Mix in shadow attribute
-    my $n = $Count - $X;
-    for my $i ( 0 .. $n - 1 ) {
-      my $cell  = $dst->[$i];
-      my $short = $src->[$i] & 0xffff;
-      ${ $cell->[0] } = $ATTR[ applyShadow( $short >> 8 ) ];
-      ${ $cell->[1] } = chr( $short & 0xff );
+    for ( my $i = 0 ; $i < $Count - $X ; ++$i ) {
+      my $c = TScreenCell->new();
+      $c->setChar( $src->[$i]->getChar() );
+      $c->setAttr( applyShadow( $src->[$i]->getAttr() ) );
+      $dst->[$i] = $c;
     }
   }
   return;
-} #/ sub copyShort2Cell
+} #/ sub copyCell
 
 sub applyShadow {
   my ( $attr ) = @_;
-  my $shadowAttrInv = reverseAttribute( $shadowAttr );
-  return $attr
-    if $attr == $shadowAttr 
-    || $attr == $shadowAttrInv;
-  return $attr & 0xf0
-    ? $shadowAttr
-    : $shadowAttrInv;
-}
 
-sub reverseAttribute {
-  my ( $attr ) = @_;
-  return ( ( $attr & 0x0f ) << 4 ) | ( ( $attr & 0xf0 ) >> 4 );
+  # Coercing the BIOS shadow attribute to a TColorAttr object
+  local $shadowAttr = TColorAttr->new( bios => $shadowAttr );
+
+  # Since TColorAttr is an object, we can use a custom field 
+  # to determine whether the shadow has already been applied.
+  my $style = $attr->getStyle();
+  unless ( $style & slNoShadow ) {
+    if ( $attr->getBack()->toBIOS( !!0 ) != 0 ) {
+      $attr = $shadowAttr;
+    }
+    else {    # Reverse the shadow attribute on black areas.
+      $attr = $shadowAttr->reverseAttribute();
+      $attr->setStyle( $style | slNoShadow );
+    }
+  }
+  return $attr;
 }
 
 1

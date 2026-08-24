@@ -1,5 +1,4 @@
 package TUI::Drivers::AttrPair;
-
 # ABSTRACT: pair of color attributes value type
 
 use 5.010;
@@ -117,8 +116,8 @@ TAttrPair - pair of color attributes value type
 
   use TUI::Drivers;
   
-  my $cNormal = TColorAttr->new( fg => ['0x234983'], bg => ['0x267232'] );
-  my $cHigh   = TColorAttr->new( fg => ['0x309283'], bg => ['0x127844'] );
+  my $cNormal = TColorAttr->new( fg => ['#234983'], bg => ['#267232'] );
+  my $cHigh   = TColorAttr->new( fg => ['#309283'], bg => ['#127844'] );
   my $attrs   = TAttrPair->new( lo => $cNormal, hi => $cHigh );
 
   my $b = TDrawBuffer->new();

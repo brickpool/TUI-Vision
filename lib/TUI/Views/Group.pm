@@ -32,6 +32,7 @@ use TUI::Objects::Rect;
 use TUI::Drivers::Const qw(
   :evXXXX
 );
+use TUI::Drivers::ScreenCell;
 use TUI::Drivers::Event;
 use TUI::Views::Const qw(
   :phaseType
@@ -951,10 +952,18 @@ sub getBuffer {    # void ()
     pos    => [],
   );
   my ( $self ) = $sig->( @_ );
-  $self->{buffer} = [ (0) x ( $self->{size}{x} * $self->{size}{y} * 2 ) ]
-    if ( $self->{state} & sfExposed )
-      && ( $self->{options} & ofBuffered )
-      && !$self->{buffer};
+  # An uninitialized screen buffer is harmless in MS-DOS, since the worst
+  # you will see are random characters and colors. But in non-Borland mode,
+  # it may result in control characters being printed to screen, which will
+  # severely mess up the display. Do not allow this to happen.
+  if ( ( $self->{state} & sfExposed )
+    && ( $self->{options} & ofBuffered )
+    && !$self->{buffer}
+  ) {
+    $self->{buffer} = [
+      map { TScreenCell->new() } 1 .. ( $self->{size}{x} * $self->{size}{y} )
+    ];
+  }
   return;
 }
 

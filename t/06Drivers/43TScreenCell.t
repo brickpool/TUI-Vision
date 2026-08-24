@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Scalar::Util qw( refaddr );
 
 BEGIN {
   use_ok 'TUI::Drivers::ColorAttr';
@@ -46,7 +47,8 @@ subtest 'setChar with TCellChar' => sub {
   my $cell = TScreenCell->new();
   $cell->setChar( $char );
 
-  ok( $cell->getChar == $char, 'character instance preserved' );
+  ok( refaddr( $cell->getChar ) != refaddr( $char ), 'character copied by value' );
+  is( $cell->getChar->getText, $char->getText, 'character value preserved' );
   ok( $cell->isWide, 'wide character detected' );
 };
 
@@ -55,7 +57,11 @@ subtest 'setAttr' => sub {
   my $cell = TScreenCell->new();
   $cell->setAttr( $attr );
 
-  ok( $cell->getAttr == $attr, 'attribute instance preserved' );
+  ok( refaddr( $cell->getAttr ) != refaddr( $attr ), 'attribute copied by value' );
+  is( $cell->getAttr->asBIOS, $attr->asBIOS, 'attribute value preserved' );
+
+  $cell->setAttr(0x2E);
+  is( $cell->getAttr->asBIOS, 0x2E, 'numeric BIOS attribute preserved' );
 };
 
 subtest 'setCell' => sub {
@@ -64,7 +70,8 @@ subtest 'setCell' => sub {
 
   $cell->setCell( 'A', $attr );
   is( $cell->getChar->getText, 'A', 'character stored');
-  ok( $cell->getAttr == $attr, 'attribute stored' );
+  ok( refaddr( $cell->getAttr ) != refaddr( $attr ), 'attribute copied by value' );
+  is( $cell->getAttr->asBIOS, $attr->asBIOS, 'attribute value stored' );
 };
 
 subtest 'equals' => sub {

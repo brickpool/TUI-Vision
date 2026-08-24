@@ -99,6 +99,12 @@ subtest 'mutation methods' => sub {
   $ch->moveWideCharTrail();
   ok( $ch->isWideCharTrail, 'moveWideCharTrail' );
   is( $ch->getText, "\0", 'trail marker text' );
+
+  my $cell = TCellChar->new( text => 'A' );
+  is( $cell->getText, 'A', 'getText returns the stored character' );
+
+  $cell->moveChar('0');
+  is( $cell->getText, '0', "getText preserves literal '0'" );
 };
 
 subtest 'appendZeroWidthChar' => sub {

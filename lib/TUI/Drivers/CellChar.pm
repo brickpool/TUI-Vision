@@ -90,7 +90,8 @@ sub appendZeroWidthChar {    # void ($mbc)
 
 sub getText {    # $ch ()
   assert ( blessed $_[0] );
-  return ${ $_[0] } || "\0";
+  my $text = ${ $_[0] };
+  return length( $text ) ? $text : "\0";
 }
 
 sub size {    # $bytes ()

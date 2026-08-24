@@ -39,8 +39,7 @@ sub new {    # $cell (|%args)
   if ( @args == 2 && $args[0] eq 'bios' ) {
     assert ( looks_like_number $args[1] );
     my $bios = $args[1];
-    my $attr = ( $bios >> 8 ) & 0xff;
-    my $ch = $bios & 0xff;
+    my ( $ch, $attr ) = unpack 'aC' => pack 'v' => $bios;
     return bless [
       TColorAttr->new( bios => $attr ),
       TCellChar->new( text => $ch ),
@@ -81,20 +80,29 @@ sub getChar {    # $ch ()
 sub setAttr {    # void ($attr)
   my ( $cell, $attr ) = @_;
   assert ( blessed $cell );
-  assert ( blessed $attr );
-
-  $cell->[0] = $attr;
+  assert ( blessed $attr or looks_like_number $attr );
+  if ( ref $attr ) {
+    ${ $cell->[0] } = $$attr;
+  }
+  else {
+    my $bios = TColorAttr->new( bios => $attr & 0xff );
+    ${ $cell->[0] } = $$bios;
+  }
   return;
 }
 
 sub setChar {    # void ($ch)
   my ( $cell, $ch ) = @_;
   assert ( blessed $cell );
-  assert ( blessed $ch or !ref $ch && length $ch );
+  assert ( blessed $ch or !ref $ch );
 
-  $cell->[1] = ref( $ch )
-             ? $ch
-             : TCellChar->new( text => $ch );
+  if ( ref $ch ) {
+    ${ $cell->[1] } = $$ch;
+  } 
+  else {
+    my $cch = TCellChar->new( text => $ch );
+    ${ $cell->[1] } = $$cch;
+  }
   return;
 }
 

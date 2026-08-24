@@ -15,18 +15,20 @@ our @EXPORT = qw(
   new_TDrawBuffer
 );
 
-use List::Util qw( max );
+use List::Util qw( min max );
 use TUI::toolkit qw( :utils );
 use TUI::toolkit::Types qw(
   :is
   :types
+  Maybe
 );
+
+use TUI::Drivers::ScreenCell;
+use TUI::Drivers::Screen;
+use TUI::Views::Const qw( maxViewWidth );
 
 sub TDrawBuffer() { __PACKAGE__ }
 sub new_TDrawBuffer { __PACKAGE__->from(@_) }
-
-use TUI::Drivers::Screen;
-use TUI::Views::Const qw( maxViewWidth );
 
 # import global variables
 use vars qw(
@@ -38,37 +40,6 @@ use vars qw(
   *screenHeight = \${ TScreen . '::screenHeight' };
   *screenWidth  = \${ TScreen . '::screenWidth' };
 }
-
-my $setAttr = sub {    # void ($cell, $attr)
-  assert ( @_ == 2 );
-  assert ( is_PositiveOrZeroInt $_[0] );
-  assert ( is_PositiveOrZeroInt $_[1] );
-  $_[0] = ( ( $_[1] & 0xff ) << 8 ) | $_[0] & 0xff;
-  return;
-};
-
-my $getChar = sub {    # $ch ($cell)
-  assert ( @_ == 1 );
-  assert ( is_PositiveOrZeroInt $_[0] );
-  $_[0] & 0xff;
-};
-
-my $setChar = sub {    # void ($cell, $ch)
-  assert ( @_ == 2 );
-  assert ( is_PositiveOrZeroInt $_[0] );
-  assert ( is_PositiveOrZeroInt $_[1] );
-  $_[0] = $_[0] & 0xff00 | $_[1] & 0xff;
-  return;
-};
-
-my $setCell = sub {    # void ($cell, $ch, $attr)
-  assert ( @_ == 3 );
-  assert ( is_PositiveOrZeroInt $_[0] );
-  assert ( is_PositiveOrZeroInt $_[1] );
-  assert ( is_PositiveOrZeroInt $_[2] );
-  $_[0] = ( ( $_[2] & 0xff ) << 8 ) | $_[1] & 0xff;
-  return;
-};
 
 # The following subroutine was ported from the framework
 # "A modern port of Turbo Vision 2.0", which is licensed under MIT licence.
@@ -86,7 +57,7 @@ my $allocData = sub {    # \@data ()
   # to draw vertical views (e.g. TScrollBar).
   # In addition, give some room for views that might exceed the screen size.
   my $len = max( 8 + max( $screenWidth, $screenHeight ), maxViewWidth );
-  return [ ( 0 ) x $len ];
+  return [ map { TScreenCell->new() } 1 .. $len ];
 };
 
 sub new {    # $obj ()
@@ -106,10 +77,13 @@ sub from {    # $obj ()
 sub putAttribute {    # void ($indent, $attr)
   state $sig = signature(
     method => Object,
-    pos    => [PositiveOrZeroInt, PositiveOrZeroInt],
+    pos    => [
+      PositiveOrZeroInt, 
+      sub { is_Object $_[0] or is_PositiveOrZeroInt $_[0] }, 
+    ],
   );
   my ( $self, $indent, $attr ) = $sig->( @_ );
-  &$setAttr( $self->[$indent], $attr );
+  $self->[$indent]->setAttr( $attr );
   return;
 }
 
@@ -120,98 +94,137 @@ sub putChar {    # void ($indent, $c)
   );
   my ( $self, $indent, $c ) = $sig->( @_ );
   assert ( length $c );
-  &$setChar( $self->[$indent], ord( $c ) );
+  $self->[$indent]->setChar( $c );
   return;
 }
 
-sub moveBuf {    # void ($indent, \@source, $attr, $count)
+sub moveBuf {    # void ($indent, \@source, $attr|undef, $count)
   state $sig = signature(
     method => Object,
     pos    => [
       PositiveOrZeroInt, 
       ArrayLike, 
-      PositiveOrZeroInt, 
+      sub { !defined $_[0] or is_Object $_[0] or is_PositiveOrZeroInt $_[0] }, 
       PositiveOrZeroInt,
     ],
   );
   my ( $self, $indent, $source, $attr, $count ) = $sig->( @_ );
 
-  if ( $attr ) {
+  if ( defined $attr ) {
     for ( my $i = 0 ; $i < $count ; $i++ ) {
-      &$setCell( $self->[ $indent + $i ], &$getChar( $source->[$i] ), $attr );
+      my $c = $source->[$i]; 
+      $self->[ $indent + $i ]->setCell(
+        ref $c ? $c->getChar() : chr( $c ),
+        $attr,
+      );
     }
   }
   else {
     for ( my $i = 0 ; $i < $count ; $i++ ) {
-      $self->[ $indent + $i ] = $source->[$i];
+      if ( ref ( my $c = $source->[$i] ) ) {
+        $self->[ $indent + $i ]->setCell(
+          $c->getChar(),
+          $c->getAttr(),
+        );
+      }
+      else {
+        my ( $ch, $attr ) = unpack 'aC' => pack 'v' => $c;
+        $self->[ $indent + $i ]->setCell( $ch,  $attr );
+      }
     }
   }
   return;
 } #/ sub moveBuf
 
-sub moveChar {    # void ($indent, $c, $attr, $count)
+sub moveChar {    # void ($indent, $c|undef, $attr|undef, $count)
   state $sig = signature(
     method => Object,
-    pos    => [PositiveOrZeroInt, Str, PositiveOrZeroInt, PositiveOrZeroInt],
+    pos    => [
+      PositiveOrZeroInt, 
+      Maybe[Str], 
+      sub { !defined $_[0] or is_Object $_[0] or is_PositiveOrZeroInt $_[0] }, 
+      PositiveOrZeroInt,
+    ],
   );
   my ( $self, $indent, $c, $attr, $count ) = $sig->( @_ );
-  assert ( length $c );
 
   my $dest = $indent;
-  while ( $count-- ) {
-    if ( $attr ) {
-      if ( $c ) {
-        &$setCell( $self->[ $dest++ ], ord( $c ), $attr );
-      } 
-      else {
-        &$setAttr( $self->[ $dest++ ], $attr );
-      }
-    }
+  $count = min( $count, max( scalar( @$self ) - $indent, 0 ) );
+
+  if ( defined $attr ) {
+    if ( defined $c ) {
+      $self->[ $dest++ ]->setCell( $c, $attr )
+        for 1 .. $count;
+    } 
     else {
-      &$setChar( $self->[ $dest++ ], ord( $c ) );
+      $self->[ $dest++ ]->setAttr( $attr )
+        for 1 .. $count;
     }
+  }
+  else {
+    assert ( length $c );
+    $self->[ $dest++ ]->setChar( $c )
+      for 1 .. $count;
   }
   return;
 } #/ sub moveChar
 
-sub moveCStr {    # void ($indent, $str, $attrs)
+sub moveCStr {    # $num ($indent, $str, $attrs)
   state $sig = signature(
     method => Object,
-    pos    => [PositiveOrZeroInt, Str, PositiveOrZeroInt],
+    pos    => [
+      PositiveOrZeroInt, 
+      Str, 
+      sub { is_ArrayLike $_[0] or is_PositiveOrZeroInt $_[0] }, 
+    ],
   );
   my ( $self, $indent, $str, $attrs ) = $sig->( @_ );
-  my $toggle  = 1;
-  my $curAttr = $attrs & 0xff;
 
-  my $dest = $indent;
+  my $dest   = $indent;
+  my $limit  = @$self;
+  my $toggle = 1;
+  $attrs = [ $attrs & 0xff, ( $attrs >> 8 ) & 0xff ] unless ref $attrs;
+  my $curAttr = $attrs->[0];
+
   foreach my $c ( split //, $str ) {
+    last unless $dest < $limit;
     if ( $c eq '~' ) {
-      $curAttr = ( $attrs >> ( 8 * $toggle ) ) & 0xff;
+      $curAttr = $attrs->[$toggle];
       $toggle  = 1 - $toggle;
     }
     else {
-      &$setCell( $self->[ $dest++ ], ord( $c ), $curAttr );
-    }
-  } #/ foreach my $c ( split //, $str)
-  return;
-} #/ sub moveCStr
-
-sub moveStr {    # void ($indent, $str, $attrs)
-  state $sig = signature(
-    method => Object,
-    pos    => [PositiveOrZeroInt, Str, PositiveOrZeroInt],
-  );
-  my ( $self, $indent, $str, $attrs ) = $sig->( @_ );
-
-  my $dest = $indent;
-  foreach my $c ( split //, $str ) {
-    if ( $attrs ) {
-      &$setCell( $self->[ $dest++ ], ord( $c ), $attrs );
-    }
-    else {
-      &$setChar( $self->[ $dest++ ], ord( $c ) );
+      $self->[ $dest++ ]->setCell( $c, $curAttr );
     }
   }
+  return $dest - $indent;
+} #/ sub moveCStr
+
+sub moveStr {    # $num ($indent, $str, $attr|undef)
+  state $sig = signature(
+    method => Object,
+    pos    => [
+      PositiveOrZeroInt, 
+      Str, 
+      sub { !defined $_[0] or is_Object $_[0] or is_PositiveOrZeroInt $_[0] }, 
+    ],
+  );
+  my ( $self, $indent, $str, $attr ) = $sig->( @_ );
+
+  return 0 
+    unless $indent < @$self;
+
+  my $dest = $indent;
+  my $count = min( length $str, scalar( @$self ) - $indent );
+
+  if ( defined $attr ) {
+    $self->[ $dest++ ]->setCell( $_, $attr )
+      for split //, $str;
+  }
+  else {
+    $self->[ $dest++ ]->setChar( $_ )
+      for split //, $str;
+  }
+  return $count;
 }
 
 1
@@ -270,30 +283,48 @@ Creates a new, empty draw buffer with a width equal to the maximum view width.
 
 =head2 moveBuf
 
-  $buffer->moveBuf($indent, \@source, $attr, $count);
+  $buffer->moveBuf($indent, \@source, $attr | undef, $count);
 
-Copies a sequence of characters from the source buffer into the draw buffer,
-starting at the specified position and applying the given attribute.
+Copies character data from C<@source> into the draw buffer.
+
+Source elements may be Unicode codepoints, legacy packed screen-cell
+values (C<short>), or C<TScreenCell> objects.
+
+If C<$attr> is defined, it overrides any attribute information present
+in the source data.
+
+Otherwise, attribute information is taken from the source element when
+available (either from a legacy packed screen-cell value or from a
+C<TScreenCell> object).
+
+=head2 moveChar
+
+  $buffer->moveChar($indent, $char | undef, $attr | undef, $count);
+
+Writes a repeated character (C<undef> to retain the already present characters) 
+into the buffer using the given attribute (C<undef> to retain the already 
+present attributes).
+
+B<Note:> If both C<$char> and C<$attr> are C<undef>, the attributes are 
+retained but the characters are not.
 
 =head2 moveCStr
 
-  $buffer->moveCStr($indent, $string, $attrs);
+  my $num = $buffer->moveCStr($indent, $string, $attrs);
 
 Writes a string containing Turbo Vision style tilde markers into the buffer,
 applying the specified attributes.
 
-=head2 moveChar
-
-  $buffer->moveChar($indent, $char, $attr, $count);
-
-Writes a repeated character into the buffer using the given attribute.
+Returns the number of cells in the buffer that were actually updated.
 
 =head2 moveStr
 
-  $buffer->moveStr($indent, $string, $attrs);
+  my $num = $buffer->moveStr($indent, $string, $attr | undef);
 
 Writes a plain string into the buffer starting at the specified position and
 applies the given attributes.
+
+Returns the number of cells in the buffer that were actually updated.
 
 =head2 putAttribute
 

@@ -222,6 +222,7 @@ our %EXPORT_TAGS = (
     slBlink
     slReverse
     slStrike
+    slNoShadow
   )],
 );
 

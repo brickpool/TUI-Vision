@@ -354,7 +354,8 @@ The returned value contains both the color type and color data.
 
 L<TUI::Drivers::Const>,
 L<TColorAttr|TUI::Drivers::ColorAttr>,
-L<TScreenCell|TUI::Drivers::ScreenCell>
+L<TScreenCell|TUI::Drivers::ScreenCell>,
+L<Convert::Color>
 
 =head1 AUTHORS
 
