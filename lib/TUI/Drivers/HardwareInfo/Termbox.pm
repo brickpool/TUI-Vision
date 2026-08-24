@@ -533,10 +533,14 @@ sub setCaretSize {    # void ($class, $size)
     # 1..99 -> BIOS-style cursor shape
     my $scan_row_start = 0x07 - int( $size * 7.0 / ( 100 - 1 ) + 0.5 );
     my $scan_row_end = 0x07;
-    $cursorLines = $scan_row_start << 8 | $scan_row_end;
+    my $scan_row = $scan_row_start << 8 | $scan_row_end;
 
-    # Show cursor; (-1,-1) is clamped to (0,0).
-    tb_set_cursor( -1, -1 );
+    if ( $scan_row != $cursorLines ) {
+      $cursorLines = $scan_row;
+
+      # Show cursor; (-1,-1) is clamped to (0,0).
+      tb_set_cursor( -1, -1 );
+    }
   }
   return;
 }
