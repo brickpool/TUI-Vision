@@ -112,10 +112,9 @@ sub setVideoMode {    # void ($class, $mode)
   assert ( looks_like_number $mode );
   $class->setCrtMode( $class->fixCrtMode( $mode ) );
   $class->setCrtData();
-  if ( TMouse->present() ) {
-    no warnings;
-    TMouse->setRange( $class->getCols() - 1, $class->getRows() - 1 );
-  }
+
+  TMouse->setRange( $class->getCols() - 1, $class->getRows() - 1 )
+    if TMouse->present();
   return;
 }
 

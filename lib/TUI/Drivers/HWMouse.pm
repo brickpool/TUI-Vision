@@ -12,7 +12,6 @@ our @EXPORT = qw(
 use PerlX::Assert::PP;
 use Scalar::Util qw( looks_like_number );
 use TUI::toolkit::boolean;
-use warnings::register;
 
 use TUI::Drivers::HardwareInfo;
 
@@ -22,6 +21,8 @@ sub THWMouse() { __PACKAGE__ }
 our $buttonCount      = 0;
 our $handlerInstalled = false;
 our $noMouse          = false;
+our $mouseRangeX      = 0;
+our $mouseRangeY      = 0;
 
 INIT {
   THWMouse->resume();
@@ -48,7 +49,8 @@ sub setRange {    # void ($class, $rx, $ry)
   assert ( $class and !ref $class );
   assert ( looks_like_number $rx );
   assert ( looks_like_number $ry );
-  warnings::warnif(__PACKAGE__, 'Unimplemented');
+  $mouseRangeX = $rx;
+  $mouseRangeY = $ry;
   return;
 }
 
@@ -142,6 +144,14 @@ Indicates whether the mouse event handler is currently installed (I<Bool>).
 =head2 $noMouse
 
 Indicates whether mouse hardware is available (I<Bool>).
+
+=head2 $mouseRangeX
+
+Maximum X coordinate for mouse movement (I<PositiveOrZeroInt>).
+
+=head2 $mouseRangeY
+
+Maximum Y coordinate for mouse movement (I<PositiveOrZeroInt>).
 
 =head1 METHODS
 

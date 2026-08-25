@@ -16,10 +16,22 @@ use TUI::Drivers::Const qw(
 );
 use TUI::Drivers::Event;
 use TUI::Drivers::HardwareInfo;
+use TUI::Drivers::HWMouse;
 use TUI::Drivers::Mouse;
 use TUI::Drivers::Screen;
 
 sub TEventQueue() { __PACKAGE__ }
+
+# import global variables
+use vars qw(
+  $mouseRangeX
+  $mouseRangeY
+);
+{
+  no strict 'refs';
+  *mouseRangeX = \${ THWMouse . '::mouseRangeX' };
+  *mouseRangeY = \${ THWMouse . '::mouseRangeY' };
+}
 
 # predeclare global variable names
 our $downTicks = 0;
@@ -59,13 +71,10 @@ sub resume {    # void ($class)
   THardwareInfo->clearPendingEvent();
 
   $mouseEvents = true;
-  eval {
-    no warnings;
-    TMouse->setRange( 
-      $TUI::Drivers::Screen::screenWidth - 1, 
-      $TUI::Drivers::Screen::screenHeight - 1 
-    )
-  };
+  TMouse->setRange( 
+    $TUI::Drivers::Screen::screenWidth - 1, 
+    $TUI::Drivers::Screen::screenHeight - 1 
+  );
   return;
 } #/ sub resume
 
@@ -85,6 +94,14 @@ my $getMouseState = sub {    # $bool ($class, $ev)
 
   return false unless THardwareInfo->getMouseEvent( $curMouse );
 
+  if ( $mouseRangeX ) {
+    $curMouse->{where}{x} = $mouseRangeX
+      if $curMouse->{where}{x} > $mouseRangeX;
+  }
+  if ( $mouseRangeY ) {
+    $curMouse->{where}{y} = $mouseRangeY
+      if $curMouse->{where}{y} > $mouseRangeY;
+  }
   if ( $mouseReverse && $curMouse->{buttons} && $curMouse->{buttons} != 3 ) {
     $curMouse->{buttons} ^= 3;
   }

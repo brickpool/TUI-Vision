@@ -78,6 +78,8 @@ hardware capabilities.
  $buttonCount        Number of detected mouse buttons
  $handlerInstalled   Mouse handler installed flag
  $noMouse            Mouse hardware unavailable flag
+ $mouseRangeX        Maximum X coordinate for mouse events
+ $mouseRangeY        Maximum Y coordinate for mouse events
 
 =head2 Dialogs and Text Resources
 
@@ -216,6 +218,8 @@ inventory.
   $months              TFileInfoPane          Month name list
   $mouse               TEventQueue            Mouse driver instance
   $mouseEvents         TEventQueue            Mouse events enabled flag
+  $mouseRangeX         THWMouse               Maximum mouse X coordinate 
+  $mouseRangeY         THWMouse               Maximum mouse Y coordinate
   $mouseReverse        TEventQueue            Reversed mouse buttons flag
   $noMouse             THWMouse               Mouse hardware unavailable flag
 

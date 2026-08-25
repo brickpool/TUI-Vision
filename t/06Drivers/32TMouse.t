@@ -28,9 +28,10 @@ lives_ok { $mouse->show() } 'show() does not die';
 lives_ok { $mouse->hide() } 'hide() does not die';
 lives_ok {
   use warnings FATAL => 'all';
-  no warnings THWMouse;
-  $mouse->setRange(80, 25);
+  $mouse->setRange( 80 -1, 25 -1 );
 } 'setRange() does not die';
+is $TUI::Drivers::HWMouse::mouseRangeX, 79, 'setRange() sets mouse range X';
+is $TUI::Drivers::HWMouse::mouseRangeY, 24, 'setRange() sets mouse range Y';
 lives_ok { $mouse->getEvent( {} ) } 'getEvent() does not die';
 ok( !$mouse->present(), 'present() returns false' );
 
