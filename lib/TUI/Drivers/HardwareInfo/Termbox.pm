@@ -23,6 +23,10 @@ use constant PERL_ONLY => ( exists $ENV{PERL_ONLY} && $ENV{PERL_ONLY} )
 use PerlX::Assert::PP;
 use English qw( -no_match_vars );
 use Errno qw( EINTR );
+use List::Util qw( 
+  min
+  max
+);
 use Scalar::Util qw(
   blessed
   looks_like_number
@@ -124,7 +128,7 @@ use vars qw(
 
 my $screenMode  = 0;
 my $initialized = false;
-my $cursorLines = 0x0607;
+my $cursorSize  = 15;
 my $tb_event    = Termbox::Event->new();
 
 # Codepage 437 to Unicode translation map.
@@ -441,6 +445,9 @@ INIT {
 sub resume {     # void ($class)
   assert ( $_[0] and !ref $_[0] );
   unless ( $initialized ) {
+    # https://github.com/neovim/neovim/issues/36635
+    $ENV{TERM} //= 'xterm-256color' if $^O eq 'MSWin32';
+
     # Initialize Termbox and set the input/output modes.
     my $err = tb_init();
     return if $err != TB_OK;
@@ -482,7 +489,6 @@ sub resume {     # void ($class)
       });
       return tb_strerror( $err ) if $err != TB_OK;
     }
-
     $initialized = true;
   }
   return;
@@ -495,6 +501,16 @@ END {
 sub suspend {    # void ($class)
   assert ( $_[0] and !ref $_[0] );
   if ( $initialized ) {
+    # Restore the cursor style on exit
+    # https://unix.stackexchange.com/q/697650
+    {
+      my $term = $ENV{TERM} // '';
+      if ( $term eq 'linux' ) {
+        tb_send( $_ = "\x1B[?0c", bytes::length( $_ ) );
+      } elsif ( $term ) {
+        tb_send( $_ = "\x1B[0 q", bytes::length( $_ ) );
+      }
+    }
     tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) if PERL_ONLY;
     tb_shutdown();
     $initialized = false;
@@ -527,17 +543,39 @@ sub setCaretSize {    # void ($class, $size)
   assert ( looks_like_number $size );
   assert ( $initialized );
   if ( $size <= 0 ) {
-    $cursorLines = 0x2000;    # hidden
+    $cursorSize = 0;    # hidden
     tb_hide_cursor();
-  } elsif ( $size > 0 ) {
-    # 1..99 -> BIOS-style cursor shape
-    my $scan_row_start = 0x07 - int( $size * 7.0 / ( 100 - 1 ) + 0.5 );
-    my $scan_row_end = 0x07;
-    my $scan_row = $scan_row_start << 8 | $scan_row_end;
+  } 
+  elsif ( $size != $cursorSize ) {
+    $cursorSize = max( 0, min( $size, 100 ) );
 
-    if ( $scan_row != $cursorLines ) {
-      $cursorLines = $scan_row;
-
+    my $term = $ENV{TERM} // '';
+    if ( $term eq 'linux' ) {
+      # Linux VGA console cursor style
+      # https://unix.stackexchange.com/a/92743
+      my $raw = sprintf(
+        "\x1B[?%dc",
+        2 + int( ( $cursorSize - 1 ) * 4 / 99 + 0.5 )
+      );
+      tb_send( $raw, bytes::length( $raw ) );
+    }
+    elsif ( $term ) {
+      # DECSCUSR (DEC Set Cursor Style)
+      # https://unix.stackexchange.com/a/597558
+      my $raw;
+      if ( $cursorSize < 50 ) {
+        $raw = "\x1B[3 q";    # blinking underline
+      }
+      elsif ( $cursorSize < 100 ) {
+        $raw = "\x1B[5 q";    # blinking bar
+      }
+      else {
+        $raw = "\x1B[1 q";    # blinking block
+      }
+      $raw .= "\x1B[?25h";
+      tb_send( $raw, bytes::length( $raw ) );
+    }
+    else {
       # Show cursor; (-1,-1) is clamped to (0,0).
       tb_set_cursor( -1, -1 );
     }
@@ -547,20 +585,7 @@ sub setCaretSize {    # void ($class, $size)
 
 sub getCaretSize {    # $size ($class)
   assert ( $_[0] and !ref $_[0] );
-
-  return 0 if $cursorLines & 0x2000;
-
-  my $scan_row_start = $cursorLines >> 8 & 0xff;
-  my $scan_row_end   = $cursorLines & 0xff;
-
-  my $size =
-	  int( ( $scan_row_end - $scan_row_start ) / 7.0 * ( 100 - 1 ) + 0.5 ) + 1;
-
-  $size = 15  if $size < 1;
-  $size = 50  if $size == 58;
-  $size = 100 if $size > 100;
-
-  return $size;
+  return min( max( $cursorSize, 0 ), 100 );
 }
 
 sub setCaretPosition {    # void ($class, $x, $y)
@@ -575,11 +600,7 @@ sub setCaretPosition {    # void ($class, $x, $y)
 
 sub isCaretVisible {    # $visible ($class)
   assert ( $_[0] and !ref $_[0] );
-  return not (
-    ( $cursorLines & 0x2000 )
-      ||
-    ( ( $cursorLines >> 8 ) > ( $cursorLines & 0xff ) )
-  );
+  return $cursorSize > 0;
 }
 
 # -------------------------------------------------------------------------

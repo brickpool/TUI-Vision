@@ -108,7 +108,8 @@ $decideCaretSize = sub {    # $int ()
   if ( $self->{state} & sfCursorIns ) {
     return 100;
   }
-  return $cursorLines & 0x0f;
+  # https://github.com/magiblot/tvision/issues/228
+  return $cursorLines & 0xff;
 };
 
 1
