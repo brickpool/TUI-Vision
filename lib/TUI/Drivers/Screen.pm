@@ -110,7 +110,13 @@ sub setVideoMode {    # void ($class, $mode)
   my ( $class, $mode ) = @_;
   assert ( $class and !ref $class );
   assert ( looks_like_number $mode );
-  $class->setCrtMode( $class->fixCrtMode( $mode ) );
+  if ( $mode != smUpdate ) {
+    $class->setCrtMode( $class->fixCrtMode( $mode ) );
+  }
+  else {
+    THardwareInfo->freeScreenBuffer( $screenBuffer );
+    $screenBuffer = THardwareInfo->allocateScreenBuffer();
+  }
   $class->setCrtData();
 
   TMouse->setRange( $class->getCols() - 1, $class->getRows() - 1 )

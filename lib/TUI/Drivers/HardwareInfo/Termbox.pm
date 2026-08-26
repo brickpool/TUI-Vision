@@ -23,10 +23,7 @@ use constant PERL_ONLY => ( exists $ENV{PERL_ONLY} && $ENV{PERL_ONLY} )
 use PerlX::Assert::PP;
 use English qw( -no_match_vars );
 use Errno qw( EINTR );
-use List::Util qw( 
-  min
-  max
-);
+use List::Util qw( min max );
 use Scalar::Util qw(
   blessed
   looks_like_number
@@ -38,6 +35,7 @@ use Time::HiRes qw( time );
 use TUI::toolkit::boolean;
 
 use TUI::Drivers::Const qw(
+  evCommand
   evKeyDown
   :smXXXX
   :kbXXXX
@@ -47,6 +45,7 @@ use TUI::Drivers::Const qw(
 use TUI::Drivers::CellChar;
 use TUI::Drivers::ColorAttr;
 use TUI::Drivers::ScreenCell;
+use TUI::Views::Const qw( cmScreenChanged );
 
 # -------------------------------------------------------------------------
 # Define constants
@@ -129,6 +128,7 @@ use vars qw(
 my $screenMode  = 0;
 my $initialized = false;
 my $cursorSize  = 15;
+my @lastSize    = ( 0, 0 );
 my $tb_event    = Termbox::Event->new();
 
 # Codepage 437 to Unicode translation map.
@@ -455,6 +455,12 @@ sub resume {     # void ($class)
     return if $err != TB_OK;
     $err = tb_set_output_mode( TB_OUTPUT_NORMAL );
     return if $err != TB_OK;
+    my $cols = tb_width();
+    return if $cols <= 0;
+    my $rows = tb_height();
+    return if $rows <= 0;
+
+    @lastSize = ( $cols, $rows );
 
     # NOTE: The following workaround for detecting a single TB_KEY_ESC relies 
     # on deprecated function tb_set_func() and Termbox::PP internals. 
@@ -713,8 +719,10 @@ sub screenWrite {         # void ($class, $x, $y, $buf, $len)
 }
 
 sub allocateScreenBuffer {    # \@buffer ($class)
-  assert ( $_[0] and !ref $_[0] );
+  my ( $class ) = @_;
+  assert ( $class and !ref $class );
   assert ( $initialized );
+  $class->reloadScreenInfo();
 
   my $cols = tb_width();
   my $rows = tb_height();
@@ -789,13 +797,6 @@ sub getMouseEvent {    # $bool ($class, $event)
   # Return false if there are no pending events
   return false
     unless $pendingEvent;
-
-  # Handle resize events immediately
-  if ( $tb_event->type == TB_EVENT_RESIZE ) {
-    tb_invalidate();
-    $pendingEvent = 0;
-    return false;
-  }
 
   # Return if the event is not a mouse event
   return false
@@ -875,8 +876,13 @@ sub getKeyEvent {    # $bool ($class, $event)
 
   # Handle resize events immediately
   if ( $tb_event->type == TB_EVENT_RESIZE ) {
-    tb_invalidate();
     $pendingEvent = 0;
+    if ( $class->screenChanged() ) {
+      $event->{what} = evCommand;
+      $event->{message}{command} = cmScreenChanged;
+      $event->{message}{infoPtr} = undef;
+      return true;
+    }
     return false;
   }
 
@@ -938,8 +944,93 @@ sub setCritErrorHandler {    # $bool ($class, $install)
 }
 
 # -------------------------------------------------------------------------
+# Additional functions (not part of the original Borland interface)
+# -------------------------------------------------------------------------
+
+sub getColorCount {    # $count ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+
+  # Is Windows 10 or later? (build 10586)
+  if ( $^O eq 'MSWin32' ) {
+    # Simple OS version test for very old systems
+    require Win32;
+    return 16
+      if ( Win32::GetOSVersion() )[1] < 6;
+
+    # Check if we can enable Virtual Terminal processing.
+    require Win32API::File;
+    require Win32::Console;
+    my $ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
+
+    my $console = Win32::Console->new( Win32API::File::STD_OUTPUT_HANDLE() );
+    return 16 unless $console;
+
+    $^E = 0;
+    my $mode = $console->Mode();
+    return 16 if $^E;
+
+    $console->Mode($mode | $ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+    my $isVT = !$^E 
+      && ( $console->Mode() // 0 ) & $ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+	  $console->Mode( $mode );
+
+    # VT processing implies modern console host.
+    # Modern VT hosts support 24-bit colors.
+	  return $isVT ? 256 * 256 * 256 : 16;
+  }
+
+  # First check COLORTERM environment
+  my $colorterm = $ENV{COLORTERM} // '';
+  return 256 * 256 * 256
+    if $colorterm =~ /\A(?:truecolor|24bit)\z/i;
+
+  # Next check terminfo database
+  my $colors = eval {
+    require Term::Cap;
+    local $SIG{__WARN__} = sub { };    # Suppress warnings from Tgetent
+    Term::Cap->Tgetent()->{_Co};
+  };
+  return $colors 
+    if !$@ && defined $colors && $colors >=8;
+
+  # Otherwise check for common TERM values that indicate color support.
+  my $term = $ENV{TERM} // '';
+  return 256 if $term =~ /256color/i;
+
+  # Let's assume all terminals disguising themselves as 'xterm'
+  # support at least 16 colors.
+  return 16 if $term =~ /xterm/;
+
+  # Fall back to a conservative default of 8 colors.
+  return 8;
+} #/ sub getColorCount
+
+sub reloadScreenInfo {    # void ($class)
+  assert( @_ == 1 );
+  assert( $_[0] and !ref $_[0] );
+  tb_invalidate();
+  return;
+}
+
+sub screenChanged {    # $bool ($class)
+  assert( @_ == 1 );
+  assert( $_[0] and !ref $_[0] );
+  my $cols = tb_width();
+  my $rows = tb_height();
+  if ( $cols != $lastSize[0] || $rows != $lastSize[1] ) {
+    @lastSize = ( $cols, $rows );
+    return true;
+  }
+  return false;
+}
+
+# -------------------------------------------------------------------------
 # Private helper functions
 # -------------------------------------------------------------------------
+
+use constant BOLD_IS_BRIGHT => __PACKAGE__->getColorCount() == 8;
 
 sub _bios_to_tb_attr {    # \@attr ($bios)
   my ( $bios ) = @_;
@@ -953,7 +1044,7 @@ sub _bios_to_tb_attr {    # \@attr ($bios)
     $fg = $bios & 0x07 ? TB_WHITE : TB_BLACK;
     $bg = $bios & 0x70 ? TB_WHITE : TB_BLACK;
 
-    $fg |= TB_BOLD   if $bios & 0x08;
+    $fg |= ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ) if $bios & 0x08;
     $bg |= TB_BRIGHT if $bios & 0x80;
     $fg |= TB_UNDERLINE
       if ( ( $screenMode & 0xff ) == smMono
@@ -963,7 +1054,7 @@ sub _bios_to_tb_attr {    # \@attr ($bios)
     $fg = $TB_COLORS[ $bios & 0x07 ];
     $bg = $TB_COLORS[ ( $bios >> 4 ) & 0x07 ];
 
-    $fg |= TB_BOLD  if $bios & 0x08;
+    $fg |= ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ) if $bios & 0x08;
     $fg |= TB_BLINK if $bios & 0x80;
   }
 

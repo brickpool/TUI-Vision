@@ -40,6 +40,9 @@ our %EXPORT_TAGS = (
     smCO80
     smMono
     smFont8x8
+    smColor256
+    smColorHigh
+    smUpdate
   )],
 
   kbXXXX => [qw(
@@ -279,10 +282,13 @@ use constant {
 
 use constant {
   # Display video modes
-  smBW80    => 0x0002,
-  smCO80    => 0x0003,
-  smMono    => 0x0007,
-  smFont8x8 => 0x0100,
+  smBW80      => 0x0002,
+  smCO80      => 0x0003,
+  smMono      => 0x0007,
+  smFont8x8   => 0x0100,
+  smColor256  => 0x0200,
+  smColorHigh => 0x0400,
+  smUpdate    => 0x8000,
 };
 
 # NOTE: these Control key definitions are intended only to provide

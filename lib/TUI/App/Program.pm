@@ -241,6 +241,12 @@ sub getEvent {    # void ($event)
       $statusLine->handleEvent( $event );
     }
   } #/ if ( $self->{statusLine...})
+  if( $event->{what} == evCommand 
+    && $event->{message}{command} == cmScreenChanged
+  ) {
+    $self->setScreenMode( smUpdate );
+    $self->clearEvent( $event );
+  }
   return;
 } #/ sub getEvent
 

@@ -1,6 +1,7 @@
 package TUI::Drivers::HardwareInfo::Win32;
 # ABSTRACT: Win32 driver for TUI::Drivers::HardwareInfo
 
+use 5.010;
 use strict;
 use warnings;
 
@@ -23,6 +24,7 @@ use Win32::Console::PatchForRT33513;
 use Win32API::File;
 
 use TUI::Drivers::Const qw(
+  evCommand
   evKeyDown
   :smXXXX
   kbAltShift
@@ -35,6 +37,7 @@ use TUI::Drivers::Const qw(
   kbCtrlZ
 );
 use TUI::Drivers::Util qw( getAltCode );
+use TUI::Views::Const qw( cmScreenChanged );
 
 # We use variables to avoid polluting the namespace when importing Win32 API 
 # functions. 
@@ -144,6 +147,8 @@ use vars qw(
   *ctrlBreakHit = \$TUI::Drivers::SystemError::ctrlBreakHit;
 }
 
+# declare local variables
+
 my @ShiftCvt = (
          0,      0,      0,      0,      0,      0,      0,      0,
          0,      0,      0,      0,      0,      0,      0,      0,
@@ -188,6 +193,10 @@ my @AltCvt = (
          0,      0,      0,      0,      0,      0,      0, 0x8b00,
     0x8c00
 );
+
+my @lastSize = ( 0, 0 );
+
+# private functions
 
 my $isValid = sub {    # $bool ($self)
   my ( $self ) = @_;
@@ -289,6 +298,7 @@ INIT {
   $consoleMode = $consoleHandle[cnInput]->Mode();
   @crInfo      = $consoleHandle[cnOutput]->Cursor();
   @sbInfo      = $consoleHandle[cnOutput]->Info();
+  @lastSize    = @sbInfo[ dwSizeX, dwSizeY ];
 }
 
 END {
@@ -437,7 +447,10 @@ sub screenWrite {    # void ($class, $x, $y, $buf, $len)
 }
 
 sub allocateScreenBuffer {    # \@buffer ($class)
-  assert ( $_[0] and !ref $_[0] );
+  my ( $class ) = @_;
+  assert ( $class and !ref $class );
+  $class->reloadScreenInfo();
+
   my $x = $sbInfo[dwSizeX];
   my $y = $sbInfo[dwSizeY];
 
@@ -605,12 +618,23 @@ sub getKeyEvent {    # $bool ($class, $event)
       $pendingEvent = 0;
       return true;
     } #/ if ( $irBuffer[EventType...])
-    elsif ( $irBuffer[EventType] != MOUSE_EVENT ) {
-      # Ignore all events except mouse events.  Pending mouse events will
-      # be read on the next polling loop.
-      $pendingEvent = 0;
+    elsif ( $irBuffer[EventType] == MOUSE_EVENT ) {
+      # Pending mouse events will be read on the next polling loop.
+      return false;
+    } #/ if ( $pendingEvent )
+
+    # Other events are not handled by Win32::Console, but we can check the 
+    # screen buffer information when no other events are occurring. This 
+    # allows us to detect changes in screen size.
+    $pendingEvent = 0;
+    if ( $class->screenChanged() ) {
+      $event->{what} = evCommand;
+      $event->{message}{command} = cmScreenChanged;
+      $event->{message}{infoPtr} = undef;
+      return true;
     }
-  } #/ if ( $pendingEvent )
+    return false;
+  }
 
   return false;
 } #/ sub getKeyEvent
@@ -640,6 +664,50 @@ sub setCritErrorHandler {  # $bool ($class, $install)
 }
 
 my $ctrlBreakHandler = sub { ... };
+
+# Additional functions (not part of the original Borland interface).
+
+sub getColorCount {    # $count ($class)
+  assert ( $_[0] and !ref $_[0] );
+  # Windows console supports 16 colors in the default color palette.
+  return 16;
+}
+
+sub reloadScreenInfo {    # void ($class)
+  my ( $class ) = @_;
+  assert ( $class and !ref $class );
+  return unless ref $consoleHandle[cnOutput];
+  @sbInfo = $consoleHandle[cnOutput]->Info();
+
+  my @curPos = $consoleHandle[cnOutput]->Cursor();
+  # Set the cursor temporally to (0, 0) to prevent the console from crashing
+  # due to https://github.com/microsoft/terminal/issues/7511.
+  $consoleHandle[cnOutput]->Cursor( 0, 0 );
+  # Make sure the buffer size matches the viewport size so that the
+  # scrollbars are not shown.
+  $sbInfo[dwSizeX] = $sbInfo[srWindowRight] - $sbInfo[srWindowLeft] + 1;
+  $sbInfo[dwSizeY] = $sbInfo[srWindowBottom] - $sbInfo[srWindowTop] + 1;
+  $consoleHandle[cnOutput]->Size( $sbInfo[dwSizeX], $sbInfo[dwSizeY] );
+  # Restore the cursor position (it does not matter if it is out of bounds).
+  $consoleHandle[cnOutput]->Cursor( @curPos );
+
+  return;
+}
+
+sub screenChanged {    # $bool ($class)
+  assert( $_[0] and !ref $_[0] );
+  my @size = do { 
+    my ( $left, $top, $right, $bottom ) = $consoleHandle[cnOutput]->Window();
+    ( $right - $left + 1, $bottom - $top + 1 );
+  };
+  if ( $size[dwSizeX] != $lastSize[dwSizeX] 
+    || $size[dwSizeY] != $lastSize[dwSizeY]
+  ) {
+	  @lastSize = @size;
+    return true;
+  }
+  return false;
+}
 
 1
 

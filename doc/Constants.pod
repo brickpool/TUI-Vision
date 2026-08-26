@@ -169,6 +169,9 @@ C<100..255>, and C<1000..65535>.
                           with TView->select.
   cmListItemSelected  56  Whenever an item in a list viewer is selected, the
                           TListViewer sends this as an evBroadcast message.
+  cmScreenChanged     57  When the screen size changes, this message is sent to 
+                          the application to allow it to resize and redraw its 
+                          views.
   cmRecordHistory     60  When received by a THistory object, this message
                           causes it to record the contents of the TInputLine
                           object that it owns.

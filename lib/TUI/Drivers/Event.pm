@@ -505,6 +505,8 @@ sub getKeyEvent {    # void ($self)
   assert ( blessed $self );
   if ( THardwareInfo->getKeyEvent( $self ) ) {
 
+    return if $self->{what} != evKeyboard;
+
     # Need to handle special case of Alt-Space, Ctrl-Ins, Shift-Ins,
     # Ctrl-Del, Shift-Del
 

@@ -69,6 +69,8 @@ our %EXPORT_TAGS = (
     cmScrollBarClicked
     cmSelectWindowNum
     cmListItemSelected
+
+    cmScreenChanged
   )],
 
   sfXXXX => [qw(
@@ -242,6 +244,11 @@ use constant {
   cmChDir         => 35,
   cmDosShell      => 36,
   cmCloseAll      => 37,
+};
+
+# TProgram messages
+use constant {
+  cmScreenChanged => 57,
 };
 
 use constant {

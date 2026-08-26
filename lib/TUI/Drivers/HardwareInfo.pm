@@ -231,6 +231,25 @@ Installs or removes the Ctrl-Break handler.
 
 Installs or removes the critical error handler.
 
+=head2 getColorCount
+
+  my $count = THardwareInfo->getColorCount();
+
+Returns the number of colors supported by the current terminal.
+
+=head2 reloadScreenInfo
+ 
+  THardwareInfo->reloadScreenInfo();
+
+Reloads the screen information from the underlying platform. 
+This is typically called when the screen has been resized.
+
+=head2 screenChanged
+
+  my $bool = THardwareInfo->screenChanged();
+
+Returns true if the screen has changed since the last call to this method.
+
 =head1 SEE ALSO
 
 L<TUI::Drivers::HardwareInfo::Win32>,
