@@ -199,6 +199,7 @@ sub asBIOS {    # $attr ()
   my $fg = ( ${$self} >> 10 ) & 0x0f;
   my $bg = ( ${$self} >> 37 ) & 0x0f;
   my $bios = $fg | ( $bg << 4 );
+  return 0 unless $bios;
   return $self->isBIOS ? $bios : 0x5f;
 }
 

@@ -92,9 +92,9 @@ B<Note>: used for TRadioButtons and TCheckBoxes
   [22] History Arrows         53
   [23] History sides          54
   [24] HistoryWindow
-        Scrollbar page         55
+       Scrollbar page         55
   [25] HistoryWindow
-        Scrollbar controls     56
+       Scrollbar controls     56
   [26] ListViewer Normal      57
   [27] ListViewer Focused     58
   [28] ListViewer Selected    59
@@ -548,5 +548,269 @@ calling the window's constructor.
   wpBlueWindow   0      Yellow on blue color scheme
   wpCyanWindow   1      Blue on cyan color scheme
   wpGrayWindow   2      Black on gray color scheme
+
+=head1 COLOR ARCHITECTURE
+
+Classic TVision was designed around BIOS color attributes.
+
+In the original Borland implementation:
+
+  uchar    -> color attribute
+  ushort   -> attribute pair
+  TPalette -> array of uchar
+
+A palette entry therefore represented a single BIOS color attribute and
+the palette system was limited to the traditional 16 DOS colors.
+
+The Perl port preserves the original palette architecture while adopting
+the extended color model introduced by modern TVision
+implementations. Existing palette-oriented code therefore continues to
+work unchanged while applications may optionally take advantage of RGB,
+XTerm and other modern color representations.
+
+The relationship between the main color types is:
+
+  TColor
+    |
+    v
+  TColorAttr
+    |
+    +----> TAttrPair
+    |
+    v
+  TPalette
+    |
+    v
+  TView / TDrawBuffer
+
+=head2 TColor
+
+C<TColor> represents a single color value.
+
+A color may be stored as:
+
+=over
+
+=item *
+
+the terminal default color
+
+=item *
+
+a BIOS color value
+
+=item *
+
+an XTerm palette index
+
+=item *
+
+a 24-bit RGB color
+
+=back
+
+C<TColor> represents only the color itself. It contains no styling information 
+and does not distinguish between foreground and background usage.
+
+Examples:
+
+  TColor->new( bios  => 0xF );
+  TColor->new( xterm => 196 );
+  TColor->new( rgb   => 0x7F00BB );
+
+=head2 TColorAttr
+
+C<TColorAttr> describes the appearance of a single screen cell.
+
+It consists of:
+
+=over
+
+=item *
+
+a foreground color
+
+=item *
+
+a background color
+
+=item *
+
+optional style flags
+
+=back
+
+Foreground and background values are represented by C<TColor> objects.
+
+For compatibility with legacy TVision code, a C<TColorAttr> may also be created 
+directly from a BIOS color attribute.
+
+Examples:
+
+  my $attr = TColorAttr->new(
+    bios => 0x1F,
+  );
+
+  my $attr = TColorAttr->new(
+    fg => TColor->new( rgb => 0xFFFFFF ),
+    bg => TColor->new( rgb => 0x000080 ),
+  );
+
+Most drawing operations ultimately consume C<TColorAttr> values.
+
+=head2 TAttrPair
+
+C<TAttrPair> stores two C<TColorAttr> values.
+
+Historically TVision often worked with pairs of attributes, typically a normal 
+and a highlighted appearance.
+
+For example:
+
+  my $attrs = TAttrPair->new(
+    lo => $normal,
+    hi => $highlight,
+  );
+
+Types such as C<TMenuBar> and drawing routines such as
+C<< TDrawBuffer->moveCStr >> commonly use attribute pairs.
+
+=head2 TPalette
+
+C<TPalette> maps palette indices to color attributes.
+
+TVision widgets traditionally refer to colors through numeric palette indices 
+rather than embedding concrete colors directly into drawing code.
+
+Views resolve those indices through:
+
+  $view->mapColor($index)
+
+and attribute pairs through:
+
+  $view->getColor($indices)
+
+This indirection is a fundamental part of the TVision rendering architecture 
+and remains unchanged in the Perl port.
+
+=head3 Internal Layout
+
+For compatibility with the original TVision implementation, C<TPalette> 
+preserves the classic length-prefixed layout:
+
+  [ count, entry1, entry2, ... ]
+
+Element C<[0]> contains the number of palette entries. Actual palette data 
+begins at index C<[1]>.
+
+This mirrors the original Pascal/C implementation where palettes were stored as 
+length-prefixed strings.
+
+=head3 Legacy Palette Entries
+
+Traditional palettes are commonly constructed from BIOS color attributes:
+
+  my $palette = TPalette->new(
+    data => "\x1F\x70\x4F",
+    size => 3,
+  );
+
+Each palette entry represents a classic BIOS color attribute exactly as in 
+Borland Turbo Vision.
+
+=head3 Extended Palette Entries
+
+Modern TVision expands palette entries from BIOS attributes to full color 
+attributes.
+
+The Perl implementation therefore allows palette entries to contain
+arbitrary values, including C<TColorAttr> instances:
+
+  my $palette = TPalette->new(
+    copy_from => [
+      3,
+      TColorAttr->new( bios => 0x01 ),
+      TColorAttr->new( bios => 0x02 ),
+      TColorAttr->new( bios => 0x03 ),
+    ]
+  );
+
+This allows palettes to carry RGB colors, XTerm colors, terminal default colors 
+and style information without requiring changes to the traditional palette API.
+
+=head2 Compatibility Model
+
+Backward compatibility is a primary design goal.
+
+Legacy applications that use BIOS attributes continue to work exactly as they 
+did in classic Turbo Vision.
+
+Applications may progressively adopt extended colors by replacing BIOS 
+attributes with C<TColorAttr> objects while keeping the existing
+palette-oriented rendering model.
+
+The palette system, palette indices, C<mapColor>, C<getColor> and the general 
+view architecture therefore remain conceptually unchanged. Only the type of 
+information stored in palette entries becomes richer.
+
+=head2 Rendering Flow
+
+In classic Borland Turbo Vision the rendering pipeline was based entirely
+on BIOS color attributes:
+
+  nibble (0-15)
+    -> color value (3bit BIOS color + intensity)
+
+  uchar
+    -> color attribute (foreground + background + intensity)
+
+  ushort
+    -> attribute pair (lo + hi byte)
+
+  TPalette
+    -> palette entries (string of uchar's)
+
+  mapColor() / getColor()
+    -> palette lookup
+
+  TDrawBuffer
+    -> screen output (pointer of attribute/char pairs)
+
+Every palette entry ultimately contained a BIOS color attribute and the result 
+of C<mapColor> was therefore always a single byte value.
+
+The Perl implementation preserves the same palette-oriented architecture but
+extends the types participating in the lookup process:
+
+  TColor
+    -> color value (BIOS, RGB, XTerm, default)
+
+  TColorAttr
+    -> color attribute (foreground + background + style)
+
+  TAttrPair
+    -> attribute pair (lo + hi TColorAttr)
+
+  TPalette
+    -> palette entries (array of octets or TColorAttr's)
+
+  mapColor() / getColor()
+    -> palette lookup
+
+  TDrawBuffer
+    -> screen output (Array of TScreenCell)
+
+The overall rendering model remains unchanged. Views still refer to palette 
+indices, palettes still resolve those indices, and drawing code still obtains 
+its display attributes through C<mapColor> and C<getColor>.
+
+What changes is the information carried by a palette entry. In classic
+Turbo Vision a palette entry was a BIOS attribute. In the modern color 
+architecture a palette entry may instead be a complete C<TColorAttr>, allowing 
+RGB colors, XTerm colors, terminal default colors and style information to flow 
+through the same palette system.
+
+As a result, existing palette-based drawing code continues to operate in the 
+traditional way while transparently supporting extended color attributes.
 
 =cut

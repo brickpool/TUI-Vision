@@ -20,6 +20,7 @@ use Scalar::Util qw(
   looks_like_number
 );
 
+use TUI::Drivers::AttrPair;
 use TUI::Drivers::ColorAttr;
 use TUI::Drivers::CellChar;
 
@@ -81,13 +82,20 @@ sub setAttr {    # void ($attr)
   my ( $cell, $attr ) = @_;
   assert ( blessed $cell );
   assert ( blessed $attr or looks_like_number $attr );
-  if ( ref $attr ) {
-    ${ $cell->[0] } = $$attr;
+  my $value;
+  if ( ref $attr eq TAttrPair ) {
+    # retrieve the lo TColorAttr value from the pair
+    $value = ${ $attr->[0] };
+  }
+  elsif ( ref $attr eq TColorAttr ) {
+    # copy TColorAttr value
+    $value = $$attr;
   }
   else {
-    my $bios = TColorAttr->new( bios => $attr & 0xff );
-    ${ $cell->[0] } = $$bios;
+    # convert a BIOS color attribute to a TColorAttr value
+    $value = ${ TColorAttr->new( bios => $attr & 0xff ) };
   }
+  ${ $cell->[0] } = $value;
   return;
 }
 

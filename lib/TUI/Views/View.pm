@@ -33,6 +33,7 @@ use TUI::Drivers::Const qw(
   :evXXXX
   :kbXXXX
 );
+use TUI::Drivers::AttrPair;
 use TUI::Drivers::ColorAttr;
 use TUI::Drivers::Event;
 use TUI::Drivers::ScreenCell;
@@ -942,21 +943,30 @@ sub execute {    # $cmd ()
   return cmCancel;
 }
 
-sub getColor {    # $int ($color)
+sub getColor {    # $pair ($color)
   state $sig = signature(
     method => Object,
     pos    => [PositiveOrZeroInt],
   );
   my ( $self, $color ) = $sig->( @_ );
-  my $colorPair = $color >> 8;
 
-  if ( $colorPair != 0 ) {
-    $colorPair = $self->mapColor( $colorPair ) << 8;
-  }
+  # Get the high and low color values from the color integer
+  my $hi = ( $color >> 8 ) & 0xff;
+  my $lo = $color & 0xff;
 
-  $colorPair |= $self->mapColor( $color & 0xff );
+  # Map the color values to the actual colors in the palette
+  $hi = $self->mapColor( $hi ) if $hi;
+  $lo = $self->mapColor( $lo );
 
-  return $colorPair;
+  # no objects, just return the color value as an integer
+  return ( $hi << 8 ) | $lo
+    unless ref $hi && ref $lo;
+
+  # objects, return a TAttrPair object with the high and low colors
+  return TAttrPair->new( 
+    hi => ref $hi ? $hi : TColorAttr->new( bios => $hi ),
+    lo => ref $lo ? $lo : TColorAttr->new( bios => $lo ),
+  );
 }
 
 sub getPalette {    # $palette ()
@@ -969,30 +979,30 @@ sub getPalette {    # $palette ()
   return $palette->clone();
 }
 
-sub mapColor {    # $int ($color)
+sub mapColor {    # $attr ($index)
   state $sig = signature(
     method => Object,
     pos    => [PositiveOrZeroInt],
   );
-  my ( $self, $color ) = $sig->( @_ );
+  my ( $self, $index ) = $sig->( @_ );
 
-  return $errorAttr
-    unless $color;
-
-  my $cur = $self;
-  do {
-    my $p = $cur->getPalette();
-    if ( $p->at( 0 ) ) {
-      if ( $color > $p->at( 0 ) ) {
-        return $errorAttr;
-      }
-      $color = $p->at( $color );
-      return $errorAttr
-        unless $color;
+  my $p = $self->getPalette();
+  my $color;
+  if ( $p->[0] != 0 ) {
+    if ( 0 < $index && $index <= $p->[0] ) {
+      $color = STRICT ? $p->at( $index ) : $p->[$index];
     }
-    $cur = $cur->{owner};
-  } while ( $cur );
-
+    else {
+      return $errorAttr;
+    }
+  }
+  else {
+    $color = $index;
+  }
+  return $errorAttr
+    if $color == 0;
+  return $self->{owner}->mapColor( $color )
+    if $self->{owner};
   return $color;
 } #/ sub mapColor
 
@@ -1814,9 +1824,9 @@ Returns the clipping rectangle of the view.
 
 =head2 getColor
 
-  my $int = $self->getColor($color);
+  my $pair = $self->getColor($color);
 
-Returns the color of the view.
+Returns the color or a color pair of the view.
 
 =head2 getCommands
 
@@ -1916,7 +1926,7 @@ Converts a global point to a local point.
 
 =head2 mapColor
 
-  my $int = $self->mapColor($color);
+  my $attr = $self->mapColor($color);
 
 Maps a color to the view's palette.
 
