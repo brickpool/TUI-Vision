@@ -89,8 +89,14 @@ use if !PERL_ONLY, constant => {
   TB_KEY_ESC        => 0x1b,
   TB_KEY_SPACE      => 0x20,
   TB_KEY_BACKSPACE2 => 0x7f,
+  TB_HI_BLACK       => tb_has_truecolor() ? 0x20000000 : 0x2000,
   TB_BRIGHT         => tb_has_truecolor() ? 0x40000000 : 0x4000,
 };
+
+BEGIN {
+  *TB_OUTPUT_TRUECOLOR = sub (){ 5 }
+    unless defined &TB_OUTPUT_TRUECOLOR;
+}
 
 # -------------------------------------------------------------------------
 # Declare global variables
@@ -416,16 +422,6 @@ my %TB_TO_TV; {
 }
 
 # Termbox color attribute table.
-my @TB_COLORS = (
-  TB_BLACK,
-  TB_BLUE,
-  TB_GREEN,
-  TB_CYAN,
-  TB_RED,
-  TB_MAGENTA,
-  TB_YELLOW,
-  TB_WHITE,
-);
 my %TB_ATTR = ();
 
 # -------------------------------------------------------------------------
@@ -453,7 +449,9 @@ sub resume {     # void ($class)
     return if $err != TB_OK;
     $err = tb_set_input_mode( TB_INPUT_ALT | TB_INPUT_MOUSE );
     return if $err != TB_OK;
-    $err = tb_set_output_mode( TB_OUTPUT_NORMAL );
+    $err = tb_set_output_mode( 
+      tb_has_truecolor() ? TB_OUTPUT_TRUECOLOR : TB_OUTPUT_NORMAL
+    );
     return if $err != TB_OK;
     my $cols = tb_width();
     return if $cols <= 0;
@@ -974,11 +972,11 @@ sub getColorCount {    # $count ($class)
     my $isVT = !$^E 
       && ( $console->Mode() // 0 ) & $ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
-	  $console->Mode( $mode );
+    $console->Mode( $mode );
 
     # VT processing implies modern console host.
     # Modern VT hosts support 24-bit colors.
-	  return $isVT ? 256 * 256 * 256 : 16;
+    return $isVT ? 256 * 256 * 256 : 16;
   }
 
   # First check COLORTERM environment
@@ -1032,6 +1030,43 @@ sub screenChanged {    # $bool ($class)
 
 use constant BOLD_IS_BRIGHT => __PACKAGE__->getColorCount() == 8;
 
+my @TB_COLORS = tb_has_truecolor() ? (
+  # https://en.wikipedia.org/wiki/Color_Graphics_Adapter#Color_palette
+  TB_HI_BLACK, # black
+  0x0000aa,    # blue
+  0x00aa00,    # green
+  0x00aaaa,    # cyan
+  0xaa0000,    # red
+  0xaa00aa,    # magenta
+  0xaa5500,    # brown
+  0xaaaaaa,    # light gray
+  0x555555,    # dark gray
+  0x5555ff,    # light blue
+  0x55ff55,    # light green
+  0x55ffff,    # light cyan
+  0xff5555,    # light red
+  0xff55ff,    # light magenta
+  0xffff55,    # yellow
+  0xffffff,    # white
+) : (
+  TB_BLACK,
+  TB_BLUE,
+  TB_GREEN,
+  TB_CYAN,
+  TB_RED,
+  TB_MAGENTA,
+  TB_YELLOW,
+  TB_WHITE,
+  TB_BLACK   | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
+  TB_BLUE    | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
+  TB_GREEN   | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
+  TB_CYAN    | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
+  TB_RED     | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
+  TB_MAGENTA | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
+  TB_YELLOW  | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
+  TB_WHITE   | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
+);
+
 sub _bios_to_tb_attr {    # \@attr ($bios)
   my ( $bios ) = @_;
 
@@ -1041,20 +1076,19 @@ sub _bios_to_tb_attr {    # \@attr ($bios)
   if ( ( $screenMode & 0xff ) == smMono 
     || ( $screenMode & 0xff ) == smBW80
   ) {
-    $fg = $bios & 0x07 ? TB_WHITE : TB_BLACK;
-    $bg = $bios & 0x70 ? TB_WHITE : TB_BLACK;
-
-    $fg |= ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ) if $bios & 0x08;
-    $bg |= TB_BRIGHT if $bios & 0x80;
+    $fg = $TB_COLORS[
+      ( $bios & 0x07 ? TB_WHITE : TB_BLACK ) - 1 | ( $bios & 0x08 )
+    ];
+    $bg = $TB_COLORS[
+      ( $bios & 0x70 ? TB_WHITE : TB_BLACK ) - 1 | ( ( $bios & 0x80 ) >> 4 )
+    ];
     $fg |= TB_UNDERLINE
       if ( ( $screenMode & 0xff ) == smMono
       && ( $bios & 0x07 ) == 0x01 );
   }
   else {
-    $fg = $TB_COLORS[ $bios & 0x07 ];
+    $fg = $TB_COLORS[ $bios & 0x0f ];
     $bg = $TB_COLORS[ ( $bios >> 4 ) & 0x07 ];
-
-    $fg |= ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ) if $bios & 0x08;
     $fg |= TB_BLINK if $bios & 0x80;
   }
 

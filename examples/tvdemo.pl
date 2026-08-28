@@ -92,7 +92,7 @@ sub getEvent {    # void ($event)
 
   SWITCH: for ( $event->{what} ) {
     case: evCommand == $_ and do {
-  q[*
+    q[*
       if ( $event->{message}{command} == cmHelp && !$helpInUse ) {
         $helpInUse = 1;
 
@@ -116,10 +116,9 @@ sub getEvent {    # void ($event)
         $helpInUse = 0;
       } #/ if ( $event->{message}...)
       elsif ( $event->{message}{command} == cmVideoMode ) {
-  q*] if 0;
+    q*] if 0;
       if ( $event->{message}{command} == cmVideoMode ) {
-        my $newMode = $TUI::Drivers::Screen::screenMode ^ smFont8x8;
-        $self->setScreenMode( $newMode );
+        $self->setScreenMode( $TUI::Drivers::Screen::screenMode ^ 1 );
       }
       last;
     };

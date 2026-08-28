@@ -245,8 +245,8 @@ sub copyCell2CharInfo {
   if ( $edx == 0 ) {
     # Expand character/attribute pair
     for ( $i = 0 ; $i < $Count - $X ; ++$i ) {
-      my $c = $src->[$i];
-      my $ch = ord $c->getChar()->getText();
+      my $c    = $src->[$i];
+      my $ch   = ord $c->getChar()->getText();
       my $attr = $c->getAttr()->asBIOS();
       splice( @$dst, 2 * $i, 2, $ch, $attr );
     }
@@ -254,11 +254,9 @@ sub copyCell2CharInfo {
   else {
     # Mix in shadow attribute
     for ( $i = 0 ; $i < $Count - $X ; ++$i ) {
-      my $c = TScreenCell->new();
-      $c->setChar( $src->[$i]->getChar() );
-      $c->setAttr( applyShadow( $src->[$i]->getAttr() ) );
-      my $ch = ord $c->getChar()->getText();
-      my $attr = $c->getAttr()->asBIOS();
+      my $c    = $src->[$i];
+      my $ch   = ord $c->getChar()->getText();
+      my $attr = applyShadow( $c->getAttr() )->asBIOS();
       splice( @$dst, 2 * $i, 2, $ch, $attr );
     }
   }
@@ -275,10 +273,8 @@ sub copyCell {
   }
   else {
     for ( my $i = 0 ; $i < $Count - $X ; ++$i ) {
-      my $c = TScreenCell->new();
-      $c->setChar( $src->[$i]->getChar() );
-      $c->setAttr( applyShadow( $src->[$i]->getAttr() ) );
-      $dst->[$i] = $c;
+      ${ $dst->[$i][0] } = ${ applyShadow( $src->[$i]->getAttr() ) };
+      ${ $dst->[$i][1] } = ${ $src->[$i][1] };
     }
   }
   return;
@@ -288,21 +284,24 @@ sub applyShadow {
   my ( $attr ) = @_;
 
   # Coercing the BIOS shadow attribute to a TColorAttr object
-  local $shadowAttr = TColorAttr->new( bios => $shadowAttr );
+  local $shadowAttr = ref $shadowAttr 
+                    ? $shadowAttr 
+                    : TColorAttr->new( bios => $shadowAttr );
 
-  # Since TColorAttr is an object, we can use a custom field 
-  # to determine whether the shadow has already been applied.
-  my $style = $attr->getStyle();
-  unless ( $style & slNoShadow ) {
-    if ( $attr->getBack()->toBIOS( !!0 ) != 0 ) {
-      $attr = $shadowAttr;
+  # Because we can't know if the cell has already been shadowed, we compare 
+  # against the shadow attributes. This may yield some false positives.
+  my $shadowAttrInv = $shadowAttr->reverseAttribute();
+  if ( $attr == $shadowAttr || $attr == $shadowAttrInv ) {
+    return $attr;
+  }
+  else {
+    if ( $attr->getBack()->toBIOS( 0 ) != 0 ) {
+      return $shadowAttr;
     }
     else {    # Reverse the shadow attribute on black areas.
-      $attr = $shadowAttr->reverseAttribute();
-      $attr->setStyle( $style | slNoShadow );
+      return $shadowAttrInv;
     }
   }
-  return $attr;
 }
 
 1

@@ -81,7 +81,7 @@ subtest 'reverseAttribute swaps colors' => sub {
     fg => $fg,
     bg => $bg,
   );
-  $attr->reverseAttribute;
+  $attr = $attr->reverseAttribute();
 
   ok( $attr->getFore == $bg, 'foreground swapped' );
   ok( $attr->getBack == $fg, 'background swapped' );

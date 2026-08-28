@@ -171,6 +171,25 @@ sub new {    # $attr (|%args)
   return bless \$v, $class;
 } #/ sub new
 
+sub reverseAttribute {    # $attr ()
+  my ( $self ) = @_;
+  my $attr = TColorAttr->new();
+  $$attr = $$self;
+
+  my $fg = $attr->getFore();
+  my $bg = $attr->getBack();
+  # The 'slReverse' attribute is represented differently by every terminal,
+  # so it is better to swap the colors manually unless any of them is default.
+  if ( $fg->isDefault() || $bg->isDefault() ) {
+    $attr->setStyle( $attr->getStyle() ^ slReverse );
+  }
+  else {
+    $attr->setFore( $bg );
+    $attr->setBack( $fg );
+  }
+  return $attr;
+}
+
 sub isBIOS {    # $bool ()
   my ( $self ) = @_;
   assert ( blessed $self );
@@ -200,7 +219,7 @@ sub asBIOS {    # $attr ()
   my $bg = ( ${$self} >> 37 ) & 0x0f;
   my $bios = $fg | ( $bg << 4 );
   return 0 unless $bios;
-  return $self->isBIOS ? $bios : 0x5f;
+  return $self->isBIOS() ? $bios : 0x5f;
 }
 
 sub equals {    # $bool ($other|$bios)
@@ -209,7 +228,7 @@ sub equals {    # $bool ($other|$bios)
   assert ( blessed $other or looks_like_number $other );
   return ref $other
     ? $$self == $$other 
-    : $self->asBIOS == $other;
+    : $self->asBIOS() == $other;
 }
 
 sub lshift {    # $result ($shift)
@@ -225,7 +244,7 @@ sub lshift {    # $result ($shift)
       hi => $self
     );
   }
-  return $self->asBIOS << $shift;
+  return $self->asBIOS() << $shift;
 }
 
 use overload
@@ -276,22 +295,6 @@ sub setStyle {    # void ($style)
   ${$self} = ( ${$self} & ~0x3ff )
            | ( $style & 0x3ff );
   return;
-}
-
-sub reverseAttribute {    # $attr ()
-  my ( $self ) = @_;
-  my $fg = $self->getFore();
-  my $bg = $self->getBack();
-  # The 'slReverse' attribute is represented differently by every terminal,
-  # so it is better to swap the colors manually unless any of them is default.
-  if ( $fg->isDefault() || $bg->isDefault() ) {
-    $self->setStyle( $self->getStyle() ^ slReverse );
-  }
-  else {
-    $self->setFore( $bg );
-    $self->setBack( $fg );
-  }
-  return $self;
 }
 
 1;
@@ -420,6 +423,22 @@ For example:
 
 This is convenient for compact palette definitions.
 
+=head2 reverseAttribute
+
+  my $attr = $self->reverseAttribute();
+
+Returns a new attribute with the visual foreground and background colors 
+swapped.
+
+The C<slReverse> style attribute is interpreted differently by different
+terminal implementations. Therefore, explicit foreground and background colors
+are swapped whenever possible.
+
+If either color is the terminal default color, the color values are left
+unchanged and the C<slReverse> style flag is toggled instead.
+
+Returns a new C<TColorAttr>.
+
 =head1 METHODS
 
 =head2 asBIOS
@@ -464,21 +483,6 @@ As a special case, shifting by C<8> returns a new C<TAttrPair> whose high
 attribute is this value and whose low attribute is a BIOS attribute of C<0>,
 for compatibility with legacy code that used C<< << 8 >> on an attribute to
 construct an attribute pair.
-
-=head2 reverseAttribute
-
-  my $attr = $self->reverseAttribute();
-
-Reverses the visual foreground and background colors.
-
-The C<slReverse> style attribute is interpreted differently by different
-terminal implementations. Therefore, explicit foreground and background colors
-are swapped whenever possible.
-
-If either color is the terminal default color, the color values are left
-unchanged and the C<slReverse> style flag is toggled instead.
-
-Returns C<$self>.
 
 =head2 setFore
 

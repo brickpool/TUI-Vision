@@ -80,7 +80,7 @@ use if _WIN32, 'Win32';
 
 BEGIN {
   eval { require Termbox     } unless $ENV{PERL_ONLY};
-  eval { require Termbox::PP } unless $INC{Termbox};
+  eval { require Termbox::PP } if $ENV{PERL_ONLY} || $@;
 }
 
 sub banner {
