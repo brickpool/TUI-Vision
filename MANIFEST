@@ -1,5 +1,7 @@
 bin/overview.pl
 Changes
+doc/06_WindowsAndDialogs.pod
+doc/07_MenusAndStatusLine.pod
 doc/Color.pod
 doc/Constants.pod
 doc/Globals.pod
@@ -195,7 +197,6 @@ t/06Drivers/02Const.t
 t/06Drivers/03Util.t
 t/06Drivers/04Colors.t
 t/06Drivers/10THardwareTermbox.t
-t/06Drivers/11THardware.t
 t/06Drivers/11THardwareWin32.t
 t/06Drivers/12TDisplay.t
 t/06Drivers/13TScreen.t
