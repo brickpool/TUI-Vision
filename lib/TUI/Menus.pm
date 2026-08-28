@@ -57,7 +57,7 @@ __END__
 
 =head1 NAME
 
-Menus - Menu and status line system for the TVision framework
+TUI::Menus - Menu and status line system for the TVision framework
 
 =head1 SYNOPSIS
 

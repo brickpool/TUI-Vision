@@ -327,6 +327,26 @@ TStatusLine - defines the class TStatusLine
     TView
       TStatusLine
 
+=head1 SYNOPSIS
+
+  # The following example shows a typical status line definition using chained
+  # status items and a single status definition that applies to all help 
+  # contexts.
+
+  sub initStatusLine {
+    my ( $class, $bounds ) = @_;
+
+    $bounds->{a}{y} = $bounds->{b}{y} - 1;
+
+    return new_TStatusLine(
+      $bounds,
+      new_TStatusDef( 0, 0xFFFF )
+        + new_TStatusItem( '~Alt+X~ Exit', kbAltX, cmQuit )
+        + new_TStatusItem( '~F10~ Menu', kbF10, cmMenu )
+        + new_TStatusItem( '~F1~ Help', kbF1, cmHelp )
+    );
+  }
+
 =head1 DESCRIPTION
 
 C<TStatusLine> represents the message line displayed at the bottom of a Turbo
@@ -463,28 +483,6 @@ returns an empty string.
 Updates the status line contents based on the current help context. This method
 selects the appropriate status definition and rebuilds the list of visible
 status items.
-
-=head1 EXAMPLE
-
-The following example shows a typical status line definition using chained
-status items and a single status definition that applies to all help contexts.
-
-  sub initStatusLine {
-    my ( $class, $bounds ) = @_;
-
-    $bounds->{a}{y} = $bounds->{b}{y} - 1;
-
-    return new_TStatusLine(
-      $bounds,
-      new_TStatusDef( 0, 0xFFFF )
-        + new_TStatusItem( '~Alt+X~ Exit', kbAltX, cmQuit )
-        + new_TStatusItem( '~F10~ Menu', kbF10, cmMenu )
-        + new_TStatusItem( '~F1~ Help', kbF1, cmHelp )
-    );
-  }
-
-This pattern mirrors the traditional Turbo Vision status line construction
-while using Perl-specific operator overloading for clarity.
 
 =head1 SEE ALSO
 
