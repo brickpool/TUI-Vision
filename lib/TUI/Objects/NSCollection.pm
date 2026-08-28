@@ -39,7 +39,7 @@ extends TObject;
 our %ITEMS = ();
 
 # protected attributes
-has items        => ( is => 'ro', default => [] );
+has items        => ( is => 'ro', default => sub { [] } );
 has count        => ( is => 'ro', default => 0 );
 has limit        => ( is => 'ro', default => 0 );
 has delta        => ( is => 'ro', default => 0 );

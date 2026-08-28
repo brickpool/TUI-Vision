@@ -8,8 +8,9 @@ TUI::Vision - Turbo Vision inspired TUI framework for Perl
 
   package MyApp;
 
-  use Moo;
+  use Moose;
   use TUI::Objects;
+  use TUI::Drivers;
   use TUI::App;
   use TUI::Menus;
   use TUI::Dialogs;
