@@ -34,6 +34,10 @@ my (
   $type,
 );
 
+# Default color constructor an constructor for specific color types.
+#   Bit  0..23: Color (24 bits)
+#   Bit 24..31: Type (8 bits, of which only 2 are actually used)
+
 sub new {    # $cell (|%args)
   my ( $class, @args ) = @_;
   assert ( $class and !ref $class );
@@ -48,7 +52,7 @@ sub new {    # $cell (|%args)
   elsif ( @args == 2 && $args[0] eq 'bios' ) {
     my $bios = $args[1];
     assert ( looks_like_number $bios );
-    $bits = ( $bios & 0x0f ) 
+    $bits = ( $bios & 0xf ) 
           | ( ctBIOS << 24 );
   }
 
@@ -60,7 +64,7 @@ sub new {    # $cell (|%args)
       $rgb = ( ( ( $rgb->[0] << 8 ) | $rgb->[1] ) << 8 ) | $rgb->[2];
     }
     assert ( looks_like_number $rgb );
-    $bits = ( $rgb & 0x00ffffff )
+    $bits = ( $rgb & 0xffffff )
           | ( ctRGB << 24 );
   }
 
@@ -79,10 +83,24 @@ sub new {    # $cell (|%args)
   return bless \$bits, $class;
 }
 
-$type = sub {   # $type ()
-  assert ( blessed $_[0] );
-  return ${ $_[0] } >> 24;
-};
+# Copy and clone methods
+
+sub assign {    # void ($other)
+  my ( $self, $other ) = @_;
+  assert ( blessed $self );
+  assert ( blessed $other );
+  $$self = $$other;
+  return;
+}
+
+sub clone {    # $attr ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $v = $$self;
+  return bless \$v, ref $self;
+}
+
+# Color type getters.
 
 sub isDefault {    # $bool ()
   assert ( blessed $_[0] );
@@ -104,6 +122,9 @@ sub isXTerm {    # $bool ()
   return $_[0]->$type == ctXTerm;
 }
 
+# Color value getters. They perform no conversion: make sure to check
+# the color type first.
+
 sub asBIOS {    # $bios ()
   assert ( blessed $_[0] );
   return ${ $_[0] } & 0x0f;
@@ -120,6 +141,7 @@ sub asXTerm {    # $xterm ()
 }
 
 # Quantization to TColor BIOS.
+
 sub toBIOS {    # $bios ($isForeground)
   my ( $self, $isForeground ) = @_;
   assert ( blessed $self );
@@ -141,19 +163,27 @@ sub toBIOS {    # $bios ($isForeground)
   }
 }
 
-sub equals {    # $bool ($other)
+sub equals {    # $bool ($other|$bios)
   my ( $self, $other ) = @_;
   assert ( blessed $self );
   assert ( blessed $other or looks_like_number $other );
-  return ref $other
-    ? $$self == $$other
-    : $$self == $other;
+  return $self->asBIOS() == $other
+    unless ref $other;
+  return ref $self eq ref $other
+      && $$self == $$other;
 }
 
 use overload
+  '0+' => \&asBIOS,
   '==' => \&equals,
-  '0+' => sub { ${$_[0]} },
   fallback => 1;
+
+# Private methods.
+
+$type = sub {   # $type ()
+  assert ( blessed $_[0] );
+  return ${ $_[0] } >> 24;
+};
 
 1;
 
@@ -270,6 +300,12 @@ Returns the stored value as an RGB color.
 
 No conversion is performed. Make sure to verify the color type first.
 
+=head2 assign
+
+  $self->assign($other);
+
+Copies the contents of another C<TColor> into the current one.
+
 =head2 asXTerm
 
   my $xterm = $self->asXTerm();
@@ -278,22 +314,18 @@ Returns the stored value as an XTerm color.
 
 No conversion is performed. Make sure to verify the color type first.
 
-=head2 bitCast
+=head2 clone
 
-  my $bits = $self->bitCast();
-  $self->bitCast( $bits );
+  my $color = $self->clone();
 
-Returns or replaces the underlying integer representation.
-
-No conversion is performed.
+Returns a new C<TColor> object that is a copy of the current one.
 
 =head2 equals
 
-  my $bool = $self->equals(
-    $other,
-  );
+  my $bool = $self->equals($other | $bios);
 
-Returns true if both values represent exactly the same color value and type.
+Returns true if both values represent exactly the same color value and type; 
+support typecast to a BIOS value if one is a number.
 
 =head2 isDefault
 

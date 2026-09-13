@@ -36,7 +36,7 @@ isa_ok( MessageEvent->new(),   'MessageEvent' );
 isa_ok( MouseEventType->new(), 'MouseEventType' );
 
 isa_ok( new_TEvent(),       TEvent );
-isa_ok( TCellChar->new(),   TCellChar );
+isa_ok( TScreenCharacter->new(),   TScreenCharacter );
 isa_ok( TColorAttr->new(),  TColorAttr );
 isa_ok( TColor->new(),      TColor );
 isa_ok( TAttrPair->new(),   TAttrPair );

@@ -57,7 +57,7 @@ use subs qw(
   copyCell
   copyCell2CharInfo
   applyShadow
-  reverseAttribute
+  reversed
 );
 
 sub L0 {
@@ -235,7 +235,7 @@ sub L50 {
   return;
 } #/ sub L50
 
-# Our Turbo Vision port stores a TCellChar for text and a TColorAttr for
+# Our Turbo Vision port stores a TScreenCharacter for text and a TColorAttr for
 # attributes for every cell. On Windows, all TGroup buffers follow this schema
 # except the topmost one, which interfaces with the Win32 Console API.
 
@@ -246,8 +246,8 @@ sub copyCell2CharInfo {
     # Expand character/attribute pair
     for ( $i = 0 ; $i < $Count - $X ; ++$i ) {
       my $c    = $src->[$i];
-      my $ch   = ord $c->getChar()->getText();
-      my $attr = $c->getAttr()->asBIOS();
+      my $ch   = ord $c->character->getText();
+      my $attr = $c->attribute->asBIOS();
       splice( @$dst, 2 * $i, 2, $ch, $attr );
     }
   }
@@ -255,8 +255,8 @@ sub copyCell2CharInfo {
     # Mix in shadow attribute
     for ( $i = 0 ; $i < $Count - $X ; ++$i ) {
       my $c    = $src->[$i];
-      my $ch   = ord $c->getChar()->getText();
-      my $attr = applyShadow( $c->getAttr() )->asBIOS();
+      my $ch   = ord $c->character->getText();
+      my $attr = applyShadow( $c->attribute )->asBIOS();
       splice( @$dst, 2 * $i, 2, $ch, $attr );
     }
   }
@@ -267,14 +267,17 @@ sub copyCell {
   my ( $dst, $src ) = @_;
   if ( $edx == 0 ) {
     for ( my $i = 0 ; $i < $Count - $X ; ++$i ) {
+      # The following lines manually copy the contents of the source cell to 
+      # the destination cell. it is equivalent to using the assign method:
+      #   $dst->[$i]->assign( $src->[$i] );
       ${ $dst->[$i][0] } = ${ $src->[$i][0] };
       ${ $dst->[$i][1] } = ${ $src->[$i][1] };
     }
   }
   else {
     for ( my $i = 0 ; $i < $Count - $X ; ++$i ) {
-      ${ $dst->[$i][0] } = ${ applyShadow( $src->[$i]->getAttr() ) };
-      ${ $dst->[$i][1] } = ${ $src->[$i][1] };
+      ${ $dst->[$i][0] } = ${ $src->[$i][0] };
+      ${ $dst->[$i][1] } = ${ applyShadow( $src->[$i]->attribute ) };
     }
   }
   return;
@@ -290,12 +293,12 @@ sub applyShadow {
 
   # Because we can't know if the cell has already been shadowed, we compare 
   # against the shadow attributes. This may yield some false positives.
-  my $shadowAttrInv = $shadowAttr->reverseAttribute();
+  my $shadowAttrInv = $shadowAttr->reversed();
   if ( $attr == $shadowAttr || $attr == $shadowAttrInv ) {
     return $attr;
   }
   else {
-    if ( $attr->getBack()->toBIOS( 0 ) != 0 ) {
+    if ( $attr->getBackground()->toBIOS( 0 ) != 0 ) {
       return $shadowAttr;
     }
     else {    # Reverse the shadow attribute on black areas.

@@ -695,7 +695,7 @@ sub reloadScreenInfo {    # void ($class)
 }
 
 sub screenChanged {    # $bool ($class)
-  assert( $_[0] and !ref $_[0] );
+  assert ( $_[0] and !ref $_[0] );
   my @size = do { 
     my ( $left, $top, $right, $bottom ) = $consoleHandle[cnOutput]->Window();
     ( $right - $left + 1, $bottom - $top + 1 );

@@ -14,6 +14,8 @@ our @EXPORT = qw(
   TColorAttr
 );
 
+require bytes;
+use Config;
 use PerlX::Assert::PP;
 use Scalar::Util qw(
   blessed
@@ -25,6 +27,9 @@ use TUI::Drivers::Color;
 
 sub TColorAttr() { __PACKAGE__ }
 
+use constant SUPPORTS_64BIT_IV => $Config{ivsize} >= 8 ? 1 : 0;
+
+# macro for coercing a value into a TColor object
 my $coerceColor = sub {
   my ( $value ) = @_;
 
@@ -125,10 +130,12 @@ my $coerceColor = sub {
 sub new {    # $attr (|%args)
   my ( $class, @args ) = @_;
 
+  my ( $style, $fg, $bg );
+
   # TColorAttr->new()
-  my $v;
   if ( !@args ) {
-    $v = 0;
+    # Watch out! This is a trivial constructor.
+    $fg = $bg = bless \($style = 0), TColor;
   }
 
   # TColorAttr->new( bios => Int )
@@ -136,11 +143,9 @@ sub new {    # $attr (|%args)
     my $bios = $args[1] & 0xff;
     assert ( looks_like_number $bios );
 
-    my $fg = TColor->new( bios => $bios & 0xf );
-    my $bg = TColor->new( bios => $bios >> 4 );
-
-    $v = ( ( $fg & 0x7ffffff ) << 10 )
-       | ( ( $bg & 0x7ffffff ) << 37 );
+    $style = 0;
+    $fg    = TColor->new( bios => $bios & 0xf );
+    $bg    = TColor->new( bios => $bios >> 4 );
   }
 
   # TColorAttr->new(
@@ -150,101 +155,211 @@ sub new {    # $attr (|%args)
   # )
   elsif ( @args % 2 == 0 ) {
     my %args = @args;
+    assert ( defined $args{fg} && defined $args{bg} );
 
-    my $style = $args{style} // 0;
-    my $fg = $coerceColor->( $args{fg} );
-    my $bg = $coerceColor->( $args{bg} );
-
-    assert ( looks_like_number $style );
-    assert ( blessed $fg );
-    assert ( blessed $bg );
-
-    $v = ( $style & 0x3ff ) 
-       | ( ( $fg & 0x7ffffff ) << 10 )
-       | ( ( $bg & 0x7ffffff ) << 37 );
+    $style = ( $args{style} // 0 ) & 0x3ff;
+    $fg    = $args{fg}->$coerceColor();
+    $bg    = $args{bg}->$coerceColor();
   }
 
   else {
     return;
   }
   
+  assert ( looks_like_number $style );
+  assert ( blessed $fg );
+  assert ( blessed $bg );
+
+  # Fields are implemented as ScalarRef so that both copy and comparison 
+  # operations can be optimized:
+  #   Bit 0: Foreground (27 bits)
+  #   Bit 27: Background (27 bits)
+  #   Bit 54: Style (10 bits)
+  # or as a packed structure for 32-bit systems:
+  #   0-3: foreground (V)
+  #   4-7: background (V)
+  #   8-9: style (v)
+
+  my $v = SUPPORTS_64BIT_IV
+        ? $$fg | ( $$bg << 27 ) | ( $style << 54 )
+        : pack( 'VVv', $$fg, $$bg, $style );
+
   return bless \$v, $class;
 } #/ sub new
 
-sub reverseAttribute {    # $attr ()
+sub assign {    # void ($other)
+  my ( $self, $other ) = @_;
+  assert ( blessed $self );
+  assert ( blessed $other );
+  $$self = $$other;
+  return;
+}
+
+sub clone {    # $attr ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $v = $$self;
+  return bless \$v, ref $self;
+}
+
+sub getForeground {    # $fg ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $fg = SUPPORTS_64BIT_IV 
+         ? $$self & 0x7ffffff
+         : unpack( 'V', $$self );
+  return bless \$fg, TColor;
+}
+
+sub setForeground {    # void ($color)
+  my ( $self, $color ) = @_;
+  assert ( blessed $self );
+  assert ( blessed $color or looks_like_number $color );
+  my $fg = $color->$coerceColor();
+  if ( SUPPORTS_64BIT_IV ) {
+    $$self = ( $$self & ~0x7ffffff ) | $$fg;
+  } 
+  else {
+    bytes::substr( $$self, 0, 4, pack( 'V', $$fg ) );
+  }
+  return;
+}
+
+sub getBackground {    # $bg ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $bg = SUPPORTS_64BIT_IV
+         ? ( $$self >> 27 ) & 0x7ffffff
+         : unpack( 'x4V', $$self );
+  return bless \$bg, TColor;
+}
+
+sub setBackground {    # void ($color)
+  my ( $self, $color ) = @_;
+  assert ( blessed $self );
+  assert ( blessed $color or looks_like_number $color );
+  my $bg = $color->$coerceColor();
+  if ( SUPPORTS_64BIT_IV ) {
+    $$self = ( $$self & ~( 0x7ffffff << 27 ) ) | ( $$bg << 27 );
+  } 
+  else {
+    bytes::substr( $$self, 4, 4, pack( 'V', $$bg ) );
+  }
+  return;
+}
+
+sub getStyle {    # sytle ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $style = SUPPORTS_64BIT_IV
+            ? ( ( $$self >> 54 ) & 0x3ff )
+            : unpack( 'x8v', $$self );
+  return $style;
+}
+
+sub setStyle {    # void ($style)
+  my ( $self, $style ) = @_;
+  assert ( blessed $self );
+  assert ( looks_like_number $style );
+  $style &= 0x3ff;
+  if ( SUPPORTS_64BIT_IV ) {
+    $$self = ( $$self & ~( 0x3ff << 54 ) ) | ( $style << 54 );
+  }
+  else {
+    bytes::substr( $$self, 8, 2, pack( 'v', $style ) );
+  }
+  return;
+}
+
+sub reversed {    # $attr ()
   my ( $self ) = @_;
   my $attr = TColorAttr->new();
   $$attr = $$self;
 
-  my $fg = $attr->getFore();
-  my $bg = $attr->getBack();
+  my $fg = $attr->getForeground();
+  my $bg = $attr->getBackground();
   # The 'slReverse' attribute is represented differently by every terminal,
   # so it is better to swap the colors manually unless any of them is default.
   if ( $fg->isDefault() || $bg->isDefault() ) {
     $attr->setStyle( $attr->getStyle() ^ slReverse );
   }
   else {
-    $attr->setFore( $bg );
-    $attr->setBack( $fg );
+    $attr->setForeground( $bg );
+    $attr->setBackground( $fg );
   }
   return $attr;
+}
+
+# Convert to a BIOS color attribute, using quantization if necessary.
+# Style flags are ignored.
+
+sub toBIOS {    # $attr ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $fg = $self->getForeground();
+  my $bg = $self->getBackground();
+  return ( $fg->toBIOS( 1 ) | ( $bg->toBIOS( 0 ) << 4 ) ) & 0xff;
+}
+
+# Backward-compatibility functions:
+#
+# Return the corresponding BIOS color attribute when both the foreground
+# and background are BIOS colors, and there are no style flags. Otherwise,
+# return a fixed color (white on magenta) indicating that the cast is invalid.
+
+sub asBIOS {    # $attr ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+
+  # $self must be a BIOS attribute, or else a fixed color will be returned
+  # instead. The key point is that the result shouldn't be '\x0' unless this
+  # is the BIOS attribute '\x0', so that legacy code comparing a TColorAttr
+  # against '0' keeps working.
+  my ( $fg, $bg );
+  if ( SUPPORTS_64BIT_IV ) {
+    $fg = $$self & 0x7ffffff;
+    $bg = ( $$self >> 27 ) & 0x7ffffff;
+  }
+  else {
+    ( $fg, $bg ) = unpack( 'VV', $$self );
+  }
+  my $bios = ( $fg & 0xf ) | ( ( $bg & 0xf ) << 4 );
+  return 0 unless $bios;
+  return $self->isBIOS() ? $bios : 0x5f;
 }
 
 sub isBIOS {    # $bool ()
   my ( $self ) = @_;
   assert ( blessed $self );
-  return $self->getFore->isBIOS() 
-      && $self->getBack->isBIOS() 
+  return $self->getForeground->isBIOS() 
+      && $self->getBackground->isBIOS() 
       && !$self->getStyle();
-}
-
-# Quantization
-sub toBIOS {    # $attr ()
-  my ( $self ) = @_;
-  assert ( blessed $self );
-  my $fg = $self->getFore();
-  my $bg = $self->getBack();
-  return ( $fg->toBIOS( 1 ) | ( $bg->toBIOS( 0 ) << 4 ) ) & 0xff;
-}
-
-# Result is meaningful only if it actually is BIOS.
-sub asBIOS {    # $attr ()
-  my ( $self ) = @_;
-  assert ( blessed $self );
-
-  # $$self must be a BIOS attribute. If it is not, the result will be
-  # bogus but harmless. The important is that the result isn't \x0
-  # unless this is BIOS attribute \x0.
-  my $fg = ( ${$self} >> 10 ) & 0x0f;
-  my $bg = ( ${$self} >> 37 ) & 0x0f;
-  my $bios = $fg | ( $bg << 4 );
-  return 0 unless $bios;
-  return $self->isBIOS() ? $bios : 0x5f;
 }
 
 sub equals {    # $bool ($other|$bios)
   my ( $self, $other ) = @_;
   assert ( blessed $self );
   assert ( blessed $other or looks_like_number $other );
-  return ref $other
-    ? $$self == $$other 
-    : $self->asBIOS() == $other;
+  return $self->asBIOS() == $other
+    unless ref $other;
+  return ref $self eq ref $other
+      && ( SUPPORTS_64BIT_IV ? $$self == $$other : $$self eq $$other );
 }
+
+# Used to compose attribute pairs in legacy code.
 
 sub lshift {    # $result ($shift)
   my ( $self, $shift ) = @_;
   assert ( blessed $self );
   assert ( looks_like_number $shift );
+  require TUI::Drivers::AttrPair;
 
   # Legacy code may use '<< 8' on an attribute to construct an attribute pair.
-  if ( $shift == 8 ) {
-    require TUI::Drivers::AttrPair;
-    return TUI::Drivers::AttrPair->new(
-      lo => TColorAttr->new( bios => 0 ), 
-      hi => $self
-    );
-  }
-  return $self->asBIOS() << $shift;
+  return TUI::Drivers::AttrPair->new(
+    lo => TColorAttr->new( bios => 0 ), 
+    hi => $self
+  ) if $shift == 8;
+  return TUI::Drivers::AttrPair->new( bios => $self->asBIOS() << $shift );
 }
 
 use overload
@@ -252,50 +367,6 @@ use overload
   '==' => \&equals,
   '<<' => \&lshift,
   fallback => 1;
-
-sub getFore {    # $fg ()
-  assert ( blessed $_[0] );
-  my $color = ( ${ $_[0] } >> 10 ) & 0x7ffffff;
-  return bless \$color, TColor;
-}
-
-sub getBack {    # $bg ()
-  assert ( blessed $_[0] );
-  my $color = ( ${ $_[0] } >> 37 ) & 0x7ffffff;
-  return bless \$color, TColor;
-}
-
-sub getStyle {    # sytle ()
-  assert ( blessed $_[0] );
-  return ${ $_[0] } & 0x3ff;
-}
-
-sub setFore {    # void ($color)
-  my ( $self, $color ) = @_;
-  assert( blessed $self );
-  assert( blessed $color or looks_like_number $color );
-  ${$self} = ( ${$self} & ~( 0x7ffffff << 10 ) )
-           | ( ( $color & 0x7ffffff ) << 10 );
-  return;
-}
-
-sub setBack {    # void ($color)
-  my ( $self, $color ) = @_;
-  assert( blessed $self );
-  assert( blessed $color or looks_like_number $color );
-  ${$self} = ( ${$self} & ~( 0x7ffffff << 37 ) )
-           | ( ( $color & 0x7ffffff ) << 37 );
-  return;
-}
-
-sub setStyle {    # void ($style)
-  my ( $self, $style ) = @_;
-  assert( blessed $self );
-  assert( looks_like_number $style );
-  ${$self} = ( ${$self} & ~0x3ff )
-           | ( $style & 0x3ff );
-  return;
-}
 
 1;
 
@@ -317,12 +388,12 @@ TColorAttr - color attribute value type for screen cells
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::ColorAttr> provides C<TColorAttr>, a value type that
-represents the color attributes of a screen cell.
+C<TUI::Drivers::ColorAttr> provides C<TColorAttr>, a value type that represents 
+the color attributes of a screen cell.
 
 A C<TColorAttr> stores foreground color, background color, and style
-information. It can also represent traditional BIOS color attributes used
-by Turbo Vision color handling.
+information. It can also represent traditional BIOS color attributes used by 
+TVision color handling.
 
 =head1 CONSTRUCTOR
 
@@ -348,9 +419,10 @@ With explicit foreground, background, and optional style information:
     style => slBold | slItalic,
   );
 
-The C<fg> and C<bg> arguments must be C<TColor> values.
+The arguments C<fg> and C<bg> should be values of type C<TColor>. The following 
+syntax is also allowed.
 
-=head3 Convenience syntax
+=head3 Coercion
 
 As a shorthand, C<fg> and C<bg> also accept a hash reference or an array
 reference instead of a C<TColor> object:
@@ -423,22 +495,6 @@ For example:
 
 This is convenient for compact palette definitions.
 
-=head2 reverseAttribute
-
-  my $attr = $self->reverseAttribute();
-
-Returns a new attribute with the visual foreground and background colors 
-swapped.
-
-The C<slReverse> style attribute is interpreted differently by different
-terminal implementations. Therefore, explicit foreground and background colors
-are swapped whenever possible.
-
-If either color is the terminal default color, the color values are left
-unchanged and the C<slReverse> style flag is toggled instead.
-
-Returns a new C<TColorAttr>.
-
 =head1 METHODS
 
 =head2 asBIOS
@@ -449,15 +505,34 @@ Returns a BIOS color attribute equivalent to the current value.
 
 The result is meaningful only when C<isBIOS> returns true.
 
-=head2 getBack
+=head2 assign
 
- my $bg = $self->getBack();
+  $self->assign($other);
+
+Copies the contents of another C<TColorAttr> into the current one.
+
+=head2 clone
+
+  my $attr = $self->clone();
+
+Returns a new C<TColorAttr> object that is a copy of the current one.
+
+=head2 equals
+
+  my $bool = $self->equals($other | $bios);
+
+Returns true if both values represent exactly the same color attribute; 
+support typecast to a BIOS value if one is a number.
+
+=head2 getBackground
+
+ my $bg = $self->getBackground();
 
 Returns the background color component.
 
-=head2 getFore
+=head2 getForeground
 
- my $fg = $self->getFore();
+ my $fg = $self->getForeground();
 
 Returns the foreground color component.
 
@@ -484,21 +559,41 @@ attribute is this value and whose low attribute is a BIOS attribute of C<0>,
 for compatibility with legacy code that used C<< << 8 >> on an attribute to
 construct an attribute pair.
 
-=head2 setFore
+=head2 reversed
 
-  $self->setFore($color);
+  my $attr = $self->reversed();
+
+Returns a new attribute with the visual foreground and background colors 
+swapped.
+
+The C<slReverse> style attribute is interpreted differently by different
+terminal implementations. Therefore, explicit foreground and background colors
+are swapped whenever possible.
+
+If either color is the terminal default color, the color values are left
+unchanged and the C<slReverse> style flag is toggled instead.
+
+Returns a new C<TColorAttr>.
+
+=head2 setForeground
+
+  $self->setForeground($color);
 
 Sets the foreground color component.
 
-The argument must be a C<TColor> value.
+The argument must be a C<TColor> value or something that can be coerced into a 
+C<TColor> using the internal color coercion mechanism (see L</Coercion> for 
+details).
 
-=head2 setBack
+=head2 setBackground
 
-  $self->setBack($color);
+  $self->setBackground($color);
 
 Sets the background color component.
 
-The argument must be a C<TColor> value.
+The argument must be a C<TColor> value or something that can be coerced into a 
+C<TColor> using the internal color coercion mechanism (see L</Coercion> for 
+details).
 
 =head2 setStyle
 

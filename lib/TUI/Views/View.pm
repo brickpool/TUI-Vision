@@ -111,11 +111,18 @@ my (
   $writeView,
 );
 
+# macro for coercing a value into a TColorAttr object
+my $coerceAttr = sub {
+  return ref $_[0] ? $_[0] : TColorAttr->new( bios => $_[0] );
+};
+
+# macro for locking a value (making it readonly)
 my $lock_value = sub {
   Internals::SvREADONLY( $_[0] => 1 )
     if exists &Internals::SvREADONLY;
 };
 
+# macro for unlocking a value (making it writable)
 my $unlock_value = sub {
   Internals::SvREADONLY( $_[0] => 0 )
     if exists &Internals::SvREADONLY;
@@ -963,9 +970,9 @@ sub getColor {    # $pair ($color)
     unless ref $hi && ref $lo;
 
   # objects, return a TAttrPair object with the high and low colors
-  return TAttrPair->new( 
-    hi => ref $hi ? $hi : TColorAttr->new( bios => $hi ),
-    lo => ref $lo ? $lo : TColorAttr->new( bios => $lo ),
+  return TAttrPair->new(
+    hi => $hi->$coerceAttr(),
+    lo => $lo->$coerceAttr(),
   );
 }
 
@@ -1288,12 +1295,12 @@ sub writeChar {    # void ($x, $y, $c, $color, $count)
     pos    => [Int, Int, Str, PositiveOrZeroInt, Int],
   );
   my ( $self, $x, $y, $c, $color, $count ) = $sig->( @_ );
-  my $attr = $self->mapColor( $color );
   if ( $count > 0 ) {
-    my $buf = [ map { TScreenCell->new() } 1 .. $count ];
-    for my $cell ( @$buf ) {
-      $cell->setCell( $c, $attr );
-    }
+    my $attr = $self->mapColor( $color )->$coerceAttr();
+    my $cell = TScreenCell->new( ch => $c, attr => $attr );
+    my $buf = [
+      map { $cell->clone() } 1 .. $count
+    ];
     $self->$writeView( $x, $y, $count, $buf );
   }
   return;
@@ -1320,16 +1327,13 @@ sub writeStr {    # void ($x, $y, $str, $color)
   if ( $str ) {
     my $length = length( $str );
     if ( $length > 0 ) {
-      my $attr = $self->mapColor( $color );
-      my $buf  = [ map { TScreenCell->new() } 1 .. $length ];
-      my $i    = 0;
-      foreach my $c ( split //, $str ) {
-        $buf->[$i]->setCell( $c, $attr );
-        $i++;
-      }
+      my $attr = $self->mapColor( $color )->$coerceAttr();
+      my $buf = [ 
+        map { TScreenCell->new( ch => $_, attr => $attr ) } split //, $str
+      ];
       $self->$writeView( $x, $y, $length, $buf );
-    } #/ if ( $length > 0 )
-  } #/ if ( $str )
+    }
+  }
   return;
 } #/ sub writeStr
 

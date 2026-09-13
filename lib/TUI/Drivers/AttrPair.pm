@@ -24,15 +24,18 @@ use TUI::Drivers::ColorAttr;
 
 sub TAttrPair() { __PACKAGE__ }
 
+# macro for coercing a value into a TColorAttr object
 my $coerceAttr = sub {
-  my ( $value ) = @_;
-  return $value if blessed $value;
-  return TColorAttr->new( bios => $value );
+  return ref $_[0] ? $_[0] : TColorAttr->new( bios => $_[0] );
 };
+
+# TAttrPair can be used as a 2-element array ([0]: low, [1]: high).
+# Instead of the operator '@{}' Perl's internal array reference access is 
+# used, since it is resolved at compile time.
 
 sub new {    # $obj (|%args)
   my ( $class, @args ) = @_;
-  assert( $class and !ref $class );
+  assert ( $class and !ref $class );
 
   my ( $lo, $hi );
 
@@ -45,56 +48,92 @@ sub new {    # $obj (|%args)
   # TAttrPair->new( bios => Int )
   elsif ( @args == 2 && $args[0] eq 'bios' ) {
     my $bios = $args[1];
-    assert( looks_like_number $bios );
-    $lo = TColorAttr->new( bios => $bios & 0xff );
-    $hi = TColorAttr->new( bios => ( $bios >> 8 ) & 0xff );
+    assert ( looks_like_number $bios );
+    $lo = TColorAttr->new( bios => $bios );
+    $hi = TColorAttr->new( bios => $bios >> 8 );
   }
 
   # TAttrPair->new( lo => TColorAttr, | hi => TColorAttr )
   elsif ( @args % 2 == 0 ) {
     my %args = @args;
-    assert( exists $args{lo} );
+    assert ( blessed $args{lo} or looks_like_number $args{lo} );
+    assert ( !exists $args{hi} or defined $args{hi} );
 
-    $lo = $coerceAttr->( $args{lo} );
-    $hi =
-      exists $args{hi}
-      ? $coerceAttr->( $args{hi} )
-      : TColorAttr->new( bios => 0 );
-
-    assert( blessed $lo and $lo->isa( TColorAttr ) );
-    assert( blessed $hi and $hi->isa( TColorAttr ) );
+    $lo = ref $args{lo} ? $args{lo}->clone() : $args{lo}->$coerceAttr();
+    $hi = exists $args{hi}
+        ? ref $args{hi} ? $args{hi}->clone() : $args{hi}->$coerceAttr()
+        : TColorAttr->new( bios => 0 );
   }
 
   else {
     return;
   }
 
+  assert ( blessed $lo and $lo->isa( TColorAttr ) );
+  assert ( blessed $hi and $hi->isa( TColorAttr ) );
+
   return bless [ $lo, $hi ], $class;
 } #/ sub new
 
+sub assign {    # void ($other)
+  my ( $self, $other ) = @_;
+  assert ( blessed $self );
+  assert ( blessed $other );
+  $self->[0]->assign( $other->[0] );
+  $self->[1]->assign( $other->[1] );
+  return;
+}
+
+sub clone {    # $obj ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $lo = $self->[0]->clone();
+  my $hi = $self->[1]->clone();
+  return bless [ $lo, $hi ], ref $self;
+}
+
+# Backward-compatibility functions:
+#
+# Return the corresponding pair of BIOS color attributes. Only works
+# properly if both attributes are actually BIOS color attributes:
+# see TColorAttr overload '0+'.
+
 sub asBIOS {    # $bios ()
   my ( $self ) = @_;
-  assert( blessed $self );
+  assert ( blessed $self );
   return ( $self->[0]->asBIOS & 0xff ) | ( ( $self->[1]->asBIOS & 0xff ) << 8 );
 }
 
+# Used to compose attribute pairs in legacy code.
+
 sub rshift {    # $result ($shift)
   my ( $self, $shift ) = @_;
-  assert( blessed $self );
-  assert( looks_like_number $shift );
+  assert ( blessed $self );
+  assert ( looks_like_number $shift );
 
   # Legacy code may use '>> 8' on an attribute pair to get the higher attribute.
-  return TAttrPair->new( lo => $self->[1] ) if $shift == 8;
-  return $self->asBIOS >> $shift;
+  return TAttrPair->new( lo => $self->[1] )
+    if $shift == 8;
+  return TAttrPair->new( bios => $self->asBIOS >> $shift );
 }
 
 sub setLo {    # $self ($attr)
   my ( $self, $attr ) = @_;
-  assert( blessed $self );
-  assert( blessed $attr or looks_like_number $attr );
+  assert ( blessed $self );
+  assert ( blessed $attr or looks_like_number $attr );
 
   # Legacy code may use '|=' on an attribute pair to set the lower attribute.
-  $self->[0] = $coerceAttr->( $attr );
+  # However, that's only if the lower attribute is equivalent to the BIOS
+  # color attribute 0x00. Otherwise, this is just an arithmetic operation.
+  $attr = $coerceAttr->( $attr );
+  my $lo = $self->[0];
+  my $bios = $lo->asBIOS;
+  if ( $bios == 0 ) {
+    $lo->assign( $attr );
+  }
+  else {
+    $lo->assign( TColor->new( bios => $bios | $attr->asBIOS ) );
+  }
   return $self;
 }
 
@@ -167,6 +206,18 @@ accepted as a shorthand for a BIOS attribute.
 
 Returns a BIOS attribute pair, with the low attribute in the low byte and
 the high attribute in the high byte.
+
+=head2 assign
+
+  $self->assign($other);
+
+Assigns the value of another C<TAttrPair> to this one.
+
+=head2 clone
+
+  my $clone = $self->clone();
+
+Returns a new C<TAttrPair> that is a copy of this one.
 
 =head2 rshift
 

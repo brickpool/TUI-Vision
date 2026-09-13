@@ -25,7 +25,7 @@ BEGIN {
   use_ok 'TUI::Drivers::HWMouse';
   use_ok 'TUI::Drivers::Mouse';
   use_ok 'TUI::Drivers::EventQueue';
-  use_ok 'TUI::Drivers::CellChar';
+  use_ok 'TUI::Drivers::ScreenCharacter';
   use_ok 'TUI::Drivers::Color';
   use_ok 'TUI::Drivers::ColorAttr';
   use_ok 'TUI::Drivers::AttrPair';
@@ -50,7 +50,7 @@ isa_ok( MessageEvent->new(),   'MessageEvent' );
 isa_ok( MouseEventType->new(), 'MouseEventType' );
 
 isa_ok( TEvent->new(),      TEvent );
-isa_ok( TCellChar->new(),   TCellChar );
+isa_ok( TScreenCharacter->new(),   TScreenCharacter );
 isa_ok( TColor->new(),      TColor );
 isa_ok( TColorAttr->new(),  TColorAttr );
 isa_ok( TAttrPair->new(),   TAttrPair );

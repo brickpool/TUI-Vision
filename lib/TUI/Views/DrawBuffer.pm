@@ -23,8 +23,10 @@ use TUI::toolkit::Types qw(
   Maybe
 );
 
-use TUI::Drivers::ScreenCell;
+use TUI::Drivers::AttrPair;
+use TUI::Drivers::ColorAttr;
 use TUI::Drivers::Screen;
+use TUI::Drivers::ScreenCell;
 use TUI::Views::Const qw( maxViewWidth );
 
 sub TDrawBuffer() { __PACKAGE__ }
@@ -60,6 +62,16 @@ my $allocData = sub {    # \@data ()
   return [ map { TScreenCell->new() } 1 .. $len ];
 };
 
+# macro for coercing a value into a TColorAttr object
+my $coerceAttr = sub {
+  return ref $_[0] ? $_[0] : TColorAttr->new( bios => $_[0] );
+};
+
+# macro for coercing a value into a TAttrPair object
+my $coerceAttrPair = sub {
+  return ref $_[0] ? $_[0] : TAttrPair->new( bios => $_[0] );
+};
+
 sub new {    # $obj ()
   state $sig = signature(
     method => 1,
@@ -83,18 +95,18 @@ sub putAttribute {    # void ($indent, $attr)
     ],
   );
   my ( $self, $indent, $attr ) = $sig->( @_ );
-  $self->[$indent]->setAttr( $attr );
+  $self->[$indent]->attribute( $attr );
   return;
 }
 
-sub putChar {    # void ($indent, $c)
+sub putChar {    # void ($indent, $ch)
   state $sig = signature(
     method => Object,
     pos    => [PositiveOrZeroInt, Str],
   );
-  my ( $self, $indent, $c ) = $sig->( @_ );
-  assert ( length $c );
-  $self->[$indent]->setChar( $c );
+  my ( $self, $indent, $ch ) = $sig->( @_ );
+  assert ( length $ch );
+  $self->[$indent]->character( $ch );
   return;
 }
 
@@ -111,25 +123,27 @@ sub moveBuf {    # void ($indent, \@source, $attr|undef, $count)
   my ( $self, $indent, $source, $attr, $count ) = $sig->( @_ );
 
   if ( defined $attr ) {
+    $attr = $attr->$coerceAttr();
     for ( my $i = 0 ; $i < $count ; $i++ ) {
       my $c = $source->[$i]; 
-      $self->[ $indent + $i ]->setCell(
-        ref $c ? $c->getChar() : chr( $c ),
-        $attr,
-      );
+      with: for ( $self->[ $indent + $i ] ) {
+        $_->character( ref $c ? $c->character() : chr( $c ) );
+        $_->attribute( $attr );
+      }
     }
   }
   else {
     for ( my $i = 0 ; $i < $count ; $i++ ) {
-      if ( ref ( my $c = $source->[$i] ) ) {
-        $self->[ $indent + $i ]->setCell(
-          $c->getChar(),
-          $c->getAttr(),
-        );
+      my $c = $source->[$i];
+      if ( ref $c ) {
+        $self->[ $indent + $i ]->assign( $c );
       }
       else {
         my ( $ch, $attr ) = unpack 'aC' => pack 'v' => $c;
-        $self->[ $indent + $i ]->setCell( $ch,  $attr );
+        with: for ( $self->[ $indent + $i ] ) {
+          $_->character( $ch );
+          $_->attribute( $attr );
+        }
       }
     }
   }
@@ -152,18 +166,23 @@ sub moveChar {    # void ($indent, $c|undef, $attr|undef, $count)
   $count = min( $count, max( scalar( @$self ) - $indent, 0 ) );
 
   if ( defined $attr ) {
+    $attr = $attr->$coerceAttr();
     if ( defined $c ) {
-      $self->[ $dest++ ]->setCell( $c, $attr )
-        for 1 .. $count;
+      for ( 1 .. $count ) {
+        with: for ( $self->[ $dest++ ] ) {
+          $_->character( $c );
+          $_->attribute( $attr );
+        }
+      }
     } 
     else {
-      $self->[ $dest++ ]->setAttr( $attr )
+      $self->[ $dest++ ]->attribute( $attr )
         for 1 .. $count;
     }
   }
   else {
     assert ( length $c );
-    $self->[ $dest++ ]->setChar( $c )
+    $self->[ $dest++ ]->character( $c )
       for 1 .. $count;
   }
   return;
@@ -183,17 +202,20 @@ sub moveCStr {    # $num ($indent, $str, $attrs)
   my $dest   = $indent;
   my $limit  = @$self;
   my $toggle = 1;
-  $attrs = [ $attrs & 0xff, ( $attrs >> 8 ) & 0xff ] unless ref $attrs;
+  $attrs = $attrs->$coerceAttrPair();
   my $curAttr = $attrs->[0];
 
-  foreach my $c ( split //, $str ) {
+  foreach my $ch ( split //, $str ) {
     last unless $dest < $limit;
-    if ( $c eq '~' ) {
+    if ( $ch eq '~' ) {
       $curAttr = $attrs->[$toggle];
       $toggle  = 1 - $toggle;
     }
     else {
-      $self->[ $dest++ ]->setCell( $c, $curAttr );
+      with: for ( $self->[ $dest++ ] ) {
+        $_->character( $ch );
+        $_->attribute( $curAttr );
+      }
     }
   }
   return $dest - $indent;
@@ -217,11 +239,16 @@ sub moveStr {    # $num ($indent, $str, $attr|undef)
   my $count = min( length $str, scalar( @$self ) - $indent );
 
   if ( defined $attr ) {
-    $self->[ $dest++ ]->setCell( $_, $attr )
-      for split //, $str;
+    $attr = $attr->$coerceAttr();
+    for my $ch ( split //, $str ) {
+      with: for ( $self->[ $dest++ ] ) {
+        $_->character( $ch );
+        $_->attribute( $attr );
+      }
+    }
   }
   else {
-    $self->[ $dest++ ]->setChar( $_ )
+    $self->[ $dest++ ]->character( $_ )
       for split //, $str;
   }
   return $count;

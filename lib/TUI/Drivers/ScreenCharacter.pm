@@ -1,4 +1,4 @@
-package TUI::Drivers::CellChar;
+package TUI::Drivers::ScreenCharacter;
 # ABSTRACT: character value type for screen cells
 
 use 5.010;
@@ -11,7 +11,7 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 
 use Exporter 'import';
 our @EXPORT = qw(
-  TCellChar
+  TScreenCharacter
 );
 
 require bytes;
@@ -19,19 +19,19 @@ use PerlX::Assert::PP;
 use Scalar::Util qw( blessed );
 use Terminal::WCWidth qw( wcswidth );
 
-sub TCellChar() { __PACKAGE__ }
+sub TScreenCharacter() { __PACKAGE__ }
 
 sub new {    # $cch (|%args)
   my ( $class, @args ) = @_;
   assert ( $class and !ref $class );
 
-  # TCellChar->new()
+  # TScreenCharacter->new()
   my $text;
   if ( !@args ) {
-    $text = '';
+    $text = '';    # Watch out! This is a trivial constructor.
   }
 
-  # TCellChar->new( text => Str )
+  # TScreenCharacter->new( text => Str )
   elsif ( @args == 2 && $args[0] eq 'text' ) {
     $text = $args[1];
     assert ( !ref $text and length $text );
@@ -44,27 +44,19 @@ sub new {    # $cch (|%args)
   return bless \$text, $class;
 }
 
-sub moveChar {    # void ($ch)
-  my ( $self, $ch ) = @_;
-  assert( blessed $self );
-  assert( !ref $ch );
-  assert( bytes::length($ch) == 1 );
-  ${$self} = $ch;
+sub assign {    # void ($other)
+  my ( $self, $other ) = @_;
+  assert ( blessed $self );
+  assert ( blessed $other );
+  $$self = $$other;
   return;
 }
 
-sub moveMultiByteChar {    # void ($text)
-  my ( $self, $text ) = @_;
-  assert( blessed $self );
-  assert( !ref $text );
-  ${$self} = $text;
-  return;
-}
-
-sub moveWideCharTrail {    # void ()
-  assert( blessed $_[0] );
-  ${ $_[0] } = "\0";
-  return;
+sub clone {    # $cch ()
+  my ( $self ) = @_;
+  assert ( blessed $self );
+  my $v = $$self;
+  return bless \$v, ref $self;
 }
 
 sub isWide {    # $bool ()
@@ -82,8 +74,8 @@ sub isWideCharTrail {    # $bool ()
 
 sub appendZeroWidthChar {    # void ($mbc)
   my ( $self, $mbc ) = @_;
-  assert( blessed $self );
-  assert( !ref $mbc );
+  assert ( blessed $self );
+  assert ( !ref $mbc );
   ${$self} .= $mbc;
   return;
 }
@@ -94,25 +86,19 @@ sub getText {    # $ch ()
   return length( $text ) ? $text : "\0";
 }
 
-sub size {    # $bytes ()
-  assert ( blessed $_[0] );
-  # There is always at least one character, even if it is a NUL
-  return bytes::length( ${ $_[0] } ) || 1;
-}
-
 1;
 
 __END__
 
 =head1 NAME
 
-TCellChar - character value type for screen cells
+TScreenCharacter - character value type for screen cells
 
 =head1 SYNOPSIS
 
   use TUI::Drivers;
 
-  my $ch = TCellChar->new(
+  my $ch = TScreenCharacter->new(
     text => 'A',
   );
 
@@ -120,7 +106,7 @@ TCellChar - character value type for screen cells
 
 =head1 DESCRIPTION
 
-C<TCellChar> represents the text stored in a single screen cell.
+C<TScreenCharacter> represents the text stored in a single screen cell.
 
 A cell may contain:
 
@@ -150,7 +136,7 @@ Wide-character trail markers are internal placeholders used to represent the
 additional screen cell occupied by a wide character. They do not contribute
 visible text of their own.
 
-Applications may construct and manipulate C<TCellChar> values directly, but
+Applications may construct and manipulate C<TScreenCharacter> values directly, but
 screen text is usually written through the functions provided by
 L<TText|TUI::Drivers::Text>.
 
@@ -162,17 +148,17 @@ Creates a new character value.
 
 Construct an empty value:
 
-  my $ch = TCellChar->new();
+  my $ch = TScreenCharacter->new();
 
 Construct from text:
 
-  my $ch = TCellChar->new(
+  my $ch = TScreenCharacter->new(
     text => 'A',
   );
 
 Construct a wide-character trail placeholder:
 
-  my $trail = TCellChar->new(
+  my $trail = TScreenCharacter->new(
     text => "\0",
   );
 
@@ -186,6 +172,18 @@ Appends a zero-width Unicode character sequence to the stored text.
 
 The resulting value continues to represent a single screen cell and must still 
 contain at least one visible character.
+
+=head2 assign
+
+  $self->assign($other);
+
+Copies the contents of another C<TScreenCharacter> into the current one.
+
+=head2 clone
+
+  my $cch = $self->clone();
+
+Returns a new C<TScreenCharacter> object that is a copy of the current one.
 
 =head2 getText
 
@@ -204,34 +202,6 @@ Returns true if the stored text does not occupy exactly one screen column.
  my $bool = $self->isWideCharTrail();
 
 Returns true if the value represents a wide-character trail placeholder.
-
-=head2 moveChar
-
-  $self->moveChar($ch);
-
-Replaces the stored text with a single-byte character.
-
-=head2 moveMultiByteChar
-
-  $self->moveMultiByteChar($text);
-
-Replaces the stored text with a UTF-8 character or character sequence.
-
-The resulting value may occupy one or two screen columns.
-
-=head2 moveWideCharTrail
-
-  $self->moveWideCharTrail();
-
-Replaces the stored text with a special wide-character trail marker.
-
-This value is used internally as the trailing cell occupied by a wide character.
-
-=head2 size
-
- my $bytes = $self->size();
-
-Returns the length of the stored text.
 
 =head1 SEE ALSO
 

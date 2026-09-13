@@ -11,7 +11,7 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 use Import::Into;
 
 use TUI::Drivers::Const;
-use TUI::Drivers::CellChar;
+use TUI::Drivers::ScreenCharacter;
 use TUI::Drivers::Color;
 use TUI::Drivers::ColorAttr;
 use TUI::Drivers::AttrPair;
@@ -29,7 +29,7 @@ use TUI::Drivers::Util;
 sub import {
   my $target = caller;
   TUI::Drivers::Const->import::into( $target, qw( :all ) );
-  TUI::Drivers::CellChar->import::into( $target );
+  TUI::Drivers::ScreenCharacter->import::into( $target );
   TUI::Drivers::Color->import::into( $target );
   TUI::Drivers::ColorAttr->import::into( $target );
   TUI::Drivers::AttrPair->import::into( $target );
@@ -48,7 +48,7 @@ sub import {
 sub unimport {
   my $caller = caller;
   TUI::Drivers::Const->unimport::out_of( $caller );
-  TUI::Drivers::CellChar->unimport::out_of( $caller );
+  TUI::Drivers::ScreenCharacter->unimport::out_of( $caller );
   TUI::Drivers::Color->unimport::out_of( $caller );
   TUI::Drivers::ColorAttr->unimport::out_of( $caller );
   TUI::Drivers::AttrPair->unimport::out_of( $caller );

@@ -42,7 +42,7 @@ use TUI::Drivers::Const qw(
   :meXXXX
   :mbXXXX
 );
-use TUI::Drivers::CellChar;
+use TUI::Drivers::ScreenCharacter;
 use TUI::Drivers::ColorAttr;
 use TUI::Drivers::ScreenCell;
 use TUI::Views::Const qw( cmScreenChanged );
@@ -698,16 +698,14 @@ sub screenWrite {         # void ($class, $x, $y, $buf, $len)
     my $cell = $buf->[$i];
 
     # Fast path equivalent of the code below.
-    #   my $dosChar = $cell->getChar()->getText();
-    #   my $ch = Encode::decode( cp437 => $dosChar );
-    my $dosChar = ${ $cell->[1] };
-    my $ch = $UTF8[ ord( $dosChar ) & 0xff ];
+    #   $ch = Encode::decode( cp437 => $cell->character->getText() );
+    my $ch = $UTF8[ ord( ${ $cell->[0] } ) & 0xff ];
 
-    #   my $bios = $cell->getAttr()->toBIOS();
+    #   my $bios = $cell->attribute->toBIOS();
     #   my $attr = _bios_to_tb_attr( $bios );
-    my $bits = ${ $cell->[0] };
-    my $attr = $TB_ATTR{$bits} //= 
-      _bios_to_tb_attr( $cell->getAttr()->asBIOS() );
+    my $data = ${ $cell->[1] };
+    my $attr = $TB_ATTR{$data} //= 
+      _bios_to_tb_attr( $cell->attribute->asBIOS() );
 
     tb_set_cell( $x, $y, $ch, @$attr );
   }
@@ -1006,15 +1004,15 @@ sub getColorCount {    # $count ($class)
 } #/ sub getColorCount
 
 sub reloadScreenInfo {    # void ($class)
-  assert( @_ == 1 );
-  assert( $_[0] and !ref $_[0] );
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
   tb_invalidate();
   return;
 }
 
 sub screenChanged {    # $bool ($class)
-  assert( @_ == 1 );
-  assert( $_[0] and !ref $_[0] );
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
   my $cols = tb_width();
   my $rows = tb_height();
   if ( $cols != $lastSize[0] || $rows != $lastSize[1] ) {
