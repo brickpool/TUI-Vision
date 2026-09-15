@@ -45,6 +45,12 @@ sub new_TDeskTop { __PACKAGE__->from(@_) }
 
 extends ( TGroup, TDeskInit );
 
+# Moo does not inherit attributes from secondary extends() classes.
+# Redeclare attribute provided by TDeskInit.
+if ( TUI::toolkit::is_Moo ) {
+  has createBackground => ( is => 'bare', default => sub { die 'required' } );
+}
+
 # declare global variables
 our $defaultBkgrnd = encode( cp437 => "░" );
 

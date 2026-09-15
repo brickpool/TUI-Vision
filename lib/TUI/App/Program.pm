@@ -69,6 +69,14 @@ sub new_TProgram { __PACKAGE__->from(@_) }
 
 extends ( TGroup, TProgInit );
 
+# Moo does not inherit attributes from secondary extends() classes.
+# Redeclare attribute provided by TProgInit.
+if ( TUI::toolkit::is_Moo ) {
+  has createStatusLine => ( is => 'bare', default => sub { die 'required' } );
+  has createMenuBar    => ( is => 'bare', default => sub { die 'required' } );
+  has createDeskTop    => ( is => 'bare', default => sub { die 'required' } );
+}
+
 # declare global variables
 our $exitText = "~Alt-X~ Exit";
 our $application;

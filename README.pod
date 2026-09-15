@@ -8,7 +8,7 @@ TUI::Vision - Turbo Vision inspired TUI framework for Perl
 
   package MyApp;
 
-  use Moose;
+  use Moo;
   use TUI::Objects;
   use TUI::Drivers;
   use TUI::App;
@@ -47,12 +47,12 @@ TUI::Vision - Turbo Vision inspired TUI framework for Perl
     $dialog->insert(
       TStaticText->new(
         bounds => TRect->new( ax => 3, ay => 3, bx => 35, by => 5 ),
-        text   => 'Hello from TUI::Vision'
+        text   => "\003Hello from TUI::Vision"
       )
     );
     $dialog->insert(
       TButton->new(
-        bounds  => TRect->new( ax => 14, ay => 7, bx => 26, by => 9 ),
+        bounds  => TRect->new( ax => 14, ay => 6, bx => 26, by => 8 ),
         title   => '~O~K',
         command => cmOK,
         flags   => bfDefault

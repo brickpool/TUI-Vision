@@ -40,6 +40,12 @@ sub new_THistoryWindow { __PACKAGE__->from(@_) }
 
 extends ( TWindow, THistInit );
 
+# Moo does not inherit attributes from secondary extends() classes.
+# Redeclare attribute provided by THistInit.
+if ( TUI::toolkit::is_Moo ) {
+  has createListViewer => ( is => 'bare', default => sub { die 'required' } );
+}
+
 # protected attributes
 has viewer => ( is => 'ro' );
 

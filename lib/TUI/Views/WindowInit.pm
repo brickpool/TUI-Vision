@@ -25,7 +25,7 @@ sub TWindowInit() { __PACKAGE__ }
 sub new_TWindowInit { __PACKAGE__->from(@_) }
 
 # declare attributes
-has createFrame => ( is => 'bare' );
+has createFrame => ( is => 'bare', default => sub { die 'required' } );
 
 sub BUILDARGS {    # \%args (%args)
   state $sig = signature(

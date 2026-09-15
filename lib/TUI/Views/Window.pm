@@ -52,6 +52,12 @@ sub new_TWindow { __PACKAGE__->from(@_) }
 
 extends ( TGroup, TWindowInit );
 
+# Moo does not inherit attributes from secondary extends() classes.
+# Redeclare attribute provided by TWindowInit.
+if ( TUI::toolkit::is_Moo ) {
+  has createFrame => ( is => 'bare', default => sub { die 'required' } );
+}
+
 # declare global variables
 our $minWinSize = TPoint->new( x => 16, y => 6 );
 
