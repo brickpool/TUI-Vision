@@ -172,7 +172,8 @@ sub import {
   });
 
   # exports living in this module
-  Importer->import_into( $class, $caller, @{ $EXPORT_TAGS{backend} } );
+  Importer->import_into( $class, $caller, $_ )
+    for grep { $want{$_} } @{ $EXPORT_TAGS{backend} };
 } #/ sub import
 
 sub unimport {
