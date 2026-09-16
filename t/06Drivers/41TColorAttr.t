@@ -233,4 +233,16 @@ subtest '7 vs. \'7\' vs. \'\x7\' vs. "\x7"' => sub {
   );
 };
 
+subtest 'legacy BIOS color expression' => sub {
+  my $color    = TColorAttr->new( bios => 0xA7 );    # bg=A fg=7
+  my $infoByte = 0x3;
+  $color = ( $color & 0x0F ) | ( ( $infoByte << 4 ) & 0xF0 );
+  is( $color->asBIOS, 0x37, 'foreground preserved, background replaced' );
+
+  $color    = TColorAttr->new( bios => 0x4E );    # bg=4 fg=E
+  $infoByte = 0x9;
+  $color    = ( $color & 0x0F ) | ( ( $infoByte << 4 ) & 0xF0 );
+  is( $color->asBIOS, 0x9E, 'background replaced from infoByte' );
+};
+
 done_testing();

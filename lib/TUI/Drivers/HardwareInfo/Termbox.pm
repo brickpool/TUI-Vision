@@ -44,6 +44,12 @@ use TUI::Drivers::Const qw(
 );
 use TUI::Drivers::ScreenCharacter;
 use TUI::Drivers::ColorAttr;
+use TUI::Drivers::Colors qw(
+  BIOStoXTerm16
+  RGBtoXTerm16
+  RGBtoXTerm256
+  XTerm256toXTerm16
+);
 use TUI::Drivers::ScreenCell;
 use TUI::Views::Const qw( cmScreenChanged );
 
@@ -132,6 +138,7 @@ use vars qw(
 # -------------------------------------------------------------------------
 
 my $screenMode  = 0;
+my $outputMode  = 0;
 my $initialized = false;
 my $cursorSize  = 15;
 my @lastSize    = ( 0, 0 );
@@ -206,10 +213,727 @@ my @CP437_TO_UTF8 = (
   ord "\x{00b0}", ord "\x{2219}", ord "\x{00b7}", ord "\x{221a}",
   ord "\x{207f}", ord "\x{00b2}", ord "\x{25a0}", ord "\x{00a0}",
 );
-my %CP437 = map { $CP437_TO_UTF8[$_] => $_ } 0..255;
-my @UTF8  = map { chr } @CP437_TO_UTF8;
+my @UTF8_TO_CP437 = map { chr } @CP437_TO_UTF8;
 
-# TVision to termbox event translation table.
+# Key Event conversion
+my (
+  $convertCharCode,
+  $convertKeyCode,
+);
+
+# Attribute conversion
+my %TB_ATTR;
+my @TB_ATTR_FIFO;
+my $TB_ATTR_LIMIT = 512;
+my (
+  $convertColor,
+  $convertNoColor,
+  $convertIndexed8,
+  $convertIndexed16,
+  $convertIndexed256,
+  $convertDirect,
+);
+
+# -------------------------------------------------------------------------
+# Initialization and cleanup
+# -------------------------------------------------------------------------
+
+INIT {
+  if ( eval { require Perl::OSType; 1 } ) {
+    $platform = Perl::OSType::os_type( $OSNAME );
+  } elsif ( $OSNAME eq 'MSWin32' ) {
+    $platform = 'Windows';
+  }
+  $platform ||= 'Unix';
+  __PACKAGE__->resume();
+}
+
+sub resume {     # void ($class)
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( $class and !ref $class );
+  unless ( $initialized ) {
+    # https://github.com/neovim/neovim/issues/36635
+    $ENV{TERM} //= 'xterm-256color' if $^O eq 'MSWin32';
+
+    # Initialize Termbox and set the input/output modes.
+    my $err = tb_init();
+    return if $err != TB_OK;
+    $err = tb_set_input_mode( TB_INPUT_ALT | TB_INPUT_MOUSE );
+    return if $err != TB_OK;
+    $outputMode = $class->getColorCount() >= 16
+                ? TB_OUTPUT_256 
+                : TB_OUTPUT_NORMAL;
+    $err = tb_set_output_mode( $outputMode );
+    return if $err != TB_OK;
+    my $cols = tb_width();
+    return if $cols <= 0;
+    my $rows = tb_height();
+    return if $rows <= 0;
+
+    @lastSize = ( $cols, $rows );
+
+    # NOTE: The following workaround for detecting a single TB_KEY_ESC relies 
+    # on deprecated function tb_set_func() and Termbox::PP internals. 
+    # The tb_set_func() API itself is backend-independent, but the access to 
+    # raw input buffer is currently only available in the PP backend.
+    if ( PERL_ONLY ) {
+      no warnings 'deprecated';
+      $err = tb_set_func( TB_FUNC_EXTRACT_PRE, sub {
+        my ( $event, $consumed_ref ) = @_;
+
+        state $esc_seen_at;
+        if ( $Termbox::global->{inbuf} eq "\e" ) {
+          my $now = int(( time() - $BASETIME ) * 1000);
+          $esc_seen_at //= $now;
+          my $elapsed = $now - $esc_seen_at;
+
+          return TB_ERR_NEED_MORE
+            if $elapsed < ESC_WAIT_DELAY;
+
+          $$consumed_ref = 1;
+
+          $event->{type} = TB_EVENT_KEY;
+          $event->{mod}  = TB_NONE;
+          $event->{key}  = TB_KEY_ESC;
+          $event->{ch}   = 0;
+
+          $esc_seen_at = undef;
+          return TB_OK;
+        }
+        $esc_seen_at = undef;
+        return TB_ERR;
+      });
+      return tb_strerror( $err ) if $err != TB_OK;
+    }
+    $initialized = true;
+  }
+  return;
+}
+
+END {
+  __PACKAGE__->suspend();
+}
+
+sub suspend {    # void ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  if ( $initialized ) {
+    # Restore the cursor style on exit
+    # https://unix.stackexchange.com/q/697650
+    {
+      my $term = $ENV{TERM} // '';
+      if ( $term eq 'linux' ) {
+        tb_send( $_ = "\x1B[?0c", bytes::length( $_ ) );
+      } elsif ( $term ) {
+        tb_send( $_ = "\x1B[0 q", bytes::length( $_ ) );
+      }
+    }
+    tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) if PERL_ONLY;
+    tb_shutdown();
+    $initialized = false;
+  }
+  return;
+}
+
+# -------------------------------------------------------------------------
+# General system functions
+# -------------------------------------------------------------------------
+
+sub getTickCount {    # $ticks ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  # Return Turbo Vision compatible clock ticks (~18.2 Hz).
+  return int( ( time() - $BASETIME ) * 1000 / 55 );
+}
+
+sub getPlatform {     # $osname ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  return $platform;
+}
+
+# -------------------------------------------------------------------------
+# Caret functions
+# -------------------------------------------------------------------------
+
+sub setCaretSize {    # void ($class, $size)
+  my ( $class, $size ) = @_;
+  assert ( @_ == 2 );
+  assert ( $class and !ref $class );
+  assert ( looks_like_number $size );
+  assert ( $initialized );
+  if ( $size <= 0 ) {
+    $cursorSize = 0;    # hidden
+    tb_hide_cursor();
+  } 
+  elsif ( $size != $cursorSize ) {
+    $cursorSize = max( 0, min( $size, 100 ) );
+
+    my $term = $ENV{TERM} // '';
+    if ( $term eq 'linux' ) {
+      # Linux VGA console cursor style
+      # https://unix.stackexchange.com/a/92743
+      my $raw = sprintf(
+        "\x1B[?%dc",
+        2 + int( ( $cursorSize - 1 ) * 4 / 99 + 0.5 )
+      );
+      tb_send( $raw, bytes::length( $raw ) );
+    }
+    elsif ( $term ) {
+      # DECSCUSR (DEC Set Cursor Style)
+      # https://unix.stackexchange.com/a/597558
+      my $raw;
+      if ( $cursorSize < 50 ) {
+        $raw = "\x1B[3 q";    # blinking underline
+      }
+      elsif ( $cursorSize < 100 ) {
+        $raw = "\x1B[5 q";    # blinking bar
+      }
+      else {
+        $raw = "\x1B[1 q";    # blinking block
+      }
+      $raw .= "\x1B[?25h";
+      tb_send( $raw, bytes::length( $raw ) );
+    }
+    else {
+      # Show cursor; (-1,-1) is clamped to (0,0).
+      tb_set_cursor( -1, -1 );
+    }
+  }
+  return;
+}
+
+sub getCaretSize {    # $size ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  return min( max( $cursorSize, 0 ), 100 );
+}
+
+sub setCaretPosition {    # void ($class, $x, $y)
+  my ( $class, $x, $y ) = @_;
+  assert ( @_ == 3 );
+  assert ( $class and !ref $class );
+  assert ( looks_like_number $x );
+  assert ( looks_like_number $y );
+  assert ( $initialized );
+  tb_set_cursor( $x, $y );
+  return;
+}
+
+sub isCaretVisible {    # $visible ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  return $cursorSize > 0;
+}
+
+# -------------------------------------------------------------------------
+# Screen functions
+# -------------------------------------------------------------------------
+
+sub getScreenRows {    # $rows ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
+  my $rows = tb_height();
+  return 25 
+    if $rows == 0;    # Borland's compatibility DOS default (only for rows)
+  return $rows > 0 ? $rows : 0;
+}
+
+sub getScreenCols {       # $cols ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
+  my $cols = tb_width();
+  return $cols > 0 ? $cols : 0;
+}
+
+sub getScreenMode {       # $mode ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
+
+  my $rows = tb_height();
+  return 0 unless $rows > 0;
+
+  # Invalid or unspecified mode.
+  unless ( $screenMode ) {
+    # https://no-color.org/
+    $screenMode = exists $ENV{NO_COLOR} && $ENV{NO_COLOR}
+                ? smMono
+                : smCO80;
+  }
+
+  my $mode = $screenMode;
+  $mode &= ~smFont8x8;
+  $mode |= smFont8x8 if $rows > 25;
+  return $mode;
+}
+
+sub setScreenMode {       # void ($class, $mode)
+  my ( $class, $mode ) = @_;
+  assert ( @_ == 2 );
+  assert ( $class and !ref $class );
+  assert ( looks_like_number $mode );
+  assert ( $initialized );
+
+  return unless tb_height() > 0;
+
+  # Fix the requested mode to a valid output mode.
+  my $base = $mode & 0xff;
+  if ( $base != smCO80
+    && $base != smBW80
+    && $base != smMono
+  ) {
+    $mode = ( $mode & 0xff00 ) | smCO80;
+  }
+  $mode &= ~smUpdate;
+  $mode &= ~smColorHigh 
+    if ( $mode & smColorHigh ) 
+    && $class->getColorCount() < 256*256*256;
+  $mode &= ~smColor256 
+    if ( $mode & smColor256 ) 
+    && $class->getColorCount() < 256;
+
+  # Set the appropriate output mode based on the requested screen mode.
+  if ( $mode & smColorHigh ) {
+    tb_set_output_mode( TB_OUTPUT_TRUECOLOR )
+      if $outputMode != TB_OUTPUT_TRUECOLOR
+  }
+  elsif ( $mode & smColor256 ) {
+    tb_set_output_mode( TB_OUTPUT_256 )
+      if $outputMode != TB_OUTPUT_256;
+  }
+  elsif ( $class->getColorCount() >= 16 ) {
+    tb_set_output_mode( TB_OUTPUT_256 )
+      if $outputMode != TB_OUTPUT_256;
+  }
+  else {
+    tb_set_output_mode( TB_OUTPUT_NORMAL )
+      if $outputMode != TB_OUTPUT_NORMAL;
+  }
+
+  # Clear the attribute cache, since the color mapping has changed.
+  %TB_ATTR = @TB_ATTR_FIFO = ();
+
+  # Save the current output state
+  $screenMode = $mode;
+  $outputMode = tb_set_output_mode( TB_OUTPUT_CURRENT );
+
+  return;
+}
+
+sub clearScreen {         # void ($class, $w, $h)
+  my ( $class, $w, $h ) = @_;
+  assert ( @_ == 3 );
+  assert ( $class and !ref $class );
+  assert ( looks_like_number $w );
+  assert ( looks_like_number $h );
+  assert ( $initialized );
+  tb_clear();
+  return;
+}
+
+sub screenWrite {         # void ($class, $x, $y, $buf, $len)
+  my ( $class, $x, $y, $buf, $len ) = @_;
+  assert ( @_ == 5 );
+  assert ( $class and !ref $class );
+  assert ( looks_like_number $x );
+  assert ( looks_like_number $y );
+  assert ( ref $buf );
+  assert ( looks_like_number $len );
+  assert ( $initialized );
+
+  q|*
+  # Attribute cache statistics (for debugging purposes)
+  state $last         = time;
+  state $tbAttrHits   = 0;
+  state $tbAttrMisses = 0;
+  if ( time != $last ) {
+    my $total = $tbAttrHits + $tbAttrMisses;
+    my $msg = sprintf(
+      "TB_ATTR: %u entries, %.1f%% hits",
+      scalar( keys %TB_ATTR ),
+      $total ? 100 * $tbAttrHits / $total : 0,
+    );
+    if ( $^O eq 'MSWin32' ) {
+      require Win32;
+      Win32::OutputDebugString( $msg );
+    }
+    else {
+      warn "$msg\n";
+    }
+
+    $last = time;
+  }
+  *| if 0;
+
+  for ( my $i = 0 ; $i < $len ; ++$i, ++$x ) {
+    my $cell = $buf->[$i];
+    my $character = $cell->[0];
+    my $attribute = $cell->[1];
+
+    # Fast path equivalent for the code below:
+    #   my $ch   = Encode::decode( cp437 => $character->getText() );
+    my $ch = $UTF8_TO_CP437[ ord( $$character ) & 0xff ];
+
+    # Cached attribute conversion for the code below:
+    #   my $attr = [
+    #     $attribute->getForeground->$convertColor( true ),
+    #     $attribute->getBackground->$convertColor( false ),
+    #   ];
+    my $attr;
+    if ( exists $TB_ATTR{$$attribute} ) {
+		  # ++$tbAttrHits;    # Increment the cache hit counter
+      $attr = $TB_ATTR{$$attribute};
+    }
+    else {
+      # ++$tbAttrMisses;  # Increment the cache miss counter
+      $attr = [
+        $attribute->getForeground->$convertColor( true ),
+        $attribute->getBackground->$convertColor( false ),
+      ];
+      $TB_ATTR{$$attribute} = $attr;
+      push @TB_ATTR_FIFO, $$attribute;
+      delete $TB_ATTR{ shift @TB_ATTR_FIFO }
+        if @TB_ATTR_FIFO > $TB_ATTR_LIMIT;
+    }
+
+    tb_set_cell( $x, $y, $ch, @$attr );
+  }
+
+  tb_present();
+  return;
+}
+
+sub allocateScreenBuffer {    # \@buffer ($class)
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( $class and !ref $class );
+  assert ( $initialized );
+  $class->reloadScreenInfo();
+
+  my $cols = tb_width();
+  my $rows = tb_height();
+
+  return []
+    if $cols <= 0 || $rows <= 0;
+
+  # Make sure we allocate at least enough for a 80x50 screen.
+  $cols = 80 if $cols < 80;
+  $rows = 50 if $rows < 50;
+
+  return [ map { TScreenCell->new() } 1 .. $cols * $rows ];
+}
+
+sub freeScreenBuffer {        # void ($class, \@buffer)
+  assert ( @_ == 2 );
+  assert ( $_[0] and !ref $_[0] );
+  assert ( ref $_[1] and !readonly @{ $_[1] } );
+  $_[1] = [];
+  return;
+}
+
+# -------------------------------------------------------------------------
+# Mouse functions
+# -------------------------------------------------------------------------
+
+sub getButtonCount {    # $num ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+
+  # Termbox reports mouse events, but not a physical button count.
+  # Return a practical compatibility value.
+  return $initialized ? 3 : 0;
+}
+
+sub cursorOn {    # void ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
+  my $mode = tb_set_input_mode( TB_INPUT_CURRENT );
+  tb_set_input_mode( $mode | TB_INPUT_MOUSE );
+  return;
+}
+
+sub cursorOff {    # void ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  assert ( $initialized );
+  my $mode = tb_set_input_mode( TB_INPUT_CURRENT );
+  tb_set_input_mode( $mode & ~TB_INPUT_MOUSE );
+  return;
+}
+
+# -------------------------------------------------------------------------
+# Event functions
+# -------------------------------------------------------------------------
+
+sub clearPendingEvent {    # void ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  $pendingEvent = 0;
+  return;
+}
+
+sub getMouseEvent {    # $bool ($class, $event)
+  my ( $class, $event ) = @_;
+  assert ( @_ == 2 );
+  assert ( $class and !ref $class );
+  assert ( blessed $event );
+  assert ( $initialized );
+
+  # Check for pending events
+  unless ( $pendingEvent ) {
+    my $rv = tb_peek_event( $tb_event, 0 );
+    $pendingEvent = 1 if $rv == TB_OK;
+  }
+
+  # Return false if there are no pending events
+  return false
+    unless $pendingEvent;
+
+  # Return if the event is not a mouse event
+  return false
+    if $tb_event->type != TB_EVENT_MOUSE;
+
+  # Track the state of mouse buttons
+  my $buttons = $lastButtons;
+  if ( $tb_event->key == TB_KEY_MOUSE_LEFT ) {
+    $buttons |= mbLeftButton;
+  }
+  elsif ( $tb_event->key == TB_KEY_MOUSE_RIGHT ) {
+    $buttons |= mbRightButton;
+  }
+  elsif ( $tb_event->key == TB_KEY_MOUSE_RELEASE ) {
+    $buttons = 0;
+  }
+
+  # Detect double-clicks
+  my @where = ( $tb_event->x, $tb_event->y );
+  my $doubleClick = false;
+  if ( $buttons != 0 && $lastButtons == 0 ) {
+    my $ticks = __PACKAGE__->getTickCount();
+    $doubleClick = !(
+      $buttons != $downButtons
+        or
+      $where[0] != $downWhere[0] || $where[1] != $downWhere[1]
+        or
+      $ticks - $downTicks >= $doubleDelay
+    );
+    $downButtons = $buttons;
+    @downWhere   = @where;
+    $downTicks   = $ticks;
+  }
+
+  # Mouse position
+  $event->{where}{x} = $where[0];
+  $event->{where}{y} = $where[1];
+
+  # Button state
+  $event->{buttons} = $buttons;
+
+  # Event flags
+  $event->{eventFlags} = 0;
+  $event->{eventFlags} |= meMouseMoved
+    if $tb_event->mod & TB_MOD_MOTION;
+  $event->{eventFlags} |= meDoubleClick
+    if $doubleClick;
+
+  # Mouse modifier state.
+  $event->{controlKeyState} = $insertState ? kbInsState : 0;
+
+  # Save the last button state and position for double-click detection
+  $lastButtons = $buttons;
+  @lastWhere   = @where;
+  $lastDouble  = $doubleClick;
+
+  # Clear the pending event flag because we have consumed the event
+  $pendingEvent = 0;
+  return true;
+}
+
+sub getKeyEvent {    # $bool ($class, $event)
+  my ( $class, $event ) = @_;
+  assert ( @_ == 2 );
+  assert ( $class and !ref $class );
+  assert ( blessed $event );
+  assert ( $initialized );
+
+  # Check for pending events
+  unless ( $pendingEvent ) {
+    my $rv = tb_peek_event( $tb_event, 0 );
+    $pendingEvent = 1 if $rv == TB_OK;
+  }
+
+  # Return false if there are no pending events
+  return false
+    unless $pendingEvent;
+
+  # Handle resize events immediately
+  if ( $tb_event->type == TB_EVENT_RESIZE ) {
+    $pendingEvent = 0;
+    if ( $class->screenChanged() ) {
+      $event->{what} = evCommand;
+      $event->{message}{command} = cmScreenChanged;
+      $event->{message}{infoPtr} = undef;
+      return true;
+    }
+    return false;
+  }
+
+  # Return if the event is not a key event
+  return false
+    if $tb_event->type != TB_EVENT_KEY;
+
+  $event->{what} = evKeyDown;
+
+  # Set the key code and character code in the event structure.
+  my $keyCode = $tb_event->$convertKeyCode();
+  $event->{keyDown}{keyCode} = $keyCode;
+  if ( $keyCode == kbNoKey ) {
+    my $charCode = $tb_event->$convertCharCode();
+    $event->{keyDown}{charScan}{charCode} = $charCode;
+  }
+  elsif ( $keyCode == kbIns ) {
+    $insertState = !$insertState;
+  }
+
+  # Update the shift state and control key state in the event structure
+  my $shiftState = 0;
+  $shiftState |= kbAltShift
+    if $tb_event->mod & TB_MOD_ALT;
+  $shiftState |= kbCtrlShift
+    if $tb_event->mod & TB_MOD_CTRL;
+  $shiftState |= kbShift
+    if $tb_event->mod & TB_MOD_SHIFT;
+  $shiftState |= kbInsState
+    if $insertState;
+  $event->{keyDown}{controlKeyState} = $shiftState;
+
+  # Set the Ctrl-Break flag if Ctrl-C was pressed
+  $ctrlBreakHit ||= $event->{keyDown}{keyCode} == kbCtrlC;
+
+  $pendingEvent = 0;
+  return true;
+}
+
+# -------------------------------------------------------------------------
+# System functions
+# -------------------------------------------------------------------------
+
+sub setCtrlBrkHandler {    # $success ($class, $install)
+  my ( $class, $install ) = @_;
+  assert ( @_ == 2 );
+  assert ( $class and !ref $class );
+  assert ( !defined $install or !ref $install );
+  # Termbox handles terminal input itself. No direct Ctrl-Break handler.
+  return true;
+}
+
+sub setCritErrorHandler {    # $bool ($class, $install)
+  assert ( @_ == 2 );
+  assert ( $_[0] and !ref $_[0] );
+  assert ( !defined $_[1] or !ref $_[1] );
+  # Not applicable for Termbox.
+  return true;
+}
+
+# -------------------------------------------------------------------------
+# Additional functions (not part of the original Borland interface)
+# -------------------------------------------------------------------------
+
+sub getColorCount {    # $count ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+
+  state $COLORS;
+  return $COLORS if defined $COLORS;
+
+  # Is Windows 10 or later? (build 10586)
+  if ( $^O eq 'MSWin32' ) {
+    # Simple OS version test for very old systems
+    require Win32;
+    return $COLORS = 16
+      if ( Win32::GetOSVersion() )[1] < 6;
+
+    # Check if we can enable Virtual Terminal processing.
+    require Win32API::File;
+    require Win32::Console;
+    my $ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
+
+    my $console = Win32::Console->new( Win32API::File::STD_OUTPUT_HANDLE() );
+    return $COLORS = 16 unless $console;
+
+    $^E = 0;
+    my $mode = $console->Mode();
+    return $COLORS = 16 if $^E;
+
+    $console->Mode($mode | $ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+    my $isVT = !$^E 
+      && ( $console->Mode() // 0 ) & $ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+
+    $console->Mode( $mode );
+
+    # VT processing implies modern console host.
+    # Only modern VT hosts support 24-bit colors.
+    return $COLORS = !$isVT              ? 16
+                   : !tb_has_truecolor() ? 256
+                   :                       256*256*256;
+  }
+
+  # First check COLORTERM environment
+  if ( tb_has_truecolor() ) {
+    my $colorterm = $ENV{COLORTERM} // '';
+    return $COLORS = 256*256*256
+      if $colorterm =~ /\A(?:truecolor|24bit)\z/i;
+  }
+
+  # Next check terminfo database
+  my $colors = eval {
+    require Term::Cap;
+    local $SIG{__WARN__} = sub { };    # Suppress warnings from Tgetent
+    Term::Cap->Tgetent()->{_Co};
+  };
+  return $COLORS = $colors 
+    if !$@ && defined $colors && $colors >=8;
+
+  # Otherwise check for common TERM values that indicate color support.
+  my $term = $ENV{TERM} // '';
+  return $COLORS = 256 if $term =~ /256color/i;
+
+  # Let's assume all terminals disguising themselves as 'xterm'
+  # support at least 16 colors.
+  return $COLORS = 16 if $term =~ /xterm/;
+
+  # Fall back to a conservative default of 8 colors.
+  return $COLORS = 8;
+} #/ sub getColorCount
+
+sub reloadScreenInfo {    # void ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  tb_invalidate();
+  return;
+}
+
+sub screenChanged {    # $bool ($class)
+  assert ( @_ == 1 );
+  assert ( $_[0] and !ref $_[0] );
+  my $cols = tb_width();
+  my $rows = tb_height();
+  if ( $cols != $lastSize[0] || $rows != $lastSize[1] ) {
+    @lastSize = ( $cols, $rows );
+    return true;
+  }
+  return false;
+}
+
+# -------------------------------------------------------------------------
+# Key Event conversion
+# -------------------------------------------------------------------------
+
 my %TV_TO_TB = (
   # Control keys
   kbCtrlA() => [ TB_MOD_CTRL, TB_KEY_CTRL_A, 0 ],
@@ -420,680 +1144,9 @@ my %TB_TO_TV; {
   $TB_TO_TV{ join( ':', TB_MOD_CTRL, TB_KEY_ENTER, 0 ) }
     = kbEnter();
 }
+my %CP437 = map { $CP437_TO_UTF8[$_] => $_ } 0..255;
 
-# Termbox color attribute table.
-my %TB_ATTR = ();
-
-# -------------------------------------------------------------------------
-# Initialization and cleanup
-# -------------------------------------------------------------------------
-
-INIT {
-  if ( eval { require Perl::OSType; 1 } ) {
-    $platform = Perl::OSType::os_type( $OSNAME );
-  } elsif ( $OSNAME eq 'MSWin32' ) {
-    $platform = 'Windows';
-  }
-  $platform ||= 'Unix';
-  __PACKAGE__->resume();
-}
-
-sub resume {     # void ($class)
-  assert ( $_[0] and !ref $_[0] );
-  unless ( $initialized ) {
-    # https://github.com/neovim/neovim/issues/36635
-    $ENV{TERM} //= 'xterm-256color' if $^O eq 'MSWin32';
-
-    # Initialize Termbox and set the input/output modes.
-    my $err = tb_init();
-    return if $err != TB_OK;
-    $err = tb_set_input_mode( TB_INPUT_ALT | TB_INPUT_MOUSE );
-    return if $err != TB_OK;
-    $err = tb_set_output_mode( 
-      tb_has_truecolor() ? TB_OUTPUT_TRUECOLOR : TB_OUTPUT_NORMAL
-    );
-    return if $err != TB_OK;
-    my $cols = tb_width();
-    return if $cols <= 0;
-    my $rows = tb_height();
-    return if $rows <= 0;
-
-    @lastSize = ( $cols, $rows );
-
-    # NOTE: The following workaround for detecting a single TB_KEY_ESC relies 
-    # on deprecated function tb_set_func() and Termbox::PP internals. 
-    # The tb_set_func() API itself is backend-independent, but the access to 
-    # raw input buffer is currently only available in the PP backend.
-    if ( PERL_ONLY ) {
-      no warnings 'deprecated';
-      $err = tb_set_func( TB_FUNC_EXTRACT_PRE, sub {
-        my ( $event, $consumed_ref ) = @_;
-
-        state $esc_seen_at;
-        if ( $Termbox::global->{inbuf} eq "\e" ) {
-          my $now = int(( time() - $BASETIME ) * 1000);
-          $esc_seen_at //= $now;
-          my $elapsed = $now - $esc_seen_at;
-
-          return TB_ERR_NEED_MORE
-            if $elapsed < ESC_WAIT_DELAY;
-
-          $$consumed_ref = 1;
-
-          $event->{type} = TB_EVENT_KEY;
-          $event->{mod}  = TB_NONE;
-          $event->{key}  = TB_KEY_ESC;
-          $event->{ch}   = 0;
-
-          $esc_seen_at = undef;
-          return TB_OK;
-        }
-        $esc_seen_at = undef;
-        return TB_ERR;
-      });
-      return tb_strerror( $err ) if $err != TB_OK;
-    }
-    $initialized = true;
-  }
-  return;
-}
-
-END {
-  __PACKAGE__->suspend();
-}
-
-sub suspend {    # void ($class)
-  assert ( $_[0] and !ref $_[0] );
-  if ( $initialized ) {
-    # Restore the cursor style on exit
-    # https://unix.stackexchange.com/q/697650
-    {
-      my $term = $ENV{TERM} // '';
-      if ( $term eq 'linux' ) {
-        tb_send( $_ = "\x1B[?0c", bytes::length( $_ ) );
-      } elsif ( $term ) {
-        tb_send( $_ = "\x1B[0 q", bytes::length( $_ ) );
-      }
-    }
-    tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) if PERL_ONLY;
-    tb_shutdown();
-    $initialized = false;
-  }
-  return;
-}
-
-# -------------------------------------------------------------------------
-# General system functions
-# -------------------------------------------------------------------------
-
-sub getTickCount {    # $ticks ($class)
-  assert ( $_[0] and !ref $_[0] );
-  # Return Turbo Vision compatible clock ticks (~18.2 Hz).
-  return int( ( time() - $BASETIME ) * 1000 / 55 );
-}
-
-sub getPlatform {     # $osname ($class)
-  assert ( $_[0] and !ref $_[0] );
-  return $platform;
-}
-
-# -------------------------------------------------------------------------
-# Caret functions
-# -------------------------------------------------------------------------
-
-sub setCaretSize {    # void ($class, $size)
-  my ( $class, $size ) = @_;
-  assert ( $class and !ref $class );
-  assert ( looks_like_number $size );
-  assert ( $initialized );
-  if ( $size <= 0 ) {
-    $cursorSize = 0;    # hidden
-    tb_hide_cursor();
-  } 
-  elsif ( $size != $cursorSize ) {
-    $cursorSize = max( 0, min( $size, 100 ) );
-
-    my $term = $ENV{TERM} // '';
-    if ( $term eq 'linux' ) {
-      # Linux VGA console cursor style
-      # https://unix.stackexchange.com/a/92743
-      my $raw = sprintf(
-        "\x1B[?%dc",
-        2 + int( ( $cursorSize - 1 ) * 4 / 99 + 0.5 )
-      );
-      tb_send( $raw, bytes::length( $raw ) );
-    }
-    elsif ( $term ) {
-      # DECSCUSR (DEC Set Cursor Style)
-      # https://unix.stackexchange.com/a/597558
-      my $raw;
-      if ( $cursorSize < 50 ) {
-        $raw = "\x1B[3 q";    # blinking underline
-      }
-      elsif ( $cursorSize < 100 ) {
-        $raw = "\x1B[5 q";    # blinking bar
-      }
-      else {
-        $raw = "\x1B[1 q";    # blinking block
-      }
-      $raw .= "\x1B[?25h";
-      tb_send( $raw, bytes::length( $raw ) );
-    }
-    else {
-      # Show cursor; (-1,-1) is clamped to (0,0).
-      tb_set_cursor( -1, -1 );
-    }
-  }
-  return;
-}
-
-sub getCaretSize {    # $size ($class)
-  assert ( $_[0] and !ref $_[0] );
-  return min( max( $cursorSize, 0 ), 100 );
-}
-
-sub setCaretPosition {    # void ($class, $x, $y)
-  my ( $class, $x, $y ) = @_;
-  assert ( $class and !ref $class );
-  assert ( looks_like_number $x );
-  assert ( looks_like_number $y );
-  assert ( $initialized );
-  tb_set_cursor( $x, $y );
-  return;
-}
-
-sub isCaretVisible {    # $visible ($class)
-  assert ( $_[0] and !ref $_[0] );
-  return $cursorSize > 0;
-}
-
-# -------------------------------------------------------------------------
-# Screen functions
-# -------------------------------------------------------------------------
-
-sub getScreenRows {    # $rows ($class)
-  assert ( $_[0] and !ref $_[0] );
-  assert ( $initialized );
-  my $rows = tb_height();
-  return 25 
-    if $rows == 0;    # Borland's compatibility DOS default (only for rows)
-  return $rows > 0 ? $rows : 0;
-}
-
-sub getScreenCols {       # $cols ($class)
-  assert ( $_[0] and !ref $_[0] );
-  assert ( $initialized );
-  my $cols = tb_width();
-  return $cols > 0 ? $cols : 0;
-}
-
-sub getScreenMode {       # $mode ($class)
-  assert ( $_[0] and !ref $_[0] );
-  assert ( $initialized );
-
-  my $rows = tb_height();
-  return 0 unless $rows > 0;
-
-  # Invalid or unspecified mode.
-  my $mode = $screenMode & 0xff;
-  if ( $mode != smCO80
-    && $mode != smBW80
-    && $mode != smMono
-  ) {
-      # https://no-color.org/
-      $mode = exists $ENV{NO_COLOR} && $ENV{NO_COLOR}
-            ? smMono
-            : smCO80;
-  }
-
-  $mode |= smFont8x8 if $rows > 25;
-  return $mode;
-}
-
-sub setScreenMode {       # void ($class, $mode)
-  my ( $class, $mode ) = @_;
-  assert ( $class and !ref $class );
-  assert ( looks_like_number $mode );
-  assert ( $initialized );
-
-  return unless tb_height() > 0;
-
-  # Fix the requested mode to a valid output mode.
-  my $base = $mode & 0xff;
-  if ( $base != smCO80
-    && $base != smBW80
-    && $base != smMono
-  ) {
-    $mode = ( $mode & 0xff00 ) | smCO80;
-  }
-
-  # Clear the attribute cache, since the color mapping has changed.
-  %TB_ATTR = () 
-    if ( $mode & 0xff ) != ( $screenMode & 0xff );
-
-  $screenMode = $mode;
-  return;
-}
-
-sub clearScreen {         # void ($class, $w, $h)
-  my ( $class, $w, $h ) = @_;
-  assert ( $class and !ref $class );
-  assert ( looks_like_number $w );
-  assert ( looks_like_number $h );
-  assert ( $initialized );
-  tb_clear();
-  return;
-}
-
-sub screenWrite {         # void ($class, $x, $y, $buf, $len)
-  my ( $class, $x, $y, $buf, $len ) = @_;
-  assert ( $class and !ref $class );
-  assert ( looks_like_number $x );
-  assert ( looks_like_number $y );
-  assert ( ref $buf );
-  assert ( looks_like_number $len );
-  assert ( $initialized );
-
-  for ( my $i = 0 ; $i < $len ; ++$i, ++$x ) {
-    my $cell = $buf->[$i];
-
-    # Fast path equivalent of the code below.
-    #   $ch = Encode::decode( cp437 => $cell->character->getText() );
-    my $ch = $UTF8[ ord( ${ $cell->[0] } ) & 0xff ];
-
-    #   my $bios = $cell->attribute->toBIOS();
-    #   my $attr = _bios_to_tb_attr( $bios );
-    my $data = ${ $cell->[1] };
-    my $attr = $TB_ATTR{$data} //= 
-      _bios_to_tb_attr( $cell->attribute->asBIOS() );
-
-    tb_set_cell( $x, $y, $ch, @$attr );
-  }
-
-  tb_present();
-  return;
-}
-
-sub allocateScreenBuffer {    # \@buffer ($class)
-  my ( $class ) = @_;
-  assert ( $class and !ref $class );
-  assert ( $initialized );
-  $class->reloadScreenInfo();
-
-  my $cols = tb_width();
-  my $rows = tb_height();
-
-  return []
-    if $cols <= 0 || $rows <= 0;
-
-  # Make sure we allocate at least enough for a 80x50 screen.
-  $cols = 80 if $cols < 80;
-  $rows = 50 if $rows < 50;
-
-  return [ map { TScreenCell->new() } 1 .. $cols * $rows ];
-}
-
-sub freeScreenBuffer {        # void ($class, \@buffer)
-  assert ( $_[0] and !ref $_[0] );
-  assert ( ref $_[1] and !readonly @{ $_[1] } );
-  $_[1] = [];
-  return;
-}
-
-# -------------------------------------------------------------------------
-# Mouse functions
-# -------------------------------------------------------------------------
-
-sub getButtonCount {    # $num ($class)
-  assert ( $_[0] and !ref $_[0] );
-
-  # Termbox reports mouse events, but not a physical button count.
-  # Return a practical compatibility value.
-  return $initialized ? 3 : 0;
-}
-
-sub cursorOn {    # void ($class)
-  assert ( $_[0] and !ref $_[0] );
-  assert ( $initialized );
-  my $mode = tb_set_input_mode( TB_INPUT_CURRENT );
-  tb_set_input_mode( $mode | TB_INPUT_MOUSE );
-  return;
-}
-
-sub cursorOff {    # void ($class)
-  assert ( $_[0] and !ref $_[0] );
-  assert ( $initialized );
-  my $mode = tb_set_input_mode( TB_INPUT_CURRENT );
-  tb_set_input_mode( $mode & ~TB_INPUT_MOUSE );
-  return;
-}
-
-# -------------------------------------------------------------------------
-# Event functions
-# -------------------------------------------------------------------------
-
-sub clearPendingEvent {    # void ($class)
-  assert ( $_[0] and !ref $_[0] );
-  $pendingEvent = 0;
-  return;
-}
-
-sub getMouseEvent {    # $bool ($class, $event)
-  my ( $class, $event ) = @_;
-  assert ( $class and !ref $class );
-  assert ( blessed $event );
-  assert ( $initialized );
-
-  # Check for pending events
-  unless ( $pendingEvent ) {
-    my $rv = tb_peek_event( $tb_event, 0 );
-    $pendingEvent = 1 if $rv == TB_OK;
-  }
-
-  # Return false if there are no pending events
-  return false
-    unless $pendingEvent;
-
-  # Return if the event is not a mouse event
-  return false
-    if $tb_event->type != TB_EVENT_MOUSE;
-
-  # Track the state of mouse buttons
-  my $buttons = $lastButtons;
-  if ( $tb_event->key == TB_KEY_MOUSE_LEFT ) {
-    $buttons |= mbLeftButton;
-  }
-  elsif ( $tb_event->key == TB_KEY_MOUSE_RIGHT ) {
-    $buttons |= mbRightButton;
-  }
-  elsif ( $tb_event->key == TB_KEY_MOUSE_RELEASE ) {
-    $buttons = 0;
-  }
-
-  # Detect double-clicks
-  my @where = ( $tb_event->x, $tb_event->y );
-  my $doubleClick = false;
-  if ( $buttons != 0 && $lastButtons == 0 ) {
-    my $ticks = __PACKAGE__->getTickCount();
-    $doubleClick = !(
-      $buttons != $downButtons
-        or
-      $where[0] != $downWhere[0] || $where[1] != $downWhere[1]
-        or
-      $ticks - $downTicks >= $doubleDelay
-    );
-    $downButtons = $buttons;
-    @downWhere   = @where;
-    $downTicks   = $ticks;
-  }
-
-  # Mouse position
-  $event->{where}{x} = $where[0];
-  $event->{where}{y} = $where[1];
-
-  # Button state
-  $event->{buttons} = $buttons;
-
-  # Event flags
-  $event->{eventFlags} = 0;
-  $event->{eventFlags} |= meMouseMoved
-    if $tb_event->mod & TB_MOD_MOTION;
-  $event->{eventFlags} |= meDoubleClick
-    if $doubleClick;
-
-  # Mouse modifier state.
-  $event->{controlKeyState} = $insertState ? kbInsState : 0;
-
-  # Save the last button state and position for double-click detection
-  $lastButtons = $buttons;
-  @lastWhere   = @where;
-  $lastDouble  = $doubleClick;
-
-  # Clear the pending event flag because we have consumed the event
-  $pendingEvent = 0;
-  return true;
-}
-
-sub getKeyEvent {    # $bool ($class, $event)
-  my ( $class, $event ) = @_;
-  assert ( $class and !ref $class );
-  assert ( blessed $event );
-  assert ( $initialized );
-
-  # Check for pending events
-  unless ( $pendingEvent ) {
-    my $rv = tb_peek_event( $tb_event, 0 );
-    $pendingEvent = 1 if $rv == TB_OK;
-  }
-
-  # Return false if there are no pending events
-  return false
-    unless $pendingEvent;
-
-  # Handle resize events immediately
-  if ( $tb_event->type == TB_EVENT_RESIZE ) {
-    $pendingEvent = 0;
-    if ( $class->screenChanged() ) {
-      $event->{what} = evCommand;
-      $event->{message}{command} = cmScreenChanged;
-      $event->{message}{infoPtr} = undef;
-      return true;
-    }
-    return false;
-  }
-
-  # Return if the event is not a key event
-  return false
-    if $tb_event->type != TB_EVENT_KEY;
-
-  $event->{what} = evKeyDown;
-
-  # Set the key code and character code in the event structure.
-  my $keyCode = _tb_event_to_key_code( $tb_event );
-  $event->{keyDown}{keyCode} = $keyCode;
-  if ( $keyCode == kbNoKey ) {
-    my $charCode = _tb_event_to_char_code( $tb_event );
-    $event->{keyDown}{charScan}{charCode} = $charCode;
-  }
-  elsif ( $keyCode == kbIns ) {
-    $insertState = !$insertState;
-  }
-
-  # Update the shift state and control key state in the event structure
-  my $shiftState = 0;
-  $shiftState |= kbAltShift
-    if $tb_event->mod & TB_MOD_ALT;
-  $shiftState |= kbCtrlShift
-    if $tb_event->mod & TB_MOD_CTRL;
-  $shiftState |= kbShift
-    if $tb_event->mod & TB_MOD_SHIFT;
-  $shiftState |= kbInsState
-    if $insertState;
-  $event->{keyDown}{controlKeyState} = $shiftState;
-
-  # Set the Ctrl-Break flag if Ctrl-C was pressed
-  $ctrlBreakHit ||= $event->{keyDown}{keyCode} == kbCtrlC;
-
-  $pendingEvent = 0;
-  return true;
-}
-
-# -------------------------------------------------------------------------
-# System functions
-# -------------------------------------------------------------------------
-
-sub setCtrlBrkHandler {    # $success ($class, $install)
-  my ( $class, $install ) = @_;
-  assert ( @_ == 2 );
-  assert ( $class and !ref $class );
-  assert ( !defined $install or !ref $install );
-  # Termbox handles terminal input itself. No direct Ctrl-Break handler.
-  return true;
-}
-
-sub setCritErrorHandler {    # $bool ($class, $install)
-  assert ( @_ == 2 );
-  assert ( $_[0] and !ref $_[0] );
-  assert ( !defined $_[1] or !ref $_[1] );
-  # Not applicable for Termbox.
-  return true;
-}
-
-# -------------------------------------------------------------------------
-# Additional functions (not part of the original Borland interface)
-# -------------------------------------------------------------------------
-
-sub getColorCount {    # $count ($class)
-  assert ( @_ == 1 );
-  assert ( $_[0] and !ref $_[0] );
-
-  # Is Windows 10 or later? (build 10586)
-  if ( $^O eq 'MSWin32' ) {
-    # Simple OS version test for very old systems
-    require Win32;
-    return 16
-      if ( Win32::GetOSVersion() )[1] < 6;
-
-    # Check if we can enable Virtual Terminal processing.
-    require Win32API::File;
-    require Win32::Console;
-    my $ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
-
-    my $console = Win32::Console->new( Win32API::File::STD_OUTPUT_HANDLE() );
-    return 16 unless $console;
-
-    $^E = 0;
-    my $mode = $console->Mode();
-    return 16 if $^E;
-
-    $console->Mode($mode | $ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-    my $isVT = !$^E 
-      && ( $console->Mode() // 0 ) & $ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-
-    $console->Mode( $mode );
-
-    # VT processing implies modern console host.
-    # Modern VT hosts support 24-bit colors.
-    return $isVT ? 256 * 256 * 256 : 16;
-  }
-
-  # First check COLORTERM environment
-  my $colorterm = $ENV{COLORTERM} // '';
-  return 256 * 256 * 256
-    if $colorterm =~ /\A(?:truecolor|24bit)\z/i;
-
-  # Next check terminfo database
-  my $colors = eval {
-    require Term::Cap;
-    local $SIG{__WARN__} = sub { };    # Suppress warnings from Tgetent
-    Term::Cap->Tgetent()->{_Co};
-  };
-  return $colors 
-    if !$@ && defined $colors && $colors >=8;
-
-  # Otherwise check for common TERM values that indicate color support.
-  my $term = $ENV{TERM} // '';
-  return 256 if $term =~ /256color/i;
-
-  # Let's assume all terminals disguising themselves as 'xterm'
-  # support at least 16 colors.
-  return 16 if $term =~ /xterm/;
-
-  # Fall back to a conservative default of 8 colors.
-  return 8;
-} #/ sub getColorCount
-
-sub reloadScreenInfo {    # void ($class)
-  assert ( @_ == 1 );
-  assert ( $_[0] and !ref $_[0] );
-  tb_invalidate();
-  return;
-}
-
-sub screenChanged {    # $bool ($class)
-  assert ( @_ == 1 );
-  assert ( $_[0] and !ref $_[0] );
-  my $cols = tb_width();
-  my $rows = tb_height();
-  if ( $cols != $lastSize[0] || $rows != $lastSize[1] ) {
-    @lastSize = ( $cols, $rows );
-    return true;
-  }
-  return false;
-}
-
-# -------------------------------------------------------------------------
-# Private helper functions
-# -------------------------------------------------------------------------
-
-use constant BOLD_IS_BRIGHT => __PACKAGE__->getColorCount() == 8;
-
-my @TB_COLORS = tb_has_truecolor() ? (
-  # https://en.wikipedia.org/wiki/Color_Graphics_Adapter#Color_palette
-  TB_HI_BLACK, # black
-  0x0000aa,    # blue
-  0x00aa00,    # green
-  0x00aaaa,    # cyan
-  0xaa0000,    # red
-  0xaa00aa,    # magenta
-  0xaa5500,    # brown
-  0xaaaaaa,    # light gray
-  0x555555,    # dark gray
-  0x5555ff,    # light blue
-  0x55ff55,    # light green
-  0x55ffff,    # light cyan
-  0xff5555,    # light red
-  0xff55ff,    # light magenta
-  0xffff55,    # yellow
-  0xffffff,    # white
-) : (
-  TB_BLACK,
-  TB_BLUE,
-  TB_GREEN,
-  TB_CYAN,
-  TB_RED,
-  TB_MAGENTA,
-  TB_YELLOW,
-  TB_WHITE,
-  TB_BLACK   | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
-  TB_BLUE    | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
-  TB_GREEN   | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
-  TB_CYAN    | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
-  TB_RED     | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
-  TB_MAGENTA | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
-  TB_YELLOW  | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
-  TB_WHITE   | ( BOLD_IS_BRIGHT ? TB_BOLD : TB_BRIGHT ),
-);
-
-sub _bios_to_tb_attr {    # \@attr ($bios)
-  my ( $bios ) = @_;
-
-  my $fg = TB_DEFAULT;
-  my $bg = TB_DEFAULT;
-
-  if ( ( $screenMode & 0xff ) == smMono 
-    || ( $screenMode & 0xff ) == smBW80
-  ) {
-    $fg = $TB_COLORS[
-      ( $bios & 0x07 ? TB_WHITE : TB_BLACK ) - 1 | ( $bios & 0x08 )
-    ];
-    $bg = $TB_COLORS[
-      ( $bios & 0x70 ? TB_WHITE : TB_BLACK ) - 1 | ( ( $bios & 0x80 ) >> 4 )
-    ];
-    $fg |= TB_UNDERLINE
-      if ( ( $screenMode & 0xff ) == smMono
-      && ( $bios & 0x07 ) == 0x01 );
-  }
-  else {
-    $fg = $TB_COLORS[ $bios & 0x0f ];
-    $bg = $TB_COLORS[ ( $bios >> 4 ) & 0x07 ];
-    $fg |= TB_BLINK if $bios & 0x80;
-  }
-
-  return [ $fg, $bg ];
-}
-
-sub _tb_event_to_char_code {    # $charCode ($event)
+$convertCharCode = sub {    # $charCode ($event)
   my ( $event ) = @_;
 
   my $cp = $event->ch;
@@ -1111,9 +1164,9 @@ sub _tb_event_to_char_code {    # $charCode ($event)
     if $key <= 0x1f || $key == 0x7f;
 
   return 0;
-}
+};
 
-sub _tb_event_to_key_code {    # $keyCode ($event)
+$convertKeyCode = sub {    # $keyCode ($event)
   my ( $event ) = @_;
 
   my $mod = $event->mod;
@@ -1147,7 +1200,158 @@ sub _tb_event_to_key_code {    # $keyCode ($event)
   }
 
   return kbNoKey();
+};
+
+# -------------------------------------------------------------------------
+# Attribute conversion
+# -------------------------------------------------------------------------
+
+# The following content is inspired by the framework
+# "A modern port of Turbo Vision 2.0", which is licensed under MIT licence.
+#
+# Copyright 2019-2026 by magiblot <magiblot@hotmail.com>
+#
+# I<ansiwrit.cpp>
+
+$convertColor = sub {    # $tb_color ($color, $isFg)
+  my ( $color, $isFg ) = @_;
+  assert ( @_ == 2 );
+  assert ( blessed $color );
+  assert ( !ref $isFg );
+  return $color->$convertNoColor( $isFg )
+    if ( $screenMode & 0xff ) == smMono;
+
+  return TB_DEFAULT
+    if ( $screenMode & 0xff ) != smBW80 
+    && ( $screenMode & 0xff ) != smCO80;
+
+  return $color->$convertDirect( $isFg )
+    if $screenMode & smColorHigh;
+
+  return $color->$convertIndexed256( $isFg )
+    if $screenMode & smColor256;
+
+  return $color->$convertIndexed16( $isFg )
+    if $outputMode > TB_OUTPUT_NORMAL;
+   
+  return $color->$convertIndexed8( $isFg );
+};
+
+$convertNoColor = sub {    # $tb_color ($color, $isFg)
+  my ( $color, $isFg ) = @_;
+  assert ( @_ == 2 );
+  assert ( blessed $color );
+  assert ( !ref $isFg );
+  my $c = TB_DEFAULT;
+  if ( $color->isBIOS() ) {
+    my $bios = $color->asBIOS();
+    if ( $isFg ) {
+      if ( $bios & 0x8 ) {
+        $c |= TB_BOLD;
+      }
+      elsif ( $bios == 0x1 ) {
+        $c |= TB_UNDERLINE;
+      }
+    }
+    elsif ( ( $bios & 0x7 ) == 0x7 ) {
+      $c |= TB_REVERSE;
+    }
+  }
+  return $c;
+};
+
+$convertIndexed8 = sub {    # $tb_color ($color, $isFg)
+  my ( $color, $isFg ) = @_;
+  assert ( @_ == 2 );
+  assert ( blessed $color );
+  assert ( !ref $isFg );
+  my $idx = $color->$convertIndexed16( $isFg );
+  my $c = ( $idx & 0x7 ) + 1;
+  if ( $idx & 0x8 ) {
+    $c |= $isFg ? TB_BOLD : TB_BLINK;
+  }
+  $c = TB_BLACK   if $idx & TB_HI_BLACK;
+  $c = TB_DEFAULT if $idx == TB_DEFAULT;
+  return $c;
+};
+
+$convertIndexed16 = sub {    # $tb_color ($color, $isFg)
+  my ( $color, $isFg ) = @_;
+  assert ( @_ == 2 );
+  assert ( blessed $color );
+  assert ( !ref $isFg );
+  if ( $color->isBIOS() ) {
+    my $idx = BIOStoXTerm16( $color->asBIOS() );
+    return $idx == TB_DEFAULT ? TB_HI_BLACK : $idx;
+  }
+  elsif ( $color->isXTerm() ) {
+    my $idx = $color->asXTerm();
+    $idx = XTerm256toXTerm16( $idx )
+      if $idx >= 16;
+    return $idx == TB_DEFAULT ? TB_HI_BLACK : $idx;
+  }
+  elsif ( $color->isRGB() ) {
+    my $idx = RGBtoXTerm16( $color->asRGB() );
+    return $idx == TB_DEFAULT ? TB_HI_BLACK : $idx;
+  }
+  return TB_DEFAULT;
+};
+
+$convertIndexed256 = sub {    # $tb_color ($color, $isFg)
+  my ( $color, $isFg ) = @_;
+  assert ( @_ == 2 );
+  assert ( blessed $color );
+  assert ( !ref $isFg );
+  if ( $color->isXTerm() ) {
+    my $idx = $color->asXTerm();
+    return $idx == TB_DEFAULT ? TB_HI_BLACK : $idx;
+  }
+  elsif ( $color->isRGB() ) {
+    my $idx = RGBtoXTerm256( $color->asRGB() );
+    return $idx == TB_DEFAULT ? TB_HI_BLACK : $idx;
+  }
+  return $color->$convertIndexed16( $isFg );
+};
+
+my @XTERM256 = (
+  # 0-15: system colors
+  0x000000, 0x800000, 0x008000, 0x808000,
+  0x000080, 0x800080, 0x008080, 0xc0c0c0,
+  0x808080, 0xff0000, 0x00ff00, 0xffff00,
+  0x0000ff, 0xff00ff, 0x00ffff, 0xffffff,
+); {
+  my @level = ( 0x00, 0x5f, 0x87, 0xaf, 0xd7, 0xff );
+
+  # 16-231: color cubes
+  for my $r ( @level ) {
+    for my $g ( @level ) {
+      for my $b ( @level ) {
+        push @XTERM256, ( $r << 16 ) | ( $g << 8 ) | $b;
+      }
+    }
+  }
+
+  # 232-255: gray scale
+  for my $i ( 0 .. 23 ) {
+    my $v = 8 + $i * 10;
+    push @XTERM256, ( $v << 16 ) | ( $v << 8 ) | $v;
+  }
 }
+
+$convertDirect = sub {    # $tb_color ($color, $isFg)
+  my ( $color, $isFg ) = @_;
+  assert ( @_ == 2 );
+  assert ( blessed $color );
+  assert ( !ref $isFg );
+  if ( $color->isRGB() ) {
+    my $idx = $color->asRGB();
+    return $idx == TB_DEFAULT ? TB_HI_BLACK : $idx;
+  }
+  my $idx = $color->$convertIndexed256( $isFg );
+  my $c = $XTERM256[ $idx & 0xff ];
+  $c = TB_HI_BLACK if $idx & TB_HI_BLACK;
+  return $c;
+};
 
 1;
 
@@ -1267,11 +1471,19 @@ L<Termbox>
 
 =back
 
+=head1 CONTRIBUTORS
+
+=over
+
+=item * magiblot <magiblot@hotmail.com>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 1990-1994, 1997 by Borland International
 
-Copyright (c) 2019-2026 the L</AUTHORS> as listed above.
+Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).

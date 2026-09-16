@@ -127,6 +127,11 @@ my $coerceColor = sub {
   return;
 };
 
+# macro for coercing a value into a TColorAttr object
+my $coerceAttr = sub {
+  return ref $_[0] ? $_[0] : TColorAttr->new( bios => $_[0] );
+};
+
 sub new {    # $attr (|%args)
   my ( $class, @args ) = @_;
 
@@ -215,7 +220,7 @@ sub setForeground {    # void ($color)
   my ( $self, $color ) = @_;
   assert ( blessed $self );
   assert ( blessed $color or looks_like_number $color );
-  my $fg = $color->$coerceColor();
+  my $fg = $color->$coerceAttr();
   if ( SUPPORTS_64BIT_IV ) {
     $$self = ( $$self & ~0x7ffffff ) | $$fg;
   } 
@@ -238,7 +243,7 @@ sub setBackground {    # void ($color)
   my ( $self, $color ) = @_;
   assert ( blessed $self );
   assert ( blessed $color or looks_like_number $color );
-  my $bg = $color->$coerceColor();
+  my $bg = $color->$coerceAttr();
   if ( SUPPORTS_64BIT_IV ) {
     $$self = ( $$self & ~( 0x7ffffff << 27 ) ) | ( $$bg << 27 );
   } 
@@ -346,12 +351,13 @@ sub equals {    # $bool ($other|$bios)
       && ( SUPPORTS_64BIT_IV ? $$self == $$other : $$self eq $$other );
 }
 
-# Used to compose attribute pairs in legacy code.
+# Used to support operations in legacy code.
 
 sub lshift {    # $result ($shift)
-  my ( $self, $shift ) = @_;
+  my ( $self, $shift, $swap ) = @_;
   assert ( blessed $self );
   assert ( looks_like_number $shift );
+  assert ( not $swap );
   require TUI::Drivers::AttrPair;
 
   # Legacy code may use '<< 8' on an attribute to construct an attribute pair.
@@ -362,13 +368,35 @@ sub lshift {    # $result ($shift)
   return TUI::Drivers::AttrPair->new( bios => $self->asBIOS() << $shift );
 }
 
+sub and {
+  my ( $self, $c ) = @_;
+  assert( blessed $self );
+  assert( blessed $c or looks_like_number $c );
+  my $lhs = $self->asBIOS();
+  my $rhs = ref $c ? $c->asBIOS() : $c;
+  my $class = ref $self;
+  return $class->new( bios => $lhs & $rhs );
+}
+
+sub or {
+  my ( $self, $c ) = @_;
+  assert( blessed $self );
+  assert( blessed $c or looks_like_number $c );
+  my $lhs = $self->asBIOS();
+  my $rhs = ref $c ? $c->asBIOS() : $c;
+  my $class = ref $self;
+  return $class->new( bios => $lhs | $rhs );
+}
+
 use overload
   '0+' => \&asBIOS,
   '==' => \&equals,
   '<<' => \&lshift,
+  '&'  => \&and,
+  '|'  => \&or,
   fallback => 1;
 
-1;
+1
 
 __END__
 
@@ -497,6 +525,13 @@ This is convenient for compact palette definitions.
 
 =head1 METHODS
 
+=head2 and
+
+  my $result = $self->and($other);
+
+Performs a bitwise AND operation on the C<asBIOS> values of the current 
+attribute and another attribute or BIOS value.
+
 =head2 asBIOS
 
  my $attr = $self->asBIOS();
@@ -558,6 +593,13 @@ As a special case, shifting by C<8> returns a new C<TAttrPair> whose high
 attribute is this value and whose low attribute is a BIOS attribute of C<0>,
 for compatibility with legacy code that used C<< << 8 >> on an attribute to
 construct an attribute pair.
+
+=head2 or
+
+  my $result = $self->or($other);
+
+Performs a bitwise OR operation on the C<asBIOS> values of the current 
+attribute and another attribute or BIOS value.
 
 =head2 reversed
 
@@ -629,6 +671,18 @@ Returns the BIOS color attribute equivalent to this value.
   my $result = $a << $shift;
 
 Calls L</lshift>.
+
+=head2 Bitwise OR
+
+  my $result = $a | $b;
+
+Calls L</or>.
+
+=head2 Bitwise AND
+
+  my $result = $a & $b;
+
+Calls L</and>.
 
 =head1 SEE ALSO
 
