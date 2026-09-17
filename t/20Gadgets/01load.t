@@ -11,6 +11,7 @@ BEGIN {
   use_ok 'TUI::Gadgets::HeapView';
   use_ok 'TUI::Gadgets::ClockView';
   use_ok 'TUI::Gadgets::ColorDisplay';
+  use_ok 'TUI::Gadgets::ColorItem';
 }
 
 isa_ok(
@@ -20,5 +21,6 @@ isa_ok( THeapView->new( bounds => TRect->new() ), THeapView() );
 isa_ok( TClockView->new( bounds => TRect->new() ), TClockView() );
 isa_ok( TColorDisplay->new( bounds => TRect->new(), aText => 'Text' ), 
   TColorDisplay() );
+isa_ok( TColorItem->new( name => 'item', index => 0 ), TColorItem() );
 
 done_testing();
