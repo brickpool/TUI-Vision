@@ -57,22 +57,20 @@ $add_menu_item = sub {    # $s ($s, $i, |undef)
   assert ( is_Object $s );
   assert ( is_Object $i and $i->isa( TMenuItem ) );
   my $sub = $s;
-  while ( $sub->{next} ) {
-    $sub = $sub->{next};
-  }
+  $sub = $sub->{next}
+    while $sub->{next};
 
   if ( !$sub->{subMenu} ) {
     $sub->{subMenu} = TMenu->new( items => $i );
   }
   else {
     my $cur = $sub->{subMenu}{items};
-    while ( $cur->{next} ) {
-      $cur = $cur->{next};
-    }
+    $cur = $cur->{next}
+      while $cur->{next};
     $cur->{next} = $i;
   }
   return $s;
-}; #/ sub $add_menu_item
+};
 
 sub _add_sub_menu { goto &$add_sub_menu }
 $add_sub_menu = sub {    # $s1 ($s1, $s2, |undef)
@@ -81,9 +79,8 @@ $add_sub_menu = sub {    # $s1 ($s1, $s2, |undef)
   assert ( is_Object $s1 );
   assert ( is_Object $s2 and $s2->isa( TSubMenu ) );
   my $cur = $s1;
-  while ( $cur->{next} ) {
-    $cur = $cur->{next};
-  }
+  $cur = $cur->{next}
+    while $cur->{next};
   $cur->{next} = $s2;
   return $s1;
 };
@@ -220,6 +217,17 @@ Adds a menu item or submenu to this submenu.
 
 This method implements the C<+> operator, allowing menu items to be chained
 together.
+
+=head1 OPERATORS
+
+=head2 +
+
+  my $list = $submenu1 + $submenu2;
+
+Appends C<$submenu2> to the end of the list beginning at C<$submenu1>.
+
+The operation returns the head element of the resulting list, allowing
+multiple append operations to be chained.
 
 =head1 USAGE NOTES
 

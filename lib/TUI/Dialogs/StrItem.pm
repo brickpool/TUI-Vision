@@ -58,7 +58,7 @@ sub from {    # $item ($aValue, $aNext|undef)
   return $class->new( value => $args[0], next => $args[1] );
 }
 
-my $mk_ro_accessors = sub {
+my $mk_accessors = sub {
   my ( $pkg ) = @_;
   assert ( @_ == 1 );
   assert ( defined $pkg );
@@ -67,14 +67,16 @@ my $mk_ro_accessors = sub {
   for my $field ( keys %HAS ) {
     my $full_name = "${pkg}::$field";
     *$full_name = sub {
-      assert ( @_ == 1 );
       assert ( is_Object $_[0] );
+      if ( @_ > 1 ) {
+        $_[0]->{$field} = $_[1];
+      }
       $_[0]->{$field};
     };
   }
 };
 
-__PACKAGE__->$mk_ro_accessors();
+__PACKAGE__->$mk_accessors();
 
 1;
 

@@ -330,25 +330,26 @@ Represents the horizontal and vertical scroll position.
 
 =item limit
 
-Maximum allowed scroll offset (I<TPoint>).  
-Defines the bounds of the scrollable area.
+Maximum allowed scroll offset (I<TPoint>, read-only). Defines the bounds of the 
+scrollable area.
 
 =item aHScrollBar
 
-Reference to the horizontal scroll bar (I<TScrollBar>), if present.
+Reference to the horizontal scroll bar (I<TScrollBar>, read-only), if present.
 
 =item aVScrollBar
 
-Reference to the vertical scroll bar (I<TScrollBar>), if present.
+Reference to the vertical scroll bar (I<TScrollBar>, read-only), if present.
 
 =item drawLock
 
 Internal counter used to suppress redraw operations during batch updates 
-(I<Int>).
+(I<Int>, read-only).
 
 =item drawFlag
 
-Indicates whether a redraw is pending once drawing is re-enabled (I<Bool>).
+Indicates whether a redraw is pending once drawing is re-enabled (I<Bool>, 
+read-only).
 
 =back
 

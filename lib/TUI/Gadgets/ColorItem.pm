@@ -1,4 +1,5 @@
 package TUI::Gadgets::ColorItem;
+# ABSTRACT: singly linked color item used by color dialog structures
 
 use 5.010;
 use strict;
