@@ -16,6 +16,12 @@ our @EXPORT_OK = qw(
 our %EXPORT_TAGS = (
   cmXXXX => [qw(
     cmFndEventView
+    cmColorForegroundChanged
+    cmColorBackgroundChanged
+    cmColorSet
+    cmNewColorItem
+    cmNewColorIndex
+    cmSaveColorIndex
   )],
 );
 
@@ -32,8 +38,19 @@ our %EXPORT_TAGS = (
       @EXPORT_OK;
 }
 
+# Color command codes
 use constant {
-  cmFndEventView => 114
+  cmColorForegroundChanged => 71,
+  cmColorBackgroundChanged => 72,
+  cmColorSet               => 73,
+  cmNewColorItem           => 74,
+  cmNewColorIndex          => 75,
+  cmSaveColorIndex         => 76,
+};
+
+# Constants for Gadgets events
+use constant {
+  cmFndEventView => 114,
 };
 
 1

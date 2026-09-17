@@ -11,5 +11,6 @@ BEGIN {
 isa_ok( new_TEventViewer( TRect->new(), 0 ), TEventViewer() );
 isa_ok( new_THeapView( TRect->new() ), THeapView() );
 isa_ok( new_TClockView( TRect->new() ), TClockView() );
+isa_ok( new_TColorDisplay( TRect->new(), 'Text' ), TColorDisplay() );
 
 done_testing();
