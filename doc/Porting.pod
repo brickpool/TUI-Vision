@@ -259,6 +259,8 @@ Lists and History
  TCalcDisplay       (missing)                    [ ]
  TCalendarView      (missing)                    [ ]
  TColorDisplay      TUI::Gadgets::ColorDisplay   [x]
+ TColorGroup        TUI::Gadgets::ColorGroup     [x]
+ TColorIndex        TUI::Gadgets::ColorGroup     [x]
  TColorItem         TUI::Gadgets::ColorItem      [x]
  TClickTester       (missing)                    [ ]
  TClockView         TUI::Gadgets::ClockView      [x]
