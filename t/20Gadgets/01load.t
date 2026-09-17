@@ -5,7 +5,7 @@ use Test::More;
 
 BEGIN {
   use_ok 'TUI::Objects::Rect';
-  use_ok 'TUI::Gadgets::Const';
+  use_ok 'TUI::Gadgets::Const', qw( csBackground );
   use_ok 'TUI::Gadgets::PrintConstants';
   use_ok 'TUI::Gadgets::EventViewer';
   use_ok 'TUI::Gadgets::HeapView';
@@ -13,6 +13,7 @@ BEGIN {
   use_ok 'TUI::Gadgets::ColorDisplay';
   use_ok 'TUI::Gadgets::ColorItem';
   use_ok 'TUI::Gadgets::ColorGroup';
+  use_ok 'TUI::Gadgets::ColorSelector';
 }
 
 isa_ok(
@@ -24,5 +25,7 @@ isa_ok( TColorDisplay->new( bounds => TRect->new(), aText => 'Text' ),
   TColorDisplay() );
 isa_ok( TColorItem->new( name => 'item', index => 0 ), TColorItem() );
 isa_ok( TColorGroup->new( name => 'group' ), TColorGroup() );
+isa_ok( TColorSelector->new( bounds => TRect->new(), selType => csBackground ), 
+  TColorSelector() );
 
 done_testing();

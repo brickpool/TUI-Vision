@@ -14,5 +14,6 @@ isa_ok( new_TClockView( TRect->new() ), TClockView() );
 isa_ok( new_TColorDisplay( TRect->new(), 'Text' ), TColorDisplay() );
 isa_ok( new_TColorItem( 'item', 0 ), TColorItem() );
 isa_ok( new_TColorGroup( 'group' ), TColorGroup() );
+isa_ok( new_TColorSelector( TRect->new(), csBackground ), TColorSelector() );
 
 done_testing();

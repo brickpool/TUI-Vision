@@ -23,6 +23,11 @@ our %EXPORT_TAGS = (
     cmNewColorIndex
     cmSaveColorIndex
   )],
+
+  csXXXX => [qw(
+    csBackground
+    csForeground
+  )],
 );
 
 # add all the other %EXPORT_TAGS ":class" tags to the ":all" class and
@@ -51,6 +56,12 @@ use constant {
 # Constants for Gadgets events
 use constant {
   cmFndEventView => 114,
+};
+
+# enum ColorSel
+use constant { 
+  csBackground => 0,
+  csForeground => 1,
 };
 
 1
@@ -96,13 +107,11 @@ Constants are exported using the following tag-based export groups:
 
 =over
 
-=item *
+=item * C<:cmXXXX> - gadget command identifiers
 
-C<:cmXXXX> - gadget command identifiers
+=item * C<:csXXXX> - color selection constants
 
-=item *
-
-C<:all> - import all constants
+=item * C<:all> - import all constants
 
 =back
 

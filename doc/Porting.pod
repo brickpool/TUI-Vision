@@ -262,6 +262,7 @@ Lists and History
  TColorGroup        TUI::Gadgets::ColorGroup     [x]
  TColorIndex        TUI::Gadgets::ColorGroup     [x]
  TColorItem         TUI::Gadgets::ColorItem      [x]
+ TColorSelector     TUI::Gadgets::ColorSelector  [x]
  TClickTester       (missing)                    [ ]
  TClockView         TUI::Gadgets::ClockView      [x]
  TEventViewer       TUI::Gadgets::EventViewer    [x]

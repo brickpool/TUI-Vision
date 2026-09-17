@@ -21,9 +21,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Drivers::Const qw( 
-  evBroadcast
-);
+use TUI::Drivers::Const qw( evBroadcast );
 use TUI::Drivers::ColorAttr;
 use TUI::Gadgets::Const qw( :cmXXXX );
 use TUI::Views::DrawBuffer;
@@ -274,7 +272,7 @@ The view broadcasts a C<cmColorSet> message and redraws itself.
 
 L<TColorDialog|TUI::Gadgets::TColorDialog>,
 L<TView|TUI::Views::View>,
-L<TColorAttr|TUI::Drivers::ColorAttr>
+L<TColorSelector|TUI::Gadgets::ColorSelector>
 
 =head1 AUTHORS
 
