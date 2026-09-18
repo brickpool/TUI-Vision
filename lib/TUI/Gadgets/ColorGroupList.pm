@@ -252,14 +252,16 @@ the currently focused group.
 
 =head1 ATTRIBUTES
 
-=head2 groups
+=over
 
-  my $groups = $groupList->groups;
+=item groups
 
 Contains the first color group in the linked list, or C<undef> when
-the list is empty.
+the list is empty (I<TColorGroup> or C<undef>).
 
 The attribute is read-only.
+
+=back
 
 =head1 CONSTRUCTOR
 
@@ -268,7 +270,7 @@ The attribute is read-only.
   my $groupList = TColorGroupList->new(
     bounds    => $bounds,
     scrollBar => $scrollBar | undef,
-    groups    => $groups | undef,
+    groups    => $groups    | undef,
   );
 
 Creates a color group list.
@@ -295,10 +297,10 @@ empty list).
 
 =head2 new_TColorGroupList
 
-  my $groupList = new_TColorGroupList(
-    $bounds,
-    $scrollBar,
-    $groups,
+  my $groupList = new_TColorGroupList( 
+    $bounds, 
+    $scrollBar | undef, 
+    $groups    | undef,
   );
 
 Creates a color group list using positional arguments.

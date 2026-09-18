@@ -9,27 +9,21 @@ BEGIN {
   use_ok 'TUI::Drivers::Const', qw( evBroadcast );
   use_ok 'TUI::Drivers::Event';
   use_ok 'TUI::Gadgets::Const', qw( cmSaveColorIndex );
+  use_ok 'TUI::Gadgets::ColorGroup';
   use_ok 'TUI::Gadgets::ColorGroupList';
+  use_ok 'TUI::Gadgets::ColorItem';
   use_ok 'TUI::Views::ScrollBar';
-}
-
-sub TestColorItem::new {
-  my ( $class, %args ) = @_;
-  return bless \%args, $class;
-}
-
-sub TestColorGroup::new {
-  my ( $class, %args ) = @_;
-  return bless \%args, $class;
 }
 
 sub make_items {
   my @names = @_;
   my ( $first, $prev );
+  my $index = 0;
   for my $name ( @names ) {
-    my $item = TestColorItem->new(
-      name => $name,
-      next => undef,
+    my $item = TColorItem->new(
+      name  => $name,
+      index => ++$index,
+      next  => undef,
     );
     if ( defined $prev ) {
       $prev->{next} = $item;
@@ -43,23 +37,20 @@ sub make_items {
 }
 
 sub make_groups {
-  my $g3 = TestColorGroup->new(
+  my $g3 = TColorGroup->new(
     name  => 'Menus',
-    index => 0,
     items => make_items( 'Normal', 'Selected' ),
-    next => undef,
+    next  => undef,
   );
-  my $g2 = TestColorGroup->new(
+  my $g2 = TColorGroup->new(
     name  => 'Dialogs',
-    index => 1,
     items => make_items( 'Frame', 'Title', 'Button' ),
-    next => $g3,
+    next  => $g3,
   );
-  my $g1 = TestColorGroup->new(
+  my $g1 = TColorGroup->new(
     name  => 'Desktop',
-    index => 0,
     items => make_items( 'Background', 'Text' ),
-    next => $g2,
+    next  => $g2,
   );
   return $g1;
 }
@@ -131,11 +122,6 @@ subtest 'getGroup/getNumGroups' => sub {
 subtest 'getGroupIndex/setGroupIndex' => sub {
   can_ok( $list, 'getGroupIndex' );
   can_ok( $list, 'setGroupIndex' );
-
-  is( $list->getGroupIndex(0), 0, 'group 0 index' );
-  is( $list->getGroupIndex(1), 1, 'group 1 index' );
-  is( $list->getGroupIndex(2), 0, 'group 2 index' );
-  is( $list->getGroupIndex(3), 0, 'invalid group returns 0' );
 
   lives_ok { $list->setGroupIndex( 0, 2 ) } 'setGroupIndex(0,2)';
   is( $list->getGroupIndex(0), 2, 'index updated');

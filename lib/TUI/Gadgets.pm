@@ -17,6 +17,7 @@ use TUI::Gadgets::ColorDisplay;
 use TUI::Gadgets::ColorGroup;
 use TUI::Gadgets::ColorGroupList;
 use TUI::Gadgets::ColorItem;
+use TUI::Gadgets::ColorItemList;
 use TUI::Gadgets::ColorSelector;
 use TUI::Gadgets::EventViewer;
 use TUI::Gadgets::HeapView;
@@ -31,6 +32,7 @@ sub import {
   TUI::Gadgets::ColorGroup->import::into( $target );
   TUI::Gadgets::ColorGroupList->import::into( $target );
   TUI::Gadgets::ColorItem->import::into( $target );
+  TUI::Gadgets::ColorItemList->import::into( $target );
   TUI::Gadgets::ColorSelector->import::into( $target );
   TUI::Gadgets::EventViewer->import::into( $target );
   TUI::Gadgets::HeapView->import::into( $target );
@@ -46,6 +48,7 @@ sub unimport {
   TUI::Gadgets::ColorGroup->unimport::out_of( $caller );
   TUI::Gadgets::ColorGroupList->unimport::out_of( $caller );
   TUI::Gadgets::ColorItem->unimport::out_of( $caller );
+  TUI::Gadgets::ColorItemList->unimport::out_of( $caller );
   TUI::Gadgets::ColorSelector->unimport::out_of( $caller );
   TUI::Gadgets::EventViewer->unimport::out_of( $caller );
   TUI::Gadgets::HeapView->unimport::out_of( $caller );

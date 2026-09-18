@@ -46,6 +46,8 @@ sub new {    # \$item (%args)
     ],
   );
   my ( $class, $self ) = $sig->( @_ );
+  $self->{$_} = $HAS{$_}->()
+    for grep { not exists $self->{$_} } keys %HAS;
   bless $self, $class;
   Hash::Util::lock_keys( %$self ) if STRICT;
   return $self;
@@ -57,7 +59,7 @@ sub from {    # $item ($nm, $idx, |$nxt)
     pos    => [
       Str,
       PositiveOrZeroInt, 
-      HashLike, { optional => 1 },
+      Maybe[Object], { optional => 1 },
     ],
   );
   my ( $class, @args ) = $sig->( @_ );
@@ -167,8 +169,8 @@ Numeric index associated with this item (I<PositiveOrZeroInt>).
 
 =item next
 
-Reference to the next list element, or C<undef> if this is the last item
-(I<TColorItem> or undef).
+Reference to the next list element (I<TColorItem>), or C<undef> if this is the 
+last item.
 
 =back
 

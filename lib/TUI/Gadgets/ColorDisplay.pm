@@ -188,11 +188,11 @@ preview of foreground and background color changes.
 
 =over
 
-=item * color
+=item color
 
 Current color attribute (I<TColorAttr>, read-only).
 
-=item * text
+=item text
 
 Text displayed across the view (I<Str>, read-only).
 

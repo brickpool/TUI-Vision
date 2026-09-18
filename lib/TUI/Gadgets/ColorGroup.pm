@@ -56,12 +56,14 @@ sub new {    # \$item (%args)
   state $sig = signature(
     method => 1,
     named  => [
-      name => Str,           { alias => 'nm' },
-      item => Maybe[Object], { alias => 'itm', optional => 1 },
-      next => Maybe[Object], { alias => 'nxt', optional => 1 },
+      name  => Str,           { alias => 'nm' },
+      items => Maybe[Object], { alias => 'itm', optional => 1 },
+      next  => Maybe[Object], { alias => 'nxt', optional => 1 },
     ],
   );
   my ( $class, $self ) = $sig->( @_ );
+  $self->{$_} = $HAS{$_}->()
+    for grep { not exists $self->{$_} } keys %HAS;
   bless $self, $class;
   Hash::Util::lock_keys( %$self ) if STRICT;
   return $self;
@@ -72,12 +74,12 @@ sub from {    # $item ($nm, |$itm, |$nxt)
     method => 1,
     pos    => [
       Str,
-      HashLike, { optional => 1 },
-      HashLike, { optional => 1 },
+      Maybe[Object], { optional => 1 },
+      Maybe[Object], { optional => 1 },
     ],
   );
   my ( $class, @args ) = $sig->( @_ );
-  return $class->new( name => $args[0], item => $args[1], next => $args[2] );
+  return $class->new( name => $args[0], items => $args[1], next => $args[2] );
 }
 
 sub _add_color_item { goto &$add_color_item }
@@ -179,8 +181,8 @@ TColorGroup - linked color group definition used by color selection dialogs
       );
 
   my $group = TColorGroup->new(
-    name => 'Desktop',
-    item => $items,
+    name  => 'Desktop',
+    items => $items,
   );
 
   my $name  = $group->name;
@@ -218,12 +220,12 @@ Display name of the color group (I<Str>).
 =item items
 
 Reference to the first color item in the group, or C<undef> if the group is
-empty (I<TColorItem> or undef).
+empty (I<TColorItem> or C<undef>).
 
 =item next
 
 Reference to the next color group, or C<undef> if this is the last group
-(I<TColorGroup> or undef).
+(I<TColorGroup> or C<undef>).
 
 =back
 
