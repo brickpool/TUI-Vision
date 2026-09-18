@@ -23,8 +23,8 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Const                            qw( EOS );
-use TUI::Dialogs::Const                   qw( cpHistoryViewer );
+use TUI::Const qw( EOS );
+use TUI::Dialogs::Const qw( cpHistoryViewer );
 use TUI::Dialogs::HistoryViewer::HistList qw(
   historyCount
   historyStr
@@ -65,9 +65,9 @@ sub BUILDARGS {    # \%args (%args)
   local $Carp::CarpLevel = $Carp::CarpLevel + 1;
   my $args2 = $class->SUPER::BUILDARGS(
     bounds     => $args1->{bounds},
+    numCols    => 1,
     hScrollBar => $args1->{hScrollBar},
     vScrollBar => $args1->{vScrollBar},
-    numCols    => 1,
   );
   return { %$args1, %$args2 };
 }
@@ -84,7 +84,7 @@ sub BUILD {    # void (\%args)
     $self->historyWidth() - $self->{size}{x} + 3
   );
   return;
-} #/ sub BUILD
+}
 
 sub from {    # $obj ($bounds, $aHScrollBar, $aVScrollBar, $aHistoryId)
   state $sig = signature(
@@ -94,7 +94,7 @@ sub from {    # $obj ($bounds, $aHScrollBar, $aVScrollBar, $aHistoryId)
   my ( $class, @args ) = $sig->( @_ );
   return $class->new( bounds => $args[0], hScrollBar => $args[1], 
     vScrollBar => $args[2], historyId  => $args[3] );
-} #/ sub from
+}
 
 sub getPalette {    # $palette ()
   state $sig = signature(
@@ -107,7 +107,7 @@ sub getPalette {    # $palette ()
     size => length( cpHistoryViewer ),
   );
   return $palette->clone();
-} #/ sub getPalette
+}
 
 sub getText {    # void (\$dest, $item, $maxChars)
   state $sig = signature(
@@ -116,9 +116,9 @@ sub getText {    # void (\$dest, $item, $maxChars)
   );
   my ( $self, $dest, $item, $maxChars ) = $sig->( @_ );
   my $str = historyStr( $self->{historyId}, $item );
-  $$dest = $str ? substr( $str, 0, $maxChars ) : EOS;
+  $$dest = length( $str ) ? substr( $str, 0, $maxChars ) : EOS;
   return;
-} #/ sub getText
+}
 
 sub handleEvent {    # void ($event)
   no warnings 'uninitialized';
@@ -127,23 +127,18 @@ sub handleEvent {    # void ($event)
     pos    => [Object],
   );
   my ( $self, $event ) = $sig->( @_ );
-  if (
-    (
-      $event->{what} == evMouseDown && ( $event->{mouse}{eventFlags} & meDoubleClick )
-    )
-    || ( $event->{what} == evKeyDown
-      && $event->{keyDown}{keyCode} == kbEnter )
-    )
-  {
+  if ( ( $event->{what} == evMouseDown 
+        && ( $event->{mouse}{eventFlags} & meDoubleClick ) )
+    || ( $event->{what} == evKeyDown 
+        && $event->{keyDown}{keyCode} == kbEnter )
+  ) {
     $self->endModal( cmOK );
     $self->clearEvent( $event );
-  } #/ if ( ( $event->{what} ...))
-  elsif (
-    ( $event->{what} == evKeyDown && $event->{keyDown}{keyCode} == kbEsc )
-    || ( $event->{what} == evCommand
-      && $event->{message}{command} == cmCancel )
-    )
-  {
+  }
+  elsif ( 
+       ( $event->{what} == evKeyDown && $event->{keyDown}{keyCode} == kbEsc )
+    || ( $event->{what} == evCommand && $event->{message}{command} == cmCancel )
+  ) {
     $self->endModal( cmCancel );
     $self->clearEvent( $event );
   }
@@ -166,7 +161,7 @@ sub historyWidth {    # $width ()
     $width = max( $width, $T );
   }
   return $width;
-} #/ sub historyWidth
+}
 
 1
 

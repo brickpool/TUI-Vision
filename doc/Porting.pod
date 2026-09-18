@@ -260,6 +260,7 @@ Lists and History
  TCalendarView      (missing)                    [ ]
  TColorDisplay      TUI::Gadgets::ColorDisplay   [x]
  TColorGroup        TUI::Gadgets::ColorGroup     [x]
+ TColorGroupList    TUI::Gadgets::ColorGroupList [x]
  TColorIndex        TUI::Gadgets::ColorGroup     [x]
  TColorItem         TUI::Gadgets::ColorItem      [x]
  TColorSelector     TUI::Gadgets::ColorSelector  [x]

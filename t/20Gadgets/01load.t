@@ -15,6 +15,7 @@ BEGIN {
   use_ok 'TUI::Gadgets::ColorGroup';
   use_ok 'TUI::Gadgets::ColorSelector';
   use_ok 'TUI::Gadgets::MonoSelector';
+  use_ok 'TUI::Gadgets::ColorGroupList';
 }
 
 isa_ok(
@@ -29,5 +30,7 @@ isa_ok( TColorGroup->new( name => 'group' ), TColorGroup() );
 isa_ok( TColorSelector->new( bounds => TRect->new(), selType => csBackground ), 
   TColorSelector() );
 isa_ok( TMonoSelector->new( bounds => TRect->new() ), TMonoSelector() );
+isa_ok( TColorGroupList->new( bounds => TRect->new(), scrollBar => undef, 
+  groups => undef ), TColorGroupList() );
 
 done_testing();

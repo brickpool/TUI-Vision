@@ -16,5 +16,6 @@ isa_ok( new_TColorItem( 'item', 0 ), TColorItem() );
 isa_ok( new_TColorGroup( 'group' ), TColorGroup() );
 isa_ok( new_TColorSelector( TRect->new(), csBackground ), TColorSelector() );
 isa_ok( new_TMonoSelector( TRect->new() ), TMonoSelector() );
+isa_ok( new_TColorGroupList( TRect->new(), undef, undef ), TColorGroupList() );
 
 done_testing();
