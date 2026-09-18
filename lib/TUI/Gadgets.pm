@@ -19,6 +19,7 @@ use TUI::Gadgets::ColorItem;
 use TUI::Gadgets::ColorSelector;
 use TUI::Gadgets::EventViewer;
 use TUI::Gadgets::HeapView;
+use TUI::Gadgets::MonoSelector;
 
 sub import {
   my $target = caller;
@@ -31,6 +32,7 @@ sub import {
   TUI::Gadgets::ColorSelector->import::into( $target );
   TUI::Gadgets::EventViewer->import::into( $target );
   TUI::Gadgets::HeapView->import::into( $target );
+  TUI::Gadgets::MonoSelector->import::into( $target );
 }
 
 sub unimport {
@@ -44,6 +46,7 @@ sub unimport {
   TUI::Gadgets::ColorSelector->unimport::out_of( $caller );
   TUI::Gadgets::EventViewer->unimport::out_of( $caller );
   TUI::Gadgets::HeapView->unimport::out_of( $caller );
+  TUI::Gadgets::MonoSelector->unimport::out_of( $caller );
 }
 
 1
