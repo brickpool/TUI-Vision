@@ -240,10 +240,12 @@ package MessageEvent {
 
   use PerlX::Assert::PP;
   use Hash::Util qw( lock_hash );
-  use Scalar::Util qw(
-    blessed
-    weaken
+  use Hash::Util::FieldHash qw(
+    id
+    id_2obj
+    register
   );
+  use Scalar::Util qw( blessed );
   use Tie::Hash;
 
   our %HAS = (
@@ -256,10 +258,10 @@ package MessageEvent {
     infoPtr => sub {
       my ( $this, $info ) = @_;
       if ( @_ > 1 ) {
-        $this->[1] = $info;
-        weaken $this->[1] if ref $info;
+        $this->[1] = id $info;
+        register $info if ref $info;
       }
-      $this->[1];
+      $this->[1] ? id_2obj $this->[1] : undef;
     },
     infoLong => sub {
       no warnings qw( uninitialized numeric );
@@ -315,15 +317,7 @@ package MessageEvent {
     my $clone = bless {}, $class;
     tie %$clone, $class;
     $clone->{command} = $self->{command};
-    if ( blessed $self->{infoPtr} && $self->{infoPtr}->can( 'clone' ) ) {
-      $clone->{infoPtr} = $self->{infoPtr}->clone();
-    }
-    elsif ( ref $self->{infoPtr} ) {
-      weaken( $clone->{infoPtr} = $self->{infoPtr} );
-    }
-    else {
-      $clone->{infoPtr} = $self->{infoPtr};
-    }
+    $clone->{infoInt} = $self->{infoInt};
     return $clone;
   }
 

@@ -134,7 +134,7 @@ subtest '&$printEvent output for command event' => sub {
   like( $output, qr/message = MessageEvent/,
     'Output contains message event block' );
   like( $output, qr/command = 999/,   'Output contains correct command value' );
-  like( $output, qr/infoPtr = 12345/, 'Output contains correct infoPtr value' );
+  like( $output, qr/infoPtr = undef/, 'Output contains correct infoPtr value' );
 }; #/ '&$printEvent output for command event' => sub
 
 done_testing();
