@@ -191,6 +191,22 @@ Lists and History
  TDirListBox        TUI::StdDlg::DirListBox      [x]
  TChDirDialog       TUI::StdDlg::ChDirDialog     [x]
 
+=head3 Color Selection Dialog
+
+ Class              Perl Module                   Status
+ ------------------ ----------------------------- ------
+ TColorDisplay      TUI::ColorSel::ColorDisplay   [x]
+ TColorGroup        TUI::ColorSel::ColorGroup     [x]
+ TColorGroupList    TUI::ColorSel::ColorGroupList [x]
+ TColorIndex        TUI::ColorSel::ColorGroup     [x]
+ TColorItem         TUI::ColorSel::ColorItem      [x]
+ TColorItemList     TUI::ColorSel::ColorItemList  [x]
+ TColorSelector     TUI::ColorSel::ColorSelector  [x]
+ TClockView         TUI::ColorSel::ClockView      [x]
+ TEventViewer       TUI::ColorSel::EventViewer    [x]
+ THeapView          TUI::ColorSel::HeapView       [x]
+ TMonoSelector      TUI::ColorSel::MonoSelector   [x]
+
 =head3 Menu System
 
  Class              Perl Module                  Status
@@ -258,19 +274,11 @@ Lists and History
  ------------------ ---------------------------- ------
  TCalcDisplay       (missing)                    [ ]
  TCalendarView      (missing)                    [ ]
- TColorDisplay      TUI::Gadgets::ColorDisplay   [x]
- TColorGroup        TUI::Gadgets::ColorGroup     [x]
- TColorGroupList    TUI::Gadgets::ColorGroupList [x]
- TColorIndex        TUI::Gadgets::ColorGroup     [x]
- TColorItem         TUI::Gadgets::ColorItem      [x]
- TColorItemList     TUI::Gadgets::ColorItemList  [x]
- TColorSelector     TUI::Gadgets::ColorSelector  [x]
  TClickTester       (missing)                    [ ]
  TClockView         TUI::Gadgets::ClockView      [x]
  TEventViewer       TUI::Gadgets::EventViewer    [x]
  THeapView          TUI::Gadgets::HeapView       [x]
  TLineCollection    (missing)                    [ ]
- TMonoSelector      TUI::Gadgets::MonoSelector   [x]
  TPuzzleView        (missing)                    [ ]
 
 =head2 Memory Management and Resource Handling

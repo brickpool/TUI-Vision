@@ -8,10 +8,10 @@ BEGIN {
   use_ok 'TUI::Objects::Rect';
   use_ok 'TUI::Drivers::Const', qw( evBroadcast );
   use_ok 'TUI::Drivers::Event';
-  use_ok 'TUI::Gadgets::Const', qw( cmSaveColorIndex );
-  use_ok 'TUI::Gadgets::ColorGroup';
-  use_ok 'TUI::Gadgets::ColorGroupList';
-  use_ok 'TUI::Gadgets::ColorItem';
+  use_ok 'TUI::ColorSel::Const', qw( cmSaveColorIndex );
+  use_ok 'TUI::ColorSel::ColorGroup';
+  use_ok 'TUI::ColorSel::ColorGroupList';
+  use_ok 'TUI::ColorSel::ColorItem';
   use_ok 'TUI::Views::ScrollBar';
 }
 

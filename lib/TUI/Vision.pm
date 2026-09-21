@@ -23,6 +23,7 @@ use TUI::MsgBox;
 use TUI::TextView;
 use TUI::Memory;
 use TUI::Validate;
+use TUI::ColorSel;
 use TUI::toolkit;
 
 sub import {
@@ -40,6 +41,7 @@ sub import {
   TUI::TextView->import::into( $target );
   TUI::Memory->import::into( $target );
   TUI::Validate->import::into( $target );
+  TUI::ColorSel->import::into( $target );
   TUI::toolkit->import::into( $target );
 }
 
@@ -58,6 +60,7 @@ sub unimport {
   TUI::TextView->unimport::out_of( $caller );
   TUI::Memory->unimport::out_of( $caller );
   TUI::Validate->unimport::out_of( $caller );
+  TUI::ColorSel->unimport::out_of( $caller );
   TUI::toolkit->unimport::out_of( $caller );
 }
 
@@ -76,7 +79,8 @@ TVision - Perl TUI Framework (Turbo Vision 2.0 Port)
   use TUI::Vision;
 
   # Imports the framework aggregators (Objects, App, Views, Dialogs,
-  # Menus, Drivers, Gadgets, StdDlg, MsgBox, TextView, Memory, Validate)
+  # Menus, Drivers, Gadgets, StdDlg, MsgBox, TextView, Memory, ColorSel, 
+  # Validate)
   # and the toolkit helpers into your package.
 
 =head1 DESCRIPTION

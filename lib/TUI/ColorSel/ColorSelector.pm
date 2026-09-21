@@ -1,4 +1,4 @@
-package TUI::Gadgets::ColorSelector;
+package TUI::ColorSel::ColorSelector;
 # ABSTRACT: interactive color selection view
 
 use 5.010;
@@ -30,7 +30,7 @@ use TUI::Drivers::Const qw(
   kbDown
 );
 use TUI::Drivers::Util qw( ctrlToArrow );
-use TUI::Gadgets::Const qw(
+use TUI::ColorSel::Const qw(
   :cmXXXX
   :csXXXX
 );
@@ -251,7 +251,7 @@ TColorSelector - interactive color selection view
 
 =head1 SYNOPSIS
 
-  use TUI::Gadgets;
+  use TUI::ColorSel;
 
   my $selector = TColorSelector->new(
     bounds  => $bounds,
@@ -274,7 +274,7 @@ C<cmColorForegroundChanged> or C<cmColorBackgroundChanged>, depending on the
 configured selection type.
 
 The class is typically used together with
-L<TColorDisplay|TUI::Gadgets::ColorDisplay> and other color dialog components.
+L<TColorDisplay|TUI::ColorSel::ColorDisplay> and other color dialog components.
 
 =head1 ATTRIBUTES
 
@@ -346,9 +346,9 @@ selection accordingly.
 
 =head1 SEE ALSO
 
-L<TColorDialog|TUI::Gadgets::ColorDialog>,
+L<TColorDialog|TUI::ColorSel::ColorDialog>,
 L<TView|TUI::Views::View>,
-L<TColorDisplay|TUI::Gadgets::ColorDisplay>
+L<TColorDisplay|TUI::ColorSel::ColorDisplay>
 
 =head1 AUTHORS
 

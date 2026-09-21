@@ -9,15 +9,15 @@ BEGIN {
   use_ok 'TUI::Drivers::Const', qw( evBroadcast );
   use_ok 'TUI::Drivers::Event';
   use_ok 'TUI::Drivers::ColorAttr';
-  use_ok 'TUI::Gadgets::Const', qw( :cmXXXX );
-  use_ok 'TUI::Gadgets::ColorDisplay';
+  use_ok 'TUI::ColorSel::Const', qw( :cmXXXX );
+  use_ok 'TUI::ColorSel::ColorDisplay';
 }
 
 {
   package MyColorDisplay;
 
   use TUI::toolkit;
-  extends 'TUI::Gadgets::ColorDisplay';
+  extends 'TUI::ColorSel::ColorDisplay';
 
   sub drawView  { ::pass 'drawView()' }
   sub writeLine { ::pass 'writeLine()' }

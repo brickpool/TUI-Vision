@@ -1,4 +1,4 @@
-package TUI::Gadgets::ColorGroupList;
+package TUI::ColorSel::ColorGroupList;
 # ABSTRACT: A list viewer for color groups
 
 use 5.010;
@@ -15,6 +15,7 @@ our @EXPORT = qw(
   new_TColorGroupList
 );
 
+use Carp ();
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
@@ -23,7 +24,7 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Drivers::Const qw( evBroadcast );
-use TUI::Gadgets::Const qw( 
+use TUI::ColorSel::Const qw( 
   cmNewColorItem
   cmSaveColorIndex
 );
@@ -124,8 +125,9 @@ sub focusItem {    # void ($item)
   $self->SUPER::focusItem( $item );
   my $curGroup = $self->{groups};
   $curGroup = $curGroup->{next}
-    while $item-- > 0;
-  message( $self->{owner}, evBroadcast, cmNewColorItem, $curGroup );
+    while $curGroup && $item-- > 0;
+  message( $self->{owner}, evBroadcast, cmNewColorItem, $curGroup )
+    if $curGroup;
   return;
 }
 
@@ -137,8 +139,8 @@ sub getText {    # void (\$dest, $item, $maxChars)
   my ( $self, $dest, $item, $maxChars ) = $sig->( @_ );
   my $curGroup = $self->{groups};
   $curGroup = $curGroup->{next}
-    while $item-- > 0;
-  $$dest = substr( $curGroup->{name}, 0, $maxChars );
+    while $curGroup && $item-- > 0;
+  $$dest = substr( $curGroup->{name}, 0, $maxChars ) if $curGroup;
   return;
 }
 
@@ -225,7 +227,7 @@ TColorGroupList - A list viewer for color groups
 
 =head1 SYNOPSIS
 
-  use TUI::Gadgets::ColorGroupList;
+  use TUI::ColorSel::ColorGroupList;
 
   my $groupList = TColorGroupList->new(
     bounds    => $bounds,
@@ -373,7 +375,7 @@ The method has no effect when the requested group does not exist.
 =head1 SEE ALSO
 
 L<TListViewer|TUI::Views::ListViewer>,
-L<TColorDialog|TUI::Gadgets::TColorDialog>
+L<TColorDialog|TUI::ColorSel::TColorDialog>
 
 =head1 AUTHORS
 

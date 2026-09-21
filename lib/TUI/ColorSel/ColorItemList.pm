@@ -1,4 +1,4 @@
-package TUI::Gadgets::ColorItemList;
+package TUI::ColorSel::ColorItemList;
 # ABSTRACT: A list viewer for color items
 
 use 5.010;
@@ -15,6 +15,7 @@ our @EXPORT = qw(
   new_TColorItemList
 );
 
+use Carp ();
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
@@ -23,11 +24,12 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Drivers::Const qw( evBroadcast );
-use TUI::Gadgets::Const qw( 
+use TUI::ColorSel::Const qw( 
   cmNewColorItem
+  cmNewColorIndex
   cmSaveColorIndex
 );
-use TUI::Gadgets::ColorGroup;
+use TUI::ColorSel::ColorGroup;
 use TUI::Views::ListViewer;
 use TUI::Views::Util qw( message );
 
@@ -96,8 +98,9 @@ sub focusItem {    # void ($item)
   message( $self->{owner}, evBroadcast, cmSaveColorIndex, $item );
   my $curItem = $self->{items};
   $curItem = $curItem->{next}
-    while $item-- > 0;
-  message( $self->{owner}, evBroadcast, cmNewColorItem, $curItem->{index} );
+    while $curItem && $item-- > 0;
+  message( $self->{owner}, evBroadcast, cmNewColorIndex, $curItem->{index} ) 
+    if $curItem;
   return;
 }
 
@@ -108,10 +111,9 @@ sub getText {    # void (\$dest, $item, $maxChars)
   );
   my ( $self, $dest, $item, $maxChars ) = $sig->( @_ );
   my $curItem = $self->{items};
-  assert ( is_Object $curItem );
   $curItem = $curItem->{next}
-    while $item-- > 0;
-  $$dest = substr( $curItem->{name}, 0, $maxChars );
+    while $curItem && $item-- > 0;
+  $$dest = substr( $curItem->{name}, 0, $maxChars ) if $curItem;
   return;
 }
 
@@ -167,7 +169,7 @@ TColorItemList - a list viewer for color items
 
 =head1 SYNOPSIS
 
-  use TUI::Gadgets::ColorItemList;
+  use TUI::ColorSel::ColorItemList;
 
   my $itemList = TColorItemList->new(
     bounds    => $bounds,
@@ -287,8 +289,8 @@ the saved item index of the group becomes the newly focused item.
 =head1 SEE ALSO
 
 L<TListViewer|TUI::Views::ListViewer>,
-L<TColorItem|TUI::Gadgets::ColorItem>,
-L<TColorGroup|TUI::Gadgets::ColorGroup>
+L<TColorItem|TUI::ColorSel::ColorItem>,
+L<TColorGroup|TUI::ColorSel::ColorGroup>
 
 =head1 AUTHORS
 

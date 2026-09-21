@@ -14,19 +14,19 @@ BEGIN {
     kbDown 
   );
   use_ok 'TUI::Drivers::Event';
-  use_ok 'TUI::Gadgets::Const', qw(
+  use_ok 'TUI::ColorSel::Const', qw(
     cmColorSet
     csForeground
     csBackground 
   );
-  use_ok 'TUI::Gadgets::ColorSelector';
+  use_ok 'TUI::ColorSel::ColorSelector';
 }
 
 {
   package MyColorSelector;
 
   use TUI::toolkit;
-  extends 'TUI::Gadgets::ColorSelector';
+  extends 'TUI::ColorSel::ColorSelector';
 
   sub drawView  { ::pass 'drawView()' }
   sub writeLine { ::pass 'writeLine()' }

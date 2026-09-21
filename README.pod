@@ -113,6 +113,8 @@ distribution:
 
 =item * Validation utilities (L<Validate|TUI::Validate>)
 
+=item * Color selection components (L<ColorSel|TUI::ColorSel>)
+
 =item * Unified OO L<toolkit|TUI::toolkit>
 
 =back

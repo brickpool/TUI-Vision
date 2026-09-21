@@ -4,8 +4,8 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TUI::Gadgets::ColorItem';
-  use_ok 'TUI::Gadgets::ColorGroup';
+  use_ok 'TUI::ColorSel::ColorItem';
+  use_ok 'TUI::ColorSel::ColorGroup';
 }
 
 my ( $group1, $group2, $group3 );

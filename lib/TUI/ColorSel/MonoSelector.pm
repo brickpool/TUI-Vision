@@ -1,4 +1,4 @@
-package TUI::Gadgets::MonoSelector;
+package TUI::ColorSel::MonoSelector;
 # ABSTRACT: A selector for monochrome attributes. 
 
 use 5.010;
@@ -16,13 +16,14 @@ our @EXPORT = qw(
   new_TMonoSelector
 );
 
+use Carp ();
 use TUI::toolkit;
 use TUI::toolkit::Types qw( :types );
 
 use TUI::Drivers::Const qw( evBroadcast );
 use TUI::Dialogs::Cluster;
 use TUI::Dialogs::StrItem;
-use TUI::Gadgets::Const qw( :cmXXXX );
+use TUI::ColorSel::Const qw( :cmXXXX );
 use TUI::Views::Util qw( message );
 
 sub TMonoSelector() { __PACKAGE__ }
@@ -159,7 +160,7 @@ TMonoSelector - monochrome attribute selector control
 
 =head1 SYNOPSIS
 
-  use TUI::Gadgets;
+  use TUI::ColorSel;
   use TUI::Objects;
 
   my $bounds = TRect->new(
@@ -293,9 +294,9 @@ Selects the specified monochrome attribute.
 
 =head1 SEE ALSO
 
-L<TColorDialog|TUI::Gadgets::ColorDialog>,
+L<TColorDialog|TUI::ColorSel::ColorDialog>,
 L<TCluster|TUI::Dialogs::Cluster>,
-L<TColorSelector|TUI::Gadgets::ColorSelector>
+L<TColorSelector|TUI::ColorSel::ColorSelector>
 
 =head1 AUTHORS
 

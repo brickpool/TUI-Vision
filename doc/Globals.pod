@@ -139,11 +139,13 @@ inventory.
   $autoDelay           TEventQueue            Auto-repeat start delay
   $autoTicks           TEventQueue            Auto-repeat tick counter
 
+  $bakText             TColorDialog           Color dialog background label
   $button              TCheckBoxes            Checkbox item pattern
   $button              TRadioButtons          Radio button item pattern
   $buttonCount         THWMouse               Number of detected mouse buttons
 
   $cancelText          MsgBoxText             Cancel button label
+  $cancelText          TColorDialog           Cancel button label
   $changeDirTitle      TChDirDialog           Dialog title text
   $checkSnow           TScreen                Snow check flag for screen output
   $chdirText           TChDirDialog           Change directory action label
@@ -151,6 +153,8 @@ inventory.
   $clearText           TFileDialog            Clear action label
   $closeIcon           TFrame                 Close window icon
   $commandSetChanged   TView                  Command set modified flag
+  $colors              TColorDialog           Color selection label
+  $colorText           TColorDialog           Color selection text label
   $confirmText         MsgBoxText             Confirmation dialog title
   $consoleMode         HardwareInfo::Win32    Current console mode flags
   $ctrlBreakHit        TSystemError           Ctrl-Break interrupt detected
@@ -183,10 +187,12 @@ inventory.
 
   $filesText           TFileDialog            Files section label
   $firstDir            TDirListBox            First directory tree element
+  $forText             TColorDialog           Foreground color label
   $frameChars          TFrame                 Frame drawing characters
   $frameChars          TMenuView              Menu frame drawing characters
 
   $graphics            TDirListBox            Directory tree graphics characters
+  $groupText           TColorDialog           Color group label
 
   $handlerInstalled    THWMouse               Mouse handler installed flag
   $helpText            TChDirDialog           Help label
@@ -204,6 +210,7 @@ inventory.
   $invalidDriveText    TFileDialog            Invalid drive message
   $invalidFileText     TFileDialog            Invalid file message
   $invalidText         TChDirDialog           Invalid directory message
+  $itemText            TColorDialog           Color item label
 
   $lastButtons         HardwareInfo::Termbox  Previous mouse button state
   $lastDir             TDirListBox            Last directory tree element
@@ -225,7 +232,9 @@ inventory.
 
   $okText              MsgBoxText             OK button label
   $okText              TChDirDialog           OK button label
+  $okText              TColorDialog           OK button label
   $okText              TFileDialog            OK button label
+
   $openText            TFileDialog            Open action label
   $ownerGroup          TGroup                 Current owner group reference
   $ownsConsole         HardwareInfo::Win32    Console ownership flag
@@ -254,6 +263,7 @@ inventory.
   $startupMode         TScreen                Startup screen mode
   $statusLine          TProgram               Status line reference
 
+  $textText            TColorDialog           Color preview label
   $tooManyFiles        TFileList              Too many files message
 
   $unZoomIcon          TFrame                 Unzoom window icon

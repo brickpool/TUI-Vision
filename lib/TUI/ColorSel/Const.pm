@@ -1,5 +1,5 @@
-package TUI::Gadgets::Const;
-# ABSTRACT: constants for gadget components
+package TUI::ColorSel::Const;
+# ABSTRACT: constants for the color dialog components
 
 use strict;
 use warnings;
@@ -15,7 +15,17 @@ our @EXPORT_OK = qw(
 
 our %EXPORT_TAGS = (
   cmXXXX => [qw(
-    cmFndEventView
+    cmColorForegroundChanged
+    cmColorBackgroundChanged
+    cmColorSet
+    cmNewColorItem
+    cmNewColorIndex
+    cmSaveColorIndex
+  )],
+
+  csXXXX => [qw(
+    csBackground
+    csForeground
   )],
 );
 
@@ -32,9 +42,20 @@ our %EXPORT_TAGS = (
       @EXPORT_OK;
 }
 
-# Constants for Gadgets events
+# Color command codes
 use constant {
-  cmFndEventView => 114,
+  cmColorForegroundChanged => 71,
+  cmColorBackgroundChanged => 72,
+  cmColorSet               => 73,
+  cmNewColorItem           => 74,
+  cmNewColorIndex          => 75,
+  cmSaveColorIndex         => 76,
+};
+
+# enum ColorSel
+use constant { 
+  csBackground => 0,
+  csForeground => 1,
 };
 
 1
@@ -45,34 +66,26 @@ __END__
 
 =head1 NAME
 
-TUI::Gadgets::Const - constants for gadget components
+TUI::ColorSel::Const - constants for color dialog components
 
 =head1 SYNOPSIS
 
-  use TUI::Gadgets::Const qw(:all);
+  use TUI::ColorSel::Const qw(:all);
 
   # or import specific constant groups
-  use TUI::Gadgets::Const qw(:cmXXXX);
+  use TUI::ColorSel::Const qw(:cmXXXX);
 
 =head1 DESCRIPTION
 
-C<TUI::Gadgets::Const> defines constants used by TVision gadget components.
-
-The constants in this module are grouped by purpose and exported via tag-based
-export groups. They are used by gadget views to identify commands and events
-specific to diagnostic and auxiliary user interface elements.
-
-This module only defines constants. The semantic meaning and practical usage of
-these constants is documented in the corresponding gadget modules.
+C<TUI::ColorSel::Const> defines constants used by TVision color selection 
+dialog components.
 
 =head1 CONSTANTS
 
-=head2 Gadget command constants (cmXXXX)
+=head2 Color selection command constants (cmXXXX)
 
-Command identifiers used by gadget components.
-
-These values are delivered via C<$event-E<gt>{command}> and are handled by
-gadget views such as event viewers and diagnostic tools.
+These constants represent the command codes used by the color selection dialog 
+components. 
 
 =head1 EXPORT TAGS
 
@@ -80,7 +93,9 @@ Constants are exported using the following tag-based export groups:
 
 =over
 
-=item * C<:cmXXXX> - gadget command identifiers
+=item * C<:cmXXXX> - color selection command identifiers
+
+=item * C<:csXXXX> - color selection constants
 
 =item * C<:all> - import all constants
 
@@ -88,9 +103,8 @@ Constants are exported using the following tag-based export groups:
 
 =head1 SEE ALSO
 
-L<Gadgets|TUI::Gadgets>,
-L<TEventViewer|TUI::Gadgets::EventViewer>,
-L<TEvent|TUI::Drivers::Event>
+L<ColorSel|TUI::ColorSel>,
+L<TColorDialog|TUI::ColorSel::ColorDialog>
 
 =head1 AUTHORS
 

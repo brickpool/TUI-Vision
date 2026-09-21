@@ -1,4 +1,4 @@
-package TUI::Gadgets::ColorGroup;
+package TUI::ColorSel::ColorGroup;
 # ABSTRACT: linked color group definition used by color selection dialogs
 
 use 5.010;
@@ -25,7 +25,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Gadgets::ColorItem;
+use TUI::ColorSel::ColorItem;
 
 struct TColorIndex => [
   groupIndex => '$',
@@ -168,7 +168,7 @@ TColorGroup - linked color group definition used by color selection dialogs
 
 =head1 SYNOPSIS
 
-  use TUI::Gadgets;
+  use TUI::ColorSel;
 
   my $items =
       TColorItem->new(
@@ -304,7 +304,7 @@ In both cases the head of the resulting structure is returned.
 =head1 SEE ALSO
 
 L<TColorItem|TUI::Dialogs::ColorItem>,
-L<TColorDialog|TUI::Gadgets::TColorDialog>
+L<TColorDialog|TUI::ColorSel::TColorDialog>
 
 =head1 AUTHORS
 

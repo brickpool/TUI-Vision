@@ -1,4 +1,4 @@
-package TUI::Gadgets::ColorDisplay;
+package TUI::ColorSel::ColorDisplay;
 # ABSTRACT: color preview view for the color selection dialog
 
 use 5.010;
@@ -17,13 +17,13 @@ our @EXPORT = qw(
 
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
-  is_Object
+  :is
   :types
 );
 
 use TUI::Drivers::Const qw( evBroadcast );
 use TUI::Drivers::ColorAttr;
-use TUI::Gadgets::Const qw( :cmXXXX );
+use TUI::ColorSel::Const qw( :cmXXXX );
 use TUI::Views::DrawBuffer;
 use TUI::Views::View;
 use TUI::Views::Util qw( message );
@@ -33,17 +33,6 @@ sub name() { 'TColorDisplay' }
 sub new_TColorDisplay { __PACKAGE__->from(@_) }
 
 extends TView;
-
-# declare global variables
-our $colors     = "Colors";
-our $groupText  = "~G~roup";
-our $itemText   = "~I~tem";
-our $forText    = "~F~oreground";
-our $bakText    = "~B~ackground";
-our $textText   = "Text ";
-our $colorText  = "Color";
-our $okText     = "O~K~";
-our $cancelText = "Cancel";
 
 # import global variables
 use vars qw(
@@ -142,10 +131,10 @@ sub handleEvent {    # void ($event)
 sub setColor {    # void ($aColor)
   state $sig = signature(
     method => Object,
-    pos    => [Object],
+    pos    => [sub { is_Object $_[0] or is_PositiveOrZeroInt $_[0] }],
   );
   my ( $self, $aColor ) = $sig->( @_ );
-  $self->{color} = $aColor;
+  $self->{color} = ref $aColor ? $aColor : TColorAttr->new( bios => $aColor );
   message( $self->{owner}, evBroadcast, cmColorSet, 0+ $self->{color} );
   $self->drawView();
   return;
@@ -169,7 +158,7 @@ TColorDisplay - color preview view for the color selection dialog
 
 =head1 SYNOPSIS
 
-  use TUI::Gadgets;
+  use TUI::ColorSel;
 
   my $view = TColorDisplay->new(
     bounds => $bounds,
@@ -270,9 +259,9 @@ The view broadcasts a C<cmColorSet> message and redraws itself.
 
 =head1 SEE ALSO
 
-L<TColorDialog|TUI::Gadgets::TColorDialog>,
+L<TColorDialog|TUI::ColorSel::TColorDialog>,
 L<TView|TUI::Views::View>,
-L<TColorSelector|TUI::Gadgets::ColorSelector>
+L<TColorSelector|TUI::ColorSel::ColorSelector>
 
 =head1 AUTHORS
 

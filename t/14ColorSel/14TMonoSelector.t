@@ -9,15 +9,15 @@ BEGIN {
   use_ok 'TUI::Objects::StringCollection';
   use_ok 'TUI::Drivers::Const', qw( evBroadcast );
   use_ok 'TUI::Drivers::Event';
-  use_ok 'TUI::Gadgets::Const', qw( cmColorSet );
-  use_ok 'TUI::Gadgets::MonoSelector';
+  use_ok 'TUI::ColorSel::Const', qw( cmColorSet );
+  use_ok 'TUI::ColorSel::MonoSelector';
 }
 
 # Mock class for testing purposes
 {
   package MyMonoSelector;
   use TUI::toolkit;
-  extends 'TUI::Gadgets::MonoSelector';
+  extends 'TUI::ColorSel::MonoSelector';
   sub drawView { ::pass 'drawView()' }
   $INC{'MyMonoSelector.pm'} = 1;
 }

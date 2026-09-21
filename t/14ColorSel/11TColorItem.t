@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TUI::Gadgets::ColorItem';
+  use_ok 'TUI::ColorSel::ColorItem';
 }
 
 my ( $item1, $item2, $item3 );

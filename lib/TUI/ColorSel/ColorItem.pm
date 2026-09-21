@@ -1,4 +1,4 @@
-package TUI::Gadgets::ColorItem;
+package TUI::ColorSel::ColorItem;
 # ABSTRACT: singly linked color item used by color dialog structures
 
 use 5.010;
@@ -233,7 +233,7 @@ multiple append operations to be chained.
 =head1 SEE ALSO
 
 L<TColorGroup|TUI::Dialogs::ColorGroup>,
-L<TColorDialog|TUI::Gadgets::TColorDialog>
+L<TColorDialog|TUI::ColorSel::TColorDialog>
 
 =head1 AUTHORS
 

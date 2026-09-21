@@ -46,6 +46,7 @@ throughout the framework:
   cm      Command constant        cmOk
   co      Collection codes        coOverflow
   cp      Color palettes          cpListViewer
+  cs      Color Enumeration       csBackground
   ct      Color types             ctBIOS
   dm      Drag mode               dmDragGrow
   ev      Event constant          evCommand
@@ -204,6 +205,18 @@ stored in a C<TColor> value.
   ctRGB      0x0002  24-bit RGB color
   ctXTerm    0x0003  XTerm 256-color palette index
   
+=head2 csXXXX
+
+Color selection constants
+
+The C<csXXXX> constants are used to specify color roles within the UI, such as 
+background and foreground colors.
+
+  Constant        Value   Usage
+  --------------- ------- ---------------------------------------------------
+  csBackground    0x0001  Background color
+  csForeground    0x0002  Foreground color
+
 =head2 dmXXXX
 
 Drag Mode constants
@@ -672,12 +685,15 @@ Use the constants from the table below when selecting Black & White, Color or
 Monochrome color palettes, or switching between 25 and 43- or 50 line display
 modes. 
 
-  Constant  Value   Usage
-  --------- ------- --------------------------------------------------
-  smBW80    0x0002  Black and white/gray scale
-  smCO80    0x0003  Color mode
-  smMono    0x0004  Monochrome mode
-  smFont8x8 0x0100  43 or 50 line modes
+  Constant    Value   Usage
+  ----------- ------- --------------------------------------------------
+  smBW80      0x0002  Black and white/gray scale
+  smCO80      0x0003  Color mode
+  smMono      0x0004  Monochrome mode
+  smFont8x8   0x0100  43 or 50 line modes
+  smColor256  0x0200  256-color mode
+  smColorHigh 0x0400  High color mode
+  smUpdate    0x8000  Update the screen immediately
 
 B<See>: C<< TScreen->setVideoMode >>, C<< TScreen->screenMode >>, 
 C<< TProgram->setScreenMode >>
