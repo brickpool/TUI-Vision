@@ -34,7 +34,7 @@ subtest 'TColorDisplay->new()' => sub {
   );
   isa_ok( $view, TColorDisplay );
   is( $view->{text}, 'Color', 'text initialized' );
-  isa_ok( $view->{color}, TColorAttr );
+  is( ref $view->{color}, 'SCALAR', 'color initialized as a scalar reference' );
 };
 
 subtest 'draw()' => sub {
@@ -44,14 +44,15 @@ subtest 'draw()' => sub {
 
 subtest 'setColor()' => sub {
   can_ok( $view, 'setColor' );
-  my $attr = TColorAttr->new( bios => 0x1E );
-  lives_ok { $view->setColor( $attr ) } 'setColor() does not die';
-  is( $view->{color}->asBIOS, 0x1E, 'color updated' );
+  my $color = 0x1E;
+  lives_ok { $view->setColor( \$color ) } 'setColor() does not die';
+  is( ${ $view->{color} }, 0x1E, 'color reference updated' );
 };
 
 subtest 'handleEvent() foreground' => sub {
   can_ok( $view, 'handleEvent' );
-  $view->{color} = TColorAttr->new( bios => 0x17 );
+  my $color = 0x17;
+  $view->setColor( \$color );
   my $event = TEvent->new(
     what    => evBroadcast,
     message => {
@@ -60,11 +61,12 @@ subtest 'handleEvent() foreground' => sub {
     },
   );
   lives_ok { $view->handleEvent( $event ) } 'foreground event does not die';
-  is( $view->{color}->asBIOS, 0x1A, 'foreground changed' );
+  is( $color, 0x1A, 'foreground changed in the referenced scalar' );
 };
 
 subtest 'handleEvent() background' => sub {
-  $view->{color} = TColorAttr->new( bios => 0x17 );
+  my $color = 0x17;
+  $view->setColor( \$color );
   my $event = TEvent->new(
     what    => evBroadcast,
     message => {
@@ -73,7 +75,7 @@ subtest 'handleEvent() background' => sub {
     },
   );
   lives_ok { $view->handleEvent( $event ) } 'background event does not die';
-  is( $view->{color}->asBIOS, 0x37, 'background changed' );
+  is( $color, 0x37, 'background changed in the referenced scalar' );
 };
 
 done_testing();

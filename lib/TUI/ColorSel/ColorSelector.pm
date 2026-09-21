@@ -107,9 +107,11 @@ sub draw {    # void ()
         my $c = $i * 4 + $j;
         $b->moveChar( $j * 3, $icon, $c, 3 );
         if ( $c == $self->{color} ) {
-          $b->putChar( $j * 3 + 1, 8 );
-          $b->putAttribute( $j * 3 + 1, 0x70 )
-            if $c == 0;
+          # We do not use the INVERSE BULLET "\x08" (U+25D8) character, but 
+          # rather BULLET "\x09" (U+25CB) and invert the color, since some 
+          # Unicode fonts display the character differently than IBM437.
+          $b->putChar( $j * 3 + 1, "\x09" );
+          $b->putAttribute( $j * 3 + 1, $c == 0 ? 0x07 : ( $c << 4 ) );
         }
       }
     }
@@ -137,12 +139,12 @@ sub handleEvent {    # void ($event)
       do {
         if ( $self->mouseInView( $event->{mouse}{where} ) ) {
           my $mouse = $self->makeLocal( $event->{mouse}{where} );
-          $self->{color} = $self->{mouse}{y} * 4 + int( $self->{mouse}{x} / 3 );
+          $self->{color} = $mouse->{y} * 4 + int( $mouse->{x} / 3 );
         }
         else {
           $self->{color} = $oldColor;
         }
-        $self->colorChanged();
+        $self->$colorChanged();
         $self->drawView();
       } while ( $self->mouseEvent( $event, evMouseMove ) );
       last;

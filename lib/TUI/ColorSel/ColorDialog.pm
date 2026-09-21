@@ -140,6 +140,13 @@ sub BUILD {    # void (\%args)
     groups    => $aGroups,
   );
   $self->insert( $self->{groups} );
+  $self->insert( 
+    TLabel->new(
+      bounds => TRect->new( ax => 3, ay => 2, bx => 10, by => 3 ),
+      text   => $groupText,
+      link   => $args->{groups},
+    )
+  );
 
   $sb = TScrollBar->new(
     bounds => TRect->new( ax => 59, ay => 3, bx => 60, by => 14 ),
@@ -262,7 +269,7 @@ sub handleEvent {    # void ($event)
     && $event->{message}{command} == cmNewColorItem;
   $self->SUPER::handleEvent( $event );
   $self->{display}->setColor( 
-    $self->{pal}->[ $event->{message}{infoByte} ]
+    \( $self->{pal}->[ $event->{message}{infoByte} ] )
   ) if $event->{what} == evBroadcast
     && $event->{message}{command} == cmNewColorIndex;
   return;
@@ -278,9 +285,9 @@ sub setData {    # void (\@rec)
 
   $self->setIndexes( $colorIndexes );
   $self->{display}->setColor(
-    $self->{pal}->[
+    \( $self->{pal}->[
       $self->{groups}->getGroupIndex( $self->{groupIndex} ) 
-    ]
+    ] )
   );
   $self->{groups}->focusItem( $self->{groupIndex} );
   if ( $showMarkers ) {

@@ -273,7 +273,7 @@ TDrawBuffer - temporary line buffer for screen output
 
   use TUI::Views;
 
-  my $buffer = TDrawBuffer->new;
+  my $buffer = TDrawBuffer->new();
 
   $buffer->moveStr(
     0,

@@ -141,6 +141,7 @@ inventory.
 
   $bakText             TColorDialog           Color dialog background label
   $button              TCheckBoxes            Checkbox item pattern
+  $button              TMonoSelector          Button item pattern
   $button              TRadioButtons          Radio button item pattern
   $buttonCount         THWMouse               Number of detected mouse buttons
 
@@ -197,12 +198,14 @@ inventory.
   $handlerInstalled    THWMouse               Mouse handler installed flag
   $helpText            TChDirDialog           Help label
   $hChars              TScrollBar             Horizontal scrollbar characters
-  $hiResScreen         TScreen                High resolution screen flag
+  $highlight           TMonoSelector          Highlighted text attribute
   $hintSeparator       TStatusLine            Hint separator text
+  $hiResScreen         TScreen                High resolution screen flag
   $historyBlock        HistList               History storage reference
   $historySize         HistList               Initial history size
   $historyUsed         HistList               Used history entries count
 
+  $icon                TColorSelector         Color selector icon
   $icon                THistory               History indicator icon
   $informationText     MsgBoxText             Information dialog title
   $initFrame           TFrame                 Frame initialization table
@@ -210,6 +213,7 @@ inventory.
   $invalidDriveText    TFileDialog            Invalid drive message
   $invalidFileText     TFileDialog            Invalid file message
   $invalidText         TChDirDialog           Invalid directory message
+  $inverse             TMonoSelector          Inverse text attribute
   $itemText            TColorDialog           Color item label
 
   $lastButtons         HardwareInfo::Termbox  Previous mouse button state
@@ -228,7 +232,9 @@ inventory.
   $mouseRangeX         THWMouse               Maximum mouse X coordinate 
   $mouseRangeY         THWMouse               Maximum mouse Y coordinate
   $mouseReverse        TEventQueue            Reversed mouse buttons flag
+
   $noMouse             THWMouse               Mouse hardware unavailable flag
+  $normal              TMonoSelector          Normal text attribute
 
   $okText              MsgBoxText             OK button label
   $okText              TChDirDialog           OK button label
@@ -266,6 +272,7 @@ inventory.
   $textText            TColorDialog           Color preview label
   $tooManyFiles        TFileList              Too many files message
 
+  $underline           TMonoSelector          Underlined text attribute
   $unZoomIcon          TFrame                 Unzoom window icon
 
   $vChars              TScrollBar             Vertical scrollbar characters
@@ -273,6 +280,7 @@ inventory.
   $validUnsignedChars  TRangeValidator        Validator unsigned numeric pattern
 
   $warningText         MsgBoxText             Warning dialog title
+
   $zoomIcon            TFrame                 Zoom window icon
 
 =head1 SEE ALSO

@@ -44,7 +44,7 @@ use vars qw(
 }
 
 # protected attributes
-has color => ( is => 'ro', default => sub { TColorAttr->new() } );
+has color => ( is => 'ro', default => sub { my $color = 0; \$color } );
 has text  => ( is => 'ro', default => sub { die 'required' } );
 
 sub BUILDARGS {    # \%args (%args)
@@ -91,13 +91,13 @@ sub draw {    # void ()
     pos    => [],
   );
   my ( $self ) = $sig->( @_ );
-  my $c = 0+ $self->{color};
+  my $c = 0 + ${ $self->{color} };
   my $b = TDrawBuffer->new();
   $c = $errorAttr 
     if $c == 0;
   my $len = length( $self->{text} );
-  for ( my $i = 0; $i <= $self->{size}{x} / $len; $i++ ) {
-    $b->moveStr( $i + $len, $self->{text}, $c );
+  for ( my $i = 0; $i <= int( $self->{size}{x} / $len ); $i++ ) {
+    $b->moveStr( $i * $len, $self->{text}, $c );
   }
   $self->writeLine( 0, 0, $self->{size}{x}, $self->{size}{y}, $b );
   return;
@@ -114,12 +114,28 @@ sub handleEvent {    # void ($event)
   if ( $event->{what} == evBroadcast ) {
     switch: for ( $event->{message}{command} ) {
       case: cmColorBackgroundChanged == $_ and do {
-        $self->{color}->setBackground( $event->{message}{infoByte} & 0xf );
+        if ( ref ${ $self->{color} } ) {
+          ${ $self->{color} }->setBackground(
+            $event->{message}{infoByte} & 0xf
+          );
+        }
+        else {
+          ${ $self->{color} } = ( ${ $self->{color} } & 0x0f )
+            | ( ( $event->{message}{infoByte} & 0xf ) << 4 );
+        }
         $self->drawView();
         last;
       };
       case: cmColorForegroundChanged == $_ and do {
-        $self->{color}->setForeground( $event->{message}{infoByte} & 0xf );
+        if ( ref ${ $self->{color} } ) {
+          ${ $self->{color} }->setForeground(
+            $event->{message}{infoByte} & 0xf
+          );
+        }
+        else {
+          ${ $self->{color} } = ( ${ $self->{color} } & 0xf0 )
+            | ( $event->{message}{infoByte} & 0xf );
+        }
         $self->drawView();
         last;
       };
@@ -128,14 +144,14 @@ sub handleEvent {    # void ($event)
   return;
 }
 
-sub setColor {    # void ($aColor)
+sub setColor {    # void (\$aColor)
   state $sig = signature(
     method => Object,
-    pos    => [sub { is_Object $_[0] or is_PositiveOrZeroInt $_[0] }],
+    pos    => [ScalarRef],
   );
   my ( $self, $aColor ) = $sig->( @_ );
-  $self->{color} = ref $aColor ? $aColor : TColorAttr->new( bios => $aColor );
-  message( $self->{owner}, evBroadcast, cmColorSet, 0+ $self->{color} );
+  $self->{color} = $aColor;
+  message( $self->{owner}, evBroadcast, cmColorSet, 0 + $$aColor );
   $self->drawView();
   return;
 }
@@ -251,9 +267,10 @@ and updates the displayed color accordingly.
 
 =head2 setColor
 
-  $view->setColor($color);
+  $view->setColor(\$color);
 
-Sets the current color attribute.
+Sets a reference to the current color attribute. Foreground and background
+selection events update the referenced palette entry directly.
 
 The view broadcasts a C<cmColorSet> message and redraws itself.
 

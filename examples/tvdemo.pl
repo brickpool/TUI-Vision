@@ -19,6 +19,7 @@ use TUI::App;
 use TUI::Views;
 use TUI::Dialogs;
 use TUI::Gadgets;
+use TUI::ColorSel;
 
 use TUI::toolkit;
 
@@ -29,14 +30,17 @@ extends TApplication;
 # Constants for TVDemo events
 use constant {
   cmAboutCmd     => 100,
+  cmColorCmd     => 109,
   cmEventViewCmd => 112,
   cmVideoMode    => 2002,
 };
 
 # Constants for TVDemo help
 use constant {
-  hcSystem => 7,
-  hcSAbout => 8,
+  hcSystem       => 7,
+  hcSAbout       => 8,
+  hcOptions      => 26,
+  hcOCColorsDBox => 39,
 };
 
 has heap  => ( is => 'bare' );    # Heap view
@@ -185,8 +189,12 @@ sub initMenuBar {
       new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 
         "Alt-0" );
 
+  my $sub4 =
+    new_TSubMenu( "~O~ptions", 0, hcOptions ) +
+      new_TMenuItem( "~C~olor...", cmColorCmd, kbNoKey, hcOCColorsDBox );
+
   $r->{b}{y} = $r->{a}{y} + 1;
-  return new_TMenuBar( $r, $sub1 );
+  return new_TMenuBar( $r, $sub1 + $sub4 );
 }
 
 #
@@ -208,6 +216,11 @@ sub handleEvent {
 
       cmEventViewCmd == $_ and do {    #  Open Event Viewer
         $self->eventViewer();
+        last;
+      };
+
+      cmColorCmd == $_ and do {        #  Color control dialog box
+        $self->colors();
         last;
       };
 
@@ -246,6 +259,136 @@ sub aboutDlgBox {
   $self->executeDialog( $aboutBox );
   return;
 } #/ sub aboutDlgBox
+
+#
+# Color Control Dialog Box function
+#
+
+my $palette;
+sub getPalette {
+  $palette //= $_[0]->SUPER::getPalette();
+  return $palette;
+}
+sub setPalette {
+  $palette = $_[1]->clone();
+  return;
+}
+
+sub colors {
+  my ( $self ) = @_;
+  my $group1 =
+    new_TColorGroup( "Desktop" ) +
+      new_TColorItem( "Color",             1 )+
+
+    new_TColorGroup( "Menus") +
+      new_TColorItem( "Normal",            2 )+
+      new_TColorItem( "Disabled",          3 )+
+      new_TColorItem( "Shortcut",          4 )+
+      new_TColorItem( "Selected",          5 )+
+      new_TColorItem( "Selected disabled", 6 )+
+      new_TColorItem( "Shortcut selected", 7
+    );
+
+  my $group2 =
+    new_TColorGroup( "Dialogs/Calc") +
+      new_TColorItem( "Frame/background",  33 )+
+      new_TColorItem( "Frame icons",       34 )+
+      new_TColorItem( "Scroll bar page",   35 )+
+      new_TColorItem( "Scroll bar icons",  36 )+
+      new_TColorItem( "Static text",       37 )+
+
+      new_TColorItem( "Label normal",      38 )+
+      new_TColorItem( "Label selected",    39 )+
+      new_TColorItem( "Label shortcut",    40
+    );
+
+  my $item_coll1 =
+    new_TColorItem( "Button normal",     41 )+
+    new_TColorItem( "Button default",    42 )+
+    new_TColorItem( "Button selected",   43 )+
+    new_TColorItem( "Button disabled",   44 )+
+    new_TColorItem( "Button shortcut",   45 )+
+    new_TColorItem( "Button shadow",     46 )+
+    new_TColorItem( "Cluster normal",    47 )+
+    new_TColorItem( "Cluster selected",  48 )+
+    new_TColorItem( "Cluster shortcut",  49
+  );
+
+  my $item_coll2 =
+    new_TColorItem( "Input normal",      50 )+
+    new_TColorItem( "Input selected",    51 )+
+    new_TColorItem( "Input arrow",       52 )+
+
+    new_TColorItem( "History button",    53 )+
+    new_TColorItem( "History sides",     54 )+
+    new_TColorItem( "History bar page",  55 )+
+    new_TColorItem( "History bar icons", 56 )+
+
+    new_TColorItem( "List normal",       57 )+
+    new_TColorItem( "List focused",      58 )+
+    new_TColorItem( "List selected",     59 )+
+    new_TColorItem( "List divider",      60 )+
+
+    new_TColorItem( "Information pane",  61
+  );
+
+  $group2 = $group2 + $item_coll1 + $item_coll2;
+
+  my $group3 =
+    new_TColorGroup( "Viewer") +
+      new_TColorItem( "Frame passive",      8 )+
+      new_TColorItem( "Frame active",       9 )+
+      new_TColorItem( "Frame icons",       10 )+
+      new_TColorItem( "Scroll bar page",   11 )+
+      new_TColorItem( "Scroll bar icons",  12 )+
+      new_TColorItem( "Text",              13 )+
+    new_TColorGroup( "Puzzle" )+
+      new_TColorItem( "Frame passive",      8 )+
+      new_TColorItem( "Frame active",       9 )+
+      new_TColorItem( "Frame icons",       10 )+
+      new_TColorItem( "Scroll bar page",   11 )+
+      new_TColorItem( "Scroll bar icons",  12 )+
+      new_TColorItem( "Normal text",       13 )+
+      new_TColorItem( "Highlighted text",  14
+    );
+
+
+  my $group4 =
+    new_TColorGroup( "Calendar") +
+      new_TColorItem( "Frame passive",     16 )+
+      new_TColorItem( "Frame active",      17 )+
+      new_TColorItem( "Frame icons",       18 )+
+      new_TColorItem( "Scroll bar page",   19 )+
+      new_TColorItem( "Scroll bar icons",  20 )+
+      new_TColorItem( "Normal text",       21 )+
+      new_TColorItem( "Current day",       22 )+
+
+    new_TColorGroup( "Ascii table") +
+      new_TColorItem( "Frame passive",     24 )+
+      new_TColorItem( "Frame active",      25 )+
+      new_TColorItem( "Frame icons",       26 )+
+      new_TColorItem( "Scroll bar page",   27 )+
+      new_TColorItem( "Scroll bar icons",  28 )+
+      new_TColorItem( "Text",              29
+    );
+
+
+  my $group5 = $group1 + $group2 + $group3 + $group4;
+
+  my $c = new_TColorDialog( undef, $group5 );
+
+  if ( $self->validView( $c ) ) {
+    $c->helpCtx( hcOCColorsDBox );    # set context help constant
+    $c->setData( [ $self->getPalette() ] );
+    my $r = $deskTop->execView( $c );
+    if ( $r != cmCancel ) {
+      $self->setPalette( $c->pal );
+      $self->setScreenMode( $TUI::Drivers::Screen::screenMode );
+    }
+    $self->destroy( $c );
+  }
+  return;
+}
 
 #
 # Event Viewer function
