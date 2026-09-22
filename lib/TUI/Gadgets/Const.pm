@@ -11,13 +11,21 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 use Exporter 'import';
 
 our @EXPORT_OK = qw(
+  maxLineLength
 );
 
 our %EXPORT_TAGS = (
   cmXXXX => [qw(
     cmFndEventView
   )],
+
+  hlXXXX => [qw(
+    hlChangeDir
+  )],
+
 );
+
+use TUI::StdDlg::Const qw( cmChangeDir );
 
 # add all the other %EXPORT_TAGS ":class" tags to the ":all" class and
 # @EXPORT_OK, deleting duplicates
@@ -37,6 +45,16 @@ use constant {
   cmFndEventView => 114,
 };
 
+# History id for the change directory dialog
+use constant {
+  hlChangeDir => cmChangeDir,
+};
+
+# Maximum line length inside TFileViewer
+use constant {
+  maxLineLength => 256,
+};
+
 1
 
 __END__
@@ -49,10 +67,10 @@ TUI::Gadgets::Const - constants for gadget components
 
 =head1 SYNOPSIS
 
-  use TUI::Gadgets::Const qw(:all);
+  use TUI::Gadgets::Const qw( :all );
 
   # or import specific constant groups
-  use TUI::Gadgets::Const qw(:cmXXXX);
+  use TUI::Gadgets::Const qw( :cmXXXX );
 
 =head1 DESCRIPTION
 
@@ -74,6 +92,13 @@ Command identifiers used by gadget components.
 These values are delivered via C<$event-E<gt>{command}> and are handled by
 gadget views such as event viewers and diagnostic tools.
 
+=head2 History identifiers for dialogs (hlXXXX)
+
+History identifiers used by gadget dialogs.
+
+These values are used to track the history of user interactions within dialogs, 
+such as the change directory dialog.
+
 =head1 EXPORT TAGS
 
 Constants are exported using the following tag-based export groups:
@@ -81,6 +106,8 @@ Constants are exported using the following tag-based export groups:
 =over
 
 =item * C<:cmXXXX> - gadget command identifiers
+
+=item * C<:hlXXXX> - history identifiers for dialogs
 
 =item * C<:all> - import all constants
 

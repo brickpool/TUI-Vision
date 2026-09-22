@@ -14,7 +14,10 @@ use TUI::Gadgets::Const;
 use TUI::Gadgets::PrintConstants;
 use TUI::Gadgets::ClockView;
 use TUI::Gadgets::EventViewer;
+use TUI::Gadgets::FileViewer;
+use TUI::Gadgets::FileWindow;
 use TUI::Gadgets::HeapView;
+use TUI::Gadgets::LineCollection;
 
 sub import {
   my $target = caller;
@@ -22,7 +25,10 @@ sub import {
   TUI::Gadgets::PrintConstants->import::into( $target );
   TUI::Gadgets::ClockView->import::into( $target );
   TUI::Gadgets::EventViewer->import::into( $target );
+  TUI::Gadgets::FileViewer->import::into( $target );
+  TUI::Gadgets::FileWindow->import::into( $target );
   TUI::Gadgets::HeapView->import::into( $target );
+  TUI::Gadgets::LineCollection->import::into( $target );
 }
 
 sub unimport {
@@ -31,7 +37,10 @@ sub unimport {
   TUI::Gadgets::PrintConstants->unimport::out_of( $caller );
   TUI::Gadgets::ClockView->unimport::out_of( $caller );
   TUI::Gadgets::EventViewer->unimport::out_of( $caller );
+  TUI::Gadgets::FileViewer->unimport::out_of( $caller );
+  TUI::Gadgets::FileWindow->unimport::out_of( $caller );
   TUI::Gadgets::HeapView->unimport::out_of( $caller );
+  TUI::Gadgets::LineCollection->unimport::out_of( $caller );
 }
 
 1
@@ -98,8 +107,17 @@ A live clock widget.
 =item * L<TEventViewer|TUI::Gadgets::EventViewer> -
 A real-time event inspection tool.
 
+=item * L<TFileViewer|TUI::Gadgets::FileViewer> -
+A widget for viewing file contents.
+
+=item * L<TFileWindow|TUI::Gadgets::FileWindow> -
+A window containing a TFileViewer widget.
+
 =item * L<THeapView|TUI::Gadgets::HeapView> -
 A memory usage visualization widget.
+
+=item * L<TLineCollection|TUI::Gadgets::LineCollection> -
+A collection of lines for use in various gadgets.
 
 =back
 

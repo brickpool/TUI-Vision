@@ -82,6 +82,7 @@ my @Titles = (
 );
 
 sub messageBox {    # $command ($msg|$aOptions, $aOptions|$fmt, @list)
+  no warnings 'uninitialized';
   assert ( @_ >= 2 );
   my $r = TRect->new( ax => 0, ay => 0, bx => 40, by => 9 );
   $r->move(
@@ -149,7 +150,7 @@ sub messageBoxRect {    # $command ($r, $msg|$aOptions, $aOptions|$fmt, @list)
 
   $dialog->selectNext( false );
 
-  $ccode = $application->execView( $dialog );
+  $ccode = $application ? $application->execView( $dialog ) : cmCancel;
 
   TObject->destroy( $dialog );
 

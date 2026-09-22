@@ -31,25 +31,63 @@ extends TApplication;
 # Constants for TVDemo events
 use constant {
   cmAboutCmd     => 100,
+  cmPuzzleCmd    => 101,
+  cmCalendarCmd  => 102,
+  cmAsciiCmd     => 103,
+  cmCalcCmd      => 104,
+  cmOpenCmd      => 105,
   cmChDirCmd     => 106,
+  cmDOS_Cmd      => 107,
+  cmMouseCmd     => 108,
   cmColorCmd     => 109,
+  cmSaveCmd      => 110,
+  cmRestoreCmd   => 111,
   cmEventViewCmd => 112,
   cmVideoMode    => 2002,
 };
 
 # Constants for TVDemo help
 use constant {
-  hcFCChDirDBox  => 37,
-  hcFChangeDir   => 15,
-  hcFExit        => 17,
-  hcFile         => 13,
-  hcOCColorsDBox => 39,
-  hcOptions      => 26,
-  hcSAbout       => 8,
-  hcSystem       => 7,
+  hcAsciiTable      => 6,
+  hcCalculator      => 4,
+  hcCalendar        => 5,
+  hcCancelBtn       => 35,
+  hcFCChDirDBox     => 37,
+  hcFChangeDir      => 15,
+  hcFDosShell       => 16,
+  hcFExit           => 17,
+  hcFOFileOpenDBox  => 31,
+  hcFOFiles         => 33,
+  hcFOName          => 32,
+  hcFOOpenBtn       => 34,
+  hcFOpen           => 14,
+  hcFile            => 13,
+  hcNocontext       => 0,
+  hcOCColorsDBox    => 39,
+  hcOColors         => 28,
+  hcOMMouseDBox     => 38,
+  hcOMouse          => 27,
+  hcORestoreDesktop => 30,
+  hcOSaveDesktop    => 29,
+  hcOpenBtn         => 36,
+  hcOptions         => 26,
+  hcPuzzle          => 3,
+  hcSAbout          => 8,
+  hcSAsciiTable     => 11,
+  hcSCalculator     => 12,
+  hcSCalendar       => 10,
+  hcSPuzzle         => 9,
+  hcSystem          => 7,
+  hcViewer          => 2,
+  hcWCascade        => 22,
+  hcWClose          => 25,
+  hcWNext           => 23,
+  hcWPrevious       => 24,
+  hcWSizeMove       => 19,
+  hcWTile           => 21,
+  hcWZoom           => 20,
+  hcWindows         => 18,
 };
-
-use constant hlChangeDir => cmChangeDir;
 
 has heap  => ( is => 'bare' );    # Heap view
 has clock => ( is => 'bare' );    # Clock view
@@ -170,46 +208,12 @@ sub initStatusLine {
 }
 
 #
-# idle() function ( updates heap and clock views for this program. )
+# Tile function
 #
 
-sub idle {
-  my $self = shift;
-  $self->SUPER::idle();
-  $self->{clock}->update();
-  $self->{heap}->update();
+sub tile {
+  $deskTop->tile( $deskTop->getExtent() );
   return;
-}
-
-#
-# Menubar initialization.
-#
-
-sub initMenuBar {
-  my ( $class, $r ) = @_;
-  
-  my $sub1 = 
-    new_TSubMenu( "~\360~", 0, hcSystem ) +
-      new_TMenuItem( "~V~ideo mode", cmVideoMode, kbNoKey, hcNoContext, "" ) +
-      newLine() +
-      new_TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
-      newLine() +
-      new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 
-        "Alt-0" );
-
-  my $sub2 =
-    new_TSubMenu( "~F~ile", 0, hcFile ) +
-#      new_TMenuItem( "~O~pen...", cmOpenCmd, kbF3, hcFOpen, "F3" ) +
-      new_TMenuItem( "~C~hange Dir...", cmChDirCmd, kbNoKey, hcFChangeDir ) +
-      newLine() +
-      new_TMenuItem( "E~x~it", cmQuit, kbAltX, hcFExit, "Alt-X" );
-
-  my $sub4 =
-    new_TSubMenu( "~O~ptions", 0, hcOptions ) +
-      new_TMenuItem( "~C~olor...", cmColorCmd, kbNoKey, hcOCColorsDBox );
-
-  $r->{b}{y} = $r->{a}{y} + 1;
-  return new_TMenuBar( $r, $sub1 + $sub2 + $sub4 );
 }
 
 #
@@ -234,8 +238,23 @@ sub handleEvent {
         last;
       };
 
+      cmOpenCmd == $_ and do {         #  View a file
+        $self->openFile("*.*");
+        last;
+      };
+
       cmChDirCmd == $_ and do {        #  Change directory
         $self->changeDir();
+        last;
+      };
+
+      cmTile == $_ and do {            #  Tile current file windows
+        $self->tile();
+        last;
+      };
+
+      cmCascade == $_ and do {         #  Cascade current file windows
+        $self->cascade();
         last;
       };
 
@@ -279,6 +298,15 @@ sub aboutDlgBox {
   $self->executeDialog( $aboutBox );
   return;
 } #/ sub aboutDlgBox
+
+#
+# Cascade function
+#
+
+sub cascade {
+  $deskTop->cascade( $deskTop->getExtent() );
+  return;
+}
 
 #
 # Change Directory function
@@ -425,6 +453,26 @@ sub colors {
 }
 
 #
+# File Viewer function
+#
+
+sub openFile {
+  my ( $self, $fileSpec ) = @_;
+  my $d = $self->validView(
+    new_TFileDialog( $fileSpec, "Open a File", "~N~ame", fdOpenButton, 100 ) );
+  if ( $d && $deskTop->execView( $d ) != cmCancel ) {
+    my $fileName;
+    $d->getFileName( $fileName );
+    $d->helpCtx( hcFOFileOpenDBox );
+    my $w = $self->validView( new_TFileWindow( $fileName ) );
+    $deskTop->insert( $w )
+      if $w;
+  }
+  $self->destroy( $d );
+  return;
+}
+
+#
 # Event Viewer function
 #
 
@@ -448,6 +496,75 @@ sub printEvent {
     $viewer->print( $event );
   }
   return;
+}
+
+#
+# isTileable() function ( checks a view on desktop is tileable or not )
+#
+
+my $isTileable = sub {
+  return shift->options & ofTileable != 0;
+};
+
+#
+# idle() function ( updates heap and clock views for this program. )
+#
+
+sub idle {
+  my $self = shift;
+  $self->SUPER::idle();
+  $self->{clock}->update();
+  $self->{heap}->update();
+  if ( $deskTop->firstThat( $isTileable, 0 ) ) {
+    $self->enableCommand( cmTile );
+    $self->enableCommand( cmCascade );
+  }
+  else {
+    $self->disableCommand( cmTile );
+    $self->disableCommand( cmCascade );
+  }
+  return;
+}
+
+#
+# Menubar initialization.
+#
+
+sub initMenuBar {
+  my ( $class, $r ) = @_;
+  
+  my $sub1 = 
+    new_TSubMenu( "~\360~", 0, hcSystem ) +
+      new_TMenuItem( "~V~ideo mode", cmVideoMode, kbNoKey, hcNoContext, "" ) +
+      newLine() +
+      new_TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
+      newLine() +
+      new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 
+        "Alt-0" );
+
+  my $sub2 =
+    new_TSubMenu( "~F~ile", 0, hcFile ) +
+      new_TMenuItem( "~O~pen...", cmOpenCmd, kbF3, hcFOpen, "F3" ) +
+      new_TMenuItem( "~C~hange Dir...", cmChDirCmd, kbNoKey, hcFChangeDir ) +
+      newLine() +
+      new_TMenuItem( "E~x~it", cmQuit, kbAltX, hcFExit, "Alt-X" );
+
+  my $sub3 =
+    new_TSubMenu( "~W~indows", 0, hcWindows ) +
+      new_TMenuItem( "~R~esize/move", cmResize, kbCtrlF5, hcWSizeMove, 
+        "Ctrl-F5" ) +
+      new_TMenuItem( "~Z~oom", cmZoom, kbF5, hcWZoom, "F5" ) +
+      new_TMenuItem( "~N~ext", cmNext, kbF6, hcWNext, "F6" ) +
+      new_TMenuItem( "~C~lose", cmClose, kbAltF3, hcWClose, "Alt-F3" ) +
+      new_TMenuItem( "~T~ile", cmTile, kbNoKey, hcWTile ) +
+      new_TMenuItem( "C~a~scade", cmCascade, kbNoKey, hcWCascade );
+
+  my $sub4 =
+    new_TSubMenu( "~O~ptions", 0, hcOptions ) +
+      new_TMenuItem( "~C~olors...", cmColorCmd, kbNoKey, hcOColors );
+
+  $r->{b}{y} = $r->{a}{y} + 1;
+  return new_TMenuBar( $r, $sub1 + $sub2 + $sub3 + $sub4 );
 }
 
 package main; 
