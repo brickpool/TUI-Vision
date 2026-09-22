@@ -31,6 +31,7 @@ use TUI::Drivers::Const qw(
   evCommand
 );
 use TUI::Objects::Point;
+use TUI::Objects::Rect;
 use TUI::Views::Const qw(
   :cmXXXX
   :gfXXXX
@@ -124,7 +125,7 @@ my $doCascade = sub {    # void ($p, $r)
   assert ( is_Object $p );
   assert ( is_Object $r );
   if ( $p->$Tileable() && $cascadeNum >= 0 ) {
-    my $NR = $r;
+    my $NR = $r->clone();
     $NR->{a}{x} += $cascadeNum;
     $NR->{a}{y} += $cascadeNum;
     $p->locate( $NR );
