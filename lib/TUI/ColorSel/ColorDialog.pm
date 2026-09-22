@@ -203,7 +203,7 @@ sub BUILD {    # void (\%args)
   $self->{monoSel}->hide();
   $self->insert( $self->{monoSel} );
   $self->{monoLabel} = TLabel->new(
-    bounds => TRect->new( ax => 62, ay => 2, bx => 69, by => 7 ), 
+    bounds => TRect->new( ax => 62, ay => 2, bx => 77, by => 3 ), 
     text   => $colorText, 
     link   => $self->{monoSel},
   );

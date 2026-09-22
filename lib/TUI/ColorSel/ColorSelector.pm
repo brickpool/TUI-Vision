@@ -107,10 +107,10 @@ sub draw {    # void ()
         my $c = $i * 4 + $j;
         $b->moveChar( $j * 3, $icon, $c, 3 );
         if ( $c == $self->{color} ) {
-          # We do not use the INVERSE BULLET "\x08" (U+25D8) character, but 
-          # rather BULLET "\x09" (U+25CB) and invert the color, since some 
+          # We do not use the INVERSE BULLET "\x8" (U+25D8) character, but 
+          # rather BULLET "\x7" (U+2022) and invert the color, since some 
           # Unicode fonts display the character differently than IBM437.
-          $b->putChar( $j * 3 + 1, "\x09" );
+          $b->putChar( $j * 3 + 1, "\x7" );
           $b->putAttribute( $j * 3 + 1, $c == 0 ? 0x07 : ( $c << 4 ) );
         }
       }

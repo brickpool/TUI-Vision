@@ -266,11 +266,11 @@ sub aboutDlgBox {
 
 my $palette;
 sub getPalette {
-  $palette //= $_[0]->SUPER::getPalette();
-  return $palette;
+  $palette->[$TUI::App::Program::appPalette] //= $_[0]->SUPER::getPalette();
+  return $palette->[$TUI::App::Program::appPalette];
 }
 sub setPalette {
-  $palette = $_[1]->clone();
+  $palette->[$TUI::App::Program::appPalette] = $_[1]->clone();
   return;
 }
 
@@ -380,8 +380,7 @@ sub colors {
   if ( $self->validView( $c ) ) {
     $c->helpCtx( hcOCColorsDBox );    # set context help constant
     $c->setData( [ $self->getPalette() ] );
-    my $r = $deskTop->execView( $c );
-    if ( $r != cmCancel ) {
+    if ( $deskTop->execView( $c ) != cmCancel ) {
       $self->setPalette( $c->pal );
       $self->setScreenMode( $TUI::Drivers::Screen::screenMode );
     }

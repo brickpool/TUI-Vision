@@ -127,6 +127,7 @@ sub press {    # void ($item)
   );
   my ( $self, $item ) = $sig->( @_ );
   $self->{value} = $monoColors[$item];
+  $self->newColor();
   return;
 }
 

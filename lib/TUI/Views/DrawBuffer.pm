@@ -166,7 +166,7 @@ sub moveChar {    # void ($indent, $c|undef, $attr|undef, $count)
   $count = min( $count, max( scalar( @$self ) - $indent, 0 ) );
 
   if ( defined $attr ) {
-    $attr = $attr->$coerceAttr();
+    $attr = $attr->$coerceAttr();    # only for performance
     if ( defined $c ) {
       for ( 1 .. $count ) {
         with: for ( $self->[ $dest++ ] ) {
@@ -252,6 +252,26 @@ sub moveStr {    # $num ($indent, $str, $attr|undef)
       for split //, $str;
   }
   return $count;
+}
+
+sub dump {    # $str (|$maxLength)
+  state $sig = signature(
+    method => Object,
+    pos    => [
+      PositiveOrZeroInt, { default => 5 },
+    ],
+  );
+  my ( $self, $maxLength ) = $sig->( @_ );
+  no warnings 'once';
+  require Data::Dumper;
+  my $str = Data::Dumper::Dumper( [
+    map { sprintf( '%d:%s', 
+      $_->attribute()->toBIOS(), 
+      $_->character()->getText()
+    ) } @$self[ 0 .. $maxLength - 1 ]
+  ] );
+  $str =~ s/(^|\s)\$VAR\d+\b/$1'$self'/g;
+  return $str;
 }
 
 1
