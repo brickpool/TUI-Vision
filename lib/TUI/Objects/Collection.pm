@@ -235,13 +235,6 @@ Removes the specified item from the collection and frees it.
 
 Frees all items in the collection and clears it.
 
-=head2 freeItem
-
-  $collection->freeItem($item);
-
-Frees a single item. This method may be overridden by subclasses to customize
-item disposal.
-
 =head2 indexOf
 
   my $index = $collection->indexOf($item | undef);

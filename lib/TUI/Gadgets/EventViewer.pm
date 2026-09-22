@@ -125,7 +125,7 @@ $init = sub {    # void ($bufSize)
   return;
 }; #/ sub $init
 
-sub from {    # $evntview ($bounds, aBufSize)
+sub from {    # $eventView ($bounds, aBufSize)
   state $sig = signature(
     method => 1,
     pos    => [Object, PositiveOrZeroInt],

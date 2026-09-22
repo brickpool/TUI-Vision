@@ -13,7 +13,7 @@ WriteMakefile1(
   VERSION_FROM      => 'lib/TUI/Vision.pm',
   ABSTRACT          => 'Perl TUI Framework (Turbo Vision 2.0 Port)',
   LICENSE           => 'mit',
-  MIN_PERL_VERSION  => '5.010',
+  MIN_PERL_VERSION  => '5.014',
   EXE_FILES         => ['bin/overview.pl'],
 
   CONFIGURE_REQUIRES  => {

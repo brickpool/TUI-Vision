@@ -146,18 +146,18 @@ sub toBIOS {    # $bios ($isForeground)
   my ( $self, $isForeground ) = @_;
   assert ( blessed $self );
 
-  switch: for ( $self->$type ) {
-    case: ctBIOS == $_ and 
+  SWITCH: for ( $self->$type ) {
+    ctBIOS == $_ and 
       return $self->asBIOS();
-    case: ctRGB == $_ and
+    ctRGB == $_ and
       return RGBtoBIOS( $self->asRGB() );
-    case: ctXTerm == $_ and do {
+    ctXTerm == $_ and do {
       my $idx = $self->asXTerm();
       $idx = XTerm256toXTerm16( $idx )
         if $idx >= 16;
       return XTerm16toBIOS( $idx );
     };
-    default: {
+    DEFAULT: {
       return $isForeground ? 0x7 : 0x0;
     }
   }

@@ -130,8 +130,8 @@ sub handleEvent {    # void ($event)
     assert ( is_Object $g );
     my $curItem;
     my $i = 0;
-    switch: for ( $event->{message}{command} ) {
-      case: cmNewColorItem == $_ and do {
+    SWITCH: for ( $event->{message}{command} ) {
+      cmNewColorItem == $_ and do {
         $curItem = $self->{items} = $g->{items};
         while ( $curItem ) {
           $curItem = $curItem->{next};
@@ -142,7 +142,7 @@ sub handleEvent {    # void ($event)
         $self->drawView();
         last;
       };
-      default: {
+      DEFAULT: {
         last;
       }
     }

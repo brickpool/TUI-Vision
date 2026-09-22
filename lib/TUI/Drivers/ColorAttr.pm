@@ -370,8 +370,8 @@ sub lshift {    # $result ($shift)
 
 sub and {
   my ( $self, $c ) = @_;
-  assert( blessed $self );
-  assert( blessed $c or looks_like_number $c );
+  assert ( blessed $self );
+  assert ( blessed $c or looks_like_number $c );
   my $lhs = $self->asBIOS();
   my $rhs = ref $c ? $c->asBIOS() : $c;
   my $class = ref $self;
@@ -380,8 +380,8 @@ sub and {
 
 sub or {
   my ( $self, $c ) = @_;
-  assert( blessed $self );
-  assert( blessed $c or looks_like_number $c );
+  assert ( blessed $self );
+  assert ( blessed $c or looks_like_number $c );
   my $lhs = $self->asBIOS();
   my $rhs = ref $c ? $c->asBIOS() : $c;
   my $class = ref $self;

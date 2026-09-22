@@ -112,8 +112,8 @@ sub handleEvent {    # void ($event)
   my ( $self, $event ) = $sig->( @_ );
   $self->SUPER::handleEvent( $event );
   if ( $event->{what} == evBroadcast ) {
-    switch: for ( $event->{message}{command} ) {
-      case: cmColorBackgroundChanged == $_ and do {
+    SWITCH: for ( $event->{message}{command} ) {
+      cmColorBackgroundChanged == $_ and do {
         if ( ref ${ $self->{color} } ) {
           ${ $self->{color} }->setBackground(
             $event->{message}{infoByte} & 0xf
@@ -126,7 +126,7 @@ sub handleEvent {    # void ($event)
         $self->drawView();
         last;
       };
-      case: cmColorForegroundChanged == $_ and do {
+      cmColorForegroundChanged == $_ and do {
         if ( ref ${ $self->{color} } ) {
           ${ $self->{color} }->setForeground(
             $event->{message}{infoByte} & 0xf

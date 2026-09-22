@@ -315,14 +315,14 @@ $wildcardMatch = sub {    # $bool ($wildcard, $filename)
     my $wc = substr $wildcard, pos( $wildcard ), 1;
     pos( $wildcard )++;
 
-    switch: for ( $wc ) {
-      case: $_ eq '?' and do {
+    SWITCH: for ( $wc ) {
+      $_ eq '?' and do {
         return false
           if $filename eq '';
         substr $filename, 0, 1, '';
         last;
       };
-      case: $_ eq '*' and do {
+      $_ eq '*' and do {
         return true
           if pos( $wildcard ) == length $wildcard;
 
@@ -334,7 +334,7 @@ $wildcardMatch = sub {    # $bool ($wildcard, $filename)
 
         return false;
       };
-      default: {
+      DEFAULT: {
         return false
           if $filename eq '';
         return false

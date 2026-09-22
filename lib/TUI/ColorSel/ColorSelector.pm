@@ -134,8 +134,8 @@ sub handleEvent {    # void ($event)
 
   my $oldColor = $self->{color};
   my $maxCol = $self->{selType} == csBackground ? 7 : 15;
-  switch: for ( $event->{what} ) {
-    case: evMouseDown == $_ and do {
+  SWITCH: for ( $event->{what} ) {
+    evMouseDown == $_ and do {
       do {
         if ( $self->mouseInView( $event->{mouse}{where} ) ) {
           my $mouse = $self->makeLocal( $event->{mouse}{where} );
@@ -149,9 +149,9 @@ sub handleEvent {    # void ($event)
       } while ( $self->mouseEvent( $event, evMouseMove ) );
       last;
     };
-    case: evKeyDown == $_ and do {
-      switch: for ( ctrlToArrow( $event->{keyDown}{keyCode} ) ) {
-        case: kbLeft == $_ and do {
+    evKeyDown == $_ and do {
+      SWITCH: for ( ctrlToArrow( $event->{keyDown}{keyCode} ) ) {
+        kbLeft == $_ and do {
           if ( $self->{color} > 0 ) {
             $self->{color}--;
           }
@@ -160,7 +160,7 @@ sub handleEvent {    # void ($event)
           }
           last;
         };
-        case: kbRight == $_ and do {
+        kbRight == $_ and do {
           if ( $self->{color} < $maxCol ) {
             $self->{color}++;
           }
@@ -169,7 +169,7 @@ sub handleEvent {    # void ($event)
           }
           last;
         };
-        case: kbUp == $_ and do {
+        kbUp == $_ and do {
           if ( $self->{color} > width- 1 ) {
             $self->{color} -= width;
           }
@@ -181,7 +181,7 @@ sub handleEvent {    # void ($event)
           }
           last;
         };
-        case: kbDown == $_ and do {
+        kbDown == $_ and do {
           if ( $self->{color} < $maxCol - ( width- 1 ) ) {
             $self->{color} += width;
           }
@@ -193,13 +193,13 @@ sub handleEvent {    # void ($event)
           }
           last;
         };
-        default: {
+        DEFAULT: {
           return;
         }
-      } #/ switch: for ( ctrlToArrow( $event...))
+      } #/ SWITCH: for ( ctrlToArrow( $event...))
       last;
     };
-    case: evBroadcast == $_ and do {
+    evBroadcast == $_ and do {
       if ( $event->{message}{command} == cmColorSet ) {
         if ( $self->{selType} == csBackground ) {
           $self->{color} = $event->{message}{infoByte} >> 4;
@@ -214,7 +214,7 @@ sub handleEvent {    # void ($event)
         return;
       }
     };
-    default: {
+    DEFAULT: {
       return;
     }
   }
