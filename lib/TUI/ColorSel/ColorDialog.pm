@@ -357,7 +357,7 @@ __END__
 
 TUI::ColorSel::ColorDialog - Common dialog box for selecting colors
 
-=head1 INHERITANCE
+=head1 HIERARCHY
 
   TObject
     TView

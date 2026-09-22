@@ -188,7 +188,7 @@ sub draw {    # void ()
     $l = max( 0, $l );
     $r = min( $self->{size}{x} - 2, $r );
     if ( $l < $r ) {
-      $b->moveChar( $l + 1, 0, $self->getColor( 3 ), $r - $l );
+      $b->moveChar( $l + 1, undef, $self->getColor( 3 ), $r - $l );
     }
   } #/ if ( ( $self->{state} ...))
   $self->writeLine( 0, 0, $self->{size}{x}, $self->{size}{y}, $b );

@@ -20,6 +20,7 @@ use TUI::Views;
 use TUI::Dialogs;
 use TUI::Gadgets;
 use TUI::ColorSel;
+use TUI::StdDlg;
 
 use TUI::toolkit;
 
@@ -30,6 +31,7 @@ extends TApplication;
 # Constants for TVDemo events
 use constant {
   cmAboutCmd     => 100,
+  cmChDirCmd     => 106,
   cmColorCmd     => 109,
   cmEventViewCmd => 112,
   cmVideoMode    => 2002,
@@ -37,11 +39,17 @@ use constant {
 
 # Constants for TVDemo help
 use constant {
-  hcSystem       => 7,
-  hcSAbout       => 8,
-  hcOptions      => 26,
+  hcFCChDirDBox  => 37,
+  hcFChangeDir   => 15,
+  hcFExit        => 17,
+  hcFile         => 13,
   hcOCColorsDBox => 39,
+  hcOptions      => 26,
+  hcSAbout       => 8,
+  hcSystem       => 7,
 };
+
+use constant hlChangeDir => cmChangeDir;
 
 has heap  => ( is => 'bare' );    # Heap view
 has clock => ( is => 'bare' );    # Clock view
@@ -189,12 +197,19 @@ sub initMenuBar {
       new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 
         "Alt-0" );
 
+  my $sub2 =
+    new_TSubMenu( "~F~ile", 0, hcFile ) +
+#      new_TMenuItem( "~O~pen...", cmOpenCmd, kbF3, hcFOpen, "F3" ) +
+      new_TMenuItem( "~C~hange Dir...", cmChDirCmd, kbNoKey, hcFChangeDir ) +
+      newLine() +
+      new_TMenuItem( "E~x~it", cmQuit, kbAltX, hcFExit, "Alt-X" );
+
   my $sub4 =
     new_TSubMenu( "~O~ptions", 0, hcOptions ) +
       new_TMenuItem( "~C~olor...", cmColorCmd, kbNoKey, hcOCColorsDBox );
 
   $r->{b}{y} = $r->{a}{y} + 1;
-  return new_TMenuBar( $r, $sub1 + $sub4 );
+  return new_TMenuBar( $r, $sub1 + $sub2 + $sub4 );
 }
 
 #
@@ -216,6 +231,11 @@ sub handleEvent {
 
       cmEventViewCmd == $_ and do {    #  Open Event Viewer
         $self->eventViewer();
+        last;
+      };
+
+      cmChDirCmd == $_ and do {        #  Change directory
+        $self->changeDir();
         last;
       };
 
@@ -259,6 +279,21 @@ sub aboutDlgBox {
   $self->executeDialog( $aboutBox );
   return;
 } #/ sub aboutDlgBox
+
+#
+# Change Directory function
+#
+
+sub changeDir {
+  my ( $self ) = @_;
+  my $d = $self->validView( new_TChDirDialog( 0, hlChangeDir ) );
+  if ( $d ) {
+    $d->helpCtx( hcFCChDirDBox );
+    $deskTop->execView( $d );
+    $self->destroy( $d );
+  }
+  return;
+}
 
 #
 # Color Control Dialog Box function
