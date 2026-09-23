@@ -223,6 +223,7 @@ inventory.
   $leftArrow           TInputLine             Left overflow indicator
 
   $markers             TButton                Button marker characters
+  $maxHeapSize         TUI::Memory            Maximum total cache entries
   $menuBar             TProgram               Menu bar reference
   $middleDir           TDirListBox            Middle directory tree element
   $minWinSize          TWindow                Minimum window size

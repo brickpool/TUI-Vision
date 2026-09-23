@@ -21,6 +21,7 @@ use TUI::Dialogs;
 use TUI::Gadgets;
 use TUI::ColorSel;
 use TUI::StdDlg;
+use TUI::MsgBox;
 
 use TUI::toolkit;
 
@@ -449,6 +450,16 @@ sub colors {
     }
     $self->destroy( $c );
   }
+  return;
+}
+
+#
+# "Out of Memory" function ( called by validView() )
+#
+
+sub outOfMemory {
+  messageBox( "Not enough memory available to complete operation.",
+    mfError | mfOKButton );
   return;
 }
 

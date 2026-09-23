@@ -51,7 +51,7 @@ use TUI::Menus::MenuBar;
 use TUI::Menus::StatusDef;
 use TUI::Menus::StatusItem;
 use TUI::Menus::StatusLine;
-use TUI::Memory::Util qw( lowMemory );
+use TUI::Memory qw( lowMemory );
 use TUI::Objects::Point;
 use TUI::Objects::Rect;
 use TUI::Views::Const qw( 

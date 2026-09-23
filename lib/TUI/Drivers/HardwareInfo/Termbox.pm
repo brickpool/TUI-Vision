@@ -51,6 +51,10 @@ use TUI::Drivers::Colors qw(
   XTerm256toXTerm16
 );
 use TUI::Drivers::ScreenCell;
+use TUI::Memory qw(
+  disposeCache
+  newCache
+);
 use TUI::Views::Const qw( cmScreenChanged );
 
 # -------------------------------------------------------------------------
@@ -222,9 +226,7 @@ my (
 );
 
 # Attribute conversion
-my %TB_ATTR;
-my @TB_ATTR_FIFO;
-my $TB_ATTR_LIMIT = 512;
+my $TB_ATTR;
 my (
   $convertColor,
   $convertNoColor,
@@ -252,62 +254,65 @@ sub resume {     # void ($class)
   my ( $class ) = @_;
   assert ( @_ == 1 );
   assert ( $class and !ref $class );
-  unless ( $initialized ) {
-    # https://github.com/neovim/neovim/issues/36635
-    $ENV{TERM} //= 'xterm-256color' if $^O eq 'MSWin32';
 
-    # Initialize Termbox and set the input/output modes.
-    my $err = tb_init();
-    return if $err != TB_OK;
-    $err = tb_set_input_mode( TB_INPUT_ALT | TB_INPUT_MOUSE );
-    return if $err != TB_OK;
-    $outputMode = $class->getColorCount() >= 16
-                ? TB_OUTPUT_256 
-                : TB_OUTPUT_NORMAL;
-    $err = tb_set_output_mode( $outputMode );
-    return if $err != TB_OK;
-    my $cols = tb_width();
-    return if $cols <= 0;
-    my $rows = tb_height();
-    return if $rows <= 0;
+  return if $initialized;
+  newCache( $TB_ATTR, 256 );
 
-    @lastSize = ( $cols, $rows );
+  # https://github.com/neovim/neovim/issues/36635
+  $ENV{TERM} //= 'xterm-256color' if $^O eq 'MSWin32';
 
-    # NOTE: The following workaround for detecting a single TB_KEY_ESC relies 
-    # on deprecated function tb_set_func() and Termbox::PP internals. 
-    # The tb_set_func() API itself is backend-independent, but the access to 
-    # raw input buffer is currently only available in the PP backend.
-    if ( PERL_ONLY ) {
-      no warnings 'deprecated';
-      $err = tb_set_func( TB_FUNC_EXTRACT_PRE, sub {
-        my ( $event, $consumed_ref ) = @_;
+  # Initialize Termbox and set the input/output modes.
+  my $err = tb_init();
+  return if $err != TB_OK;
+  $err = tb_set_input_mode( TB_INPUT_ALT | TB_INPUT_MOUSE );
+  return if $err != TB_OK;
+  $outputMode = $class->getColorCount() >= 16
+              ? TB_OUTPUT_256 
+              : TB_OUTPUT_NORMAL;
+  $err = tb_set_output_mode( $outputMode );
+  return if $err != TB_OK;
+  my $cols = tb_width();
+  return if $cols <= 0;
+  my $rows = tb_height();
+  return if $rows <= 0;
 
-        state $esc_seen_at;
-        if ( $Termbox::global->{inbuf} eq "\e" ) {
-          my $now = int(( time() - $BASETIME ) * 1000);
-          $esc_seen_at //= $now;
-          my $elapsed = $now - $esc_seen_at;
+  @lastSize = ( $cols, $rows );
 
-          return TB_ERR_NEED_MORE
-            if $elapsed < ESC_WAIT_DELAY;
+  # NOTE: The following workaround for detecting a single TB_KEY_ESC relies 
+  # on deprecated function tb_set_func() and Termbox::PP internals. 
+  # The tb_set_func() API itself is backend-independent, but the access to 
+  # raw input buffer is currently only available in the PP backend.
+  if ( PERL_ONLY ) {
+    no warnings 'deprecated';
+    $err = tb_set_func( TB_FUNC_EXTRACT_PRE, sub {
+      my ( $event, $consumed_ref ) = @_;
 
-          $$consumed_ref = 1;
+      state $esc_seen_at;
+      if ( $Termbox::global->{inbuf} eq "\e" ) {
+        my $now = int(( time() - $BASETIME ) * 1000);
+        $esc_seen_at //= $now;
+        my $elapsed = $now - $esc_seen_at;
 
-          $event->{type} = TB_EVENT_KEY;
-          $event->{mod}  = TB_NONE;
-          $event->{key}  = TB_KEY_ESC;
-          $event->{ch}   = 0;
+        return TB_ERR_NEED_MORE
+          if $elapsed < ESC_WAIT_DELAY;
 
-          $esc_seen_at = undef;
-          return TB_OK;
-        }
+        $$consumed_ref = 1;
+
+        $event->{type} = TB_EVENT_KEY;
+        $event->{mod}  = TB_NONE;
+        $event->{key}  = TB_KEY_ESC;
+        $event->{ch}   = 0;
+
         $esc_seen_at = undef;
-        return TB_ERR;
-      });
-      return tb_strerror( $err ) if $err != TB_OK;
-    }
-    $initialized = true;
+        return TB_OK;
+      }
+      $esc_seen_at = undef;
+      return TB_ERR;
+    });
+    return tb_strerror( $err ) if $err != TB_OK;
   }
+
+  $initialized = true;
   return;
 }
 
@@ -318,21 +323,24 @@ END {
 sub suspend {    # void ($class)
   assert ( @_ == 1 );
   assert ( $_[0] and !ref $_[0] );
-  if ( $initialized ) {
-    # Restore the cursor style on exit
-    # https://unix.stackexchange.com/q/697650
-    {
-      my $term = $ENV{TERM} // '';
-      if ( $term eq 'linux' ) {
-        tb_send( $_ = "\x1B[?0c", bytes::length( $_ ) );
-      } elsif ( $term ) {
-        tb_send( $_ = "\x1B[0 q", bytes::length( $_ ) );
-      }
+
+  return unless $initialized;
+
+  # Restore the cursor style on exit
+  # https://unix.stackexchange.com/q/697650
+  {
+    my $term = $ENV{TERM} // '';
+    if ( $term eq 'linux' ) {
+      tb_send( $_ = "\x1B[?0c", bytes::length( $_ ) );
+    } elsif ( $term ) {
+      tb_send( $_ = "\x1B[0 q", bytes::length( $_ ) );
     }
-    tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) if PERL_ONLY;
-    tb_shutdown();
-    $initialized = false;
   }
+  tb_set_func( TB_FUNC_EXTRACT_PRE, undef ) if PERL_ONLY;
+  tb_shutdown();
+
+  disposeCache( $TB_ATTR );
+  $initialized = false;
   return;
 }
 
@@ -515,7 +523,7 @@ sub setScreenMode {       # void ($class, $mode)
   }
 
   # Clear the attribute cache, since the color mapping has changed.
-  %TB_ATTR = @TB_ATTR_FIFO = ();
+  %$TB_ATTR = ();
 
   # Save the current output state
   $screenMode = $mode;
@@ -545,30 +553,6 @@ sub screenWrite {         # void ($class, $x, $y, $buf, $len)
   assert ( looks_like_number $len );
   assert ( $initialized );
 
-  q|*
-  # Attribute cache statistics (for debugging purposes)
-  state $last         = time;
-  state $tbAttrHits   = 0;
-  state $tbAttrMisses = 0;
-  if ( time != $last ) {
-    my $total = $tbAttrHits + $tbAttrMisses;
-    my $msg = sprintf(
-      "TB_ATTR: %u entries, %.1f%% hits",
-      scalar( keys %TB_ATTR ),
-      $total ? 100 * $tbAttrHits / $total : 0,
-    );
-    if ( $^O eq 'MSWin32' ) {
-      require Win32;
-      Win32::OutputDebugString( $msg );
-    }
-    else {
-      warn "$msg\n";
-    }
-
-    $last = time;
-  }
-  *| if 0;
-
   for ( my $i = 0 ; $i < $len ; ++$i, ++$x ) {
     my $cell = $buf->[$i];
     my $character = $cell->[0];
@@ -583,21 +567,13 @@ sub screenWrite {         # void ($class, $x, $y, $buf, $len)
     #     $attribute->getForeground->$convertColor( true ),
     #     $attribute->getBackground->$convertColor( false ),
     #   ];
-    my $attr;
-    if ( exists $TB_ATTR{$$attribute} ) {
-		  # ++$tbAttrHits;    # Increment the cache hit counter
-      $attr = $TB_ATTR{$$attribute};
-    }
-    else {
-      # ++$tbAttrMisses;  # Increment the cache miss counter
+    my $attr = $TB_ATTR->{$$attribute};
+    unless ( $attr ) {
       $attr = [
         $attribute->getForeground->$convertColor( true ),
         $attribute->getBackground->$convertColor( false ),
       ];
-      $TB_ATTR{$$attribute} = $attr;
-      push @TB_ATTR_FIFO, $$attribute;
-      delete $TB_ATTR{ shift @TB_ATTR_FIFO }
-        if @TB_ATTR_FIFO > $TB_ATTR_LIMIT;
+      $TB_ATTR->{$$attribute} = $attr;
     }
 
     tb_set_cell( $x, $y, $ch, @$attr );
