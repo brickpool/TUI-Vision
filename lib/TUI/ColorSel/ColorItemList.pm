@@ -127,11 +127,11 @@ sub handleEvent {    # void ($event)
   $self->SUPER::handleEvent( $event );
   if ( $event->{what} == evBroadcast ) {
     my $g = $event->{message}{infoPtr};
-    assert ( is_Object $g );
     my $curItem;
     my $i = 0;
     SWITCH: for ( $event->{message}{command} ) {
       cmNewColorItem == $_ and do {
+        assert ( is_Object $g );
         $curItem = $self->{items} = $g->{items};
         while ( $curItem ) {
           $curItem = $curItem->{next};

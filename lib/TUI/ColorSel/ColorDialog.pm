@@ -144,7 +144,7 @@ sub BUILD {    # void (\%args)
     TLabel->new(
       bounds => TRect->new( ax => 3, ay => 2, bx => 10, by => 3 ),
       text   => $groupText,
-      link   => $args->{groups},
+      link   => $self->{groups},
     )
   );
 
