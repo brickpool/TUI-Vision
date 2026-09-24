@@ -43,23 +43,12 @@ use vars qw(
   *screenWidth  = \${ TScreen . '::screenWidth' };
 }
 
-# The following subroutine was ported from the framework
-# "A modern port of Turbo Vision 2.0", which is licensed under MIT licence.
-#
-# Copyright 2019-2021 by magiblot <magiblot@hotmail.com>
-#
-# I<drivers.cpp>
-#
-my $allocData = sub {    # \@data ()
-  assert ( @_ == 0 );
-  # This makes it possible to create TDrawBuffers for screens wider than 
-  # 'maxViewWidth'. 
-  # We must take the greatest of the screen's dimensions, because we cannot 
-  # assume that 'screenWidth > screenHeight' and TDrawBuffer can also be used 
-  # to draw vertical views (e.g. TScrollBar).
-  # In addition, give some room for views that might exceed the screen size.
-  my $len = max( 8 + max( $screenWidth, $screenHeight ), maxViewWidth );
-  return [ map { TScreenCell->new() } 1 .. $len ];
+my $getBufferLength = sub {    # $num ()
+	assert ( @_ == 0 );
+	return max(
+		8 + max( $screenWidth, $screenHeight ),
+		maxViewWidth,
+	);
 };
 
 # macro for coercing a value into a TColorAttr object
@@ -78,8 +67,7 @@ sub new {    # $obj ()
     pos    => [],
   );
   my ( $class ) = $sig->( @_ );
-  my $self  = &$allocData();
-  return bless $self, $class;
+  return bless [], $class;
 }
 
 sub from {    # $obj ()
@@ -95,7 +83,9 @@ sub putAttribute {    # void ($indent, $attr)
     ],
   );
   my ( $self, $indent, $attr ) = $sig->( @_ );
-  $self->[$indent]->attribute( $attr );
+  assert ( $indent < &$getBufferLength() );
+  my $cell = $self->[$indent] //= TScreenCell->new();
+  $cell->attribute( $attr );
   return;
 }
 
@@ -106,7 +96,9 @@ sub putChar {    # void ($indent, $ch)
   );
   my ( $self, $indent, $ch ) = $sig->( @_ );
   assert ( length $ch );
-  $self->[$indent]->character( $ch );
+  assert ( $indent < &$getBufferLength() );
+  my $cell = $self->[$indent] //= TScreenCell->new();
+  $cell->character( $ch );
   return;
 }
 
@@ -121,29 +113,28 @@ sub moveBuf {    # void ($indent, \@source, $attr|undef, $count)
     ],
   );
   my ( $self, $indent, $source, $attr, $count ) = $sig->( @_ );
+  assert ( $indent + $count <= &$getBufferLength() );
 
   if ( defined $attr ) {
     $attr = $attr->$coerceAttr();
     for ( my $i = 0 ; $i < $count ; $i++ ) {
       my $c = $source->[$i]; 
-      with: for ( $self->[ $indent + $i ] ) {
-        $_->character( ref $c ? $c->character() : chr( $c ) );
-        $_->attribute( $attr );
-      }
+      my $cell = $self->[ $indent + $i ] //= TScreenCell->new();
+      $cell->character( ref $c ? $c->character() : chr( $c ) );
+      $cell->attribute( $attr );
     }
   }
   else {
     for ( my $i = 0 ; $i < $count ; $i++ ) {
       my $c = $source->[$i];
+      my $cell = $self->[ $indent + $i ] //= TScreenCell->new();
       if ( ref $c ) {
-        $self->[ $indent + $i ]->assign( $c );
+        $cell->assign( $c );
       }
       else {
-        my ( $ch, $attr ) = unpack 'aC' => pack 'v' => $c;
-        with: for ( $self->[ $indent + $i ] ) {
-          $_->character( $ch );
-          $_->attribute( $attr );
-        }
+        my ( $ch, $cellAttr ) = unpack 'aC' => pack 'v' => $c;
+        $cell->character( $ch );
+        $cell->attribute( $cellAttr );
       }
     }
   }
@@ -161,29 +152,31 @@ sub moveChar {    # void ($indent, $c|undef, $attr|undef, $count)
     ],
   );
   my ( $self, $indent, $c, $attr, $count ) = $sig->( @_ );
+  assert ( $indent + $count <= &$getBufferLength() );
 
   my $dest = $indent;
-  $count = min( $count, max( scalar( @$self ) - $indent, 0 ) );
-
   if ( defined $attr ) {
     $attr = $attr->$coerceAttr();    # only for performance
     if ( defined $c ) {
       for ( 1 .. $count ) {
-        with: for ( $self->[ $dest++ ] ) {
-          $_->character( $c );
-          $_->attribute( $attr );
-        }
+        my $cell = $self->[$dest++] //= TScreenCell->new();
+        $cell->character( $c );
+        $cell->attribute( $attr );
       }
-    } 
+    }
     else {
-      $self->[ $dest++ ]->attribute( $attr )
-        for 1 .. $count;
+      for ( 1 .. $count ) {
+        my $cell = $self->[$dest++] //= TScreenCell->new();
+        $cell->attribute( $attr );
+      }
     }
   }
   else {
     assert ( length $c );
-    $self->[ $dest++ ]->character( $c )
-      for 1 .. $count;
+    for ( 1 .. $count ) {
+      my $cell = $self->[$dest++] //= TScreenCell->new();
+      $cell->character( $c );
+    }
   }
   return;
 } #/ sub moveChar
@@ -200,22 +193,19 @@ sub moveCStr {    # $num ($indent, $str, $attrs)
   my ( $self, $indent, $str, $attrs ) = $sig->( @_ );
 
   my $dest   = $indent;
-  my $limit  = @$self;
   my $toggle = 1;
   $attrs = $attrs->$coerceAttrPair();
   my $curAttr = $attrs->[0];
 
   foreach my $ch ( split //, $str ) {
-    last unless $dest < $limit;
     if ( $ch eq '~' ) {
       $curAttr = $attrs->[$toggle];
       $toggle  = 1 - $toggle;
     }
     else {
-      with: for ( $self->[ $dest++ ] ) {
-        $_->character( $ch );
-        $_->attribute( $curAttr );
-      }
+      my $cell = $self->[$dest++] //= TScreenCell->new();
+      $cell->character( $ch );
+      $cell->attribute( $curAttr );
     }
   }
   return $dest - $indent;
@@ -232,26 +222,25 @@ sub moveStr {    # $num ($indent, $str, $attr|undef)
   );
   my ( $self, $indent, $str, $attr ) = $sig->( @_ );
 
-  return 0 
-    unless $indent < @$self;
+  my @chars = split //, $str;
+  assert ( $indent + @chars <= &$getBufferLength() );
 
   my $dest = $indent;
-  my $count = min( length $str, scalar( @$self ) - $indent );
-
   if ( defined $attr ) {
     $attr = $attr->$coerceAttr();
-    for my $ch ( split //, $str ) {
-      with: for ( $self->[ $dest++ ] ) {
-        $_->character( $ch );
-        $_->attribute( $attr );
-      }
+    for my $ch ( @chars ) {
+      my $cell = $self->[$dest++] //= TScreenCell->new();
+      $cell->character( $ch );
+      $cell->attribute( $attr );
     }
   }
   else {
-    $self->[ $dest++ ]->character( $_ )
-      for split //, $str;
+    for my $ch ( @chars ) {
+      my $cell = $self->[$dest++] //= TScreenCell->new();
+      $cell->character( $ch );
+    }
   }
-  return $count;
+  return scalar @chars;
 }
 
 sub dump {    # $str (|$maxLength)
@@ -262,14 +251,21 @@ sub dump {    # $str (|$maxLength)
     ],
   );
   my ( $self, $maxLength ) = $sig->( @_ );
+
+	$maxLength = max( $maxLength, &$getBufferLength() );
+  my @cells;
+  for my $i ( 0 .. $maxLength - 1 ) {
+    my $cell = $self->[$i] //= TScreenCell->new();
+    push @cells, sprintf(
+      '%d:%s',
+      $cell->attribute()->toBIOS(),
+      $cell->character()->getText(),
+    );
+  }
+
   no warnings 'once';
   require Data::Dumper;
-  my $str = Data::Dumper::Dumper( [
-    map { sprintf( '%d:%s', 
-      $_->attribute()->toBIOS(), 
-      $_->character()->getText()
-    ) } @$self[ 0 .. $maxLength - 1 ]
-  ] );
+  my $str = Data::Dumper::Dumper( \@cells );
   $str =~ s/(^|\s)\$VAR\d+\b/$1'$self'/g;
   return $str;
 }
@@ -400,19 +396,11 @@ L<TWindow|TUI::Views::Window>
 
 =back
 
-=head1 CONTRIBUTORS
-
-=over
-
-=item * magiblot <magiblot@hotmail.com>
-
-=back
-
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 1990-1994, 1997 by Borland International
 
-Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
+Copyright (c) 2019-2026 the L</AUTHORS> as listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is 
 part of the distribution).
