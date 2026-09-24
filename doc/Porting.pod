@@ -138,7 +138,6 @@ detail.
  TWindow            TUI::Views::Window           [x]
  TDialog            TUI::Dialogs::Dialog         [x]
 
-
 =head3 Dialog Controls
 
 Buttons and Clusters
@@ -203,8 +202,6 @@ Lists and History
  TColorItemList     TUI::ColorSel::ColorItemList  [x]
  TColorSelector     TUI::ColorSel::ColorSelector  [x]
  TClockView         TUI::ColorSel::ClockView      [x]
- TEventViewer       TUI::ColorSel::EventViewer    [x]
- THeapView          TUI::ColorSel::HeapView       [x]
  TMonoSelector      TUI::ColorSel::MonoSelector   [x]
 
 =head3 Menu System
@@ -249,6 +246,7 @@ Lists and History
  TNSCollection        TUI::Objects::NSCollection        [x]
  TNSSortedCollection  TUI::Objects::NSSortedCollection  [x]
  TCollection          TUI::Objects::Collection          [x]
+ TLineCollection      TUI::Gadgets::LineCollection      [x]
  TSortedCollection    TUI::Objects::SortedCollection    [x]
  TStringCollection    TUI::Objects::StringCollection    [x]
  TStringList          (missing)                         [ ]
@@ -274,11 +272,12 @@ Lists and History
  ------------------ ---------------------------- ------
  TCalcDisplay       (missing)                    [ ]
  TCalendarView      (missing)                    [ ]
- TClickTester       (missing)                    [ ]
+ TClickTester       TUI::Gadgets::ClickTester    [x]
  TClockView         TUI::Gadgets::ClockView      [x]
  TEventViewer       TUI::Gadgets::EventViewer    [x]
+ TFileViewer        TUI::Gadgets::FileViewer     [x]
+ TFileWindow        TUI::Gadgets::FileWindow     [x]
  THeapView          TUI::Gadgets::HeapView       [x]
- TLineCollection    (missing)                    [ ]
  TPuzzleView        (missing)                    [ ]
 
 =head2 Memory Management and Resource Handling

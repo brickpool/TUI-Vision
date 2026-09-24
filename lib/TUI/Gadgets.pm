@@ -12,6 +12,7 @@ use Import::Into;
 
 use TUI::Gadgets::Const;
 use TUI::Gadgets::PrintConstants;
+use TUI::Gadgets::ClickTester;
 use TUI::Gadgets::ClockView;
 use TUI::Gadgets::EventViewer;
 use TUI::Gadgets::FileViewer;
@@ -23,6 +24,7 @@ sub import {
   my $target = caller;
   TUI::Gadgets::Const->import::into( $target, qw( :all ) );
   TUI::Gadgets::PrintConstants->import::into( $target );
+  TUI::Gadgets::ClickTester->import::into( $target );
   TUI::Gadgets::ClockView->import::into( $target );
   TUI::Gadgets::EventViewer->import::into( $target );
   TUI::Gadgets::FileViewer->import::into( $target );
@@ -35,6 +37,7 @@ sub unimport {
   my $caller = caller;
   TUI::Gadgets::Const->unimport::out_of( $caller );
   TUI::Gadgets::PrintConstants->unimport::out_of( $caller );
+  TUI::Gadgets::ClickTester->unimport::out_of( $caller );
   TUI::Gadgets::ClockView->unimport::out_of( $caller );
   TUI::Gadgets::EventViewer->unimport::out_of( $caller );
   TUI::Gadgets::FileViewer->unimport::out_of( $caller );
@@ -100,6 +103,9 @@ Symbolic constants for gadget behavior.
 
 =item * L<PrintConstants|TUI::Gadgets::PrintConstants> -
 Utility for printing symbolic values.
+
+=item * L<TClickTester|TUI::Gadgets::ClickTester> -
+A widget for testing mouse click interactions.
 
 =item * L<TClockView|TUI::Gadgets::ClockView> -
 A live clock widget.

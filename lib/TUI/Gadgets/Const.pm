@@ -15,8 +15,13 @@ our @EXPORT_OK = qw(
 );
 
 our %EXPORT_TAGS = (
+
   cmXXXX => [qw(
     cmFndEventView
+  )],
+
+  cpXXXX => [qw(
+    cpMousePalette
   )],
 
   hlXXXX => [qw(
@@ -53,6 +58,11 @@ use constant {
 # Maximum line length inside TFileViewer
 use constant {
   maxLineLength => 256,
+};
+
+# Palette for TClickTester
+use constant {
+  cpMousePalette => "\x07\x08",
 };
 
 1
@@ -92,6 +102,13 @@ Command identifiers used by gadget components.
 These values are delivered via C<$event-E<gt>{command}> and are handled by
 gadget views such as event viewers and diagnostic tools.
 
+=head2 Gadget color palettes (cpXXXX)
+
+Color palette constants used by gadget components.
+
+These values define the color schemes for various gadget elements, such as the 
+mouse pointer in TClickTester.
+
 =head2 History identifiers for dialogs (hlXXXX)
 
 History identifiers used by gadget dialogs.
@@ -106,6 +123,8 @@ Constants are exported using the following tag-based export groups:
 =over
 
 =item * C<:cmXXXX> - gadget command identifiers
+
+=item * C<:cpXXXX> - gadget color palettes
 
 =item * C<:hlXXXX> - history identifiers for dialogs
 
