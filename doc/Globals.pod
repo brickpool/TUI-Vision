@@ -128,9 +128,7 @@ inventory.
 
   @consoleHandle       HardwareInfo::Win32    Console handle list
   @crInfo              HardwareInfo::Win32    Console cursor information
-  @downWhere           HardwareInfo::Termbox  Mouse press coordinates
   @irBuffer            HardwareInfo::Win32    Input record buffer
-  @lastWhere           HardwareInfo::Termbox  Last mouse action coordinates
   @sbInfo              HardwareInfo::Win32    Screen buffer information
 
   $amText              TFileInfoPane          AM time indicator
@@ -168,11 +166,8 @@ inventory.
   $dirNameText         TChDirDialog           Directory name label
   $dirTreeText         TChDirDialog           Directory tree label
   $doubleDelay         TEventQueue            Double-click delay
-  $doubleDelay         HardwareInfo::Termbox  Double-click delay
-  $downButtons         HardwareInfo::Termbox  Mouse button state at press time
   $downMouse           TEventQueue            Mouse-down state
   $downTicks           TEventQueue            Ticks since mouse press
-  $downTicks           HardwareInfo::Termbox  Tick count at mouse press
   $dragIcon            TFrame                 Drag window icon
   $drives              TDirListBox            Drives label text
   $drivesText          TChDirDialog           Drives label
@@ -218,7 +213,6 @@ inventory.
 
   $lastButtons         HardwareInfo::Termbox  Previous mouse button state
   $lastDir             TDirListBox            Last directory tree element
-  $lastDouble          HardwareInfo::Termbox  Double-click detection state
   $lastMouse           TEventQueue            Previous mouse state
   $leftArrow           TInputLine             Left overflow indicator
 

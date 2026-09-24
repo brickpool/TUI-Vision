@@ -116,14 +116,8 @@ our $insertState  = true;
 our $platform     = '';
 our $pendingEvent = 0;
 
-# Track mouse button state for double-click detection.
+# Track mouse button state.
 our $lastButtons = 0;
-our $downButtons = 0;
-our $lastDouble  = false;
-our @lastWhere   = ( 0, 0 );
-our @downWhere   = ( 0, 0 );
-our $downTicks   = 0;
-our $doubleDelay = 8;
 
 # -------------------------------------------------------------------------
 # Import global variables
@@ -675,7 +669,7 @@ sub getMouseEvent {    # $bool ($class, $event)
     if $tb_event->type != TB_EVENT_MOUSE;
 
   # Track the state of mouse buttons
-  my $buttons = $lastButtons;
+  my $buttons = 0;
   if ( $tb_event->key == TB_KEY_MOUSE_LEFT ) {
     $buttons |= mbLeftButton;
   }
@@ -686,44 +680,21 @@ sub getMouseEvent {    # $bool ($class, $event)
     $buttons = 0;
   }
 
-  # Detect double-clicks
-  my @where = ( $tb_event->x, $tb_event->y );
-  my $doubleClick = false;
-  if ( $buttons != 0 && $lastButtons == 0 ) {
-    my $ticks = __PACKAGE__->getTickCount();
-    $doubleClick = !(
-      $buttons != $downButtons
-        or
-      $where[0] != $downWhere[0] || $where[1] != $downWhere[1]
-        or
-      $ticks - $downTicks >= $doubleDelay
-    );
-    $downButtons = $buttons;
-    @downWhere   = @where;
-    $downTicks   = $ticks;
-  }
-
   # Mouse position
+  my @where = ( $tb_event->x, $tb_event->y );
   $event->{where}{x} = $where[0];
   $event->{where}{y} = $where[1];
 
   # Button state
   $event->{buttons} = $buttons;
 
-  # Event flags
+  # Event flags. Double-clicks are detected by TEventQueue.
   $event->{eventFlags} = 0;
   $event->{eventFlags} |= meMouseMoved
     if $tb_event->mod & TB_MOD_MOTION;
-  $event->{eventFlags} |= meDoubleClick
-    if $doubleClick;
 
   # Mouse modifier state.
   $event->{controlKeyState} = $insertState ? kbInsState : 0;
-
-  # Save the last button state and position for double-click detection
-  $lastButtons = $buttons;
-  @lastWhere   = @where;
-  $lastDouble  = $doubleClick;
 
   # Clear the pending event flag because we have consumed the event
   $pendingEvent = 0;
@@ -1378,35 +1349,6 @@ Indicates whether a Termbox input event has been buffered(I<PositiveOrZeroInt>).
 =head2 $lastButtons
 
 Stores the most recently observed mouse button state (I<PositiveOrZeroInt>).
-
-=head2 $downButtons
-
-Stores the mouse button state recorded when the current button press began
-(I<PositiveOrZeroInt>).
-
-=head2 $lastDouble
-
-Indicates whether the previous mouse event was recognized as a double-click
-(I<Bool>).
-
-=head2 @lastWhere
-
-Contains the screen coordinates associated with the most recent completed
-mouse action.
-
-=head2 @downWhere
-
-Contains the screen coordinates where the current mouse button press began.
-
-=head2 $downTicks
-
-Stores the Turbo Vision clock tick value at which the current mouse button
-press began (I<PositiveOrZeroInt>).
-
-=head2 $doubleDelay
-
-Maximum interval, in Turbo Vision clock ticks, used for mouse double-click
-detection (I<PositiveInt>).
 
 =head1 IMPLEMENTATION
 
