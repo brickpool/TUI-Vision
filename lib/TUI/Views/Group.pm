@@ -772,8 +772,10 @@ sub getData {    # void (\@rec)
   if ( $self->{last} ) {
     my $v = $self->{last};
     do {
-      $v->getData( sub { \@_ }->( @$rec[ $i .. $#$rec ] ) );
-      $i += $v->dataSize();
+      my $size = $v->dataSize();
+      $v->getData( sub { \@_ }->( @$rec[ $i .. $i + $size - 1 ] ) )
+        if $size;
+      $i += $size;
       $v = $v->prev();
     } while ( $v != $self->{last} );
   }
@@ -790,8 +792,10 @@ sub setData {    # void (\@rec)
   if ( $self->{last} ) {
     my $v = $self->{last};
     do {
-      $v->setData( sub { \@_ }->( @$rec[ $i .. $#$rec ] ) );
-      $i += $v->dataSize();
+      my $size = $v->dataSize();
+      $v->setData( sub { \@_ }->( @$rec[ $i .. $i + $size - 1 ] ) )
+        if $size;
+      $i += $size;
       $v = $v->prev();
     } while ( $v != $self->{last} );
   }
