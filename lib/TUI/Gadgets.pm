@@ -19,6 +19,7 @@ use TUI::Gadgets::FileViewer;
 use TUI::Gadgets::FileWindow;
 use TUI::Gadgets::HeapView;
 use TUI::Gadgets::LineCollection;
+use TUI::Gadgets::MouseDialog;
 
 sub import {
   my $target = caller;
@@ -31,6 +32,7 @@ sub import {
   TUI::Gadgets::FileWindow->import::into( $target );
   TUI::Gadgets::HeapView->import::into( $target );
   TUI::Gadgets::LineCollection->import::into( $target );
+  TUI::Gadgets::MouseDialog->import::into( $target );
 }
 
 sub unimport {
@@ -44,6 +46,7 @@ sub unimport {
   TUI::Gadgets::FileWindow->unimport::out_of( $caller );
   TUI::Gadgets::HeapView->unimport::out_of( $caller );
   TUI::Gadgets::LineCollection->unimport::out_of( $caller );
+  TUI::Gadgets::MouseDialog->unimport::out_of( $caller );
 }
 
 1
@@ -124,6 +127,9 @@ A memory usage visualization widget.
 
 =item * L<TLineCollection|TUI::Gadgets::LineCollection> -
 A collection of lines for use in various gadgets.
+
+=item * L<TMouseDialog|TUI::Gadgets::MouseDialog> -
+A dialog for configuring mouse options.
 
 =back
 

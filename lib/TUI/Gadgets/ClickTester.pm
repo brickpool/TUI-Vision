@@ -93,7 +93,7 @@ __END__
 
 =head1 NAME
 
-TUI::Gadgets::ClickTester - mouse click test gadget
+TClickTester - mouse click test gadget
 
 =head1 HIERARCHY
 

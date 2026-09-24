@@ -669,7 +669,7 @@ sub getMouseEvent {    # $bool ($class, $event)
     if $tb_event->type != TB_EVENT_MOUSE;
 
   # Track the state of mouse buttons
-  my $buttons = 0;
+  my $buttons = $lastButtons;
   if ( $tb_event->key == TB_KEY_MOUSE_LEFT ) {
     $buttons |= mbLeftButton;
   }
@@ -695,6 +695,9 @@ sub getMouseEvent {    # $bool ($class, $event)
 
   # Mouse modifier state.
   $event->{controlKeyState} = $insertState ? kbInsState : 0;
+
+  # Save the last button state
+  $lastButtons = $buttons;
 
   # Clear the pending event flag because we have consumed the event
   $pendingEvent = 0;

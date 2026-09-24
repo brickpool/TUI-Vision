@@ -259,6 +259,11 @@ sub handleEvent {
         last;
       };
 
+      cmMouseCmd == $_ and do {        #  Mouse control dialog box
+        $self->mouse();
+        last;
+      };
+
       cmColorCmd == $_ and do {        #  Color control dialog box
         $self->colors();
         last;
@@ -454,6 +459,26 @@ sub colors {
 }
 
 #
+# Mouse Control Dialog Box function
+#
+
+sub mouse {
+  my ( $self ) = @_;
+  my $mouseCage = $self->validView( new_TMouseDialog() );
+
+  if ( $mouseCage ) {
+    $mouseCage->helpCtx( hcOMMouseDBox );
+    $mouseCage->setData( [$TUI::Drivers::EventQueue::mouseReverse] );
+    if ( $deskTop->execView( $mouseCage ) != cmCancel ) {
+      $mouseCage->getData( my $data = [] );
+      $TUI::Drivers::EventQueue::mouseReverse = $data->[0];
+    }
+  }
+  $self->destroy( $mouseCage );
+  return;
+}
+
+#
 # "Out of Memory" function ( called by validView() )
 #
 
@@ -572,6 +597,7 @@ sub initMenuBar {
 
   my $sub4 =
     new_TSubMenu( "~O~ptions", 0, hcOptions ) +
+      new_TMenuItem( "~M~ouse...", cmMouseCmd, kbNoKey, hcOMouse ) +
       new_TMenuItem( "~C~olors...", cmColorCmd, kbNoKey, hcOColors );
 
   $r->{b}{y} = $r->{a}{y} + 1;

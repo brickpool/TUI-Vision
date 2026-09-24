@@ -278,6 +278,7 @@ Lists and History
  TFileViewer        TUI::Gadgets::FileViewer     [x]
  TFileWindow        TUI::Gadgets::FileWindow     [x]
  THeapView          TUI::Gadgets::HeapView       [x]
+ TMouseDialog       TUI::Gadgets::MouseDialog    [x]
  TPuzzleView        (missing)                    [ ]
 
 =head2 Memory Management and Resource Handling
