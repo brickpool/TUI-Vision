@@ -182,10 +182,7 @@ sub drawMultiBox {    # void ($icon, $marker)
 
       my $col = $self->$column( $cur );
 
-      next unless (
-        ( $col + length( $self->{strings}->at( $cur ) ) + 5 ) < $self->{size}{x}
-        && ( $col < $self->{size}{x} ) 
-      );
+      next unless $col < $self->{size}{x};
 
       if ( !$self->buttonState( $cur ) ) {
         $color = $cDis;
