@@ -86,3 +86,100 @@ sub from {    # $fileWindow ($fileName)
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Gadgets::FileWindow - window for viewing text files
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TGroup
+        TWindow
+          TFileWindow
+
+=head1 SYNOPSIS
+
+  sub openFile {
+    ...
+    if ( $d && $deskTop->execView( $d ) != cmCancel ) {
+      my $fileName;
+      $d->getFileName( $fileName );
+
+      my $w = $self->validView(
+        new_TFileWindow( $fileName )
+      );
+
+      $deskTop->insert( $w ) if $w;
+    }
+
+    $self->destroy( $d );
+  }
+
+=head1 DESCRIPTION
+
+C<TFileWindow> provides a standard window for viewing text files.
+
+The window automatically creates a C<TFileViewer> together with horizontal
+and vertical scrollbars. The specified file is loaded when the window is
+created and can then be viewed using the standard scrolling facilities
+provided by the framework.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $win = TFileWindow->new( fileName => $fileName );
+
+Creates a new file window and initializes an embedded C<TFileViewer> for
+the specified file.
+
+=over
+
+=item fileName
+
+Name of the file to be displayed (I<Str>).
+
+=back
+
+=head2 new_TFileWindow
+
+  my $win = new_TFileWindow( $fileName );
+
+Factory-style constructor using positional arguments.
+
+This constructor is equivalent to calling C<new> with named parameters and
+is provided for compatibility with traditional Turbo Vision construction
+patterns.
+
+=head1 SEE ALSO
+
+L<TFileViewer|TUI::Gadgets::FileViewer>,
+L<TWindow|TUI::Views::Window>,
+L<TScrollBar|TUI::Views::ScrollBar>
+
+=head1 AUTHORS
+
+=over
+
+=item * Borland International (original Turbo Vision design)
+
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut

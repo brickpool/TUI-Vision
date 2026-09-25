@@ -56,7 +56,6 @@ lib/TUI/Dialogs/StrItem.pm
 lib/TUI/Dialogs/Util.pm
 lib/TUI/Drivers.pm
 lib/TUI/Drivers/AttrPair.pm
-lib/TUI/Drivers/CellChar.pm
 lib/TUI/Drivers/Color.pm
 lib/TUI/Drivers/ColorAttr.pm
 lib/TUI/Drivers/Colors.pm
@@ -75,6 +74,7 @@ lib/TUI/Drivers/ScreenCharacter.pm
 lib/TUI/Drivers/SystemError.pm
 lib/TUI/Drivers/Util.pm
 lib/TUI/Gadgets.pm
+lib/TUI/Gadgets/ClickTester.pm
 lib/TUI/Gadgets/ClockView.pm
 lib/TUI/Gadgets/Const.pm
 lib/TUI/Gadgets/EventViewer.pm
@@ -85,6 +85,7 @@ lib/TUI/Gadgets/HeapView/Linux.pm
 lib/TUI/Gadgets/HeapView/Unix.pm
 lib/TUI/Gadgets/HeapView/Win32.pm
 lib/TUI/Gadgets/LineCollection.pm
+lib/TUI/Gadgets/MouseDialog.pm
 lib/TUI/Gadgets/PrintConstants.pm
 lib/TUI/Memory.pm
 lib/TUI/Menus.pm
@@ -223,7 +224,6 @@ t/06Drivers/32TMouse.t
 t/06Drivers/33TEventQueue.t
 t/06Drivers/40TColor.t
 t/06Drivers/41TColorAttr.t
-t/06Drivers/42TCellChar.t
 t/06Drivers/42TScreenCharacter.t
 t/06Drivers/43TScreenCell.t
 t/06Drivers/44TAttrPair.t
@@ -336,6 +336,11 @@ t/20Gadgets/04PrintConstants.t
 t/20Gadgets/13TClockView.t
 t/20Gadgets/14TEventViewer.t
 t/20Gadgets/15THeapView.t
+t/20Gadgets/16TClickTester.t
+t/20Gadgets/17TMouseDialog.t
+t/20Gadgets/20TLineCollection.t
+t/20Gadgets/21TFileViewer.t
+t/20Gadgets/22TFileWindow.t
 t/20Gadgets/99Gadgets.t
 t/99Vision.t
 xt/01Intro/05FirstDesktop.t

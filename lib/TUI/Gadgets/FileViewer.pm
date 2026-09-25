@@ -198,3 +198,163 @@ sub valid {    # $bool ($command)
 }
 
 1
+
+__END__
+
+=pod
+
+=head1 NAME
+
+TUI::Gadgets::FileViewer - file viewer gadget for text files
+
+=head1 HIERARCHY
+
+  TObject
+    TView
+      TScroller
+        TFileViewer
+
+=head1 SYNOPSIS
+
+  use TUI::Objects::Rect;
+  use TUI::Gadgets::FileViewer;
+  use TUI::Views::Const qw( :sbXXXX );
+
+  my $r = $self->getExtent();
+  $r->grow( -1, -1 );
+  $self->insert(
+    TFileViewer->new(
+      bounds     => $r,
+      hScrollBar => $self->standardScrollBar( sbHorizontal | sbHandleKeyboard ),
+      vScrollBar => $self->standardScrollBar( sbVertical | sbHandleKeyboard ),
+      fileName   => $fileName,
+    )
+  );
+
+=head1 DESCRIPTION
+
+C<TFileViewer> displays the contents of a text file inside a scrollable view.
+
+The viewer reads the specified file into an internal line collection and
+renders the visible portion of the file. Horizontal and vertical scrolling
+are provided through the inherited scrolling support from C<TScroller>.
+
+=head1 ATTRIBUTES
+
+=head2 fileLines
+
+Collection containing the currently loaded file contents
+(I<TLineCollection>).
+
+=head2 fileName
+
+Name of the currently loaded file (I<Str>).
+
+=head2 isValid
+
+Indicates whether the file was loaded successfully (I<Bool>).
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $viewer = TFileViewer->new(
+    bounds     => $bounds,
+    hScrollBar => $hScrollBar,
+    vScrollBar => $vScrollBar,
+    fileName   => $fileName,
+  );
+
+Creates a new file viewer and loads the specified file.
+
+=over
+
+=item bounds
+
+Bounding rectangle defining the position and size of the view
+(I<TRect>).
+
+=item hScrollBar
+
+Optional horizontal scroll bar (I<TScrollBar>).
+
+=item vScrollBar
+
+Optional vertical scroll bar (I<TScrollBar>).
+
+=item fileName
+
+Name of the file to load (I<Str>).
+
+=back
+
+=head2 new_TFileViewer
+
+  my $viewer = new_TFileViewer(
+    $bounds,
+    $hScrollBar | undef,
+    $vScrollBar | undef,
+    $fileName
+  );
+
+Factory-style constructor using positional arguments.
+
+=head1 METHODS
+
+=head2 draw
+
+  $viewer->draw();
+
+Draws the currently visible portion of the file.
+
+=head2 readFile
+
+  $viewer->readFile($fileName);
+
+Loads a text file into the viewer and updates the scrolling limits.
+
+=head2 scrollDraw
+
+  $viewer->scrollDraw();
+
+Refreshes the display after a scrolling operation.
+
+=head2 setState
+
+  $viewer->setState($state, $enable);
+
+Updates the viewer state. When the view becomes exposed, the scrolling
+limits are synchronized with the loaded file.
+
+=head2 valid
+
+  my $bool = $viewer->valid($command);
+
+Returns true if the viewer contains valid file data.
+
+=head1 SEE ALSO
+
+L<TScroller|TUI::Views::Scroller>,
+L<TLineCollection|TUI::Gadgets::LineCollection>,
+L<TFileWindow|TUI::Gadgets::FileWindow>
+
+=head1 AUTHORS
+
+=over
+
+=item * Borland International (original Turbo Vision design)
+
+=item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 1990-1994, 1997 by Borland International
+
+Copyright (c) 2026 the L</AUTHORS> as listed above.
+
+This software is licensed under the MIT license (see the LICENSE file, which is
+part of the distribution).
+
+=cut
