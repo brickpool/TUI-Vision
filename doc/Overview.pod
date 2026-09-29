@@ -1,85 +1,108 @@
 =pod
 
+=head1 NAME
+
+doc::appendix::Overview - Overview of TUI::Vision Components
+
 =head1 OVERVIEW
 
-=head2 Class Hierarchy
-
-The following diagram shows the main inheritance tree of TUI::Vision.
-Indentation represents inheritance (derived classes are indented).
-
-    TObject
+  TObject
+  |
+  +- TCollection
+  |  |
+  |  +- TDirCollection
+  |  +- TLineCollection
+  |  +- TSortedCollection
+  |     |
+  |     +- TFileCollection
+  |     +- TStringCollection
+  |
+  +- TGroup
+  |  |
+  |  +- TDeskTop
+  |  +- TProgram
+  |  |  +- TApplication
+  |  |
+  |  +- TWindow
+  |     |
+  |     +- TDialog
+  |     |  |
+  |     |  +- TChDirDialog
+  |     |  +- TColorDialog
+  |     |  +- TFileDialog
+  |     |  +- TMouseDialog
+  |     |
+  |     +- TFileWindow
+  |     +- THistoryWindow
+  |
+  +- TView
     |
-    +- TView
+    +- TBackground
+    +- TButton
+    +- TCluster
     |  |
-    |  +- TFrame
-    |  +- TScrollBar
-    |  +- TScroller
-    |  |  +- TTextDevice
-    |  |     +- TTerminal
-    |  |
-    |  +- TStaticText
-    |  |  +- TLabel
-    |  |  +- TParamText
-    |  |
-    |  +- TInputLine
-    |  |  +- TFileInputLine
-    |  |
-    |  +- TButton
-    |  +- TCluster
-    |  |  +- TRadioButtons
-    |  |  +- TCheckBoxes
-    |  |  +- TMultiCheckBoxes
-    |  |
-    |  +- TListViewer
-    |  |  +- TListBox
-    |  |  |  +- TEditListBox
-    |  |  |  +- TSortedListBox
-    |  |  |     +- TFileList
-    |  |  +- THistoryViewer
-    |  |
-    |  +- THistory
-    |  +- TMenuView
-    |  |  +- TMenuBar
-    |  |  +- TMenuBox
-    |  |     +- TMenuPopup
-    |  |
-    |  +- TStatusLine
-    |  +- TClockView
-    |  +- THeapView
-    |  +- TEventViewer
+    |  +- TCheckBoxes
+    |  +- TMultiCheckBoxes
+    |  +- TRadioButtons
     |
-    +- TGroup
-    |  |
-    |  +- TWindow
-    |  |  |
-    |  |  +- TDialog
-    |  |  |  +- TFileDialog
-    |  |  |  +- TChDirDialog
-    |  |  |  +- TColorDialog
-    |  |  |
-    |  |  +- THistoryWindow
-    |  |
-    |  +- TDeskTop
-    |  +- TProgram
-    |     +- TApplication
+    +- TClockView
+    +- TColorDisplay
+    +- TColorSelector
+    +- TEventViewer
+    +- TFileInfoPane
+    +- TFrame
+    +- THeapView
+    +- THistory
+    +- TInputLine
+    |  +- TFileInputLine
     |
-    +- TCollection
-       |
-       +- TSortedCollection
-       |  +- TStringCollection
-       |  +- TFileCollection
-       |
-       +- TDirCollection
-
+    +- TListViewer
+    |  |
+    |  +- TColorGroupList
+    |  +- TColorItemList
+    |  +- THistoryViewer
+    |  |
+    |  +- TListBox
+    |     |
+    |     +- TDirListBox
+    |     +- TEditListBox
+    |     +- TSortedListBox
+    |        |
+    |        +- TFileList
+    |
+    +- TMenuView
+    |  |
+    |  +- TMenuBar
+    |  +- TMenuBox
+    |     +- TMenuPopup
+    |
+    +- TMonoSelector
+    +- TScrollBar
+    +- TScroller
+    |  |
+    |  +- TFileViewer
+    |  +- TTextDevice
+    |     +- TTerminal
+    |
+    +- TStaticText
+    |  |
+    |  +- TClickTester
+    |  +- TLabel
+    |  +- TParamText
+    |
+    +- TStatusLine
 
 =head2 Source Module Inventory
 
   lib/TUI/
     +-- App/      - TProgram, TApplication, TDeskTop, TBackground, etc.
+    +-- ColorSel/ - TColorDialog, TColorDisplay, TColorSelector, TMonoSelector, 
+    |               TColorGroupList, TColorItemList, etc.
     +-- Dialogs/  - TDialog, TButton, TInputLine, TLabel, etc.
     +-- Drivers/  - TEvent, TScreen, TEventQueue, THardwareInfo, etc.
     +-- Editors/  - TEditor, TMemo, TFileEditor, TIndicator, etc.
-    +-- Gadgets/  - TClickTester, TEventViewer, THeapView, etc.
+    +-- Gadgets/  - TClockView, TClickTester, TEventViewer,
+    |               TFileViewer, TFileWindow, THeapView, TMouseDialog, etc.
     +-- Help/     - THelpFile, THelpTopic, THelpViewer, etc.
     +-- Memory/   - Memory manager
     +-- Menus/    - TMenuBar, TMenuBox, TStatusLine, etc.

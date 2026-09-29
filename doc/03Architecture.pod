@@ -1,0 +1,23 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+doc::manual::03 - Architecture of TUI::Vision
+
+=head1 ARCHITECTURE
+
+=head1 Core Concepts
+
+=head1 The Application Object
+
+=head1 The View Hierarchy
+
+=head1 Ownership and Lifetime
+
+=head1 Event Driven Design
+
+=head1 Conclusion
+
+=cut

@@ -2,7 +2,11 @@
 
 =encoding utf8
 
-=head1 Menu Bars and Status Lines
+=head1 NAME
+
+doc::manual::07 - Menu Bars and Status Lines in TUI::Vision
+
+=head1 MENU BARS AND STATUS LINES
 
 Among the many ideas introduced by Turbo Vision, two have remained
 remarkably distinctive: the menu bar and the status line.

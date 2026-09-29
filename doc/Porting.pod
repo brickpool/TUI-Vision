@@ -1,5 +1,9 @@
 =pod
 
+=head1 NAME
+
+doc::appendix::Porting - Porting Notes
+
 =head1 PORTING NOTES
 
 This document describes the porting of Borland Turbo Vision to Perl.
@@ -16,10 +20,13 @@ Turbo Vision classes are mapped to Perl modules in a mostly one-to-one
 fashion.
 
 This port is based on the original codebase of Borland C++ 4.02
-(Turbo Vision 2.0 sources including bug fixes by Eric Woodruff: 
+(Turbo Vision 2.0 sources including bug fixes by Eric Woodruff:
 L<tv2fixed.zip|http://www.sigala.it/sergio/tvision/source/tv2fixed.zip>).
-In addition, assembler routines that have been ported to C++ come from 
-I<magiblot>'s implementation I<"A modern port of Turbo Vision 2.0.">.
+
+The Perl implementation also draws inspiration from I<magiblot>'s
+I<"A modern port of Turbo Vision 2.0">. Besides using C++ ports of various
+assembler routines, the extended color model was adapted from that project and
+forms the basis of the enhanced color handling available in the Perl port.
 
 =head2 Class Implementation Status
 
@@ -195,13 +202,13 @@ Lists and History
  Class              Perl Module                   Status
  ------------------ ----------------------------- ------
  TColorDisplay      TUI::ColorSel::ColorDisplay   [x]
+ TColorDialog       TUI::ColorSel::ColorDialog    [x]
  TColorGroup        TUI::ColorSel::ColorGroup     [x]
  TColorGroupList    TUI::ColorSel::ColorGroupList [x]
  TColorIndex        TUI::ColorSel::ColorGroup     [x]
  TColorItem         TUI::ColorSel::ColorItem      [x]
  TColorItemList     TUI::ColorSel::ColorItemList  [x]
  TColorSelector     TUI::ColorSel::ColorSelector  [x]
- TClockView         TUI::ColorSel::ClockView      [x]
  TMonoSelector      TUI::ColorSel::MonoSelector   [x]
 
 =head3 Menu System
@@ -280,82 +287,5 @@ Lists and History
  THeapView          TUI::Gadgets::HeapView       [x]
  TMouseDialog       TUI::Gadgets::MouseDialog    [x]
  TPuzzleView        (missing)                    [ ]
-
-=head2 Memory Management and Resource Handling
-
-Languages with automatic garbage collection (like Perl) have complementary 
-problems compared to languages without garbage collection (like C/C++). For 
-every issue, there is a bug characteristic of non-GC languages and a bug 
-characteristic of GC languages, along with programmer responsibilities in both 
-types.
-
-Perl programmers might think they are relieved from freeing objects, but objects
-hold other resources besides memory that often need to be released 
-appropriately. Where a C++ programmer might have a dangling reference (often 
-not a bug due to some flag or state marking it as not to be used), a Perl 
-programmer has a memory leak. Thus, the C++ programmer is responsible for 
-ensuring C<free/delete> is called appropriately, while the Perl programmer must 
-ensure unwanted references are nulled or otherwise disposed of properly.
-
-Perl 5 supports weak references so that programmers can deliberately avoid 
-creating reference cycles. If data structures contain reference cycles, these 
-are only reclaimed by the Perl runtime when the parent thread is switched off. 
-This is seen as a welcome compromise, as opposed to implementing overhead cycle 
-detection, which would slow down execution time.
-
-It is claimed that a few calls to C<weaken> or using 
-L<Proxy Objects|https://www.perl.com/pub/2002/08/07/proxyobject.html/> can 
-handle this. This might be true, but Turbo Vision sources use many dangling 
-references in various tree structures or collections. To break all these cycles 
-and ensure timely disposal of garbage memory, the Perl implementation must have 
-an intelligent scheme.
-
-Turbo Vision C++ code relies heavily on the convention of resource allocation 
-and ensures reliable and timely destructor calls. This is not possible in Perl, 
-which works with cycles. This poses some challenges during implementation. If 
-you interrupt a garbage cycle, you can't know which destructor to call first 
-without causing dependency problems - it might even be impossible, since there 
-are more cyclic dependencies than just memory references. All other resources 
-have to be cleaned up manually, like in Pascal or C++, without the advantages 
-of Perl.
-
-When porting C++ code to Perl, one common pitfall is accidentally replacing an 
-object reference instead of copying data into the existing object. In C++, 
-passing by reference ensures that assignments modify the caller's object, while 
-in Perl the same assignment simply rebinds a local scalar and discards the 
-caller's reference. This difference can silently break control flow, especially 
-in event-driven systems where modified objects must propagate back to the 
-caller.
-
-=head2 Debug Helpers
-
-C<NoteSV> and C<CheckSV> are two functions from the L<Devel::Leak> module that 
-can be used to track memory leaks in Perl applications. They work together to 
-identify and report on memory that has been allocated but not properly released.
-
-    my $count = Devel::Leak::NoteSV($handle);
-    my $count = Devel::Leak::CheckSV($handle);
-
-C<NoteSV> searches the Perl-internal table of assigned scalar values (which 
-also contains arrays and hashes), and records their addresses in a table. It 
-returns a count of these I<things> and stores a reference to the table in its 
-argument.
-
-C<CheckSV> is passed an argument containing a reference to a table created by 
-C<NoteSV>. It runs through the Perl internals again and calls C<sv_dump()> for 
-all I<things> that were not yet present when C<NoteSV> was called. It returns 
-the  number of I<things> now assigned. 
-
-This is particularly useful if you want to check your application for memory 
-leaks, as shown in this example code from L<Devel::Leak>:
-
-  use Devel::Leak;
-  ... setup code
-  my $count = Devel::Leak::NoteSV($handle);
-  ... code that may leak
-  Devel::Leak::CheckSV($handle);
-
-B<Note>: This small Perl utility module is to be used as a replacement for the 
-Turbo Vision Pascal implementation of I<SetMemTop>.
 
 =cut

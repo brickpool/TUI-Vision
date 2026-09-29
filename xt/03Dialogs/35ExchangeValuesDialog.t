@@ -2,11 +2,13 @@
 
 =head1 NAME
 
-Add radio buttons to the dialog.
+Until now, the values in the dialog box would repeatedly be lost whenever you 
+closed and reopened it.
+For this reason, the values are now saved to a Class::Struct object.
 
 =head1 SEE ALSO
 
-L<Lazarus-FreeVision-Tutorial|https://github.com/sechshelme/Lazarus-FreeVision-Tutorial/tree/master/03_-_Dialoge/10_-_Button>
+L<Lazarus-FreeVision-Tutorial|https://github.com/sechshelme/Lazarus-FreeVision-Tutorial/tree/master/03_-_Dialoge/35_-_Werte_im_Dialog_merken>
 
 =cut
 
@@ -46,9 +48,27 @@ BEGIN {
     cmList  => 1002,    # File list
     cmPara  => 1003,    # Parameters
   };
-  
+
+  # The values from the dialog are stored in the following Class::Struct based 
+  # on a ArrayRef.
+  # The order of the data B<must> be exactly the same as when the components 
+  # were created; otherwise, an assert might be triggered.
+  # With TUI::Vision, an ArrayRef had to be used instead of a Pascal record or 
+  # C struct; this is important when porting applications.
+  use Class::Struct 'TParameterData' => [
+    print => '$',
+    font  => '$',
+    note  => '$',
+  ];
+
   extends TApplication;
 
+  has parameterData  => ( is => 'rw' );    # Data for the Parameter Dialog
+
+  # The constructor must be inherited here; this derived class is needed to 
+  # load the dialog data with default values.
+
+  sub BUILD;             # New Constructor 
   sub initStatusLine;    # Status line
   sub initMenuBar;       # Menu
   sub handleEvent;       # Event handler
@@ -59,6 +79,21 @@ BEGIN {
     my $args = shift->SUPER::BUILDARGS( @_ ) || return;
     $args->{bounds} = new_TRect( 0, 0, 80, 25 );
     return $args;
+  }
+
+  # The Constructor that loads the values for the dialog.
+  # The data structure for the radio buttons is simple. 0 is the first button, 
+  # 1 is the second, 2 is the third, and so on.
+  # For checkboxes, it's best to use a binary approach. In the example, the 
+  # first and third checkboxes are selected.
+  sub BUILD {
+    my $self = shift;
+    $self->{parameterData} = TParameterData->new(
+      print => 0b0101,
+      font  => 2,
+      note  => 'Hello world',
+    );
+    return;
   }
 
   sub initStatusLine {
@@ -117,8 +152,8 @@ BEGIN {
     return;
   }
 
-  # Add RadioButton to the dialog; this works almost the same as with 
-  # checkboxes.
+  # The dialog is now loading with values.
+  # You do this once you're done creating components.
   sub myParameter {
     my $self = shift;
     my $r    = new_TRect( 0, 0, 35, 15 );
@@ -127,34 +162,53 @@ BEGIN {
     WITH: for ( $dlg ) {
       # CheckBoxes
       $r->assign( 2, 3, 18, 7 );
-      my $view = new_TCheckBoxes($r,
+      my $view = new_TCheckBoxes( $r,
         new_TSItem('~F~ile',
         new_TSItem('~L~ine',
-        new_TSItem('D~a~te',
+        new_TSItem('~D~ate',
         new_TSItem('~T~ime',
         undef))))
       );
       $_->insert( $view );
+      # Label for CheckGroup.
+      $r->assign( 2, 2, 10, 3 );
+      $_->insert( new_TLabel( $r, '~P~rint', $view ) );
 
       # RadioButtons
       $r->assign( 21, 3, 33, 6 );
-      $view = new_TRadioButtons($r,
+      $view = new_TRadioButtons( $r,
         new_TSItem('~B~ig',
         new_TSItem('~M~edium',
         new_TSItem('~S~mall',
         undef)))
       );
       $_->insert( $view );
+      # Label for RadioGroup.
+      $r->assign( 20, 2, 31, 3 );
+      $_->insert( new_TLabel( $r, 'Font ~w~idth', $view ) );
+
+      # Input Line
+      $r->assign( 3, 10, 32, 11 );
+      $view = new_TInputLine( $r, 50 );
+      $_->insert( $view );
+      # Label for the Input Line
+      $r->assign( 2, 9, 10, 10 );
+      $_->insert( new_TLabel( $r, '~N~ote', $view ) );
 
       # Ok-Button
       $r->assign( 7, 12, 17, 14 );
       $_->insert( new_TButton( $r, '~O~K', cmOK, bfDefault ) );
 
-      # Close-Button
+      # Cancel-Button
       $r->move( 12, 0 );
       $_->insert( new_TButton( $r, '~C~ancel', cmCancel, bfNormal ) );
     }
-    my $dummy = $deskTop->execView( $dlg );      # Open dialog modal
+	  $dlg->setData( $self->{parameterData} );    # Load the 'Values' dialog box.
+    my $dummy = $deskTop->execView( $dlg );      # Run the dialog.
+    if ( $dummy == cmOK ) {    # When you close the dialog with 'OK', ..
+      # .. load the data from the dialog into an ArrayRef.
+      $dlg->getData( $self->{parameterData} );
+    }
     # Dialog and memory are automatically released.
     return;
   }

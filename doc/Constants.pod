@@ -1,6 +1,10 @@
 =pod
 
-=head1 CONSTANTS
+=head1 NAME
+
+doc::appendix::Constants - Constant Definitions
+
+=head1 CONSTANTS DEFINITIONS
 
 The Turbo Vision framework defines a large set of constants used to
 describe behavior rather than encode logic.

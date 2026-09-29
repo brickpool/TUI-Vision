@@ -1,5 +1,9 @@
 =pod
 
+=head1 NAME
+
+doc::appendix::Globals - Global Variables
+
 =head1 GLOBAL VARIABLES
 
 This document lists global variables used across the TUI framework.

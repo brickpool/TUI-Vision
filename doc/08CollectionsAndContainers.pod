@@ -1,0 +1,23 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+doc::manual::08 - Collections and Containers in TUI::Vision
+
+=head1 COLLECTIONS AND CONTAINERS
+
+=head1 Why Collections Exist
+
+=head1 TCollection
+
+=head1 TSortedCollection
+
+=head1 Ownership of Objects
+
+=head1 Collection Patterns
+
+=head1 Conclusion
+
+=cut
