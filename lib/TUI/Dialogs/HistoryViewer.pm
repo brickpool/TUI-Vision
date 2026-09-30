@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -171,7 +171,7 @@ __END__
 
 =head1 NAME
 
-THistoryViewer - list viewer for dialog input history
+TUI::Dialogs::HistoryViewer - list viewer for dialog input history
 
 =head1 HIERARCHY
 
@@ -194,13 +194,14 @@ THistoryViewer - list viewer for dialog input history
 =head1 DESCRIPTION
 
 C<THistoryViewer> implements the list viewer used to display input history
-entries managed by C<THistory>. It is responsible for presenting the stored
-history values in a scrollable list and handling user interaction with that
-list.
+entries managed by L<THistory|TUI::Dialogs::History>. It is responsible for 
+presenting the stored history values in a scrollable list and handling user 
+interaction with that list.
 
-The history viewer is normally created indirectly by a C<THistory> object when
-the history control is activated. Application code rarely needs to instantiate
-or interact with C<THistoryViewer> directly.
+The history viewer is normally created indirectly by a 
+L<THistory|TUI::Dialogs::History> object when the history control is activated. 
+Application code rarely needs to instantiate or interact with C<THistoryViewer> 
+directly.
 
 The viewer displays the history entries associated with a specific history
 identifier. Input fields that share the same history ID also share the same
@@ -211,14 +212,10 @@ history list.
 The following attributes are managed internally and exposed as read-only
 accessors.
 
-=over
-
-=item historyId
+=head2 historyId
 
 Numeric identifier selecting which history list is displayed
 (I<PositiveOrZeroInt>).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -237,7 +234,7 @@ Creates a new history viewer for displaying a specific history list.
 
 =item bounds
 
-Bounding rectangle of the list viewer (I<TRect>).
+Bounding rectangle of the list viewer (L<TRect|TUI::Objects::Rect>).
 
 =item hScrollBar
 
@@ -265,7 +262,8 @@ Numeric identifier of the history list to display.
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with named parameters and is
-provided for compatibility with traditional Turbo Vision construction patterns.
+provided for compatibility with traditional I<Turbo Vision> construction 
+patterns.
 
 =head1 METHODS
 
@@ -317,7 +315,6 @@ Copyright (c) 1990-1994, 1997 by Borland International
 Copyright (c) 2026 the L</AUTHORS> as listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is
-part of the distribution). This documentation is provided under the same terms
-as the Turbo Vision library itself.
+part of the distribution).
 
 =cut

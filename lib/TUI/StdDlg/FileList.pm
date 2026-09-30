@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -280,7 +280,7 @@ __END__
 
 =head1 NAME
 
-TFileList - list box view for file and directory entries
+TUI::StdDlg::FileList - list box view for file and directory entries
 
 =head1 HIERARCHY
 
@@ -302,21 +302,22 @@ TFileList - list box view for file and directory entries
 
 =head1 DESCRIPTION
 
-C<TFileList> implements a specialized list box used by standard
-TVision file dialogs to display directory contents.
+C<TFileList> implements a specialized list box used by standard L<TUI::Vision> 
+file dialogs to display directory contents.
 
-The list presents files and directories obtained from a C<TFileCollection>
-instance and supports keyboard and mouse navigation, selection, and activation
-of entries.
+The list presents files and directories obtained from a 
+L<TFileCollection|TUI::StdDlg::FileCollection> instance and supports keyboard 
+and mouse navigation, selection, and activation of entries.
 
-This class extends C<TListBox> with file-specific behavior and integrates
-tightly with other standard dialog components.
+This class extends L<TListBox|TUI::Views::ListBox> with file-specific behavior 
+and integrates tightly with other standard dialog components.
 
-C<TFileList> is typically managed by C<TFileDialog> and not used
-directly by application code.
+C<TFileList> is typically managed by L<TFileDialog|TUI::StdDlg::FileDialog> and 
+not used directly by application code.
 
-The list view relies on C<TFileCollection> for sorting and filtering file
-entries and reflects changes immediately when a new collection is assigned.
+The list view relies on L<TFileCollection|TUI::StdDlg::FileCollection> for 
+sorting and filtering file entries and reflects changes immediately when a new 
+collection is assigned.
 
 This class extends the generic list box behavior with file-specific logic such
 as directory scanning, filename display formatting, and hotkey extraction.
@@ -345,12 +346,13 @@ Creates a new file list view.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the list box (I<TRect>).
+Bounding rectangle defining the position and size of the list box 
+(L<TRect|TUI::Objects::Rect>).
 
 =item vScrollBar
 
-Optional vertical scroll bar associated with the list box (I<TScrollBar> or 
-undef).
+Optional vertical scroll bar associated with the list box 
+(L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
 
 =back
 

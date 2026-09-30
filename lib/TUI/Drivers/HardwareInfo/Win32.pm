@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -721,13 +721,13 @@ TUI::Drivers::HardwareInfo::Win32 - Win32 hardware backend for THardwareInfo
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::HardwareInfo::Win32> provides the Windows-specific 
-implementation of the C<THardwareInfo> hardware interface used by the Turbo 
-Vision driver layer.
+this module provides the Windows-specific implementation of the 
+L<THardwareInfo|TUI::Drivers::HardwareInfo> hardware interface used by the 
+I<Turbo Vision> driver layer.
 
-The module encapsulates access to the Win32 console, keyboard, mouse, timer,
-and screen facilities. It maintains global process-level state and interfaces
-directly with the Windows Console API.
+The module encapsulates access to the L<Win32 console|Win32::Console>, 
+keyboard, mouse, timer, and screen facilities. It maintains global 
+process-level state and interfaces directly with the Windows Console API.
 
 This module is not instantiated. All interaction is performed through
 class-level method calls.
@@ -737,8 +737,9 @@ is loaded. Console state is restored automatically when the program terminates.
 
 =head1 VARIABLES
 
-The following variables are internal to the Win32 backend implementation and
-are not part of the portable C<THardwareInfo> interface.
+The following variables are internal to the Win32 backend implementation and 
+are not part of the portable L<THardwareInfo|TUI::Drivers::HardwareInfo> 
+interface.
 
 =head2 $insertState
 
@@ -781,8 +782,9 @@ Stores console screen buffer information.
 =head1 IMPLEMENTATION
 
 This module contains the Windows-specific implementation behind
-C<THardwareInfo>. Public API semantics and usage are documented in
-usage are documented in L<THardwareInfo|TUI::Drivers::HardwareInfo>.
+L<THardwareInfo|TUI::Drivers::HardwareInfo>. Public API semantics and usage are 
+documented in usage are documented in 
+L<THardwareInfo|TUI::Drivers::HardwareInfo>.
 
 In this backend, those methods are mapped to Win32 console facilities for
 keyboard/mouse input, screen and caret control, timing, and control/error

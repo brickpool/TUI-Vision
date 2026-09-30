@@ -1,11 +1,11 @@
 package TUI::Dialogs::Label;
 # ABSTRACT: Provides a descriptive label linked to another dialog control.
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -206,7 +206,7 @@ __END__
 
 =head1 NAME
 
-TLabel - descriptive label linked to another dialog control
+TUI::Dialogs::Label - descriptive label linked to another dialog control
 
 =head1 HIERARCHY
 
@@ -228,36 +228,32 @@ TLabel - descriptive label linked to another dialog control
 =head1 DESCRIPTION
 
 C<TLabel> represents a static text label that is explicitly linked to another
-dialog control. Unlike C<TStaticText>, a label forwards activation events to
-its linked control, allowing users to focus or activate that control by
-clicking the label or using a keyboard shortcut.
+dialog control. Unlike L<TStaticText|TUI::Dialogs::StaticText>, a label 
+forwards activation events to its linked control, allowing users to focus or 
+activate that control by clicking the label or using a keyboard shortcut.
 
 Hotkey activation is supported through marked characters in the label text.
 When the corresponding key combination is pressed, focus is transferred to the
 linked control.
 
 Labels are typically used as prompts for input fields, list boxes, or other
-dialog elements and are commonly paired with controls such as C<TInputLine> or
-radio button groups.
+dialog elements and are commonly paired with controls such as 
+L<TInputLine|TUI::Dialogs::InputLine> or radio button groups.
 
 =head1 ATTRIBUTES
 
 The following attributes are exposed as read-only accessors and are managed
 internally by the label implementation.
 
-=over
-
-=item link
+=head2 link
 
 Reference to the control associated with this label (I<TView>).  
 If set, activation of the label selects the linked control.
 
-=item light
+=head2 light
 
 Indicates whether the label is currently displayed in its highlighted variant
 (I<Bool>). This state is managed internally.
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -275,7 +271,7 @@ Creates a new label with the specified bounds, text, and optional link target.
 
 =item bounds
 
-Bounding rectangle of the label (I<TRect>).
+Bounding rectangle of the label (L<TRect|TUI::Objects::Rect>).
 
 =item text
 

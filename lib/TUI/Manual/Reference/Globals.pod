@@ -1,8 +1,13 @@
+# PODNAME: TUI::Manual::Reference::Globals
+# ABSTRACT: Global Variables
+
+__END__
+
 =pod
 
 =head1 NAME
 
-doc::appendix::Globals - Global Variables
+TUI::Manual::Reference::Globals - Global Variables
 
 =head1 GLOBAL VARIABLES
 
@@ -281,11 +286,5 @@ inventory.
   $warningText         MsgBoxText             Warning dialog title
 
   $zoomIcon            TFrame                 Zoom window icon
-
-=head1 SEE ALSO
-
-L<TUI::Manual::Reference::Constants>,
-L<TUI::Manual::Reference::Events>,
-L<TUI::Manual::Reference::Screen>
 
 =cut

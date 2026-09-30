@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -427,8 +427,8 @@ TUI::StdDlg::Util - utility functions for standard dialogs
 
 =head1 DESCRIPTION
 
-C<TUI::StdDlg::Util> provides a collection of helper functions used by 
-TVision standard dialogs to validate paths, filenames, and directories.
+This module provides a collection of helper functions used by L<TUI::Vision> 
+standard dialogs to validate paths, filenames, and directories.
 
 The functions in this module operate on strings and filesystem-related data and
 do not maintain any internal state. They are intended to support file and

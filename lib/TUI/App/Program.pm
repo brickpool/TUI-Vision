@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -530,7 +530,7 @@ __END__
 
 =head1 NAME
 
-TProgram - central program object managing application execution
+TUI::App::Program - central program object managing application execution
 
 =head1 HIERARCHY
 
@@ -576,13 +576,13 @@ TProgram - central program object managing application execution
 
 =head1 DESCRIPTION
 
-C<TProgram> implements the core functionality of a TVision application.
+C<TProgram> implements the core functionality of a L<TUI::Vision> application.
 It manages the event loop, screen initialization, desktop, menu bar, and status
 line.
 
-Most applications derive from C<TApplication>, which extends C<TProgram> with
-additional behavior. However, it is also possible to derive an application
-directly from C<TProgram>.
+Most applications derive from L<TApplication|TUI::App::Application>, which 
+extends C<TProgram> with additional behavior. However, it is also possible to 
+derive an application directly from C<TProgram>.
 
 C<TProgram> owns all top-level views of the application and coordinates event
 dispatch, idle processing, and shutdown.
@@ -590,11 +590,12 @@ dispatch, idle processing, and shutdown.
 =head2 Commonly Used Features
 
 In normal applications you instantiate a C<TProgram>-derived class and call
-C<run>; most day-to-day customization happens by overriding C<initMenuBar>,
-C<initStatusLine>, C<handleEvent>, and sometimes C<idle>. C<TProgram> wires
+L</run>; most day-to-day customization happens by overriding L</initMenuBar>,
+L</initStatusLine>, L</handleEvent>, and sometimes L</idle>. C<TProgram> wires
 the desktop, menu bar, and status line during construction, then drives the
-main event loop for you. While many projects derive from C<TApplication>, the
-same workflow applies because C<TApplication> builds directly on this class.
+main event loop for you. While many projects derive from 
+L<TApplication|TUI::App::Application>, the same workflow applies because 
+L<TApplication|TUI::App::Application> builds directly on this class.
 
 =head1 VARIABLES
 
@@ -603,32 +604,33 @@ to access application state and top-level views.
 
 =head2 $exitText
 
-Label text (I<Str>) for the standard application exit command, including optional
-accelerator markers.
+Label text (I<Str>) for the standard application exit command, including 
+optional accelerator markers.
 
 =head2 $application
 
-Reference to the running application object (usually C<TApplication>).
+Reference to the running application object (usually 
+L<TApplication|TUI::App::Application>).
 
 =head2 $statusLine
 
-Reference to the application's C<TStatusLine> instance.
+Reference to the application's L<TStatusLine|TUI::Menus::StatusLine> instance.
 
 =head2 $menuBar
 
-Reference to the application's C<TMenuBar> instance.
+Reference to the application's L<TMenuBar|TUI::Menus::MenuBar> instance.
 
 =head2 $deskTop
 
-Reference to the application's C<TDeskTop> container.
+Reference to the application's L<TDeskTop|TUI::App::DeskTop> container.
 
 =head2 $appPalette
 
-Index of the active application C<TPalette> color palette.
+Index of the active application L<TPalette|TUI::Views::Palette> color palette.
 
 =head2 $pending
 
-Pending C<TEvent> object queued for later processing.
+Pending L<TEvent|TUI::Drivers::Event> object queued for later processing.
 
 =head1 CONSTRUCTOR
 
@@ -636,10 +638,10 @@ Pending C<TEvent> object queued for later processing.
 
   my $program = TProgram->new();
 
-Creates a new program object and initializes TVision support.
+Creates a new program object and initializes L<TUI::Vision> support.
 
-This constructor corresponds to the Turbo Vision 2.0 constructor and calls
-C<initScreen>, C<initDeskTop>, C<initMenuBar>, and C<initStatusLine>.
+This constructor calls C<initScreen>, C<initDeskTop>, C<initMenuBar>, and 
+C<initStatusLine>.
 
 =head2 new_TProgram
 

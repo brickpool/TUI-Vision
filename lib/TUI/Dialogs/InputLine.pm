@@ -1,11 +1,11 @@
 package TUI::Dialogs::InputLine;
 # ABSTRACT: Editable single-line text input control for dialogs.
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -610,7 +610,7 @@ __END__
 
 =head1 NAME
 
-TInputLine - editable single-line text input control for dialogs
+TUI::Dialogs::InputLine - editable single-line text input control for dialogs
 
 =head1 HIERARCHY
 
@@ -661,33 +661,29 @@ visible input area. The default value is a CP437 character.
 The following attributes are part of the public state of the input line.
 Internal and private attributes are intentionally not documented.
 
-=over
-
-=item data
+=head2 data
 
 Current text stored in the input field (I<Str>).
 
-=item maxLen
+=head2 maxLen
 
 Maximum allowed length of the input text (I<Int>).
 
-=item curPos
+=head2 curPos
 
 Current cursor position within the text (I<Int>).
 
-=item firstPos
+=head2 firstPos
 
 Index of the first visible character, used for horizontal scrolling (I<Int>).
 
-=item selStart
+=head2 selStart
 
 Start index of the current selection (I<Int>).
 
-=item selEnd
+=head2 selEnd
 
 End index of the current selection (I<Int>).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -705,7 +701,7 @@ Creates a new input line control.
 
 =item bounds
 
-Bounding rectangle of the input field (I<TRect>).  
+Bounding rectangle of the input field (L<TRect|TUI::Objects::Rect>).  
 The rectangle must describe a single-line area.
 
 =item maxLen
@@ -726,7 +722,8 @@ Optional validator object used for input checking and data transfer
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with named parameters and is
-provided for compatibility with traditional Turbo Vision construction patterns.
+provided for compatibility with traditional I<Turbo Vision> construction 
+patterns.
 
 =head1 DESTRUCTOR
 
@@ -734,9 +731,7 @@ provided for compatibility with traditional Turbo Vision construction patterns.
 
   $self->DEMOLISH($in_global_destruction);
 
-Destroys the input line and releases associated resources. This method
-corresponds to the Turbo Vision destructor and is normally invoked
-automatically.
+Destroys the input line and releases associated resources. 
 
 =head1 METHODS
 

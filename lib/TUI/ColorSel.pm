@@ -1,10 +1,11 @@
 package TUI::ColorSel;
-# ABSTRACT: Aggregated color selection components for TVision
+# ABSTRACT: Aggregated color selection components for TUI::Vision
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -52,7 +53,7 @@ __END__
 
 =head1 NAME
 
-TUI::ColorSel - Aggregated color selection components for TVision
+TUI::ColorSel - Aggregated color selection components for TUI::Vision
 
 =head1 SYNOPSIS
 
@@ -89,7 +90,7 @@ TUI::ColorSel - Aggregated color selection components for TVision
 =head1 DESCRIPTION
 
 C<TUI::ColorSel> is a convenience module that loads and re-exports the
-color selection components of the TUI::Vision framework.
+color selection components of the L<TUI::Vision> framework.
 
 Instead of importing each component separately, applications can simply
 load this module to gain access to all color selection related classes

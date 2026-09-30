@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -60,8 +60,9 @@ TUI::Gadgets::LineCollection - collection specialized for storing text lines
 =head1 HIERARCHY
 
   TObject
-    TCollection
-      TLineCollection
+    TNSCollection
+      TCollection
+        TLineCollection
 
 =head1 SYNOPSIS
 
@@ -73,14 +74,14 @@ TUI::Gadgets::LineCollection - collection specialized for storing text lines
 
 =head1 DESCRIPTION
 
-C<TLineCollection> is a specialized C<TCollection> used for storing text
-lines.
+C<TLineCollection> is a specialized L<TCollection|TUI::Objects::Collection> 
+used for storing text lines.
 
 It is primarily used by file viewing components and other gadgets that need
 to maintain a collection of strings representing individual lines of text.
 
 Apart from its constructor interface, all collection management behavior is
-inherited unchanged from C<TCollection>.
+inherited unchanged from L<TCollection|TUI::Objects::Collection>.
 
 =head1 CONSTRUCTOR
 
@@ -115,7 +116,7 @@ Growth increment of the collection (I<Int>).
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with named parameters and
-is provided for compatibility with traditional Turbo Vision construction
+is provided for compatibility with traditional I<Turbo Vision> construction
 patterns.
 
 =head1 SEE ALSO

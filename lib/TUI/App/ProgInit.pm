@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -91,7 +91,7 @@ __END__
 
 =head1 NAME
 
-TProgInit - program initialization helper
+TUI::App::ProgInit - program initialization helper
 
 =head1 SYNOPSIS
 
@@ -105,7 +105,7 @@ TProgInit - program initialization helper
 
 =head1 DESCRIPTION
 
-C<TProgInit> encapsulates the initialization logic used by a TVision
+C<TProgInit> encapsulates the initialization logic used by a TUI::Vision
 application to create its main user interface components.
 
 The class stores factory callbacks for creating the status line, menu bar, and
@@ -132,18 +132,18 @@ Creates a new program initialization helper.
 
 =item createStatusLine
 
-Code reference (I<CodeRef>) that is called with a C<TRect> argument and must 
-return a C<TStatusLine> object.
+Code reference (I<CodeRef>) that is called with a L<TRect|TUI::Objects::Rect> 
+argument and must return a L<TStatusLine|TUI::Menus::StatusLine> object.
 
 =item createMenuBar
 
-Code reference (I<CodeRef>) that is called with a C<TRect> argument and must 
-return a C<TMenuBar> object.
+Code reference (I<CodeRef>) that is called with a L<TRect|TUI::Objects::Rect> 
+argument and must return a L<TMenuBar|TUI::Menus::MenuBar> object.
 
 =item createDeskTop
 
-Code reference (I<CodeRef>) that is called with a C<TRect> argument and must 
-return a C<TDeskTop> object.
+Code reference (I<CodeRef>) that is called with a L<TRect|TUI::Objects::Rect> 
+argument and must return a L<TDeskTop|TUI::App::DeskTop> object.
 
 =back
 

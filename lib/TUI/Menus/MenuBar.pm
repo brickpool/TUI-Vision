@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -159,7 +159,7 @@ __END__
 
 =head1 NAME
 
-TMenuBar - manages the menu bar at the top of the application
+TUI::Menus::MenuBar - manages the menu bar at the top of the application
 
 =head1 HIERARCHY
 
@@ -172,7 +172,7 @@ TMenuBar - manages the menu bar at the top of the application
 
   use TUI::Menus;
 
-  # Common TVision style call 
+  # Common Turbo Vision style call 
   my $menuBar = new_TMenuBar($bounds, $menu);
 
   # The following section demonstrates how to build a menu bar 
@@ -194,7 +194,7 @@ TMenuBar - manages the menu bar at the top of the application
 
 =head1 DESCRIPTION
 
-C<TMenuBar> implements the menu bar displayed at the top of a TVision
+C<TMenuBar> implements the menu bar displayed at the top of a TUI::Vision
 application. In this Perl implementation, menu structures are created using
 a declarative, expression-based style rather than explicit builder calls.
 
@@ -221,7 +221,7 @@ Creates a new menu bar.
 
 =item bounds
 
-Bounding rectangle of the menu bar (I<TRect>).
+Bounding rectangle of the menu bar (L<TRect|TUI::Objects::Rect>).
 
 =item menu
 
@@ -236,7 +236,8 @@ Root menu structure defining the contents of the menu bar (I<TMenu> or undef).
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with named parameters and is
-provided for compatibility with traditional Turbo Vision construction patterns.
+provided for compatibility with traditional I<Turbo Vision> construction 
+patterns.
 
 =head1 METHODS
 

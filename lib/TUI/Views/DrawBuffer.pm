@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -278,12 +278,7 @@ __END__
 
 =head1 NAME
 
-TDrawBuffer - temporary line buffer for screen output
-
-=head1 HIERARCHY
-
-  TDrawBuffer (value type)
-    used by TView drawing methods
+TUI::Views::DrawBuffer - temporary line buffer for screen output
 
 =head1 SYNOPSIS
 
@@ -305,14 +300,14 @@ C<TDrawBuffer> represents a temporary buffer for rendering a single line of
 screen output. Each entry in the buffer stores both a character value and a
 display attribute.
 
-This type is a lightweight value type and is not derived from C<TObject>.
-Internally, it corresponds to an array of fixed width, where each element
-combines a character and its visual attributes.
+This type is a lightweight value type and is not derived from 
+L<TObject|TUI::Objects::Object>. Internally, it corresponds to an array of 
+fixed width, where each element combines a character and its visual attributes.
 
-C<TDrawBuffer> is primarily used inside C<TView> drawing routines. Text and
-attributes are written into the buffer using helper methods, and the buffer is
-then passed to C<TView> methods such as C<writeLine> or C<writeBuf> to render 
-the output on screen.
+C<TDrawBuffer> is primarily used inside L<TView|TUI::Views::View> drawing 
+routines. Text and attributes are written into the buffer using helper methods, 
+and the buffer is then passed to L<TView|TUI::Views::View> methods such as 
+L</writeLine> or L</writeBuf> to render the output on screen.
 
 =head1 CONSTRUCTOR
 
@@ -331,14 +326,14 @@ Creates a new, empty draw buffer with a width equal to the maximum view width.
 Copies character data from C<@source> into the draw buffer.
 
 Source elements may be Unicode codepoints, legacy packed screen-cell
-values (C<short>), or C<TScreenCell> objects.
+values (C<short>), or L<TScreenCell|TUI::Drivers::ScreenCell> objects.
 
 If C<$attr> is defined, it overrides any attribute information present
 in the source data.
 
 Otherwise, attribute information is taken from the source element when
 available (either from a legacy packed screen-cell value or from a
-C<TScreenCell> object).
+L<TScreenCell|TUI::Drivers::ScreenCell> object).
 
 =head2 moveChar
 
@@ -355,7 +350,7 @@ retained but the characters are not.
 
   my $num = $buffer->moveCStr($indent, $string, $attrs);
 
-Writes a string containing Turbo Vision style tilde markers into the buffer,
+Writes a string containing I<Turbo Vision> style tilde markers into the buffer,
 applying the specified attributes.
 
 Returns the number of cells in the buffer that were actually updated.

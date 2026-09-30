@@ -1,10 +1,11 @@
 package TUI::Objects;
-# ABSTRACT: Base objects for the TVision framework
+# ABSTRACT: Base objects for the TUI::Vision framework
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -54,7 +55,7 @@ __END__
 
 =head1 NAME
 
-Objects - Base object classes for the TVision framework
+TUI::Objects - Base object classes for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -74,9 +75,10 @@ Objects - Base object classes for the TVision framework
 
 =head1 DESCRIPTION
 
-TUI::Objects provides the foundational object layer for the TVision
-framework. It corresponds to the classic Turbo Vision TObject system and
-serves as the central hub for all structural classes, including:
+C<TUI::Objects> provides the foundational object layer for the TUI::Vision
+framework. It corresponds to the classic I<Turbo Vision> 
+L<TObject|TUI::Objects::Object> system and serves as the central hub for all 
+structural classes, including:
 
 =over 4
 
@@ -88,7 +90,7 @@ L<TPoint|TUI::Objects::Point>, L<TRect|TUI::Objects::Rect>, and related
 utilities.
 
 =item * L<TCollection|TUI::Objects::Collection> classes -
-Typed and sorted collections, mirroring the original Turbo Vision design.
+Typed and sorted collections, mirroring the original I<Turbo Vision> design.
 
 =item * Constants and shared definitions -
 Symbolic L<constants|TUI::Objects::Const> used throughout the framework.

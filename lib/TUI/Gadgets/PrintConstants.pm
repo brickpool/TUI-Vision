@@ -1,10 +1,11 @@
 package TUI::Gadgets::PrintConstants;
+# ABSTRACT: Helpers for printing symbolic event constants
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -17,6 +18,10 @@ our @EXPORT_OK = qw(
   printMouseButtonState
   printMouseWheelState
   printMouseEventFlags
+);
+
+our %EXPORT_TAGS = (
+  all => \@EXPORT_OK,
 );
 
 use TUI::toolkit qw( :utils );
@@ -274,8 +279,8 @@ TUI::Gadgets::PrintConstants - helpers for printing symbolic event constants
 
 =head1 DESCRIPTION
 
-C<TUI::Gadgets::PrintConstants> provides helper functions for printing symbolic
-representations of TVision constants.
+This module provides helper functions for printing symbolic representations of 
+L<TUI::Vision> constants.
 
 The functions translate numeric event, key, and mouse codes into their
 corresponding symbolic names and write the result to a supplied output object.
@@ -283,7 +288,7 @@ If a value cannot be mapped to a known constant, its numeric representation is
 printed instead.
 
 This module is intended for debugging and diagnostic output and is commonly
-used by gadgets such as C<TEventViewer>.
+used by gadgets such as L<TEventViewer|TUI::Gadgets::EventViewer>.
 
 =head1 FUNCTIONS
 

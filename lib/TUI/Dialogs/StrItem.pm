@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -86,7 +86,7 @@ __END__
 
 =head1 NAME
 
-TSItem - simple singly linked list node for  dialog data
+TUI::Dialogs::StrItem - simple singly linked list node for dialog data
 
 =head1 SYNOPSIS
 
@@ -101,11 +101,11 @@ TSItem - simple singly linked list node for  dialog data
 
 =head1 DESCRIPTION
 
-C<TSItem> represents a minimal singly linked list node used by TVision
+C<TSItem> represents a minimal singly linked list node used by TUI::Vision
 dialog infrastructure. Each node stores a string value and a reference to the
 next node in the list, or C<undef> if it is the last element.
 
-This structure originates from the classic Turbo Vision record type used for
+This structure originates from the classic I<Turbo Vision> record type used for
 managing lists of strings. In the Perl implementation, it benefits from
 automatic memory management and reference handling while preserving the
 original data model.
@@ -121,23 +121,19 @@ contains only the essential information required to traverse the list, keeping
 the structure lightweight and efficient.
 
 Unlike container abstractions such as arrays, C<TSItem> mirrors the original
-Turbo Vision design closely, which simplifies porting and maintenance of
+I<Turbo Vision> design closely, which simplifies porting and maintenance of
 existing logic.
 
 =head1 ATTRIBUTES
 
-=over
-
-=item value
+=head2 value
 
 The string value stored in this list node (I<Str>).
 
-=item next
+=head2 next
 
 Reference to the next node in the list, or C<undef> if this is the last element
 (I<TSItem> or undef).
-
-=back
 
 =head1 METHODS
 

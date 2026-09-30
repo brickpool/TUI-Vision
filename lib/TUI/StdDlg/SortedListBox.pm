@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -184,7 +184,7 @@ __END__
 
 =head1 NAME
 
-TSortedListBox - list box with automatic item sorting
+TUI::StdDlg::SortedListBox - list box with automatic item sorting
 
 =head1 HIERARCHY
 
@@ -206,8 +206,8 @@ TSortedListBox - list box with automatic item sorting
 
 =head1 DESCRIPTION
 
-C<TSortedListBox> is a subclass of C<TListBox> that adds automatic sorting
-behavior for its items.
+C<TSortedListBox> is a subclass of L<TListBox|TUI::Views::ListBox> that adds 
+automatic sorting behavior for its items.
 
 The list box maintains its contents in sorted order based on keys extracted
 from the item text. It is designed as a reusable base class for list views that
@@ -215,19 +215,15 @@ require ordered presentation, such as file and directory lists.
 
 =head1 ATTRIBUTES
 
-=over
-
-=item shiftState
+=head2 shiftState
 
 Current keyboard shift state used during incremental search and navigation
 (I<Int>).
 
-=back
-
 =head1 CONSTRUCTOR
 
 This class does not define its own construction parameters and relies on the
-standard C<TListBox> initialization.
+standard L<TListBox|TUI::Views::ListBox> initialization.
 
 =head2 new
 
@@ -238,19 +234,21 @@ standard C<TListBox> initialization.
 
 Creates a new sorted list box.
 
-This constructor is inherited from C<TListBox> and initializes the view with
-the specified bounds and optional vertical scroll bar.
+This constructor is inherited from L<TListBox|TUI::Views::ListBox> and 
+initializes the view with the specified bounds and optional vertical scroll 
+bar.
 
 =over
 
 =item bounds
 
-Bounding rectangle defining the position and size of the list box (I<TRect>).
+Bounding rectangle defining the position and size of the list box 
+(L<TRect|TUI::Objects::Rect>).
 
 =item vScrollBar
 
-Optional vertical scroll bar associated with the list box (I<TScrollBar> or 
-undef).
+Optional vertical scroll bar associated with the list box 
+(L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
 
 =back
 

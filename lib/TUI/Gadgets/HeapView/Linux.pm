@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -61,12 +61,12 @@ TUI::Gadgets::HeapView::Linux - Linux heap usage backend for HeapView
 
   use TUI::Gadgets::HeapView::Linux;
 
-  my $total = TUI::Gadgets::HeapView::Linux->heapSize;
+  my $total = TUI::Gadgets::HeapView::Linux->heapSize();
 
 =head1 DESCRIPTION
 
-C<TUI::Gadgets::HeapView::Linux> provides the Linux-specific implementation
-used by C<THeapView> to retrieve memory usage information.
+This module provides the Linux-specific implementation used by 
+L<THeapView|TUI::Gadgets::HeapView> to retrieve memory usage information.
 
 On Linux systems, heap usage is derived from the process virtual memory
 statistics provided by the operating system. This module encapsulates the
@@ -78,7 +78,7 @@ The module is not intended to be used directly by application code.
 
 =head2 heapSize
 
-  my $total = TUI::Gadgets::HeapView::Linux->heapSize;
+  my $total = TUI::Gadgets::HeapView::Linux->heapSize();
 
 Returns the amount of memory currently used by the process.
 

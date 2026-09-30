@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -63,7 +63,7 @@ __END__
 
 =head1 NAME
 
-THistInit - initializer for history list viewer creation
+TUI::Dialogs::HistInit - initializer for history list viewer creation
 
 =head1 SYNOPSIS
 
@@ -97,8 +97,8 @@ THistInit - initializer for history list viewer creation
 
 =head1 DESCRIPTION
 
-C<TUI::Dialogs::HistInit> encapsulates the initialization logic required to
-create history list viewer objects in TVision dialogs.
+C<HistInit> encapsulates the initialization logic required to create history 
+list viewer objects in L<TUI::Vision> dialogs.
 
 The class stores a user-supplied callback which is invoked whenever a list
 viewer needs to be constructed. This allows dialogs to customize the concrete

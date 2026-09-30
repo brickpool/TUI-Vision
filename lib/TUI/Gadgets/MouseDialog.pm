@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -175,7 +175,7 @@ __END__
 
 =head1 NAME
 
-TMouseDialog - dialog for configuring mouse options
+TUI::Gadgets::MouseDialog - dialog for configuring mouse options
 
 =head1 HIERARCHY
 

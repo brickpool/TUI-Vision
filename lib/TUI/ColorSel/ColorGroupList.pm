@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -216,7 +216,7 @@ __END__
 
 =head1 NAME
 
-TColorGroupList - A list viewer for color groups
+TUI::ColorSel::ColorGroupList - A list viewer for color groups
 
 =head1 HIERARCHY
 
@@ -254,16 +254,12 @@ the currently focused group.
 
 =head1 ATTRIBUTES
 
-=over
-
-=item groups
+=head2 groups
 
 Contains the first color group in the linked list, or C<undef> when
 the list is empty (I<TColorGroup> or C<undef>).
 
 The attribute is read-only.
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -283,7 +279,7 @@ The following named parameters are accepted:
 
 =item C<bounds>
 
-The rectangular bounds of the list viewer (I<TRect>).
+The rectangular bounds of the list viewer (L<TRect|TUI::Objects::Rect>).
 
 =item C<scrollBar>
 

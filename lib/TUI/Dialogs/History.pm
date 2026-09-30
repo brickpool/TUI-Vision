@@ -1,12 +1,12 @@
 package TUI::Dialogs::History;
-# ABSTRACT: A TWindow-based history browser for TVision input controls
+# ABSTRACT: A TWindow-based history browser for input controls
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 use utf8;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -218,7 +218,7 @@ __END__
 
 =head1 NAME
 
-THistory - history browser for dialog input fields
+TUI::Dialogs::History - history browser for dialog input fields
 
 =head1 HIERARCHY
 
@@ -268,18 +268,14 @@ symbol.
 The following attributes are managed internally and exposed as read-only
 accessors.
 
-=over
-
-=item link
+=head2 link
 
 Reference to the associated input line control (I<TInputLine>).
 
-=item historyId
+=head2 historyId
 
 Numeric identifier for the history list (I<PositiveOrZeroInt>).  
 Input fields using the same identifier share the same history.
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -297,7 +293,7 @@ Creates a new history control linked to an input field.
 
 =item bounds
 
-Bounding rectangle of the history control (I<TRect>).
+Bounding rectangle of the history control (L<TRect|TUI::Objects::Rect>).
 
 =item link
 
@@ -316,7 +312,8 @@ Numeric identifier used to group history entries.
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with named parameters and is
-provided for compatibility with traditional Turbo Vision construction patterns.
+provided for compatibility with traditional I<Turbo Vision> construction 
+patterns.
 
 =head1 METHODS
 
@@ -385,7 +382,6 @@ Copyright (c) 1990-1994, 1997 by Borland International
 Copyright (c) 2026 the L</AUTHORS> as listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is
-part of the distribution). This documentation is provided under the same terms
-as the Turbo Vision library itself.
+part of the distribution).
 
 =cut

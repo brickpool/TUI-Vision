@@ -1,11 +1,11 @@
 package TUI::Views::ListViewer;
 # ABSTRACT: Base class for list viewers
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -589,7 +589,7 @@ __END__
 
 =head1 NAME
 
-TListViewer - base class for list viewers
+TUI::Views::ListViewer - base class for list viewers
 
 =head1 HIERARCHY
 
@@ -631,14 +631,14 @@ TListViewer - base class for list viewers
 
 =head1 DESCRIPTION
 
-C<TListViewer> is the TVision base class for list viewer controls. It
+C<TListViewer> is the L<TUI::Vision> base class for list viewer controls. It
 implements the generic behavior required to display a list of items arranged
 in one or more columns, including keyboard navigation, mouse interaction, and
 scroll bar synchronization.
 
 C<TListViewer> does not store the actual data being displayed. Subclasses are
-expected to provide the data by overriding C<getText()> and typically also
-C<selectItem()>.
+expected to provide the data by overriding L</getText> and typically also
+L</selectItem>.
 
 List viewers may be equipped with horizontal and/or vertical scroll bars. When
 attached, the list viewer keeps the scroll bars synchronized with the current
@@ -647,10 +647,10 @@ focus and range.
 =head2 Commonly Used Features
 
 Because C<TListViewer> does not manage any data itself, the primary task when
-using it is to subclass it and override C<getText>, which is called once per
+using it is to subclass it and override L</getText>, which is called once per
 visible row to retrieve the display string for a given item index. After
-construction, call C<setRange> to tell the viewer how many items exist. When
-the list viewer is placed in a group other than a dialog, C<getPalette> will
+construction, call L</setRange> to tell the viewer how many items exist. When
+the list viewer is placed in a group other than a dialog, L</getPalette> will
 almost certainly need to be overridden as well so that the color mapping works
 correctly.
 
@@ -668,33 +668,31 @@ Text displayed when the list contains no items.
 The following attributes are implemented as read/write accessors and are also
 used internally by the list viewer.
 
-=over
+=head2 hScrollBar
 
-=item hScrollBar
+Horizontal scroll bar (L<TScrollBar|TUI::Views::TScrollBar> or C<undef>) 
+associated with the list viewer.
 
-Horizontal scroll bar (I<TScrollBar> or undef) associated with the list viewer.
+=head2 vScrollBar
 
-=item vScrollBar
+Vertical scroll bar (L<TScrollBar|TUI::Views::TScrollBar> or C<undef>) 
+associated with the list viewer.
 
-Vertical scroll bar  (I<TScrollBar> or undef) associated with the list viewer.
-
-=item numCols
+=head2 numCols
 
 Number of columns used to display items (I<PositiveOrZeroInt>).
 
-=item topItem
+=head2 topItem
 
 Index of the first visible item (I<Int>).
 
-=item focused
+=head2 focused
 
 Index of the currently focused item (I<Int>).
 
-=item range
+=head2 range
 
 Total number of items in the list (I<Int>).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -713,7 +711,7 @@ Creates a new list viewer.
 
 =item bounds
 
-Bounding rectangle of the list viewer (I<TRect>).
+Bounding rectangle of the list viewer (L<TRect|TUI::Objects::Rect>).
 
 =item numCols
 
@@ -721,11 +719,12 @@ Number of columns used to display items (I<PositiveOrZeroInt>).
 
 =item hScrollBar
 
-Optional horizontal scroll bar (I<TScrollBar> or undef).
+Optional horizontal scroll bar 
+(L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
 
 =item vScrollBar
 
-Optional vertical scroll bar (I<TScrollBar> or undef).
+Optional vertical scroll bar (L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
 
 =back
 
@@ -748,7 +747,7 @@ parameters.
 
   $lv->draw();
 
-Draws the list viewer contents using C<getText()>.
+Draws the list viewer contents using L</getText>.
 
 =head2 focusItem
 
@@ -760,7 +759,7 @@ Moves the focus to the specified item index.
 
   $lv->focusItemNum($index);
 
-Like C<focusItem>, but clamps the index to the valid range.
+Like L</focusItem>, but clamps the index to the valid range.
 
 =head2 getPalette
 
@@ -774,8 +773,8 @@ Returns the color palette used to draw the list viewer.
 
 Returns the text representation of an item.
 
-Subclasses are expected to override this method to provide the actual data to be
-displayed by the list viewer.
+Subclasses are expected to override this method to provide the actual data to 
+be displayed by the list viewer.
 
 =head2 handleEvent
 

@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -87,7 +87,7 @@ __END__
 
 =head1 NAME
 
-TValidator - Abstract base class for validator objects
+TUI::Validate::Validator - Abstract base class for validator objects
 
 =head1 HIERARCHY
 
@@ -123,30 +123,31 @@ validators specialize behavior for concrete value domains.
 
 =head2 Commonly Used Features
 
-Typical subclasses combine C<isValidInput> for live field checking with
-C<isValid> for final acceptance.
+Typical subclasses combine L</isValidInput> for live field checking with
+L</isValid> for final acceptance.
 
-Callers that want a single validation entry point usually use C<validate>,
-which performs the check and triggers C<error> on failure.
+Callers that want a single validation entry point usually use L</validate>,
+which performs the check and triggers L</error> on failure.
 
-For non-string payloads, subclasses can override C<transfer> to bridge between
+For non-string payloads, subclasses can override L</transfer> to bridge between
 widget text and structured data.
 
 =head1 ATTRIBUTES
 
 =head2 options
 
-Read/write bit field for validator options.
+Read/write bit field for validator options (I<PositiveOrZeroInt>).
 
 =head2 status
 
-Read/write status value set by concrete validator implementations.
+Read/write status value set by concrete validator implementations
+(I<PositiveOrZeroInt>).
 
 =head1 CONSTRUCTOR
 
 =head2 new
 
-Construction is inherited from C<TObject>.
+Construction is inherited from L<TObject|TUI::Objects::Object>.
 
 =head2 new_TValidator
 

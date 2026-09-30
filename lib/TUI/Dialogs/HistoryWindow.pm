@@ -1,11 +1,11 @@
 package TUI::Dialogs::HistoryWindow;
 # ABSTRACT: Window component showing and managing history list items
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -140,7 +140,7 @@ __END__
 
 =head1 NAME
 
-THistoryWindow - window displaying input history entries
+TUI::Dialogs::HistoryWindow - window displaying input history entries
 
 =head1 HIERARCHY
 
@@ -162,27 +162,24 @@ THistoryWindow - window displaying input history entries
 =head1 DESCRIPTION
 
 C<THistoryWindow> implements the window used to display the history list managed
-by C<THistory>. When the history icon is activated, a history window is created
-and populated with a list viewer showing previously entered values.
+by L<THistory|TUI::Dialogs::History>. When the history icon is activated, a 
+history window is created and populated with a list viewer showing previously 
+entered values.
 
 This class primarily exists to support the internal operation of history lists
 and is not commonly instantiated directly by application code. The window owns
-a C<THistoryViewer> instance that handles rendering and selection of history
-entries.
+a L<THistoryViewer|TUI::Dialogs::HistoryViewer> instance that handles rendering 
+and selection of history entries.
 
 =head1 ATTRIBUTES
 
 The following attributes are managed internally and exposed as read-only
 accessors.
 
-=over
-
-=item viewer
+=head2 viewer
 
 Reference to the history list viewer (I<THistoryViewer>) contained within this
 window.
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -199,7 +196,7 @@ Creates a new history window and initializes its internal list viewer.
 
 =item bounds
 
-Bounding rectangle of the history window (I<TRect>).
+Bounding rectangle of the history window (L<TRect|TUI::Objects::Rect>).
 
 =item historyId
 
@@ -214,7 +211,8 @@ Numeric identifier selecting which history list is displayed.
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with named parameters and is
-provided for compatibility with traditional Turbo Vision construction patterns.
+provided for compatibility with traditional I<Turbo Vision> construction 
+patterns.
 
 =head1 METHODS
 

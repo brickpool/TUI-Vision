@@ -1,11 +1,11 @@
 package TUI::Dialogs::RadioButtons;
 # ABSTRACT: Radio button cluster control based on TCluster
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -88,7 +88,7 @@ __END__
 
 =head1 NAME
 
-TRadioButtons - radio button cluster control
+TUI::Dialogs::RadioButtons - radio button cluster control
 
 =head1 HIERARCHY
 
@@ -117,7 +117,7 @@ TRadioButtons - radio button cluster control
 
 C<TRadioButtons> implements a classic radio button group where exactly one item
 is selected at any time. It inherits navigation, event handling, and drawing
-behavior from C<TCluster>.
+behavior from L<TCluster|TUI::Dialogs::Cluster>.
 
 Selecting a radio button automatically deselects the previously selected one.
 The control updates its internal value whenever the selection changes or an item
@@ -125,11 +125,11 @@ is pressed.
 
 =head2 Commonly Used Features
 
-Typical usage is to create the C<TSItem> chain, construct C<TRadioButtons>
-with C<new_TRadioButtons>, and insert the control into a dialog. In normal
-code you usually interact with the selected value through dialog data transfer
-rather than calling C<press> or C<movedTo> directly; those methods are mostly
-used by event handling and tests.
+Typical usage is to create the L<TSItem|TUI::Dialogs::StrItem> chain, construct
+C<TRadioButtons> with L</new_TRadioButtons>, and insert the control into a 
+dialog. In normal code you usually interact with the selected value through 
+dialog data transfer rather than calling L</press> or L</movedTo> directly; 
+those methods are mostly used by event handling and tests.
 
 =head1 VARIABLES
 
@@ -156,7 +156,7 @@ Creates a new radio button cluster.
 =item bounds
 
 Bounding rectangle defining the position and size of the radio button group
-(I<TRect>).
+(L<TRect|TUI::Objects::Rect>).
 
 =item strings
 

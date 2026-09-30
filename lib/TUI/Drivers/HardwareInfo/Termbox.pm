@@ -9,7 +9,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -1315,15 +1315,15 @@ TUI::Drivers::HardwareInfo::Termbox - Termbox hardware backend for THardwareInfo
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::HardwareInfo::Termbox> provides the Termbox-based
-implementation of the C<THardwareInfo> hardware interface used by the Turbo
-Vision driver layer.
+This module provides the L<Termbox>-based implementation of the 
+L<THardwareInfo|TUI::Drivers::HardwareInfo> hardware interface used by the 
+I<Turbo Vision> driver layer.
 
 The module maps keyboard, mouse, screen, caret, timer, and terminal services
-to the facilities provided by C<Termbox>.
+to the facilities provided by L<Termbox>.
 
-Depending on availability, either the native Termbox FFI implementation or the
-pure Perl fallback implementation is used transparently.
+Depending on availability, either the native L<Termbox> FFI implementation or 
+the pure Perl fallback implementation is used transparently.
 
 This module is not instantiated. All interaction is performed through
 class-level method calls.
@@ -1333,8 +1333,9 @@ released automatically when the program terminates.
 
 =head1 VARIABLES
 
-The following variables are internal to the Termbox backend implementation and
-are not part of the portable C<THardwareInfo> interface.
+The following variables are internal to the L<Termbox> backend implementation 
+and are not part of the portable L<THardwareInfo|TUI::Drivers::HardwareInfo> 
+interface.
 
 =head2 $insertState
 
@@ -1356,13 +1357,13 @@ Stores the most recently observed mouse button state (I<PositiveOrZeroInt>).
 =head1 IMPLEMENTATION
 
 This module contains the Termbox-specific implementation behind
-C<THardwareInfo>. Public API semantics and usage are documented in
-L<THardwareInfo|TUI::Drivers::HardwareInfo>.
+L<THardwareInfo|TUI::Drivers::HardwareInfo>. Public API semantics and usage are 
+documented in L<THardwareInfo|TUI::Drivers::HardwareInfo>.
 
 In this backend, those methods are mapped to Termbox facilities for terminal
 input handling, screen output, cursor management, timing, and mouse support.
 
-The implementation provides translation between Turbo Vision key codes,
+The implementation provides translation between I<Turbo Vision> key codes,
 character codes, mouse events, and the corresponding Termbox event model.
 
 When the pure Perl L<Termbox::PP> backend is used, additional compatibility

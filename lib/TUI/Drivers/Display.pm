@@ -145,7 +145,7 @@ __END__
 
 =head1 NAME
 
-TDisplay - low-level display abstraction
+TUI::Drivers::Display - low-level display abstraction
 
 =head1 SYNOPSIS
 
@@ -165,8 +165,8 @@ TDisplay - low-level display abstraction
 
 =head1 DESCRIPTION
 
-C<TDisplay> provides a low-level abstraction layer for screen and
-cursor operations used by the TVision driver subsystem.
+C<TDisplay> provides a low-level abstraction layer for screen and cursor 
+operations used by the L<TUI::Vision> driver subsystem.
 
 The module defines a set of class-level routines for querying and modifying
 display parameters such as screen size, cursor shape, and video mode. It does
@@ -176,18 +176,19 @@ C<TDisplay> is not an object-oriented class. It must not be instantiated.
 All interaction is performed via class method calls of the form
 C<< TDisplay->method >>.
 
-This module is primarily used internally by C<TScreen> and related driver
-components.
+This module is primarily used internally by L<TScreen|TUI::Drivers::Screen> and 
+related driver components.
 
 =head2 Commonly Used Features
 
 Most code interacts with C<TDisplay> through class-style calls to query and
-control the terminal state: C<getCols()>, C<getRows()>, C<getCrtMode()>,
-C<setCrtMode()>, C<getCursorType()>, C<setCursorType()>, and C<clearScreen()>.
+control the terminal state: L</getCols>, L</getRows>, L</getCrtMode>,
+L</setCrtMode>, L</getCursorType>, L</setCursorType>, and L</clearScreen>.
 
-C<TDisplay> is a thin abstraction over C<THardwareInfo> and is generally used
-inside the driver stack (for example C<TScreen>) rather than directly in
-application dialogs or views. The C<updateIntlChars()> routine adjusts frame,
+C<TDisplay> is a thin abstraction over 
+L<THardwareInfo|TUI::Drivers::HardwareInfo> and is generally used inside the 
+driver stack (for example L<TScreen|TUI::Drivers::Screen>) rather than directly 
+in application dialogs or views. The L</updateIntlChars> routine adjusts frame,
 scrollbar, and desktop drawing characters based on the active code page.
 
 =head1 METHODS

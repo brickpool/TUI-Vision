@@ -100,7 +100,7 @@ __END__
 
 =head1 NAME
 
-THWMouse - internal low-level hardware mouse backend
+TUI::Drivers::HWMouse - internal low-level hardware mouse backend
 
 =head1 SYNOPSIS
 
@@ -112,10 +112,11 @@ THWMouse - internal low-level hardware mouse backend
 
 =head1 DESCRIPTION
 
-C<THWMouse> implements low-level mouse handling for the TVision driver layer.
+C<THWMouse> implements low-level mouse handling for the L<TUI::Vision> driver 
+layer.
 
-This module is an internal backend API. External code should use C<TMouse> as 
-the public mouse interface.
+This module is an internal backend API. External code should use 
+L<TMouse|TUI::Drivers::Mouse> as the public mouse interface.
 
 The module maintains global mouse state and backend hooks used by the driver 
 stack.
@@ -156,8 +157,8 @@ Maximum Y coordinate for mouse movement (I<PositiveOrZeroInt>).
 =head1 METHODS
 
 The backend exposes class methods with the same operational surface used by
-C<TMouse> (for example C<show()>, C<hide()>, C<getEvent()>, C<present()>,
-C<resume()>, and C<suspend()>).
+L<TMouse|TUI::Drivers::Mouse> (for example C<show()>, C<hide()>, C<getEvent()>, 
+C<present()>, C<resume()>, and C<suspend()>).
 
 Their public-facing semantics are documented in L<TMouse|TUI::Drivers::Mouse>.
 

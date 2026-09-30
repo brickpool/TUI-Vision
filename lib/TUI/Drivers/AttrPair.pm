@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -149,7 +149,7 @@ __END__
 
 =head1 NAME
 
-TAttrPair - pair of color attributes value type
+TUI::Drivers::AttrPair - pair of color attributes value type
 
 =head1 SYNOPSIS
 
@@ -164,13 +164,14 @@ TAttrPair - pair of color attributes value type
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::AttrPair> provides C<TAttrPair>, a value type that
-represents a pair of color attributes.
+This module provides C<TAttrPair>, a value type that represents a pair of color 
+attributes.
 
-A C<TAttrPair> is a blessed array reference of two C<TColorAttr> elements,
-conventionally called the I<"low"> (index C<0>) and I<"high"> (index C<1>)
-attribute. Some API functions, such as C<< TDrawBuffer->moveCStr >>, use a
-C<TAttrPair> to pass both a normal and a highlighted attribute at once.
+A C<TAttrPair> is a blessed array reference of two 
+L<TColorAttr|TUI::Drivers::ColorAttr> elements, conventionally called the 
+I<"low"> (index C<0>) and I<"high"> (index C<1>) attribute. Some API functions, 
+such as C<< TDrawBuffer->moveCStr >>, use a C<TAttrPair> to pass both a normal 
+and a highlighted attribute at once.
 
 =head1 CONSTRUCTOR
 
@@ -195,8 +196,8 @@ With explicit low and optional high attributes:
   );
 
 If C<hi> is omitted, it defaults to a BIOS attribute of C<0>. The C<lo> and
-C<hi> arguments must be C<TColorAttr> values, but a plain integer is also
-accepted as a shorthand for a BIOS attribute.
+C<hi> arguments must be L<TColorAttr|TUI::Drivers::ColorAttr> values, but a 
+plain integer is also accepted as a shorthand for a BIOS attribute.
 
 =head1 METHODS
 

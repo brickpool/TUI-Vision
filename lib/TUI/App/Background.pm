@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -99,7 +99,7 @@ __END__
 
 =head1 NAME
 
-TBackground - forms the background for the applications
+TUI::App::Background - forms the background for the applications
 
 =head1 HIERARCHY
 
@@ -119,7 +119,7 @@ TBackground - forms the background for the applications
 =head1 DESCRIPTION
 
 C<TBackground> represents the background view that forms the visual backdrop of
-a TVision application. It fills its bounding rectangle by repeatedly
+a L<TUI::Vision> application. It fills its bounding rectangle by repeatedly
 drawing a single character pattern.
 
 Background views are typically created and managed automatically by the
@@ -128,11 +128,12 @@ unless a custom background is desired.
 
 =head2 Commonly Used Features
 
-Most programs use C<TBackground> indirectly through C<TDeskTop>; the default
-desktop creation path already instantiates a background object with the global
-desktop pattern. Direct usage is uncommon and usually limited to customizing
-appearance by overriding C<TDeskTop::initBackground()> and returning a
-background with a different C<pattern> character.
+Most programs use C<TBackground> indirectly through 
+L<TDeskTop|TUI::App::DeskTop>; the default desktop creation path already 
+instantiates a background object with the global desktop pattern. Direct usage 
+is uncommon and usually limited to customizing appearance by overriding 
+C<TDeskTop::initBackground()> and returning a background with a different 
+L</pattern> character.
 
 For custom backgrounds, the typical workflow is: derive a desktop class,
 override C<initBackground()> to create 
@@ -144,13 +145,9 @@ from the application's C<initDeskTop()> override.
 The following attributes are managed internally and exposed as read-only
 accessors.
 
-=over
-
-=item pattern
+=head2 pattern
 
 The character pattern replicated to fill the background (I<Str>).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -167,7 +164,8 @@ Creates a new background view.
 
 =item bounds
 
-Bounding rectangle defining the area covered by the background (I<TRect>).
+Bounding rectangle defining the area covered by the background 
+(L<TRect|TUI::Objects::Rect>).
 
 =item pattern
 

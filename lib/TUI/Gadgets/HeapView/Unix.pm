@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -56,12 +56,12 @@ TUI::Gadgets::HeapView::Unix - Unix heap usage backend for HeapView
 
   use TUI::Gadgets::HeapView::Unix;
 
-  my $total = TUI::Gadgets::HeapView::Unix->heapSize;
+  my $total = TUI::Gadgets::HeapView::Unix->heapSize();
 
 =head1 DESCRIPTION
 
-C<TUI::Gadgets::HeapView::Unix> provides the Unix-specific implementation
-used by C<THeapView> to retrieve memory usage information.
+This module provides the Unix-specific implementation used by 
+L<THeapView|TUI::Gadgets::HeapView> to retrieve memory usage information.
 
 On Unix systems, memory usage is obtained from the operating system by
 querying the resident set size (RSS) of the current process using the
@@ -73,7 +73,7 @@ The module is not intended to be used directly by application code.
 
 =head2 heapSize
 
-  my $total = TUI::Gadgets::HeapView::Unix->heapSize;
+  my $total = TUI::Gadgets::HeapView::Unix->heapSize();
 
 Returns the amount of resident memory currently used by the process.
 

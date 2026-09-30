@@ -1,10 +1,11 @@
 package TUI::StdDlg;
-# ABSTRACT: Standard dialog components for the TVision framework
+# ABSTRACT: Standard dialog components for the TUI::Vision framework
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -69,7 +70,7 @@ __END__
 
 =head1 NAME
 
-StdDlg - Standard dialogs for the TVision framework
+TUI::StdDlg - Standard dialogs for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -98,8 +99,8 @@ StdDlg - Standard dialogs for the TVision framework
 
 =head1 DESCRIPTION
 
-TUI::StdDlg provides the standard dialog set for the TVision
-framework. It corresponds to the Turbo Vision standard dialogs and
+C<TUI::StdDlg> provides the standard dialog set for the TUI::Vision
+framework. It corresponds to Borland's I<Turbo Vision> standard dialogs and
 includes high-level components such as file dialogs, directory dialogs,
 and specialized list boxes.
 

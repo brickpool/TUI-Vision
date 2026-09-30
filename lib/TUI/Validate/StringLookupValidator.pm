@@ -1,10 +1,11 @@
 package TUI::Validate::StringLookupValidator;
+# ABSTRACT: lookup validator backed by a string list
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -118,7 +119,7 @@ __END__
 
 =head1 NAME
 
-TStringLookupValidator - lookup validator backed by a string list
+TUI::Validate::StringLookupValidator - lookup validator backed by a string list
 
 =head1 HIERARCHY
 
@@ -143,20 +144,21 @@ TStringLookupValidator - lookup validator backed by a string list
 =head1 DESCRIPTION
 
 C<TStringLookupValidator> validates input by checking whether the text exists
-in a configured collection object.  The actual lookup happens in C<lookup>,
+in a configured collection object. The actual lookup happens in C<lookup>,
 which uses the collection's C<firstThat> method with an exact string comparator
-(C<eq>).  Validation therefore is case-sensitive unless the supplied collection
+(C<eq>). Validation therefore is case-sensitive unless the supplied collection
 contains normalized values.
 
-This class is a concrete subclass of C<TLookupValidator> and is useful for
-fields that must match one of a predefined set of tokens.
+This class is a concrete subclass of 
+L<TLookupValidator|TUI::Validate::LookupValidator> and is useful for fields 
+that must match one of a predefined set of tokens.
 
 =head2 Commonly Used Features
 
 Typical usage is to build a collection with allowed values and pass it to
-C<new_TStringLookupValidator> (or C<new>).  The field then accepts only strings
-present in that collection.  You can replace the active collection later via
-C<newStringList>; the previous list is disposed before assignment.
+L</new> (or L</new_TStringLookupValidator>). The field then accepts only 
+strings present in that collection. You can replace the active collection later 
+via L</newStringList>; the previous list is disposed before assignment.
 
 =head1 VARIABLES
 
@@ -172,7 +174,8 @@ Package-global message shown by C<error()> when validation fails.
 
   my $list = $v->strings;
 
-Read-only reference to the currently configured lookup collection object.
+Read-only reference to the currently configured lookup collection
+(L<TStringCollection|TUI::Objects::StringCollection>).
 The object is expected to provide C<firstThat> with the callback signature used
 internally by C<lookup>.
 
@@ -184,15 +187,22 @@ If C<strings> is C<undef>, C<lookup> always returns false.
 
   my $v = TStringLookupValidator->new( strings => $strings );
 
-Creates a validator bound to the given string collection object.  The
-C<strings> argument is mandatory.
+Creates a validator bound to the given string collection object. 
+
+=over
+
+=item strings
+
+The C<strings> argument is mandatory collection 
+(L<TStringCollection|TUI::Objects::StringCollection>) of strings (I<Str>).
+
+=back
 
 =head2 new_TStringLookupValidator
 
   my $v = new_TStringLookupValidator( $aStrings );
 
-Convenience factory with a positional collection argument.  Exported by
-default.
+Convenience factory with a positional collection argument. Exported by default.
 
 =head1 METHODS
 
@@ -214,8 +224,8 @@ entry is found.
 
   $v->newStringList( $strings|undef );
 
-Replaces the active lookup collection.  If an existing collection is present,
-it is disposed via C<destroy> before the new one is stored.  Passing C<undef>
+Replaces the active lookup collection. If an existing collection is present,
+it is disposed via C<destroy> before the new one is stored. Passing C<undef>
 removes the current list.
 
 =head1 SEE ALSO

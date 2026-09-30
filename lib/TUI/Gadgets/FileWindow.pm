@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -125,10 +125,10 @@ TUI::Gadgets::FileWindow - window for viewing text files
 
 C<TFileWindow> provides a standard window for viewing text files.
 
-The window automatically creates a C<TFileViewer> together with horizontal
-and vertical scrollbars. The specified file is loaded when the window is
-created and can then be viewed using the standard scrolling facilities
-provided by the framework.
+The window automatically creates a L<TFileViewer|TUI::Gadgets::FileViewer> 
+together with horizontal and vertical scrollbars. The specified file is loaded 
+when the window is created and can then be viewed using the standard scrolling 
+facilities provided by the framework.
 
 =head1 CONSTRUCTOR
 
@@ -136,8 +136,8 @@ provided by the framework.
 
   my $win = TFileWindow->new( fileName => $fileName );
 
-Creates a new file window and initializes an embedded C<TFileViewer> for
-the specified file.
+Creates a new file window and initializes an embedded 
+L<TFileViewer|TUI::Gadgets::FileViewer> for the specified file.
 
 =over
 
@@ -154,7 +154,7 @@ Name of the file to be displayed (I<Str>).
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with named parameters and
-is provided for compatibility with traditional Turbo Vision construction
+is provided for compatibility with traditional I<Turbo Vision> construction
 patterns.
 
 =head1 SEE ALSO

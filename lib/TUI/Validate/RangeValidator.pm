@@ -1,11 +1,11 @@
 package TUI::Validate::RangeValidator;
 # ABSTRACT: integer range validator for numeric input
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -138,7 +138,7 @@ __END__
 
 =head1 NAME
 
-TRangeValidator - integer range validator for numeric input
+TUI::Validate::RangeValidator - integer range validator for numeric input
 
 =head1 HIERARCHY
 
@@ -163,7 +163,8 @@ TRangeValidator - integer range validator for numeric input
 
 C<TRangeValidator> validates integer text input against an inclusive minimum
 and maximum bound.  It inherits character filtering behavior from
-C<TFilterValidator> and then applies a numeric range check in C<isValid>.
+L<TFilterValidator|TUI::Validate::FilterValidator> and then applies a numeric 
+range check in L</isValid>.
 
 At construction time, the module configures the accepted character set from
 the selected range: non-negative ranges allow C<+0123456789>, while ranges
@@ -171,10 +172,11 @@ that include negative numbers allow C<+-0123456789>.
 
 =head2 Commonly Used Features
 
-Typical usage is to create a validator with C<min> and C<max>, assign it to an
-input field, and let the framework call C<isValidInput> while typing and
-C<isValid> on commit.  If the committed value is outside the configured range,
-C<error> shows a formatted message with both limits.
+Typical usage is to create a validator with L</min> and L</max>, assign it to 
+an input field, and let the framework call
+L<isValidInput|TUI::Validate::FilterValidator/isValidInput> while typing and
+L</isValid> on commit.  If the committed value is outside the configured range,
+L</error> shows a formatted message with both limits.
 
 =head1 VARIABLES
 
@@ -201,11 +203,11 @@ Character set applied when C<min> is negative.
 
 =head2 min
 
-Inclusive lower bound for accepted integer values (read-only).
+Inclusive lower bound for accepted integer values (I<Int>, read-only).
 
 =head2 max
 
-Inclusive upper bound for accepted integer values (read-only).
+Inclusive upper bound for accepted integer values (I<Int>, read-only).
 
 =head1 CONSTRUCTOR
 

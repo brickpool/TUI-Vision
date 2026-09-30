@@ -1,5 +1,5 @@
 package TUI::MsgBox::MsgBoxText;
-# ABSTRACT: Message Box and Input Box functions for TVision
+# ABSTRACT: Message Box and Input Box functions for the framework
 
 use 5.010;
 use strict;
@@ -12,6 +12,10 @@ our @EXPORT_OK = qw(
   messageBoxRect
   inputBox
   inputBoxRect
+);
+
+our %EXPORT_TAGS = (
+  all => \@EXPORT_OK,
 );
 
 use Carp ();
@@ -257,16 +261,16 @@ TUI::MsgBox::MsgBoxText - message box and input box helper functions
 =head1 DESCRIPTION
 
 C<TUI::MsgBox::MsgBoxText> provides a set of convenience functions for 
-displaying simple message boxes and input dialogs in TVision applications.
+displaying simple message boxes and input dialogs in L<TUI::Vision> 
+applications.
 
-This module implements functional equivalents of the Turbo Vision
-C<inputBox>, C<messageBox>, and related helper routines found in the original
-demo sources.
+This module implements the common functional routines C<inputBox>, 
+C<messageBox> and other related helper routines.
 
 All functions in this module are implemented as plain subroutines. No objects
 are created or required.
 
-These functions may only be used within a running TVision application.
+These functions may only be used within a running L<TUI::Vision> application.
 
 =head1 VARIABLES
 
@@ -347,7 +351,7 @@ size.
 
 =item bounds
 
-Bounding rectangle of the dialog (I<TRect>).
+Bounding rectangle of the dialog (L<TRect|TUI::Objects::Rect>).
 
 =item title
 
@@ -375,7 +379,7 @@ Returns either C<cmOk> or C<cmCancel>.
 
 Displays a formatted message box with configurable buttons and style.
 
-The message string and optional parameters are formatted using TVision
+The message string and optional parameters are formatted using TUI::Vision
 formatting rules.
 
 =over
@@ -407,7 +411,7 @@ size.
 
 =item bounds
 
-Bounding rectangle of the message box (I<TRect>).
+Bounding rectangle of the message box (L<TRect|TUI::Objects::Rect>).
 
 =item message
 
@@ -483,8 +487,8 @@ C<mfOkCancel>
 
 =head1 IMPORTANT
 
-These functions require a running TVision application environment.
-They must not be used outside of a TVision program.
+These functions require a running L<TUI::Vision> application environment.
+They must not be used outside of a L<TUI::Vision> program.
 
 =head1 SEE ALSO
 

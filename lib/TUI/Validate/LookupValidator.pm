@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -52,7 +52,7 @@ __END__
 
 =head1 NAME
 
-TLookupValidator - abstract base class for lookup-based validation
+TUI::Validate::LookupValidator - abstract base class for lookup-based validation
 
 =head1 HIERARCHY
 
@@ -77,9 +77,22 @@ TLookupValidator - abstract base class for lookup-based validation
 =head1 DESCRIPTION
 
 C<TLookupValidator> is an abstract base class for validators that perform
-custom lookups to determine validity.  It delegates C<isValid> to a C<lookup>
-method that subclasses must override.  The default C<lookup> returns true
+custom lookups to determine validity. It delegates L</isValid> to a L</lookup>
+method that subclasses must override. The default L</lookup> returns true
 unconditionally, serving as a placeholder for concrete implementations.
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+Construction is inherited from L<TValidator|TUI::Validate::Validator>.
+
+=head2 new_TLookupValidator
+
+  my $obj = new_TLookupValidator();
+
+Factory helper for creating a new TLookupValidator object in traditional 
+I<Turbo Vision> style.
 
 =head1 METHODS
 
@@ -87,7 +100,7 @@ unconditionally, serving as a placeholder for concrete implementations.
 
   my $ok = $v->isValid( $s );
 
-Delegates to C<lookup()>, which subclasses must override.
+Delegates to L</lookup>, which subclasses must override.
 
 =head2 lookup
 

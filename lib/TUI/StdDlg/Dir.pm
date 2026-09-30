@@ -5,6 +5,10 @@ use 5.010;
 use strict;
 use warnings;
 
+our $VERSION = '2.000002';
+$VERSION =~ tr/_//d;
+our $AUTHORITY = 'cpan:BRICKPOOL';
+
 use Exporter 'import';
 our @EXPORT_OK = qw(
   findfirst
@@ -301,8 +305,8 @@ TUI::StdDlg::Dir - directory and path utility functions
 
 =head1 DESCRIPTION
 
-C<TUI::StdDlg::Dir> provides a set of directory- and path-related utility
-functions compatible with the traditional Borland C/C++ runtime library.
+This module provides a set of directory- and path-related utility functions 
+compatible with the traditional Borland C/C++ runtime library API.
 
 The functions in this module are used by the standard dialog subsystem to
 perform directory traversal, path manipulation, and drive handling. Although

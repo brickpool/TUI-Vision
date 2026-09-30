@@ -1,11 +1,11 @@
 package TUI::Dialogs::Button;
 # ABSTRACT: Pushbutton control for dialogs
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -450,7 +450,7 @@ __END__
 
 =head1 NAME
 
-TButton - pushbutton control for dialogs
+TUI::Dialogs::Button - pushbutton control for dialogs
 
 =head1 HIERARCHY
 
@@ -489,7 +489,7 @@ TButton - pushbutton control for dialogs
 
 =head1 DESCRIPTION
 
-C<TButton> implements an interactive pushbutton control with full TVision
+C<TButton> implements an interactive pushbutton control with full TUI::Vision
 semantics. It supports highlighting, shadow rendering, pressing behavior,
 default-button logic, and command dispatch.
 
@@ -499,13 +499,15 @@ model.
 =head2 Commonly Used Features
 
 Most applications use C<TButton> as a dialog control: create a button with
-title/command/flags, insert it into a C<TDialog>, then react to the command
-returned by C<execView()>. Typical setups include one default action button
-(C<bfDefault>) and one normal cancel button (C<bfNormal>).
+title/command/flags, insert it into a L<TDialog|TUI::Dialogs::Dialog>, then 
+react to the command returned by C<execView()>. Typical setups include one 
+default action button (C<bfDefault>) and one normal cancel button 
+(C<bfNormal>).
 
-In day-to-day use you rarely call low-level methods directly; C<handleEvent()>,
-C<draw()>, and default-button behavior are managed by the framework. Manual
-calls to C<makeDefault()> are only needed for advanced dialog interactions
+In day-to-day use you rarely call low-level methods directly;
+L<handleEvent()|/handleEvent>,
+L<draw()|/draw>, and default-button behavior are managed by the framework. Manual
+calls to L<makeDefault()|/makeDefault> are only needed for advanced dialog interactions
 where default focus behavior is changed dynamically.
 
 =head1 VARIABLES
@@ -524,28 +526,24 @@ Defines the characters (I<Str>) used as button markers, for example C<'[]'>.
 
 The following attributes are exposed as read-only accessors.
 
-=over
-
-=item title
+=head2 title
 
 The caption displayed on the button (I<Str>).
 
-=item command
+=head2 command
 
 The command identifier triggered when the button is pressed
 (I<PositiveOrZeroInt>).
 
-=item flags
+=head2 flags
 
 Bit-mask of behavioral settings such as default, broadcast, or selectable
 (I<PositiveOrZeroInt>).
 
-=item amDefault
+=head2 amDefault
 
 Boolean flag indicating whether the button is currently treated as the dialog's
 default button (I<Bool>).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -564,7 +562,8 @@ Creates a new button control.
 
 =item bounds
 
-The rectangular region defining the button's position (I<TRect>).
+The rectangular region defining the button's position 
+(L<TRect|TUI::Objects::Rect>).
 
 =item title
 

@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -419,8 +419,8 @@ TUI::StdDlg::FindFirstRec::Win32 - Win32 implementation of FindFirstRec
 
 =head1 DESCRIPTION
 
-C<TUI::StdDlg::FindFirstRec::Win32> provides the Windows-specific implementation
-of the C<FindFirstRec> directory search interface.
+This module provides the Windows-specific implementation of the C<FindFirstRec> 
+directory search interface.
 
 The implementation maps the generic search operations to the Win32
 C<FindFirstFile> and C<FindNextFile> APIs and updates the associated C<find_t>

@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -145,7 +145,7 @@ __END__
 
 =head1 NAME
 
-TMenuItem - represents a single menu item or submenu entry
+TUI::Menus::MenuItem - represents a single menu item or submenu entry
 
 =head1 SYNOPSIS
 
@@ -158,7 +158,7 @@ TMenuItem - represents a single menu item or submenu entry
   # submenu item (opens a submenu)
   my $sub =
     new_TMenuItem('~F~ile', kbNoKey, $subMenu, hcNoContext);
-  
+
   # chaining menu items
   my $menu =
       new_TMenuItem('~O~pen...', cmFileOpen, kbF3, hcNoContext, 'F3')
@@ -168,7 +168,8 @@ TMenuItem - represents a single menu item or submenu entry
 
 C<TMenuItem> represents a single entry in a menu structure. Menu items are
 linked together to form a list and are used by menu views such as
-C<TMenuBar> and C<TMenuBox> to display selectable commands.
+L<TMenuBar|TUI::Menus::MenuBar> and L<TMenuBox|TUI::Menus::MenuBox> to display 
+selectable commands.
 
 Each menu item may represent either a command entry or a submenu entry.
 This is determined by whether the item contains a command or a submenu
@@ -181,46 +182,42 @@ using the overloaded C<+> operator to form complete menu structures.
 
 The following attributes describe the state of a menu item.
 
-=over
-
-=item name
+=head2 name
 
 Text displayed for the menu item (I<Str>).  
 Marked characters may be used to define a hotkey.
 
-=item command
+=head2 command
 
 Command identifier generated when the item is selected
 (I<PositiveOrZeroInt>).
 
-=item keyCode
+=head2 keyCode
 
 Scan code of the hot key associated with the menu item
 (I<PositiveOrZeroInt>).
 
-=item disabled
+=head2 disabled
 
-Boolean flag indicating whether the item is disabled.
+Boolean flag indicating whether the item is disabled (I<Bool>).
 
-=item helpCtx
+=head2 helpCtx
 
 Help context identifier associated with the menu item
 (I<PositiveOrZeroInt>).
 
-=item param
+=head2 param
 
 Optional parameter string displayed next to the menu item, such as a shortcut
 label (I<Str>).
 
-=item subMenu
+=head2 subMenu
 
 Optional submenu associated with this item (I<TMenu>).
 
-=item next
+=head2 next
 
 Reference to the next menu item in the list (I<TMenuItem>).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -310,7 +307,7 @@ Optional reference to the next menu item (I<Object>).
 Factory-style constructor for menu items.
 
 This constructor supports two distinct forms, corresponding directly to the
-original Turbo Vision constructors:
+original I<Turbo Vision> constructors:
 
 =over
 

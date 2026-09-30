@@ -1,6 +1,7 @@
 package TUI::Drivers::SystemError;
 # ABSTRACT: defines the class TSystemError
 
+use 5.010;
 use strict;
 use warnings;
 
@@ -49,7 +50,7 @@ __END__
 
 =head1 NAME
 
-TSystemError - system error and Ctrl-Break handling
+TUI::Drivers::SystemError - system error and Ctrl-Break handling
 
 =head1 SYNOPSIS
 
@@ -67,8 +68,8 @@ TSystemError - system error and Ctrl-Break handling
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::SystemError> provides system-level error handling facilities
-used by the TVision driver layer.
+This module provides system-level error handling facilities used by the 
+L<TUI::Vision> driver layer.
 
 The module exposes global state related to Ctrl-Break handling and provides
 class methods to suspend and resume system-level interrupt processing. This
@@ -76,16 +77,16 @@ functionality is used to coordinate application behavior during critical
 sections and shutdown.
 
 In typical applications, C<TSystemError> is coordinated by the application
-lifecycle (for example via C<TApplication-E<gt>suspend()> and
-C<TApplication-E<gt>resume()>), rather than being called directly in business
+lifecycle (for example via C<< TApplication->suspend() >> and
+C<< TApplication->resume() >>), rather than being called directly in business
 logic.
 
 =head2 Commonly Used Features
 
-The most common interaction is checking C<$ctrlBreakHit>, which is set by the
+The most common interaction is checking L</$ctrlBreakHit>, which is set by the
 platform backend when a Ctrl-Break condition is observed.
 
-C<suspend()> and C<resume()> are primarily lifecycle hooks around driver
+L</suspend> and L</resume> are primarily lifecycle hooks around driver
 subsystems. In strict debugging mode, backend Ctrl-Break handler changes are
 intentionally skipped.
 
@@ -100,11 +101,11 @@ interrupt. The flag may be cleared by assigning it a false value.
 
 =head2 $saveCtrlBreak
 
-Compatibility variable (I<Bool>) from the original Turbo Vision DOS 
+Compatibility variable (I<Bool>) from the original I<Turbo Vision> DOS 
 implementation.
 
 Historically it stored the previous DOS Ctrl-Break flag so that the system 
-state could be restored when Turbo Vision released control of the terminal. 
+state could be restored when I<Turbo Vision> released control of the terminal. 
 The Perl port does not use this mechanism and the variable is retained only for 
 compatibility.
 

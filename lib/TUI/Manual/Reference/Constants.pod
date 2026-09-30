@@ -1,25 +1,30 @@
+# PODNAME: TUI::Manual::Reference::Constants
+# ABSTRACT: Constant Definitions
+
+__END__
+
 =pod
 
 =head1 NAME
 
-doc::appendix::Constants - Constant Definitions
+TUI::Manual::Reference::Constants - Constant Definitions
 
 =head1 CONSTANTS DEFINITIONS
 
-The Turbo Vision framework defines a large set of constants used to
-describe behavior rather than encode logic.
+The L<TUI::Vision> framework defines a large set of constants used to describe 
+behavior rather than encode logic.
 
-Constants are used for palettes, flags, command identifiers and event
-classification. They are central to the framework because many design
-decisions are expressed declaratively through constant values.
+Constants are used for palettes, flags, command identifiers and event 
+classification. They are central to the framework because many design decisions 
+are expressed declaratively through constant values.
 
-Understanding the naming scheme is usually more important than
-memorizing individual values.
+Understanding the naming scheme is usually more important than memorizing 
+individual values.
 
 =head2 Naming Conventions
 
-Turbo Vision follows strict naming conventions to make source code
-readable and predictable.
+Borland's I<Turbo Vision> follows strict naming conventions to make source code 
+readable and  predictable.
 
 The most relevant conventions are:
 
@@ -87,18 +92,19 @@ button attributes, as shown in the table:
                           TButton sends an evBroadcast message. If not set, 
                           TButton inserts a new event with putEvent.
 
-B<Note>: It's up to the programmer to ensure that each C<TGroup> entity 
-(C<TDialog> is descended from C<TGroup>) has only one default button.
+B<Note>: It's up to the programmer to ensure that each 
+L<TGroup|TUI::Views::Group> entity (L<TDialog|TUI:.Dialogs::Dialog> is 
+descended from L<TGroup|TUI::Views::Group>) has only one default button.
 
 =head2 cmXXXX
 
 Command constants
 
-The C<cmXXXX> constants are the predefined commands within Turbo Vision and are
-passed to C<handleEvent> methods in the C<< $event->{command} >> field. 
+The C<cmXXXX> constants are the predefined commands within L<TUI::Vision> and 
+are passed to C<handleEvent> methods in the C<< $event->{command} >> field. 
 
 Constant values of C<0..99>, and C<256..999> are reserved for use by 
-Turbo Vision. Your applications can define command constants in the range 
+L<TUI::Vision>. Your applications can define command constants in the range 
 C<100..255>, and C<1000..65535>.
 
   Constant        Value   Usage
@@ -129,7 +135,7 @@ C<100..255>, and C<1000..65535>.
   cmZoom              5   The cmZoom flag is generated when the window is
                           zoomed. You can prevent zooming by intercepting
                           the cmZoom command (also see the wfZoom constant).
-                          By convention, Turbo Vision applications often use
+                          By convention, TUI::Vision applications often use
                           the F5 key to denote a zoom.
   cmResize            6   cmResize is sent when a window is resized. Also
                           see wfMove and wfGrow. By convention, Ctrl-F5 is
@@ -185,8 +191,9 @@ C<100..255>, and C<1000..65535>.
 
 Collection Error constants
 
-When a C<TCollection> error occurs, the method C<< TCollection->error >> is 
-called, with the Code parameter having one of the values shown in the table.
+When a L<TCollection|TUI::Objects::Collection> error occurs, the method 
+C<< TCollection->error() >> is called, with the Code parameter having one of 
+the values shown in the table.
 
   Constant     Value  Usage
   ------------ ------ ---------------------------------------------------
@@ -200,7 +207,7 @@ called, with the Code parameter having one of the values shown in the table.
 Desired color format constants
 
 Use the constants from the table below to select the color representation
-stored in a C<TColor> value.
+stored in a L<TColor|TUI::Drivers::Color> value.
 
   Constant   Value   Usage
   ---------- ------- --------------------------------------
@@ -228,7 +235,7 @@ Drag Mode constants
 The C<< TView->dragMode >> field controls whether or not a view can be dragged 
 or have its size changed. The C<dragMode> field is stored in a scalar, with the 
 bits set by the constants shown in the following table, and C<$limits> is a 
-C<TRect> parameter to C<< TView->dragView >>.
+L<TRect|TUI::Objects::Rect> parameter to C<< TView->dragView() >>.
 
   Constant        Value    Usage
   --------------- -------- --------------------------------------------------
@@ -246,7 +253,7 @@ C<TRect> parameter to C<< TView->dragView >>.
 
 The C<evXXXX> constants are used to designate event types and event masks,
 particularly as used in the What field of an event record but also in other
-places within Turbo Vision.
+places within L<TUI::Vision>.
 
   Constant        Value   Usage
   --------------- ------- ---------------------------------------------------
@@ -451,14 +458,15 @@ Determines the maximum width of a view.
 Mouse Button constants
 
 The C<mbXXXX> constants are used to test the C<< TEvent->{buttons} >> field of 
-a C<TEvent> hash to determine if the left or right button was pressed.
+a L<TEvent|TUI::Drivers::Event> hash to determine if the left or right button 
+was pressed.
 
   Constant        Value   Usage
   --------------- ------- ---------------------------------------------------
   mbLeftButton    0x01    Value if left button was pressed.
   mbRightButton   0x02    Value if right button was pressed.
 
-B<See>: C<TEvent>
+B<See>: L<TEvent|TUI::Drivers::Event>
 
 =head2 mfXXXX
 
@@ -482,10 +490,10 @@ B<See>: C<TEvent>
   mfYesNoCancel           Show a Yes, No and a Cancel button
   mfOkCancel              Show an Okay and a Cancel button
 
-B<Note>: C<messageBox> only works within Turbo Vision applications. Do not 
-attempt to use it in non-Turbo Vision applications.
+B<Note>: C<messageBox> only works within L<TUI::Vision> applications. Do not 
+attempt to use it in non-L<TUI::Vision> applications.
 
-B<See>: C<sprintf>, C<messageBoxRect>, C<TStaticText>
+B<See>: C<sprintf>, C<messageBoxRect>, L<TStaticText|TUI::Dialogs::StaticText>
 
 =head2 ofXXXX 
 
@@ -602,7 +610,7 @@ Constants for selectMode
     leaveSelect     => 2,
   };
 
-An internal value used by Turbo Vision.
+An internal value used by L<TUI::Vision>.
 
 =head2 sfXXXX
 
@@ -616,7 +624,7 @@ TView's state field. Example usage:
 where the first parameter is the state value to change, and the second
 parameter is C<true> to enable the selected condition, or C<false> to disable 
 the selected condition. Some of the bits are not normally set by the programmer
-but rather by methods in Turbo Vision. You can, however, read and test the
+but rather by methods in L<TUI::Vision>. You can, however, read and test the
 values in TView->state directly.
 
   Constant    Value   Usage
@@ -637,7 +645,7 @@ values in TView->state directly.
                       "overstrike" cursor). Call TView->blockCursor to set 
                       this bit, and TView->normalCursor to clear the bit.
   sfShadow    0x0008  Set when the view has a shadow.
-  sfActive    0x0010  Set whenever the view is an active window or a subview
+  sfActive    0x0010  Set whenever the view is an active window or a sub view
                       within an active window. For example, when using the app
                       to edit multiple files, only the editor that you are
                       currently using is the active window.
@@ -660,14 +668,15 @@ values in TView->state directly.
                       visible.
 
 B<See>: C<blockCursor>, C<exposed>, C<hide>, C<hideCursor>,
-C<normalCursor>, C<setState>, C<show>, C<showCursor> from C<TView>.
+C<normalCursor>, C<setState>, C<show>, C<showCursor> from 
+L<TView|TUI::Views::View>.
 
 =head2 slXXXX
 
 Style attribute constants
 
 Use the constants from the table below to set or test style attributes in
-a C<TColorAttr> value.
+a L<TColorAttr|TUI::Drivers::ColorAttr> value.
 
   Constant     Value   Usage
   ------------ ------- --------------------------------------------

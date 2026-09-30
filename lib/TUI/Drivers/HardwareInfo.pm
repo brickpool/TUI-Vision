@@ -1,4 +1,5 @@
 package TUI::Drivers::HardwareInfo;
+# ABSTRACT: Platform-independent hardware interface dispatcher
 
 use strict;
 use warnings;
@@ -30,7 +31,7 @@ __END__
 
 =head1 NAME
 
-THardwareInfo - platform-independent hardware interface dispatcher
+TUI::Drivers::HardwareInfo - platform-independent hardware interface dispatcher
 
 =head1 SYNOPSIS
 
@@ -45,7 +46,7 @@ THardwareInfo - platform-independent hardware interface dispatcher
 =head1 DESCRIPTION
 
 C<THardwareInfo> provides the platform-independent entry point for
-hardware-related operations used by the TVision driver layer.
+hardware-related operations used by the L<TUI::Vision> driver layer.
 
 This module does not implement any hardware access itself. Instead, it selects
 and loads a platform-specific backend at runtime and exposes it under the
@@ -64,12 +65,13 @@ C<THardwareInfo> must not be instantiated.
 
 Typical code uses C<THardwareInfo> as a static interface for low-level driver
 queries and operations, for example: reading screen dimensions
-(C<getScreenCols()>/C<getScreenRows()>), checking timing
-(C<getTickCount()>), reading platform information (C<getPlatform()>), and
+(L</getScreenCols>/L</getScreenRows>), checking timing
+(L</getTickCount>), reading platform information (L</getPlatform>), and
 performing caret/screen operations needed by the event and display layers.
 
 In normal application code, these methods are usually accessed indirectly
-through higher-level modules such as C<TScreen>, C<TDisplay>, C<TEventQueue>,
+through higher-level modules such as L<TScreen|TUI::Drivers::Screen>, 
+L<TDisplay|TUI::Drivers::Display>, L<TEventQueue|TUI::Drivers::EventQueue>,
 and mouse/system-error wrappers.
 
 =head1 PLATFORM DISPATCH
@@ -81,14 +83,14 @@ Current backend availability in this distribution:
 
 =over 4
 
-=item * Windows systems: C<TUI::Drivers::HardwareInfo::Win32>
+=item * Windows systems: L<TUI::Drivers::HardwareInfo::Win32>
 
-=item * Non-Windows systems: C<TUI::Drivers::HardwareInfo::Termbox>
+=item * Non-Windows systems: L<TUI::Drivers::HardwareInfo::Termbox>
 
 =back
 
-B<Note:> On Windows, prefer the Termbox backend if running under Windows 
-Terminal (WT_SESSION).
+B<Note:> On Windows, prefer the L<Termbox::PP> backend if running under Windows 
+Terminal (C<WT_SESSION>).
 
 As of now, this dispatcher is effectively Win32-only. Attempting to load
 C<THardwareInfo> on unsupported platforms will fail until additional backend
@@ -238,7 +240,7 @@ Installs or removes the critical error handler.
 Returns the number of colors supported by the current terminal.
 
 =head2 reloadScreenInfo
- 
+
   THardwareInfo->reloadScreenInfo();
 
 Reloads the screen information from the underlying platform. 

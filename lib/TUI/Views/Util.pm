@@ -1,11 +1,11 @@
 package TUI::Views::Util;
 # ABSTRACT: defines various utility functions for views
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -78,8 +78,8 @@ TUI::Views::Util - utility functions for views
 
 =head1 DESCRIPTION
 
-C<TUI::Views::Util> provides low-level utility functions used throughout the
-TVision view system.
+This module provides low-level utility functions used throughout the
+L<TUI::Vision> view system.
 
 The functions in this module operate on views and events and are intended to
 simplify common interaction patterns such as message dispatching and command
@@ -130,8 +130,8 @@ the sending view, depending on the semantics of the command.
 
 =head1 USAGE NOTES
 
-The C<message> function is a convenience wrapper around the TVision event
-dispatch mechanism.
+The C<message> function is a convenience wrapper around the L<TUI::Vision> 
+event dispatch mechanism.
 
 Messages are delivered by invoking the C<handleEvent> method of the receiver.
 If the receiver does not handle the message, it may be propagated to child
@@ -140,7 +140,7 @@ views depending on the event type and view hierarchy.
 The return value indicates which view actually processed the message. This
 allows callers to detect whether a command was handled and by whom.
 
-This function is intended for use within a running TVision application.
+This function is intended for use within a running L<TUI::Vision> application.
 Calling it outside of a valid view context will have no useful effect.
 
 =head1 SEE ALSO

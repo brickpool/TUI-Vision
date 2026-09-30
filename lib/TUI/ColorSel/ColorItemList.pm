@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -158,7 +158,7 @@ __END__
 
 =head1 NAME
 
-TColorItemList - a list viewer for color items
+TUI::ColorSel::ColorItemList - a list viewer for color items
 
 =head1 HIERARCHY
 
@@ -181,33 +181,29 @@ TColorItemList - a list viewer for color items
 
 =head1 DESCRIPTION
 
-C<TColorItemList> displays the names of linked color items in a
-single-column list viewer.
+C<TColorItemList> displays the names of linked color items in a single-column 
+list viewer.
 
 The list is initialized from a linked sequence of
-C<TColorItem> objects. Each item provides a C<name>, an
-C<index>, and a C<next> reference.
+L<TColorItem|TUI::ColorSel::ColorItem> objects. Each item provides a C<name>, 
+an C<index>, and a C<next> reference.
 
 When the focused item changes, the list broadcasts both
 C<cmSaveColorIndex> and C<cmNewColorItem> messages so that other
 components of the color dialog may synchronize their state.
 
 The list also reacts to C<cmNewColorItem> broadcasts containing a
-C<TColorGroup> and replaces its current item list with the
-group's item chain.
+L<TColorGroup|TUI::ColorSel::ColorGroup> and replaces its current item list 
+with the group's item chain.
 
 =head1 ATTRIBUTES
 
-=over
+=head2 items
 
-=item items
-
-Contains the first color item in the linked list (I<TColorItem>>, or C<undef> 
-when the list is empty.
+Contains the first color item in the linked list 
+(L<TColorItem|TUI::ColorSel::ColorItem>), or C<undef> when the list is empty.
 
 The attribute is read-only.
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -227,7 +223,7 @@ The following named parameters are accepted:
 
 =item C<bounds>
 
-The rectangular bounds of the list viewer (I<TRect>).
+The rectangular bounds of the list viewer (L<TRect|TUI::Objects::Rect>).
 
 =item C<scrollBar>
 
@@ -281,7 +277,8 @@ The result is limited to at most C<$maxChars> characters.
 Handles an event after passing it to the inherited event handler.
 
 For an C<evBroadcast> event with the C<cmNewColorItem> command, the method 
-expects C<infoPtr> to reference a C<TColorGroup> object.
+expects C<infoPtr> to reference a L<TColorGroup|TUI::ColorSel::ColorGroup> 
+object.
 
 The list is rebuilt from the group's item chain, the list range is updated, and 
 the saved item index of the group becomes the newly focused item.

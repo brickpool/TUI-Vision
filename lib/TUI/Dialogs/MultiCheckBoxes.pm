@@ -1,11 +1,11 @@
 package TUI::Dialogs::MultiCheckBoxes;
 # ABSTRACT: Multi-state checkbox cluster control based on TCluster
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -155,7 +155,7 @@ __END__
 
 =head1 NAME
 
-TMultiCheckBoxes - multi-state checkbox cluster control
+TUI::Dialogs::MultiCheckBoxes - multi-state checkbox cluster control
 
 =head1 HIERARCHY
 
@@ -199,8 +199,8 @@ number of bits, determined by the supplied mask and shift values. This allows
 multiple stateful items to be encoded efficiently in a single scalar value.
 
 C<TMultiCheckBoxes> inherits navigation, layout, and focus handling from
-C<TCluster>, while extending the marking and activation logic to support
-multi-state cycling.
+L<TCluster|TUI::Dialogs::Cluster>, while extending the marking and activation 
+logic to support multi-state cycling.
 
 =head1 CONSTRUCTOR
 
@@ -220,11 +220,13 @@ Creates a new multi-state checkbox cluster.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the cluster (I<TRect>).
+Bounding rectangle defining the position and size of the cluster 
+(L<TRect|TUI::Objects::Rect>).
 
 =item strings
 
-Linked list of item descriptors providing the labels (I<TSItem>).
+Linked list of item descriptors providing the labels 
+(L<TSItem|TUI::Dialogs::TStrItem>).
 
 =item selRange
 

@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -93,7 +93,7 @@ __END__
 
 =head1 NAME
 
-TClickTester - mouse click test gadget
+TUI::Gadgets::ClickTester - mouse click test gadget
 
 =head1 HIERARCHY
 
@@ -137,7 +137,8 @@ Creates a new click tester view.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the view (I<TRect>).
+Bounding rectangle defining the position and size of the view 
+(L<TRect|TUI::Objects::Rect>).
 
 =item text
 

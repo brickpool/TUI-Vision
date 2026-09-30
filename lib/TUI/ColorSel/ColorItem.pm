@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -116,7 +116,7 @@ __END__
 
 =head1 NAME
 
-TColorItem - singly linked color item used by color dialog structures
+TUI::ColorSel::ColorItem - linked color item used by color dialog structures
 
 =head1 SYNOPSIS
 
@@ -139,12 +139,12 @@ TColorItem - singly linked color item used by color dialog structures
 
 =head1 DESCRIPTION
 
-C<TColorItem> represents a singly linked list element used by TVision color 
-selection infrastructure.
+C<TColorItem> represents a singly linked list element used by L<TUI::Vision> 
+color selection infrastructure.
 
 Each node stores a display name, an index value and an optional reference to 
-the next item in the list. The structure mirrors the original Turbo Vision data 
-model closely and is primarily used to describe available color groups and 
+the next item in the list. The structure mirrors the original I<Turbo Vision> 
+data model closely and is primarily used to describe available color groups and 
 color entries.
 
 Like the original Borland implementation, items are linked together through a
@@ -152,27 +152,23 @@ simple forward list. Perl's automatic memory management removes the need
 for explicit allocation and disposal while preserving the original behavior.
 
 The overloaded C<+> operator provides a convenient way to append items to
-an existing chain while preserving the original Turbo Vision programming
+an existing chain while preserving the original I<Turbo Vision> programming
 style.
 
 =head1 ATTRIBUTES
 
-=over
-
-=item name
+=head2 name
 
 Display name associated with this item (I<Str>).
 
-=item index
+=head2 index
 
 Numeric index associated with this item (I<PositiveOrZeroInt>).
 
-=item next
+=head2 next
 
 Reference to the next list element (I<TColorItem>), or C<undef> if this is the 
 last item.
-
-=back
 
 =head1 CONSTRUCTOR
 

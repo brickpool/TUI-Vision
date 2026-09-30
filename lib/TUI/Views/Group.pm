@@ -1,11 +1,11 @@
 package TUI::Views::Group;
 # ABSTRACT: Base class for all group components
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -1022,7 +1022,7 @@ __END__
 
 =head1 NAME
 
-TGroup - base class for grouping views in TVision
+TUI::Views::Group - base class for grouping views in TUI::Vision
 
 =head1 HIERARCHY
 
@@ -1044,7 +1044,7 @@ TGroup - base class for grouping views in TVision
 
 =head1 DESCRIPTION
 
-C<TGroup> is the structural backbone of TVision's view hierarchy. It
+C<TGroup> is the structural backbone of TUI::Vision's view hierarchy. It
 manages collections of subviews and coordinates drawing, event dispatch, and
 modal execution.
 
@@ -1053,23 +1053,24 @@ entirely by its subviews. Dialogs, windows, and the desktop are all implemented
 as specialized groups.
 
 TGroup is responsible for maintaining Z-order, dispatching events according to
-focus and position, and coordinating modal execution via C<execView> and
-C<execute>. During event processing, the C<phase> attribute allows subviews to
-determine in which processing stage their handlers are invoked.
+focus and position, and coordinating modal execution via L</execView> and
+L</execute>. During event processing, the L</phase> attribute allows subviews 
+to determine in which processing stage their handlers are invoked.
 
 To improve drawing performance, groups may use an internal buffer. In this
-case, screen updates should be bracketed by C<lock> and C<unlock> calls to
+case, screen updates should be bracketed by L</lock> and L</unlock> calls to
 avoid flicker.
 
 =head2 Commonly Used Features
 
 In typical application code, only a small subset of the API is used directly:
-subviews are added with C<insert>, modal views are executed with C<execView>,
-and dialog-style state transfer is handled through C<getData> and C<setData>.
+subviews are added with L</insert>, modal views are executed with L</execView>,
+and dialog-style state transfer is handled through L</getData> and L</setData>.
 
 Most remaining methods are primarily infrastructure for descendants such as
-C<TWindow>, C<TDialog>, and C<TDeskTop>. Direct instantiation of C<TGroup>
-itself is therefore uncommon outside framework-level or advanced custom view
+L<TWindow|TUI::Views::Window>, L<TDialog|TUI::Dialogs::Dialog>, and 
+L<TDeskTop|TUI::App::DeskTop>. Direct instantiation of C<TGroup> itself is 
+therefore uncommon outside framework-level or advanced custom view 
 implementations.
 
 =head1 VARIABLES
@@ -1079,12 +1080,13 @@ view hierarchy state.
 
 =head2 $TheTopView
 
-Holds a reference to the currently active top-level view (I<TView>).
-This variable is used during focus and event handling.
+Holds a reference to the currently active top-level view 
+(L<TView|TUI::Views::View>). This variable is used during focus and event 
+handling.
 
 =head2 $ownerGroup
 
-Holds a reference to the group (I<TGroup>) currently owning a view.
+Holds a reference to the group (C<TGroup>) currently owning a view.
 It is used internally to manage parent-child relationships between views.
 
 =head1 ATTRIBUTES
@@ -1093,44 +1095,40 @@ The following attributes represent the internal state of the group and its
 relationship to contained subviews. Attributes marked as read-only are managed
 internally and should not be modified directly.
 
-=over
+=head2 current
 
-=item current
+Pointer to the currently selected subview (L<TView|TUI::Views::View> or 
+C<undef>). This attribute is managed internally.
 
-Pointer to the currently selected subview (I<TView> or undef). 
-This attribute is managed internally.
+=head2 last
 
-=item last
+Read-only pointer to the last subview (L<TView|TUI::Views::View> or C<undef>) 
+in the Z-ordered view  list.
 
-Read-only pointer to the last subview (I<TView> or undef) in the Z-ordered view 
-list.
+=head2 clip
 
-=item clip
+Clipping rectangle of the group (L<TRect|TUI::Objects::TRect>). Defines the 
+drawable region for subviews.
 
-Clipping rectangle of the group (I<TRect>).  
-Defines the drawable region for subviews.
-
-=item phase
+=head2 phase
 
 Read-only event processing phase indicator (I<Int>).  
-Used by subviews to determine the context in which their C<handleEvent> method
+Used by subviews to determine the context in which their L</handleEvent> method
 is invoked.
 
-=item buffer
+=head2 buffer
 
 Read-only reference to the internal screen cache buffer (I<ArrayRef>).  
 Used to speed up redraw operations when buffering is enabled.
 
-=item lockFlag
+=head2 lockFlag
 
 Lock counter used to suppress screen updates while batch operations are
 performed (I<Int>).
 
-=item endState
+=head2 endState
 
 Command value used to terminate modal execution (I<PositiveOrZeroInt>).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -1144,7 +1142,7 @@ Creates and initializes a new group with the specified bounds.
 
 =item bounds
 
-Bounding rectangle of the group (I<TRect>).
+Bounding rectangle of the group (L<TRect|TUI::Objects::Rect>).
 
 =back
 
@@ -1154,8 +1152,8 @@ Bounding rectangle of the group (I<TRect>).
 
 Factory-style constructor using positional arguments.
 
-This constructor is equivalent to calling C<new> with the $bounds parameter
-and is provided for compatibility with traditional Turbo Vision construction
+This constructor is equivalent to calling L</new> with the $bounds parameter
+and is provided for compatibility with traditional I<Turbo Vision> construction
 patterns.
 
 =head1 DESTRUCTOR

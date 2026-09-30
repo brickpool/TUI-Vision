@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -112,7 +112,7 @@ __END__
 
 =head1 NAME
 
-TSubMenu - submenu item for menu bars and menu boxes
+TUI::Menus::SubMenu - submenu item for menu bars and menu boxes
 
 =head1 HIERARCHY
 
@@ -134,8 +134,8 @@ TSubMenu - submenu item for menu bars and menu boxes
 =head1 DESCRIPTION
 
 C<TSubMenu> represents a submenu entry that can be attached to a menu bar or
-menu box. It is a specialized form of C<TMenuItem> that owns a list of child
-menu items.
+menu box. It is a specialized form of L<TMenuItem|TUI::Menus::MenuItem> that 
+owns a list of child menu items.
 
 Submenus are typically constructed using operator chaining, allowing menu
 structures to be built declaratively.
@@ -143,7 +143,7 @@ structures to be built declaratively.
 =head1 CONSTRUCTOR
 
 This class does not define its own construction parameters and relies on the
-standard C<TMenuItem> initialization.
+standard L<TMenuItem|TUI::Menus::MenuItem> initialization.
 
 =head2 new
 
@@ -235,7 +235,7 @@ C<TSubMenu> is not normally instantiated directly via C<new>. Instead, the
 factory function C<new_TSubMenu> should be used.
 
 Menu structures are commonly built using chained additions, which preserves
-the original Turbo Vision menu construction style.
+the original I<Turbo Vision> menu construction style.
 
 =head1 SEE ALSO
 

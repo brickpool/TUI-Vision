@@ -1,10 +1,11 @@
 package TUI::Validate;
-# ABSTRACT: Validation components for the TVision framework
+# ABSTRACT: Validation components for the TUI::Vision framework
 
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -48,7 +49,7 @@ __END__
 
 =head1 NAME
 
-Validate - Validation components for the TVision framework
+TUI::Validate - Validation components for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -63,9 +64,9 @@ Validate - Validation components for the TVision framework
 
 =head1 DESCRIPTION
 
-TUI::Validate provides the validator layer for the TVision framework.
-It corresponds to the Turbo Vision validation subsystem and collects the
-validator base classes, concrete validators, and related constants.
+C<TUI::Validate> provides the validator layer for the L<TUI::Vision> framework.
+It corresponds to Borland's I<Turbo Vision> validation subsystem and collects 
+the validator base classes, concrete validators, and related constants.
 
 Importing this module re-exports the full validator surface, including:
 

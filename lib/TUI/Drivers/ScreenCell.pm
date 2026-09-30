@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -144,7 +144,7 @@ use overload
 
 =head1 NAME
 
-TScreenCell - screen cell value type
+TUI::Drivers::ScreenCell - screen cell value type
 
 =head1 SYNOPSIS
 
@@ -175,11 +175,12 @@ A screen cell consists of:
 
 =item *
 
-a C<TScreenCharacter> value describing the cell contents
+a L<TScreenCharacter|TUI::Drivers::ScreenCharacter> value describing the cell 
+contents
 
 =item *
 
-a C<TColorAttr> value describing the cell attributes
+a L<TColorAttr|TUI::Drivers::ColorAttr> value describing the cell attributes
 
 =back
 
@@ -191,9 +192,9 @@ If a double-width character is not followed by a wide-character trail, or
 if a wide-character trail is not preceded by a double-width character, the
 character is considered to be partially overwritten.
 
-C<TScreenCharacter> is designed to be compatible with Borland's Turbo Vision 
-cell structure, and it is therefore trivially constructible and copyable via 
-L</assign> and L</clone>. 
+L<TScreenCharacter|TUI::Drivers::ScreenCharacter> is designed to be compatible 
+with Borland's I<Turbo Vision> cell structure, and it is therefore trivially 
+constructible and copyable via L</assign> and L</clone>. 
                                                                 
 A zero-initialized TScreenCharacter is valid and represents the text of an 
 empty screen cell.
@@ -229,15 +230,16 @@ Copies the contents of another C<TScreenCell> into the current one.
  my $attr = $self->attribute();
  $self->attribute($attr);
 
-Sets the cell attributes or returns the C<TColorAttr> associated with the cell.
+Sets the cell attributes or returns the L<TColorAttr|TUI::Drivers::ColorAttr> 
+associated with the cell.
 
 =head2 character
 
  my $ch = $self->character();
  $self->character($ch);
 
-Sets the character stored in the cell or returns the C<TScreenCharacter> stored 
-in the cell.
+Sets the character stored in the cell or returns the 
+L<TScreenCharacter|TUI::Drivers::ScreenCharacter> stored in the cell.
 
 =head2 clone
 

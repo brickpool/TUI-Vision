@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use utf8;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -308,7 +308,7 @@ __END__
 
 =head1 NAME
 
-TDirListBox - list box view for directory entries
+TUI::StdDlg::DirListBox - list box view for directory entries
 
 =head1 HIERARCHY
 
@@ -329,14 +329,15 @@ TDirListBox - list box view for directory entries
 
 =head1 DESCRIPTION
 
-C<TDirListBox> implements a specialized list box used by standard TVision
+C<TDirListBox> implements a specialized list box used by standard TUI::Vision
 dialogs to display and navigate directory entries.
 
-The list box presents directory items backed by a C<TDirCollection> and
-operates on directory entry records of type C<TDirEntry>. It supports keyboard
-and mouse navigation, selection, and directory changes.
+The list box presents directory items backed by a 
+L<TDirCollection|TUI::StdDlg::DirCollection> and operates on directory entry 
+records of type L<TDirEntry|TUI::StdDlg::DirEntry>. It supports keyboard and 
+mouse navigation, selection, and directory changes.
 
-This view is primarily used by C<TChDirDialog>.
+This view is primarily used by L<TChDirDialog|TUI::StdDlg::ChDirDialog>.
 
 =head1 VARIABLES
 
@@ -387,12 +388,13 @@ Creates a new directory list box.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the list box (I<TRect>).
+Bounding rectangle defining the position and size of the list box 
+(L<TRect|TUI::Objects::Rect>).
 
 =item vScrollBar
 
-Optional vertical scroll bar associated with the list box (I<TScrollBar> or 
-undef).
+Optional vertical scroll bar associated with the list box 
+(L<TScrollBar|TUI::Views::ScrollBar> or undef).
 
 =back
 
@@ -404,7 +406,8 @@ Factory-style constructor using positional arguments.
 
 =head1 METHODS
 
-The following methods operate on directory entry objects (C<TDirEntry>).
+The following methods operate on directory entry objects 
+(L<TDirEntry|TUI::StdDlg::DirEntry>).
 
 =head2 getText
 
@@ -423,7 +426,7 @@ Returns true if the specified directory entry is currently selected.
   my $collection = $list->list();
 
 Returns the directory collection backing this list box
-(C<TDirCollection>).
+(L<TDirCollection|TUI::StdDlg::DirCollection>).
 
 =head2 newDirectory
 

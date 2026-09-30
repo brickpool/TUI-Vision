@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use utf8;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -269,7 +269,7 @@ __END__
 
 =head1 NAME
 
-TFrame - frame class for window components
+TUI::Views::Frame - frame class for window components
 
 =head1 HIERARCHY
 
@@ -291,9 +291,9 @@ responsible for drawing the window frame, including the title, border lines,
 and standard window icons such as close, zoom, and resize indicators.
 
 Frame objects are normally created and managed automatically by
-C<TWindow>. Applications rarely instantiate C<TFrame> directly and typically
-do not interact with it except through subclassing or customization hooks
-provided by the window.
+L<TWindow|TUI::Views::Window>. Applications rarely instantiate C<TFrame> 
+directly and typically do not interact with it except through subclassing or 
+customization hooks provided by the window.
 
 To customize the appearance of a window frame, applications override
 C<TWindow::initFrame> to instantiate a C<TFrame>-derived object with modified
@@ -342,7 +342,7 @@ normally called internally by C<TWindow::initFrame>.
 
 =item bounds
 
-Bounding rectangle of the frame (I<TRect>).
+Bounding rectangle of the frame (L<TRect|TUI::Objects::Rect>).
 
 =back
 
@@ -353,7 +353,7 @@ Bounding rectangle of the frame (I<TRect>).
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with the $bounds parameter
-and is provided for compatibility with traditional Turbo Vision construction
+and is provided for compatibility with traditional I<Turbo Vision> construction
 patterns.
 
 =head1 METHODS
@@ -417,7 +417,6 @@ Copyright (c) 1990-1994, 1997 by Borland International
 Copyright (c) 2021-2026 the L</AUTHORS> as listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is
-part of the distribution). This documentation is provided under the same terms
-as the Turbo Vision library itself.
+part of the distribution).
 
 =cut

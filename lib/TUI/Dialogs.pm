@@ -1,10 +1,11 @@
 package TUI::Dialogs;
-# ABSTRACT: Dialog components for the TVision framework
+# ABSTRACT: Dialog components for the TUI::Vision framework
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -84,7 +85,7 @@ __END__
 
 =head1 NAME
 
-Dialogs - Dialog components for the TVision framework
+TUI::Dialogs - Dialog components for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -127,9 +128,9 @@ Dialogs - Dialog components for the TVision framework
 
 =head1 DESCRIPTION
 
-TUI::Dialogs provides the dialog and widget layer for the TVision
-framework. It corresponds to the Turbo Vision dialog subsystem and
-includes a wide range of interactive UI components.
+C<TUI::Dialogs> provides the dialog and widget layer for the TUI::Vision
+framework. It corresponds to the I<Turbo Vision> dialog subsystem and includes 
+a wide range of interactive UI components.
 
 This module re-exports numerous dialog-related classes, including:
 

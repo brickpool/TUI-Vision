@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -121,7 +121,7 @@ __END__
 
 =head1 NAME
 
-TFileInputLine - input line view for file dialog interaction
+TUI::StdDlg::FileInputLine - input line view for file dialog interaction
 
 =head1 HIERARCHY
 
@@ -144,10 +144,11 @@ TFileInputLine - input line view for file dialog interaction
 C<TFileInputLine> implements a specialized input line used by standard Turbo
 Vision file dialogs for entering file and directory names.
 
-The control extends C<TInputLine> with file-dialog-specific behavior, such as
-custom keyboard handling and interaction with other dialog components. It is
-typically embedded in a C<TFileDialog> and participates in focus navigation
-and command processing within the dialog.
+The control extends L<TInputLine|TUI::Dialogs::InputLine> with 
+file-dialog-specific behavior, such as custom keyboard handling and interaction 
+with other dialog components. It is typically embedded in a 
+L<TFileDialog|TUI::StdDlg::FileDialog> and participates in focus navigation and 
+command processing within the dialog.
 
 =head1 CONSTRUCTOR
 
@@ -164,7 +165,8 @@ Creates a new file input line.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the input line (I<TRect>).
+Bounding rectangle defining the position and size of the input line 
+(L<TRect|TUI::Objects::Rect>).
 
 =item maxLen
 

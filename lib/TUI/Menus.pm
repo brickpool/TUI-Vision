@@ -1,10 +1,11 @@
 package TUI::Menus;
-# ABSTRACT: Menu components for the TVision framework
+# ABSTRACT: Menu components for the TUI::Vision framework
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -57,7 +58,7 @@ __END__
 
 =head1 NAME
 
-TUI::Menus - Menu and status line system for the TVision framework
+TUI::Menus - Menu and status line system for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -94,10 +95,10 @@ TUI::Menus - Menu and status line system for the TVision framework
 
 =head1 DESCRIPTION
 
-TUI::Menus provides the menu and status line subsystem for the
-TVision framework. It corresponds to the Turbo Vision menu
-architecture and includes all components required for building
-interactive menu bars, pull-down menus, popup menus, and status lines.
+C<TUI::Menus> provides the menu and status line subsystem for the 
+L<TUI::Vision> framework. It corresponds to Borland's I<Turbo Vision> menu 
+architecture and includes all components required for building interactive menu 
+bars, pull-down menus, popup menus, and status lines.
 
 This module re-exported a wide range of menu-related classes, including:
 

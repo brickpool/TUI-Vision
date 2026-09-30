@@ -1,10 +1,11 @@
 package TUI::Gadgets::Const;
 # ABSTRACT: constants for gadget components
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -84,7 +85,8 @@ TUI::Gadgets::Const - constants for gadget components
 
 =head1 DESCRIPTION
 
-C<TUI::Gadgets::Const> defines constants used by TVision gadget components.
+These module defines constants used by L<TUI::Vision> L<gadget|TUI::Gadgets> 
+components.
 
 The constants in this module are grouped by purpose and exported via tag-based
 export groups. They are used by gadget views to identify commands and events
@@ -99,7 +101,7 @@ these constants is documented in the corresponding gadget modules.
 
 Command identifiers used by gadget components.
 
-These values are delivered via C<$event-E<gt>{command}> and are handled by
+These values are delivered via C<< $event->{command} >> and are handled by
 gadget views such as event viewers and diagnostic tools.
 
 =head2 Gadget color palettes (cpXXXX)
@@ -107,7 +109,7 @@ gadget views such as event viewers and diagnostic tools.
 Color palette constants used by gadget components.
 
 These values define the color schemes for various gadget elements, such as the 
-mouse pointer in TClickTester.
+mouse pointer in L<TClickTester|TUI::Gadgets::TClickTester>.
 
 =head2 History identifiers for dialogs (hlXXXX)
 

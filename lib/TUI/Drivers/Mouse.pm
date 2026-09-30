@@ -1,4 +1,5 @@
 package TUI::Drivers::Mouse;
+# ABSTRACT: Public mouse driver interface
 
 use strict;
 use warnings;
@@ -22,7 +23,7 @@ __END__
 
 =head1 NAME
 
-TMouse - public mouse driver interface
+TUI::Drivers::Mouse - public mouse driver interface
 
 =head1 SYNOPSIS
 
@@ -45,12 +46,12 @@ TMouse - public mouse driver interface
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::Mouse> provides the public entry point for mouse handling in the
-TVision driver layer.
+This module provides the public entry point for mouse handling in the 
+L<TUI::Vision> driver layer.
 
 The module exports the symbolic name C<TMouse>, which resolves to the underlying
 hardware mouse implementation. All mouse-related operations are delegated to
-C<THWMouse>.
+L<THWMouse|TUI::Drivers::HWMouse>.
 
 This module does not implement any logic of its own and exists to provide a
 user-facing interface.
@@ -59,9 +60,9 @@ C<TMouse> is a class-style interface. It must not be instantiated.
 
 =head2 Commonly Used Features
 
-Within the driver stack, C<THWMouse> is used to coordinate backend mouse
-startup/shutdown (C<resume()>/C<suspend()>), query availability
-(C<present()>), and read raw mouse state (C<getEvent()>).
+Within the driver stack, L<THWMouse|TUI::Drivers::HWMouse> is used to 
+coordinate backend mouse startup/shutdown (L</resume>/L</suspend>), query 
+availability (L</present>), and read raw mouse state (L</getEvent>).
 
 For complete interface documentation and application-facing usage, see
 L<TMouse|TUI::Drivers::Mouse>.

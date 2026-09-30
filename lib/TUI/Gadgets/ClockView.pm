@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -81,7 +81,7 @@ __END__
 
 =head1 NAME
 
-TClockView - view displaying the current time
+TUI::Gadgets::ClockView - view displaying the current time
 
 =head1 HIERARCHY
 
@@ -120,7 +120,8 @@ Creates a new clock view.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the view (I<TRect>).
+Bounding rectangle defining the position and size of the view 
+(L<TRect|TUI::Objects::Rect>).
 
 =back
 

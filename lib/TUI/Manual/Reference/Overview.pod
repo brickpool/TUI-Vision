@@ -1,8 +1,13 @@
+# PODNAME: TUI::Manual::Reference::Overview
+# ABSTRACT: Overview of TUI::Vision Classes
+
+__END__
+
 =pod
 
 =head1 NAME
 
-doc::appendix::Overview - Overview of TUI::Vision Components
+TUI::Manual::Reference::Overview - Overview of TUI::Vision Classes
 
 =head1 OVERVIEW
 

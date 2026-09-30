@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -390,7 +390,7 @@ TUI::ColorSel::ColorDialog - Common dialog box for selecting colors
 
 =head1 DESCRIPTION
 
-C<TColorDialog> implements the standard TVision color selection dialog.
+C<TColorDialog> implements the standard L<TUI::Vision> color selection dialog.
 
 The dialog presents a list of color groups and their associated color items. 
 The selected item can be modified using foreground and background color 
@@ -398,7 +398,7 @@ selectors or, when running in monochrome mode, through a monochrome attribute
 selector.
 
 The dialog operates on a copy of the supplied palette. The modified palette can 
-be retrieved through the standard Turbo Vision data transfer mechanism.
+be retrieved through the standard Perl data transfer mechanism.
 
 The dialog contains the following visual components:
 
@@ -447,13 +447,13 @@ Parameters:
 
 =item * C<pal>
 
-Optional palette object (C<TPalette>). When supplied, the palette is cloned and
-edited locally within the dialog.
+Optional palette object (L<TPalette|TUI::Views::Palette>). When supplied, the 
+palette is cloned and edited locally within the dialog.
 
 =item * C<groups>
 
-A C<TColorGroup> hierarchy describing the available color groups and
-items that may be edited.
+A L<TColorGroup|TUI::ColorSel::ColorGroup> hierarchy describing the available 
+color groups and items that may be edited.
 
 =back
 
@@ -468,14 +468,16 @@ interface.
 
 =head2 pal
 
-The palette currently being edited.
+The palette currently being edited (L<TPalette|TUI::Views::Palette> or
+C<undef>).
 
 A clone of the palette provided to the constructor is maintained by the
 dialog.
 
 =head2 groups
 
-The color group hierarchy displayed by the dialog.
+The color group hierarchy displayed by the dialog
+(L<TColorGroupList|TUI::ColorSel::ColorGroupList>).
 
 =head1 METHODS
 
@@ -501,7 +503,7 @@ Initializes the dialog from the supplied record.
 
   $dlg->handleEvent($event);
 
-Handles Turbo Vision events and updates the preview display when the
+Handles L<TUI::Vision> events and updates the preview display when the
 currently selected color item changes.
 
 =head1 SEE ALSO

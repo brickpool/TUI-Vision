@@ -1,37 +1,42 @@
+# PODNAME: TUI::Manual::Reference::Porting
+# ABSTRACT: Porting Notes
+
+__END__
+
 =pod
 
 =head1 NAME
 
-doc::appendix::Porting - Porting Notes
+TUI::Manual::Reference::Porting - Porting Notes
 
 =head1 PORTING NOTES
 
-This document describes the porting of Borland Turbo Vision to Perl.
+This document describes the porting of Borland I<Turbo Vision> to Perl.
 It focuses on implementation status, class mapping and technical
 considerations arising from differences between C++ and Perl.
 
 This document is primarily intended for maintainers and contributors.
 
-The TUI framework is based on the original Turbo Vision 2.0 C++ sources.
+The TUI framework is based on the original I<Turbo Vision> 2.0 C++ sources.
 The goal of the port is conceptual compatibility rather than a
 mechanical translation of code.
 
-Turbo Vision classes are mapped to Perl modules in a mostly one-to-one
-fashion.
+Borland's I<Turbo Vision> classes are mapped to Perl modules in a mostly 
+one-to-one fashion.
 
 This port is based on the original codebase of Borland C++ 4.02
 (Turbo Vision 2.0 sources including bug fixes by Eric Woodruff:
 L<tv2fixed.zip|http://www.sigala.it/sergio/tvision/source/tv2fixed.zip>).
 
 The Perl implementation also draws inspiration from I<magiblot>'s
-I<"A modern port of Turbo Vision 2.0">. Besides using C++ ports of various
+I<A modern port of Turbo Vision 2.0>. Besides using C++ ports of various
 assembler routines, the extended color model was adapted from that project and
 forms the basis of the enhanced color handling available in the Perl port.
 
 =head2 Class Implementation Status
 
 The following table provides an overview of the implementation status
-of major Turbo Vision classes in the Perl port. The status reflects
+of major I<Turbo Vision> classes in the Perl port. The status reflects
 practical usability rather than theoretical completeness.
 
  Status legend:
@@ -68,7 +73,7 @@ features are missing or incomplete. Use with care.
 =item [+] Port extension
 
 The class is specific to the Perl port and has no direct equivalent in the
-original Turbo Vision implementation. It was introduced to support
+original I<Turbo Vision> implementation. It was introduced to support
 additional functionality provided by modern terminals, color handling or
 the Perl implementation architecture.
 
@@ -287,5 +292,17 @@ Lists and History
  THeapView          TUI::Gadgets::HeapView       [x]
  TMouseDialog       TUI::Gadgets::MouseDialog    [x]
  TPuzzleView        (missing)                    [ ]
+
+=head3 Help System
+
+ Class              Perl Module                  Status
+ ------------------ ---------------------------- ------
+ TParagraph         (missing)                    [ ]
+ TCrossRef          (missing)                    [ ]
+ THelpTopic         (missing)                    [ ]
+ THelpIndex         (missing)                    [ ]
+ THelpFile          (missing)                    [ ]
+ THelpViewer        (missing)                    [ ]
+ THelpWindow        (missing)                    [ ]
 
 =cut

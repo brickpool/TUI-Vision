@@ -1,5 +1,7 @@
 package TUI::Drivers::Event;
+# ABSTRACT: Unified event structure for input handling
 
+use 5.014;
 use strict;
 use warnings;
 
@@ -545,12 +547,12 @@ __END__
 
 =head1 NAME
 
-TEvent - unified event structure for input handling
+TUI::Drivers::Event - unified event structure for input handling
 
 =head1 HIERARCHY
 
-  TEvent (value type, tied hash)
-    used throughout the event system
+  Tie::Hash
+    TEvent
 
 =head1 SYNOPSIS
 
@@ -569,13 +571,13 @@ TEvent - unified event structure for input handling
 
 =head1 DESCRIPTION
 
-C<TEvent> represents the central event structure used throughout TVision
+C<TEvent> represents the central event structure used throughout TUI::Vision
 It models all input and message events such as keyboard input, mouse activity,
 and broadcast messages.
 
-This type is implemented as a tied hash and is not derived from C<TObject>.
-Its structure mirrors the Turbo Vision C++ event union, with the active event
-variant selected by the C<what> field.
+This type is implemented as a tied hash and is not derived from 
+L<TObject|TUI::Objects::Object>. Its structure mirrors the I<Turbo Vision> C++ 
+event union, with the active event variant selected by the C<what> field.
 
 Depending on the event type, one of the variant substructures is active and
 accessible via the corresponding hash key.
@@ -595,7 +597,7 @@ handlers inspect C<what> and then read/write the active variant
 =item *
 
 As a synthetic event in tests and higher-level components, e.g. creating
-keyboard, mouse, broadcast, or command events with C<TEvent->new(...)> and
+keyboard, mouse, broadcast, or command events with C<< TEvent->new(...) >> and
 injecting them into controls/dialogs.
 
 =back
@@ -638,8 +640,8 @@ C<what>.
 =head1 INTERNAL REPRESENTATION
 
 Internally, C<TEvent> is implemented as a tied hash that models the original
-Turbo Vision C++ event union. The active event variant is selected by the value 
-of the C<what> field.
+I<Turbo Vision> C++ event union. The active event variant is selected by the 
+value of the C<what> field.
 
 Conceptually, the structure can be viewed as follows:
 
@@ -746,7 +748,7 @@ structure accordingly.
 
 =head1 HASH INTERFACE
 
-C<TEvent> implements the C<Tie::Hash> interface. Fields are accessed via normal
+C<TEvent> implements the L<Tie::Hash> interface. Fields are accessed via normal
 hash operations.
 
 Direct deletion or clearing of fields is not supported.
@@ -761,7 +763,7 @@ When C<what> contains C<evMouse>, the C<mouse> field is active and provides:
 
 =item where
 
-Mouse position as a C<TPoint>.
+Mouse position as a L<TPoint|TUI::Objects::Point>.
 
 =item buttons
 

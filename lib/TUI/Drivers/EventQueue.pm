@@ -1,5 +1,7 @@
 package TUI::Drivers::EventQueue;
+# ABSTRACT: Internal mouse event queue and dispatcher
 
+use 5.014;
 use strict;
 use warnings;
 
@@ -178,12 +180,7 @@ __END__
 
 =head1 NAME
 
-TEventQueue - internal mouse event queue and dispatcher
-
-=head1 HIERARCHY
-
-  TEventQueue (internal manager)
-    used by TEvent and the event system
+TUI::Drivers::EventQueue - internal mouse event queue and dispatcher
 
 =head1 SYNOPSIS
 
@@ -196,26 +193,27 @@ TEventQueue - internal mouse event queue and dispatcher
 =head1 DESCRIPTION
 
 C<TEventQueue> implements the low-level event queue responsible for collecting
-and dispatching mouse events within the TVision framework.
+and dispatching mouse events within the L<TUI::Vision> framework.
 
 This module manages mouse state, button transitions, double-click detection,
 auto-repeat handling, and movement tracking. It serves as the bridge between
-hardware input and the higher-level C<TEvent> abstraction.
+hardware input and the higher-level L<TEvent|TUI::Drivers::Event> abstraction.
 
 C<TEventQueue> is an internal framework component. Application code normally
-interacts with events through C<TEvent> and should not depend directly on this
-module.
+interacts with events through L<TEvent|TUI::Drivers::Event> and should not 
+depend directly on this module.
 
 =head2 Commonly Used Features
 
 In typical runtime flow, C<TEventQueue> is started and stopped automatically
-via C<resume()> and C<suspend()> during driver/application lifecycle handling.
-The most frequently used operation is C<getMouseEvent($event)>, which updates a
-provided C<TEvent> instance in-place and sets C<< $event->{what} >> to one of
-C<evMouseDown>, C<evMouseUp>, C<evMouseMove>, C<evMouseAuto>, or C<evNothing>.
+via L</resume> and L</suspend> during driver/application lifecycle handling.
+The most frequently used operation is L</getMouseEvent>,
+which updates a provided L<TEvent|TUI::Drivers::Event> instance in-place and 
+sets C<< $event->{what} >> to one of C<evMouseDown>, C<evMouseUp>, 
+C<evMouseMove>, C<evMouseAuto>, or C<evNothing>.
 
 Configuration usually centers on timing and behavior globals such as
-C<$doubleDelay>, C<$repeatDelay>, and C<$mouseReverse>. These values influence
+L</$doubleDelay>, L</$repeatDelay>, and L</$mouseReverse>. These values influence
 double-click recognition, mouse auto-repeat generation, and button mapping,
 and are primarily relevant for driver-level customization rather than
 application-level dialog/view code.
@@ -295,24 +293,26 @@ This method is called automatically during program shutdown.
 
   TEventQueue->getMouseEvent($event);
 
-Retrieves the next mouse event and populates the provided C<TEvent> object.
+Retrieves the next mouse event and populates the provided 
+L<TEvent|TUI::Drivers::Event> object.
 
 If no mouse event is available, the event's C<what> field is set to
 C<evNothing>.
 
-This method is a low-level helper used internally by C<TEvent>. Application
-code should normally call C<TEvent-E<gt>getMouseEvent> instead.
+This method is a low-level helper used internally by 
+L<TEvent|TUI::Drivers::Event>. Application code should normally call 
+C<< TEvent->getMouseEvent() >> instead.
 
 =head1 IMPLEMENTATION DETAILS
 
-Following the original Turbo Vision design, C<TEventQueue> is implemented as a
-singleton class with class methods and global state. 
+Following the original I<Turbo Vision> design, C<TEventQueue> is implemented as 
+a singleton class with class methods and global state. 
 
 =head2 Scope and limitations
 
 C<TEventQueue> processes mouse events only.
 
-Keyboard events are handled separately through C<TEvent-E<gt>getKeyEvent> and
+Keyboard events are handled separately through C<< TEvent->getKeyEvent() >> and
 are not part of this queue.
 
 =head2 Lifecycle

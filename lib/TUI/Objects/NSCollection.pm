@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -371,17 +371,24 @@ __END__
 
 =head1 NAME
 
-TNSCollection - internal non-storable collection base class
+TUI::Objects::NSCollection - internal non-storable collection base class
+
+=head1 HIERARCHY
+
+  TObject
+    TNSCollection
+      TCollection
 
 =head1 DESCRIPTION
 
-C<TNSCollection> is the non-storable base variant of the TVision collection
-classes. It exists primarily for internal use, most notably by the stream and
-resource management infrastructure.
+C<TNSCollection> is the non-storable base variant of the L<TUI::Vision> 
+collection classes. It exists primarily for internal use, most notably by the 
+stream and resource management infrastructure.
 
-This class provides the same operational behavior as C<TCollection>, but is not
-intended to be used directly by application code. Public-facing code should
-always use C<TCollection> or one of its derived classes instead.
+This class provides the same operational behavior as 
+L<TCollection|TUI::Objects::Collection>, but is not intended to be used 
+directly by application code. Public-facing code should always use 
+L<TCollection|TUI::Objects::Collection> or one of its derived classes instead.
 
 The non-storable variants are required to separate internal framework
 mechanisms from the storable collection types used elsewhere in the library.
@@ -391,15 +398,14 @@ mechanisms from the storable collection types used elsewhere in the library.
 =head2 %ITEMS
 
 Internal global hash used to maintain item references for all
-C<TCollection> objects.
+L<TCollection|TUI::Objects::Collection> objects.
 
-The collection elements are stored as references in this hash.
-Keys are derived using
-L<Hash::Util::FieldHash::id|Hash::Util::FieldHash>, ensuring stable and
+The collection elements are stored as references in this hash. Keys are derived 
+using L<Hash::Util::FieldHash::id|Hash::Util::FieldHash>, ensuring stable and
 unique identification of collection items.
 
-This variable is for internal use only and mirrors the reference
-handling approach of the original Turbo Vision implementation.
+This variable is for internal use only and mirrors the reference handling 
+approach of the original I<Turbo Vision> implementation.
 
 See also L<Scalar::Util::refaddr|Scalar::Util>.
 

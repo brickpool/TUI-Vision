@@ -1,11 +1,11 @@
 package TUI::Views::View;
 # ABSTRACT: Base class for all visual components
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -1458,7 +1458,7 @@ __END__
 
 =head1 NAME
 
-TView - base class for all visual components in TVision
+TUI::Views::View - base class for all visual components
 
 =head1 HIERARCHY
 
@@ -1475,7 +1475,7 @@ TView - base class for all visual components in TVision
 
 =head1 DESCRIPTION
 
-C<TView> is the fundamental base class for all visible objects in TVision
+C<TView> is the fundamental base class for all visible objects in TUI::Vision
 Every visual component shown on the screen ultimately derives from C<TView>.
 
 The class provides the core infrastructure required for drawing, event
@@ -1495,15 +1495,16 @@ state, options, event mask, and geometry attributes.
 =head2 Commonly Used Features
 
 In day-to-day application code, the most relevant configuration fields are
-C<growMode>, C<dragMode>, C<helpCtx>, C<state>, C<options>, and C<eventMask>.
-They define resize behavior, input handling, help context, and event routing.
+L</growMode>, L</dragMode>, L</helpCtx>, L</state>, L</options>, and 
+L</eventMask>. They define resize behavior, input handling, help context, and 
+event routing.
 
 The methods most commonly touched outside framework internals are
-C<clearEvent>, C<commandEnabled>, C<dataSize>, C<disableCommands>, C<draw>,
-C<drawView>, C<enableCommands>, C<getColor>, C<getCommands>, C<getHelpCtx>,
-C<getPalette>, C<getState>, C<hideCursor>, C<normalCursor>, C<select>,
-C<setCommands>, C<setState>, C<show>, C<showCursor>, C<valid>, C<writeLine>,
-and C<writeStr>.
+L</clearEvent>, L</commandEnabled>, L</dataSize>, L</disableCommands>, 
+L</draw>, L</drawView>, L</enableCommands>, L</getColor>, L</getCommands>, 
+L</getHelpCtx>, L</getPalette>, L</getState>, L</hideCursor>, L</normalCursor>, 
+L</select>, L</setCommands>, L</setState>, L</show>, L</showCursor>, L</valid>, 
+L</writeLine>, and L</writeStr>.
 
 =head1 VARIABLES
 
@@ -1512,32 +1513,35 @@ properties shared by all C<TView> objects.
 
 =head2 $shadowSize
 
-Default size of the view shadow, specified as a C<TPoint>.
+Default size of the view shadow, specified as a L<TPoint|TUI::Objects::Point>.
 
 =head2 $shadowAttr
 
-Attribute value used when drawing view shadows.
+Attribute value used when drawing view shadows (I<PositiveInt> or 
+L<TColorAttr|TUI::Objects::ColorAttr>).
 
 =head2 $showMarkers
 
-Controls whether focus and selection markers are displayed.
+Controls whether focus and selection markers are displayed (I<Bool>).
 
 =head2 $specialChars
 
-Array reference defining special navigation and marker characters.
+Array reference defining special navigation and marker characters 
+(I<ArrayRef[Str]>).
 
 =head2 $errorAttr
 
-Attribute value used to render views in an error state.
+Attribute value used to render views in an error state (I<PositiveInt> or 
+L<TColorAttr|TUI::Objects::ColorAttr>).
 
 =head2 $commandSetChanged
 
-Indicates whether the active command set has been modified.
+Indicates whether the active command set has been modified (I<Bool>).
 
 =head2 $curCommandSet
 
-Holds the current default command set used for command enabling
-and dispatch.
+Holds the current default command set used for command enabling and dispatch (
+L<TCommandSet|TUI::Views::CommandSet>).
 
 =head1 ATTRIBUTES
 
@@ -1545,57 +1549,57 @@ The following attributes define the geometry, state, and ownership of a view.
 Unless otherwise noted, attributes are part of the public view state and may
 be read or modified by application code.
 
-=over
-
-=item next
+=head2 next
 
 Internal link to the next view in the owner's Z-ordered view list.
-This attribute is managed internally.
+This attribute is managed internally (L<TView|TUI::Views::View>).
 
-=item size
+=head2 size
 
-Size of the view as a C<TPoint>.
+Size of the view as a L<TPoint|TUI::Objects::Point>.
 
-=item origin
+=head2 origin
 
-Upper-left corner of the view relative to its owner.
+Upper-left corner of the view relative to its owner 
+(L<TPoint|TUI::Objects::Point>).
 
-=item cursor
+=head2 cursor
 
-Current cursor position within the view.
+Current cursor position within the view (L<TPoint|TUI::Objects::Point>).
 
-=item owner
+=head2 owner
 
-Owning group of this view (I<TGroup>). This reference is managed internally.
+Owning group of this view (L<TGroup|TUI::Views::Group>). This reference is 
+managed internally.
 
-=item options
+=head2 options
 
-View option flags (I<Int>), typically a combination of C<ofXXXX> constants.
+View option flags (I<PositiveOrZeroInt>), typically a combination of C<ofXXXX> 
+constants.
 
-=item eventMask
+=head2 eventMask
 
-Event mask controlling which event classes are accepted by the view.
+Event mask controlling which event classes are accepted by the view 
+(I<PositiveOrZeroInt>, C<evXXXX> constants).
 
-=item state
+=head2 state
 
 Current state flags of the view, such as visibility, selection, and cursor
-mode (C<sfXXXX> constants).
+mode (I<PositiveOrZeroInt>, C<sfXXXX> constants).
 
-=item growMode
+=head2 growMode
 
 Grow mode flags controlling how the view resizes when its owner changes size
-(C<gfXXXX> constants).
+(I<PositiveOrZeroInt>, C<gfXXXX> constants).
 
-=item dragMode
+=head2 dragMode
 
 Drag behavior flags controlling how the view responds to mouse dragging
-(C<dmXXXX> constants).
+(I<PositiveOrZeroInt>, C<dmXXXX> constants).
 
-=item helpCtx
+=head2 helpCtx
 
-Help context identifier associated with the view.
-
-=back
+Help context identifier associated with the view (I<PositiveOrZeroInt>).
 
 =head1 CONSTRUCTOR
 
@@ -1610,7 +1614,7 @@ The view is created with default state, option, and event mask values.
 
 =item bounds
 
-Bounding rectangle of the view (I<TRect>).
+Bounding rectangle of the view (L<TRect|TUI::Objects::Rect>).
 
 =back
 
@@ -1621,7 +1625,7 @@ Bounding rectangle of the view (I<TRect>).
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with the $bounds parameter
-and is provided for compatibility with traditional Turbo Vision construction
+and is provided for compatibility with traditional I<Turbo Vision> construction
 patterns.
 
 =head1 DESTRUCTOR
@@ -1631,8 +1635,6 @@ patterns.
   $self->DEMOLISH($in_global_destruction);
 
 Destroys the view and removes it from the screen and the view hierarchy.
-This method corresponds to the Turbo Vision destructor and is normally called
-automatically by the owning group.
 
 =head1 METHODS
 

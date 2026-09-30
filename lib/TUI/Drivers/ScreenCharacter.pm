@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -92,7 +92,7 @@ __END__
 
 =head1 NAME
 
-TScreenCharacter - character value type for screen cells
+TUI::Drivers::ScreenCharacter - character value type for screen cells
 
 =head1 SYNOPSIS
 

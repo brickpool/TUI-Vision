@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -246,8 +246,8 @@ TUI::Drivers::Colors - color conversion functions for BIOS, XTerm and RGB colors
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::Colors> provides a collection of color conversion functions
-used by the TVision color system.
+This module provides a collection of color conversion functions used by the 
+L<TUI::Vision> color system.
 
 The functions convert between BIOS colors, XTerm 16-color values,
 XTerm 256-color values and 24-bit RGB colors.
@@ -259,8 +259,8 @@ This module is purely functional and does not define any objects.
 XTerm16 colors form a 4-bit RGBI palette and are not a regular RGB color
 space.
 
-The conversion algorithm implemented by C<RGBtoXTerm16()> follows the
-approach used by the "A modern port of Turbo Vision 2.0".
+The conversion algorithm implemented by L</RGBtoXTerm16> follows the
+approach used by the I<A modern port of Turbo Vision 2.0>.
 
 The RGB color is first transformed into an intermediate hue, chroma and
 lightness representation.
@@ -325,8 +325,8 @@ Converts an XTerm16 color index into the equivalent BIOS color value.
 
 Returns the RGB value corresponding to an XTerm256 palette entry.
 
-For compatibility with the original TVision implementation this function is
-primarily intended for XTerm256 indices 16 through 255.
+For compatibility with the original Turbo Vision implementation this function 
+is primarily intended for XTerm256 indices 16 through 255.
 
 =head2 XTerm256toXTerm16
 

@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-TUI::Vision - Turbo Vision inspired TUI framework for Perl
+README - Turbo Vision inspired TUI framework for Perl
 
 =head1 SYNOPSIS
 

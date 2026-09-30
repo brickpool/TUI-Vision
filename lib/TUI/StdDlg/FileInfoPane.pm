@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -162,7 +162,7 @@ __END__
 
 =head1 NAME
 
-TFileInfoPane - view displaying information about the focused file
+TUI::StdDlg::FileInfoPane - view displaying information about the focused file
 
 =head1 HIERARCHY
 
@@ -180,13 +180,13 @@ TFileInfoPane - view displaying information about the focused file
 
 =head1 DESCRIPTION
 
-C<TFileInfoPane> implements a view used by standard TVision file dialogs to
-display information about the currently focused file or directory.
+C<TFileInfoPane> implements a view used by standard L<TUI::Vision> file dialogs 
+to display information about the currently focused file or directory.
 
 The pane renders metadata such as name, size, date, and attributes of the
 active entry and updates its display automatically when the file selection
 changes. It is typically embedded alongside a file list within a
-C<TFileDialog>.
+L<TFileDialog|TUI::StdDlg::FileDialog>.
 
 The view is display-only and does not allow direct user interaction.
 
@@ -222,7 +222,8 @@ Creates a new file information pane.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the pane (I<TRect>).
+Bounding rectangle defining the position and size of the pane 
+(L<TRect|TUI::Objects::Rect>).
 
 =back
 

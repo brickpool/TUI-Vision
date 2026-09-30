@@ -1,5 +1,5 @@
 package TUI::toolkit;
-# ABSTRACT: Unified OO facade for the TVision framework
+# ABSTRACT: Unified OO facade for the TUI::Vision framework
 
 use 5.010;
 use strict;
@@ -385,7 +385,7 @@ __END__
 
 =head1 NAME
 
-toolkit - Unified OO facade for the TVision framework
+TUI::toolkit - Unified OO facade for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -403,9 +403,9 @@ toolkit - Unified OO facade for the TVision framework
 
 =head1 DESCRIPTION
 
-C<TUI::toolkit> provides a unified object system facade for the
-TVision framework. It offers a consistent set of OO features regardless of
-which backend toolkit is available.
+C<TUI::toolkit> provides a unified object system facade for the L<TUI::Vision> 
+framework. It offers a consistent set of OO features regardless of which 
+backend toolkit is available.
 
 C<TUI::toolkit> dynamically selected an OO backend from:
 
@@ -455,7 +455,7 @@ which backend toolkit is already in use.
 
 =head1 BACKEND BEHAVIOR
 
-If any of these toolkits are already loaded, C<TUI::toolkit> uses them
+If any of these toolkit's are already loaded, C<TUI::toolkit> uses them
 directly:
 
 =over 4

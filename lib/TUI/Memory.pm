@@ -1,10 +1,11 @@
 package TUI::Memory;
 # ABSTRACT: defines various memory-related utility functions
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -32,6 +33,10 @@ our @EXPORT = qw(
 
 our @EXPORT_OK = qw(
   $maxHeapSize
+);
+
+our %EXPORT_TAGS = (
+  all => [ @EXPORT, @EXPORT_OK ],
 );
 
 # global variables
@@ -179,8 +184,8 @@ TUI::Memory - memory-related utility functions
 
 =head1 DESCRIPTION
 
-C<TUI::Memory> provides the Turbo Vision compatible memory and cache management 
-API used by the Perl port.
+C<TUI::Memory> provides the I<Turbo Vision> compatible memory and cache 
+management API used by the Perl port.
 
 Caches are represented by ordinary hash references. Each allocation defines a 
 guaranteed minimum size. However, the cache may also use additional capacity.
@@ -194,12 +199,12 @@ This module is purely functional and does not define any classes.
 =head2 Commonly Used Features
 
 Most applications interact with C<TUI::Memory> only through the cache
-management API. Cache allocations are typically created with C<newCache>. A 
-cache can be removed completely with C<disposeCache>.
+management API. Cache allocations are typically created with L</newCache>. A 
+cache can be removed completely with L</disposeCache>.
 
-The C<lowMemory> function is typically used by the framework before creating or
+The L</lowMemory> function is typically used by the framework before creating or
 validating new views. If the combined guaranteed cache size still exceeds
-C<$maxHeapSize> after reclaimable entries have been discarded, applications
+L</$maxHeapSize> after reclaimable entries have been discarded, applications
 may reject additional allocations and report a low-memory condition.
 
 Typical examples include large transient caches such as attribute conversion 
@@ -213,8 +218,8 @@ complexity of the user interface.
 Maximum combined number of entries permitted across all registered caches
 before the memory manager attempts to reclaim cache contents.
 
-The name is retained from the original Turbo Vision API. In the Perl port the
-value represents cache entries rather than bytes of heap memory.
+The name is retained from the original I<Turbo Vision> API. In the Perl port 
+the value represents cache entries rather than bytes of heap memory.
 
 =head1 FUNCTIONS
 

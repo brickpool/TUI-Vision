@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -66,7 +66,7 @@ __END__
 
 =head1 NAME
 
-TWindowInit - class for initializing a frame for TWindows.
+TUI::Views::WindowInit - class for initializing a frame for TWindows.
 
 =head1 SYNOPSIS
 
@@ -82,13 +82,9 @@ essential for setting up the user interface elements in a TWindow class.
 
 =head1 ATTRIBUTES
 
-=over
-
-=item createFrame
+=head2 createFrame
 
 A subroutine reference used to create the frame for a window. (I<CodeRef>)
-
-=back
 
 =head1 CONSTRUCTOR
 

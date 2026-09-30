@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -407,15 +407,15 @@ TUI::StdDlg::FindFirstRec::Unix - Unix implementation of FindFirstRec
 
 =head1 DESCRIPTION
 
-C<TUI::StdDlg::FindFirstRec::Unix> provides the Unix-specific implementation
-of the C<FindFirstRec> directory search interface.
+C<TUI::StdDlg::FindFirstRec::Unix> provides the Unix-specific implementation of 
+the C<FindFirstRec> directory search interface.
 
-The implementation maps the generic search operations to native Unix
-directory handling using directory streams and file status information.
+The implementation maps the generic search operations to native Unix directory 
+handling using directory streams and file status information.
 
-Pathnames are split into a search directory and a wildcard pattern.
-Directory entries are matched against the wildcard and converted into
-Turbo Vision compatible C<find_t> records.
+Path names are split into a search directory and a wildcard pattern. Directory 
+entries are matched against the wildcard and converted into I<Turbo Vision> 
+compatible C<find_t> records.
 
 =head1 CONSTRUCTOR
 

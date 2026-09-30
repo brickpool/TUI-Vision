@@ -1,10 +1,11 @@
 package TUI::App;
-# ABSTRACT: Application framework for the TVision framework
+# ABSTRACT: Application layer for the TUI::Vision framework
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -48,7 +49,7 @@ __END__
 
 =head1 NAME
 
-App - Application layer for the TVision framework
+TUI::App - Application layer for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -83,9 +84,10 @@ App - Application layer for the TVision framework
 
 =head1 DESCRIPTION
 
-TUI::App represents the application-level framework of TVision
-It corresponds to the Turbo Vision TProgram and TApplication layer and
-provides the structural foundation for building complete TUI programs.
+C<TUI::App> represents the application-level framework of TUI::Vision
+It corresponds to the I<Turbo Vision> L<TProgram|TUI::App::Program> and 
+L<TApplication|TUI::App::Application> layer and provides the structural 
+foundation for building complete TUI programs.
 
 This module re-exports multiple application components, including:
 

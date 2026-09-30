@@ -1,10 +1,11 @@
 package TUI::Views::View::Write;
 # ABSTRACT: TView write member functions.
 
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 

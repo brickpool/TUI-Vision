@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -365,7 +365,7 @@ __END__
 
 =head1 NAME
 
-TChDirDialog - common dialog for selecting a directory
+TUI::StdDlg::ChDirDialog - common dialog for selecting a directory
 
 =head1 HIERARCHY
 
@@ -389,8 +389,8 @@ TChDirDialog - common dialog for selecting a directory
 
 =head1 DESCRIPTION
 
-C<TChDirDialog> implements the standard TVision dialog used for selecting
-and changing directories.
+C<TChDirDialog> implements the standard L<TUI::Vision> dialog used for 
+selecting and changing directories.
 
 The dialog presents a directory list, an input line for the directory path,
 and command buttons. It allows navigation through the directory hierarchy

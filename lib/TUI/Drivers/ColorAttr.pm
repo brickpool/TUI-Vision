@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -402,7 +402,7 @@ __END__
 
 =head1 NAME
 
-TColorAttr - color attribute value type for screen cells
+TUI::Drivers::ColorAttr - color attribute value type for screen cells
 
 =head1 SYNOPSIS
 
@@ -416,12 +416,12 @@ TColorAttr - color attribute value type for screen cells
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::ColorAttr> provides C<TColorAttr>, a value type that represents 
-the color attributes of a screen cell.
+This module provides C<TColorAttr>, a value type that represents the color 
+attributes of a screen cell.
 
 A C<TColorAttr> stores foreground color, background color, and style
 information. It can also represent traditional BIOS color attributes used by 
-TVision color handling.
+L<TUI::Vision> color handling.
 
 =head1 CONSTRUCTOR
 
@@ -447,13 +447,13 @@ With explicit foreground, background, and optional style information:
     style => slBold | slItalic,
   );
 
-The arguments C<fg> and C<bg> should be values of type C<TColor>. The following 
-syntax is also allowed.
+The arguments C<fg> and C<bg> should be values of type 
+L<TColor|TUI::Drivers::Color>. The following syntax is also allowed.
 
 =head3 Coercion
 
 As a shorthand, C<fg> and C<bg> also accept a hash reference or an array
-reference instead of a C<TColor> object:
+reference instead of a L<TColor|TUI::Drivers::Color> object:
 
 =over
 
@@ -589,10 +589,10 @@ Returns true if this value is represented as a BIOS color attribute.
 
 Shifts the C<asBIOS> value left by C<$shift> bits.
 
-As a special case, shifting by C<8> returns a new C<TAttrPair> whose high
-attribute is this value and whose low attribute is a BIOS attribute of C<0>,
-for compatibility with legacy code that used C<< << 8 >> on an attribute to
-construct an attribute pair.
+As a special case, shifting by C<8> returns a new 
+L<TAttrPair|TUI::Drivers::AttrPair> whose high attribute is this value and 
+whose low attribute is a BIOS attribute of C<0>, for compatibility with legacy 
+code that used C<< << 8 >> on an attribute to construct an attribute pair.
 
 =head2 or
 
@@ -623,9 +623,9 @@ Returns a new C<TColorAttr>.
 
 Sets the foreground color component.
 
-The argument must be a C<TColor> value or something that can be coerced into a 
-C<TColor> using the internal color coercion mechanism (see L</Coercion> for 
-details).
+The argument must be a L<TColor|TUI::Drivers::Color> value or something that 
+can be coerced into a L<TColor|TUI::Drivers::Color> using the internal color 
+coercion mechanism (see L</Coercion> for details).
 
 =head2 setBackground
 
@@ -633,9 +633,9 @@ details).
 
 Sets the background color component.
 
-The argument must be a C<TColor> value or something that can be coerced into a 
-C<TColor> using the internal color coercion mechanism (see L</Coercion> for 
-details).
+The argument must be a L<TColor|TUI::Drivers::Color> value or something that 
+can be coerced into a L<TColor|TUI::Drivers::Color> using the internal color 
+coercion mechanism (see L</Coercion> for details).
 
 =head2 setStyle
 

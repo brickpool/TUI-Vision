@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -87,7 +87,7 @@ __END__
 
 =head1 NAME
 
-TDirEntry - directory entry record used by standard dialogs
+TUI::StdDlg::DirEntry - directory entry record used by standard dialogs
 
 =head1 SYNOPSIS
 
@@ -107,9 +107,10 @@ C<TDirEntry> represents a single directory entry used by the standard dialog
 subsystem. It is a lightweight data object that stores the display text and the
 associated directory path.
 
-This class is not derived from C<TObject> and does not participate in the view
-hierarchy. It exists solely as a structured data container and is used by
-collections and list boxes to represent directory items.
+This class is not derived from L<TObject|TUI::Objects::TObject> and does not 
+participate in the view hierarchy. It exists solely as a structured data 
+container and is used by collections and list boxes to represent directory 
+items.
 
 =head1 CONSTRUCTOR
 

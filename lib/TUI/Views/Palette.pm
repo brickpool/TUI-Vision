@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -107,12 +107,7 @@ __END__
 
 =head1 NAME
 
-TPalette - color palette representation based on string data
-
-=head1 HIERARCHY
-
-  TPalette (scalar-based type)
-    used by TView and derived classes
+TUI::Views::Palette - color palette representation based on string data
 
 =head1 SYNOPSIS
 
@@ -147,10 +142,11 @@ TPalette - color palette representation based on string data
 
 =head1 DESCRIPTION
 
-C<TPalette> represents a color palette as used by TVision views. Unlike most
-TVision classes, C<TPalette> is not derived from C<TObject>.
+C<TPalette> represents a color palette as used by L<TUI::Vision> views. Unlike 
+most L<TUI::Vision> classes, C<TPalette> is not derived from 
+L<TObject|TUI::Objects::Object>.
 
-The original TVision implementation stored a palette as a length-prefixed
+The original L<TUI::Vision> implementation stored a palette as a length-prefixed
 Pascal string. For compatibility, the Perl port preserves the same logical
 layout while using an array-based object representation internally:
 
@@ -163,7 +159,8 @@ Palette objects are typically created once and then shared or cloned by views
 that require color information.
 
 Palette entries are commonly integer attribute values obtained from string
-data, but may also be arbitrary objects such as instances of C<TColorAttr>.
+data, but may also be arbitrary objects such as instances of 
+L<TColorAttr|TUI::Drivers::ColorAttr>.
 
 =head1 CONSTRUCTOR
 
@@ -204,7 +201,7 @@ C<size> are provided.
 Factory-style constructor using positional arguments.
 
 This constructor forwards to the internal implementation and is provided for
-compatibility with traditional Turbo Vision construction patterns.
+compatibility with traditional I<Turbo Vision> construction patterns.
 
 =head1 METHODS
 

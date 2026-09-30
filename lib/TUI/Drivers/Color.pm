@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -191,7 +191,7 @@ __END__
 
 =head1 NAME
 
-TColor - represents a color in any of the supported color types
+TUI::Drivers::Color - represents a color in any of the supported color types
 
 =head1 SYNOPSIS
 
@@ -219,7 +219,7 @@ TColor - represents a color in any of the supported color types
 
 =head1 DESCRIPTION
 
-C<TUI::Drivers::Color> provides C<TColor>, a value type that represents one of 
+This module provides C<TColor>, a value type that represents one of 
 several color kinds:
 
 =over

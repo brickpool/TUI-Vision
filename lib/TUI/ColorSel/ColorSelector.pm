@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use utf8;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -243,7 +243,7 @@ __END__
 
 =head1 NAME
 
-TColorSelector - interactive color selection view
+TUI::ColorSel::ColorSelector - interactive color selection view
 
 =head1 HIERARCHY
 
@@ -263,7 +263,7 @@ TColorSelector - interactive color selection view
 =head1 DESCRIPTION
 
 C<TColorSelector> implements an interactive color selection view used by the
-Turbo Vision color dialog infrastructure.
+L<TUI::Vision> color dialog infrastructure.
 
 The selector displays a palette of available colors and allows the user to
 choose a foreground or background color using keyboard or mouse input.
@@ -280,20 +280,16 @@ L<TColorDisplay|TUI::ColorSel::ColorDisplay> and other color dialog components.
 
 =head1 ATTRIBUTES
 
-=over
-
-=item color
+=head2 color
 
 Currently selected color index (I<PositiveOrZeroInt>).
 
-=item selType
+=head2 selType
 
 Selection mode determining whether foreground or background colors are
 edited (I<PositiveOrZeroInt>).
 
 Typical values are C<csForeground> and C<csBackground>.
-
-=back
 
 =head1 CONSTRUCTORS
 
@@ -311,7 +307,7 @@ Creates a new color selector view.
 =item bounds
 
 Bounding rectangle defining the position and size of the view
-(I<TRect>).
+(L<TRect|TUI::Objects::Rect>).
 
 =item selType
 

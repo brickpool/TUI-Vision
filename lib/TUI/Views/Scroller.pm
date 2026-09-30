@@ -1,11 +1,11 @@
 package TUI::Views::Scroller;
-# ABSTRACT: Base class for scrolling text windows
+# ABSTRACT: Base class for scrollable views
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -277,7 +277,7 @@ __END__
 
 =head1 NAME
 
-TScroller - base class for scrollable views in TVision
+TUI::Views::Scroller - base class for scrollable views
 
 =head1 HIERARCHY
 
@@ -321,37 +321,35 @@ in the scroll bars.
 The following attributes describe the scrolling state of the view. Attributes
 marked as read-only are managed internally.
 
-=over
+=head2 delta
 
-=item delta
-
-Current scroll offset as a point (I<TPoint>).  
+Current scroll offset as a point (L<TPoint|TUI::Objects::Point>).  
 Represents the horizontal and vertical scroll position.
 
-=item limit
+=head2 limit
 
-Maximum allowed scroll offset (I<TPoint>, read-only). Defines the bounds of the 
-scrollable area.
+Maximum allowed scroll offset (L<TPoint|TUI::Objects::Point>, read-only). 
+Defines the bounds of the scrollable area.
 
-=item aHScrollBar
+=head2 hScrollBar
 
-Reference to the horizontal scroll bar (I<TScrollBar>, read-only), if present.
+Reference to the horizontal scroll bar (L<TScrollBar|TUI::Views::ScrollBar>, 
+read-only), if present.
 
-=item aVScrollBar
+=head2 vScrollBar
 
-Reference to the vertical scroll bar (I<TScrollBar>, read-only), if present.
+Reference to the vertical scroll bar (L<TScrollBar|TUI::Views::ScrollBar>, 
+read-only), if present.
 
-=item drawLock
+=head2 drawLock
 
 Internal counter used to suppress redraw operations during batch updates 
 (I<Int>, read-only).
 
-=item drawFlag
+=head2 drawFlag
 
 Indicates whether a redraw is pending once drawing is re-enabled (I<Bool>, 
 read-only).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -369,15 +367,17 @@ Creates a new scroller with the specified bounds and optional scroll bars.
 
 =item bounds
 
-Bounding rectangle of the scroller (I<TRect>).
+Bounding rectangle of the scroller (L<TRect|TUI::Objects::Rect>).
 
 =item hScrollBar
 
-Horizontal scroll bar associated with the scroller (I<TScrollBar> or undef).
+Horizontal scroll bar associated with the scroller 
+(L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
 
 =item vScrollBar
 
-Vertical scroll bar associated with the scroller (I<TScrollBar> or undef).
+Vertical scroll bar associated with the scroller 
+(L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
 
 =back
 
@@ -389,7 +389,8 @@ Vertical scroll bar associated with the scroller (I<TScrollBar> or undef).
 Factory-style constructor using positional arguments.
 
 This constructor is equivalent to calling C<new> with named parameters and is
-provided for compatibility with traditional Turbo Vision construction patterns.
+provided for compatibility with traditional I<Turbo Vision> construction 
+patterns.
 
 =head1 DESTRUCTOR
 
@@ -397,9 +398,7 @@ provided for compatibility with traditional Turbo Vision construction patterns.
 
   $self->DEMOLISH($in_global_destruction);
 
-Destroys the scroller and releases references to associated scroll bars. This
-method corresponds to the Turbo Vision destructor and is normally invoked
-automatically.
+Destroys the scroller and releases references to associated scroll bars. 
 
 =head1 METHODS
 

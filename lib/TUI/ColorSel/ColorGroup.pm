@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -164,7 +164,7 @@ __END__
 
 =head1 NAME
 
-TColorGroup - linked color group definition used by color selection dialogs
+TUI::ColorSel::ColorGroup - linked color group definition used by color dialog
 
 =head1 SYNOPSIS
 
@@ -190,8 +190,8 @@ TColorGroup - linked color group definition used by color selection dialogs
 
 =head1 DESCRIPTION
 
-C<TColorGroup> represents a color group used by the TVision color selection 
-infrastructure.
+C<TColorGroup> represents a color group used by the L<TUI::Vision> color 
+selection infrastructure.
 
 Each group contains a display name and a linked list of
 L<TColorItem|TUI::Dialogs::ColorItem> objects describing the individual color
@@ -200,34 +200,30 @@ entries belonging to the group.
 Groups themselves may also be linked together, forming a list of available
 color groups.
 
-The Perl implementation preserves the original Borland Turbo Vision data model.
-Each C<TColorGroup> contains a linked list of color items accessible through
-the C<items> attribute. Multiple groups may themselves be linked through the
-C<next> attribute.
+The Perl implementation preserves the original Borland I<Turbo Vision> data 
+model. Each C<TColorGroup> contains a linked list of color items accessible 
+through the C<items> attribute. Multiple groups may themselves be linked 
+through the C<next> attribute.
 
-The overloaded C<+> operator supports the original Borland Turbo Vision 
+The overloaded C<'+'> operator supports the original Borland I<Turbo Vision> 
 programming style by allowing both color items and color groups to be appended 
 using a uniform syntax.
 
 =head1 ATTRIBUTES
 
-=over
-
-=item name
+=head2 name
 
 Display name of the color group (I<Str>).
 
-=item items
+=head2 items
 
 Reference to the first color item in the group, or C<undef> if the group is
 empty (I<TColorItem> or C<undef>).
 
-=item next
+=head2 next
 
 Reference to the next color group, or C<undef> if this is the last group
 (I<TColorGroup> or C<undef>).
-
-=back
 
 =head1 CONSTRUCTORS
 

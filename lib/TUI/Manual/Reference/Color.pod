@@ -1,8 +1,13 @@
+# PODNAME: TUI::Manual::Reference::Color
+# ABSTRACT: Color Constants
+
+__END__
+
 =pod
 
 =head1 NAME
 
-doc::appendix::Color - Color Constants
+TUI::Manual::Reference::Color - Color Constants
 
 =head1 COLOR CONSTANTS
 

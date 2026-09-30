@@ -1,4 +1,5 @@
 package TUI::Drivers::Screen;
+# ABSTRACT: Global screen and video mode management
 
 use strict;
 use warnings;
@@ -132,7 +133,7 @@ __END__
 
 =head1 NAME
 
-TScreen - global screen and video mode management
+TUI::Drivers::Screen - global screen and video mode management
 
 =head1 SYNOPSIS
 
@@ -153,8 +154,8 @@ TScreen - global screen and video mode management
 
 =head1 DESCRIPTION
 
-C<TScreen> provides global screen and video mode management
-facilities used by the TVision driver layer.
+C<TScreen> provides global screen and video mode management facilities used by 
+the L<TUI::Vision> driver layer.
 
 The module maintains global state describing the current screen configuration
 and provides class-level routines to suspend, resume, and reinitialize the
@@ -162,32 +163,32 @@ video subsystem.
 
 C<TScreen> is not an object-oriented class. It is not instantiated and does
 not represent a view. All interaction is performed through class method calls
-of the form C<TScreen-E<gt>method>.
+of the form C<< TScreen->method() >>.
 
 =head2 Commonly Used Features
 
 In normal application flow, C<TScreen> is primarily used to coordinate screen
-lifecycle transitions (C<resume()> and C<suspend()>) and to switch video mode
-via C<setVideoMode()>.
+lifecycle transitions (L</resume> and L</suspend>) and to switch video mode
+via L</setVideoMode>.
 
 When a mode change occurs, the module refreshes shared screen state such as
-C<$screenWidth>, C<$screenHeight>, and C<$hiResScreen>, and updates mouse range
-through C<TMouse> when mouse support is available.
+L</$screenWidth>, L</$screenHeight>, and L</$hiResScreen>, and updates mouse range
+through L<TMouse|TUI::Drivers::Mouse> when mouse support is available.
 
 =head1 VARIABLES
 
 =head2 $startupMode
 
-Stores the screen mode (I<PositiveOrZeroInt>) that was active before TVision 
-initialized the video system.
+Stores the screen mode (I<PositiveOrZeroInt>) that was active before 
+L<TUI::Vision> initialized the video system.
 
-This value is used to restore the original screen mode when TVision
+This value is used to restore the original screen mode when TUI::Vision
 suspends or terminates.
 
 =head2 $startupCursor
 
-Stores the initial cursor shape (I<PositiveOrZeroInt>) before TVision modifies 
-the cursor.
+Stores the initial cursor shape (I<PositiveOrZeroInt>) before L<TUI::Vision> 
+modifies the cursor.
 
 =head2 $screenMode
 
@@ -214,8 +215,8 @@ Indicates whether a high-resolution text mode is active (I<Bool>).
 
 Controls CGA snow checking behavior (I<Bool>).
 
-If true, TVision performs additional checks to avoid display artifacts on
-older CGA adapters. This variable should not be modified before application
+If true, L<TUI::Vision> performs additional checks to avoid display artifacts 
+on older CGA adapters. This variable should not be modified before application
 initialization has completed.
 
 =head2 $screenBuffer
@@ -260,14 +261,14 @@ Adjusts the supplied screen mode value to match hardware constraints.
 Selects a new screen mode.
 
 This method changes the screen color mode and optionally the screen height.
-Typically, applications should call C<TProgram-E<gt>setScreenMode> instead,
+Typically, applications should call C<< TProgram->setScreenMode() >> instead,
 which performs additional updates such as palette and mouse repositioning.
 
 =head2 suspend
 
   TScreen->suspend();
 
-Suspends TVision video support and restores the original screen state.
+Suspends L<TUI::Vision> video support and restores the original screen state.
 
 This method is called automatically during application shutdown.
 
@@ -275,7 +276,7 @@ This method is called automatically during application shutdown.
 
   TScreen->resume();
 
-Initializes the TVision video subsystem and switches the display to the
+Initializes the L<TUI::Vision> video subsystem and switches the display to the
 mode specified by C<$screenMode>.
 
 This method initializes C<$screenWidth>, C<$screenHeight>, C<$hiResScreen>,

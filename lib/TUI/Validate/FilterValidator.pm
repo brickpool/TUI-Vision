@@ -1,11 +1,11 @@
 package TUI::Validate::FilterValidator;
 # ABSTRACT: character-set validator for input fields
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -110,7 +110,7 @@ __END__
 
 =head1 NAME
 
-TFilterValidator - character-set validator for input fields
+TUI::Validate::FilterValidator - character-set validator for input fields
 
 =head1 HIERARCHY
 
@@ -167,8 +167,8 @@ constructing any validator if a different message is needed.
 
   my $pattern = $v->validChars;
 
-Read-only string holding the character-class pattern used to decide whether a
-character is acceptable.  Set once at construction time via the C<validChars>
+Read-only string (I<Str>) holding the character-class pattern used to decide
+whether a character is acceptable.  Set once at construction time via the C<validChars>
 (or aliased C<aValidChars>) constructor argument.
 
 =head1 CONSTRUCTOR

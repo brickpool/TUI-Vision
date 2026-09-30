@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -110,14 +110,15 @@ __END__
 
 =head1 NAME
 
-TFileCollection - sorted collection of file system entries
+TUI::StdDlg::FileCollection - sorted collection of file system entries
 
 =head1 HIERARCHY
 
   TObject
-    TCollection
-      TSortedCollection
-        TFileCollection
+    TNSCollection
+      TNSortedCollection
+        TSortedCollection
+          TFileCollection
 
 =head1 SYNOPSIS
 
@@ -131,14 +132,14 @@ TFileCollection - sorted collection of file system entries
 =head1 DESCRIPTION
 
 C<TFileCollection> implements a sorted collection used by standard
-TVision dialogs to manage file and directory search results.
+L<TUI::Vision> dialogs to manage file and directory search results.
 
 The collection stores file system entries and maintains them in sorted order
 according to a comparison strategy defined by the class. It is primarily used
 internally by file selection and directory browsing dialogs.
 
-This class derives from C<TSortedCollection> and specializes the comparison
-logic for file-related data.
+This class derives from L<TSortedCollection|TUI::Objects::SortedCollection> and 
+specializes the comparison logic for file-related data.
 
 =head1 STRUCTURES
 

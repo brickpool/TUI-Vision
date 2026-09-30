@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -304,7 +304,7 @@ __END__
 
 =head1 NAME
 
-TEventViewer - terminal window for displaying received events
+TUI::Gadgets::EventViewer - terminal window for displaying received events
 
 =head1 HIERARCHY
 
@@ -328,15 +328,15 @@ TEventViewer - terminal window for displaying received events
 =head1 DESCRIPTION
 
 C<TEventViewer> implements a terminal-style window that displays the attributes
-of C<TEvent> objects received by the application.
+of L<TEvent|TUI::Drivers::Event> objects received by the application.
 
 The window captures incoming events and renders them in textual form, allowing
 developers to observe and debug event flow during program execution. It is
 intended as a diagnostic gadget and is typically used during development or
 testing.
 
-The implementation is inspired by the Turbo Vision C++ event viewer and by the
-TTYWindow concept.
+The implementation is ported from the I<modern port of Turbo Vision 2.0> event 
+viewer which is inspired by the TTYWindow concept.
 
 =head1 CONSTRUCTOR
 
@@ -353,7 +353,8 @@ Creates a new event viewer window.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the window (I<TRect>).
+Bounding rectangle defining the position and size of the window 
+(L<TRect|TUI::Objects::Rect>).
 
 =item bufSize
 
@@ -379,7 +380,8 @@ Processes incoming events and records them for display.
 
   $viewer->print($event);
 
-Formats and appends the specified C<TEvent> to the internal output buffer.
+Formats and appends the specified L<TEvent|TUI::Drivers::Event> to the internal 
+output buffer.
 
 =head2 toggle
 
@@ -403,25 +405,15 @@ L<THeapView|TUI::Gadgets::HeapView>
 
 =over
 
-=item * Borland International (original Turbo Vision design)
+=item * magiblot <magiblot@hotmail.com> (original color attribute design)
 
 =item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
 
-=head1 CONTRIBUTORS
-
-=over
-
-=item * magiblot <magiblot@hotmail.com>
-
-=back
-
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 1990-1994, 1997 by Borland International
-
-Copyright (c) 2019-2026 the L</AUTHORS> and L</CONTRIBUTORS> as listed above.
+Copyright (c) 2019-2026 the L</AUTHORS> listed above.
 
 This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).

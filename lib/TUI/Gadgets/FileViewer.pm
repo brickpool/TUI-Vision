@@ -1,11 +1,11 @@
 package TUI::Gadgets::FileViewer;
-# ABSTRACT: File viewer gadget for TVision applications
+# ABSTRACT: File viewer gadget for TUI::Vision applications
 
 use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -237,7 +237,8 @@ C<TFileViewer> displays the contents of a text file inside a scrollable view.
 
 The viewer reads the specified file into an internal line collection and
 renders the visible portion of the file. Horizontal and vertical scrolling
-are provided through the inherited scrolling support from C<TScroller>.
+are provided through the inherited scrolling support from 
+L<TScroller|TUI::Views::Scroller>.
 
 =head1 ATTRIBUTES
 
@@ -272,7 +273,7 @@ Creates a new file viewer and loads the specified file.
 =item bounds
 
 Bounding rectangle defining the position and size of the view
-(I<TRect>).
+(L<TRect|TUI::Objects::Rect>).
 
 =item hScrollBar
 

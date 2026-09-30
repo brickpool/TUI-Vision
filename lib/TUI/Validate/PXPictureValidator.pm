@@ -1,11 +1,11 @@
 package TUI::Validate::PXPictureValidator;
 # ABSTRACT: Validator for picture-based input validation with auto-fill support
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -638,7 +638,7 @@ __END__
 
 =head1 NAME
 
-TPXPictureValidator - Picture-based validator for structured input
+TUI::Validate::PXPictureValidator - Picture-based validator for structured input
 
 =head1 HIERARCHY
 
@@ -663,23 +663,23 @@ TPXPictureValidator - Picture-based validator for structured input
 C<TPXPictureValidator> checks text against a picture pattern.
 
 The picture string defines allowed character classes and grouping rules.
-During validation, the parser returns status codes from C<TPicResult> to
-describe whether the current input is complete, incomplete, syntactically
-invalid, or incompatible with the pattern.
+During validation, the parser returns status codes from 
+L<TPicResult|TUI::Validate::Const> to describe whether the current input is 
+complete, incomplete, syntactically invalid, or incompatible with the pattern.
 
 If auto-fill is enabled, literal characters from the picture can be inserted
 while parsing incremental input.
 
 =head2 Commonly Used Features
 
-Typical usage combines C<isValidInput> for live, per-keystroke checks and
-C<isValid> for final acceptance checks.
+Typical usage combines L</isValidInput> for live, per-keystroke checks and
+L</isValid> for final acceptance checks.
 
 When C<autoFill> is enabled, picture literals are inserted during parsing so
 input can be normalized to the target format while the user types.
 
-For integration points that need direct parser state, C<picture> returns the
-underlying C<TPicResult> status codes.
+For integration points that need direct parser state, L</picture> returns the
+underlying L<TPicResult|TUI::Validate::Const> status codes.
 
 =head1 VARIABLES
 
@@ -691,7 +691,7 @@ Message template used by C<error>.
 
 =head2 pic
 
-Read-only picture string used as the validation mask.
+Read-only picture string (I<Str>) used as the validation mask.
 
 =head1 CONSTRUCTOR
 
@@ -741,7 +741,7 @@ fill settings, C<$s> may be normalized in place.
 
   my $result = $obj->picture( $input, $autoFill );
 
-Evaluates C<$input> and returns a C<TPicResult> status.
+Evaluates C<$input> and returns a L<TPicResult|TUI::Validate::Const> status.
 
 The parser recognizes the following control tokens in C<pic>:
 

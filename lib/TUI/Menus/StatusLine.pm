@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -319,7 +319,7 @@ __END__
 
 =head1 NAME
 
-TStatusLine - defines the class TStatusLine
+TUI::Menus::StatusLine - defines the class TStatusLine
 
 =head1 HIERARCHY
 
@@ -377,21 +377,17 @@ in the status line. The default value uses a C<CP437> vertical separator.
 The following attributes are exposed as read-only accessors and are intended
 for internal use by the status line implementation.
 
-=over
-
-=item defs
+=head2 defs
 
 Read-only reference to the linked list of status definitions
 (I<TStatusDef>). This attribute is required and defines which status items
 apply to which help context ranges.
 
-=item items
+=head2 items
 
 Read-only reference to the currently active list of status items
 (I<TStatusItem>). This list is managed internally and updated as the help
 context changes.
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -409,7 +405,7 @@ initializes it with a list of status definitions.
 
 =item bounds
 
-Bounding rectangle of the status line (I<TRect>).  
+Bounding rectangle of the status line (L<TRect|TUI::Objects::Rect>).  
 The height is typically one row and the line is placed at the bottom of the
 desktop.
 

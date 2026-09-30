@@ -1,10 +1,11 @@
 package TUI::Gadgets;
-# ABSTRACT: Gadget components for the TVision framework
+# ABSTRACT: Gadget components for the TUI::Vision framework
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -57,7 +58,7 @@ __END__
 
 =head1 NAME
 
-Gadgets - Optional UI gadgets for the TVision framework
+TUI::Gadgets - Optional UI gadgets for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
@@ -92,9 +93,9 @@ Gadgets - Optional UI gadgets for the TVision framework
 
 =head1 DESCRIPTION
 
-TUI::Gadgets provides optional visual components for the TVision
+C<TUI::Gadgets> provides optional visual components for the TUI::Vision
 framework. These modules extend the core UI with additional views and
-diagnostic tools, similar to the classic Turbo Vision gadget set.
+diagnostic tools, similar to the classic I<Turbo Vision> gadget set.
 
 This module re-exported several non-essential but useful UI components, 
 including:

@@ -1,10 +1,11 @@
 package TUI::Views::Const;
 # ABSTRACT: defines various constants used throughout views and windows
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -461,19 +462,20 @@ TUI::Views::Const - constants for view and window components
 
 =head1 DESCRIPTION
 
-C<TUI::Views::Const> defines constants used by TVision view, window, and
-scrollbar components.
+The module defines constants used by L<TUI::Vision> view, window, and scrollbar 
+components.
 
-The constants in this module follow the naming conventions of Turbo Vision 2.0
-and are provided using lower camel case identifiers. They are grouped by
-purpose and exported via tag-based export groups.
+The constants in this module follow the naming conventions of Borland's
+I<Turbo Vision> 2.0 and are provided using lower camel case identifiers. They 
+are grouped by purpose and exported via tag-based export groups.
 
 These constants control view state, option flags, grow and drag modes, command
 handling, palette selection, and event filtering.
 
 This module only defines constants. The semantic meaning and practical usage of
-these constants is documented in higher-level modules such as C<TUI::Views>,
-C<TView>, C<TWindow>, and the individual view classes.
+these constants is documented in higher-level modules such as 
+L<TView|TUI::Views::View> and L<TWindow|TUI::Views::Window>, and the individual 
+view classes.
 
 =head1 CONSTANTS
 

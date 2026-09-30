@@ -5,12 +5,11 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
 use Exporter 'import';
-
 our @EXPORT = qw(
   TMonoSelector
   new_TMonoSelector
@@ -150,7 +149,7 @@ __END__
 
 =head1 NAME
 
-TMonoSelector - monochrome attribute selector control
+TUI::ColorSel::MonoSelector - monochrome attribute selector control
 
 =head1 HIERARCHY
 
@@ -180,11 +179,11 @@ TMonoSelector - monochrome attribute selector control
 =head1 DESCRIPTION
 
 C<TMonoSelector> implements a monochrome attribute selector based on the
-standard C<TCluster> control.
+standard L<TCluster|TUI::Dialogs::Cluster> control.
 
 The selector presents a fixed set of monochrome display attributes and
 allows the user to choose between them. The available selections correspond
-to the classic Turbo Vision monochrome display modes.
+to the classic I<Turbo Vision> monochrome display modes.
 
 Whenever the selected attribute changes, the selector broadcasts the
 corresponding foreground and background colors so that related controls may
@@ -236,7 +235,8 @@ Creates a new monochrome selector.
 
 =item bounds
 
-Bounding rectangle defining the position and size of the selector (I<TRect>).
+Bounding rectangle defining the position and size of the selector 
+(L<TRect|TUI::Objects::Rect>).
 
 =back
 
@@ -276,8 +276,6 @@ monochrome attribute.
 
 Updates the selected attribute when the selection cursor moves to a different 
 item.
-
-=back
 
 =head2 newColor
 

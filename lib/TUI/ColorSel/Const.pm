@@ -1,10 +1,11 @@
 package TUI::ColorSel::Const;
 # ABSTRACT: constants for the color dialog components
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -77,8 +78,8 @@ TUI::ColorSel::Const - constants for color dialog components
 
 =head1 DESCRIPTION
 
-C<TUI::ColorSel::Const> defines constants used by TVision color selection 
-dialog components.
+C<TUI::ColorSel::Const> defines constants used by L<TUI::Vision> color 
+selection dialog components.
 
 =head1 CONSTANTS
 

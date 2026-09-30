@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -504,7 +504,7 @@ __END__
 
 =head1 NAME
 
-TFileDialog - common file selection dialog
+TUI::StdDlg::FileDialog - common file selection dialog
 
 =head1 HIERARCHY
 
@@ -536,7 +536,7 @@ TFileDialog - common file selection dialog
   
 =head1 DESCRIPTION
 
-C<TFileDialog> implements the standard TVision file dialog used for
+C<TFileDialog> implements the standard L<TUI::Vision> file dialog used for
 opening, replacing, or selecting files.
 
 The dialog combines several specialized views, including a file list, an input
@@ -590,25 +590,21 @@ Message text displayed for an invalid file name (I<Str>).
 The following attributes are part of the public dialog state and may be queried
 or updated during dialog execution.
 
-=over
-
-=item fileName
+=head2 fileName
 
 The currently selected file name (I<Str>).
 
-=item fileList
+=head2 fileList
 
 Reference to the file list view used by the dialog (I<TFileList>).
 
-=item wildCard
+=head2 wildCard
 
 Current wildcard filter applied to the file list (I<Str>).
 
-=item directory
+=head2 directory
 
 Current directory shown by the dialog (I<Str>).
-
-=back
 
 =head1 CONSTRUCTOR
 

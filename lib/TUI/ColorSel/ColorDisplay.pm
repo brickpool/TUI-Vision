@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -164,7 +164,7 @@ __END__
 
 =head1 NAME
 
-TColorDisplay - color preview view for the color selection dialog
+TUI::ColorSel::ColorDisplay - color preview view for the color selection dialog
 
 =head1 HIERARCHY
 
@@ -191,17 +191,13 @@ preview of foreground and background color changes.
 
 =head1 ATTRIBUTES
 
-=over
-
-=item color
+=head2 color
 
 Current color attribute (I<TColorAttr>, read-only).
 
-=item text
+=head2 text
 
 Text displayed across the view (I<Str>, read-only).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -219,7 +215,7 @@ Creates a new color preview view.
 =item bounds
 
 Bounding rectangle defining the position and size of the view
-(I<TRect>).
+(L<TRect|TUI::Objects::Rect>).
 
 =item text
 

@@ -1,9 +1,11 @@
 package TUI::Validate::Const;
+# ABSTRACT: constants for validator components
 
+use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -14,23 +16,6 @@ our @EXPORT_OK = qw(
 
 our %EXPORT_TAGS = (
 
-  vsXXXX => [qw(
-    vsOk
-    vsSyntax
-  )],
-
-  voXXXX => [qw(
-    voFill
-    voTransfer
-    voReserved
-  )],
-
-  TVTransfer => [qw(
-    vtDataSize
-    vtSetData
-    vtGetData
-  )], 
-
   TPicResult => [qw(
     prComplete
     prIncomplete
@@ -40,6 +25,24 @@ our %EXPORT_TAGS = (
     prAmbiguous
     prIncompNoFill
   )], 
+
+  voXXXX => [qw(
+    voFill
+    voTransfer
+    voReserved
+  )],
+
+  vsXXXX => [qw(
+    vsOk
+    vsSyntax
+  )],
+
+  TVTransfer => [qw(
+    vtDataSize
+    vtSetData
+    vtGetData
+  )], 
+
 );
 
 # add all the other %EXPORT_TAGS ":class" tags to the ":all" class and
@@ -55,31 +58,7 @@ our %EXPORT_TAGS = (
       @EXPORT_OK;
 }
 
-# TValidator Status constants
-
-use constant {
-  vsOk     =>  0,
-  vsSyntax =>  1,    # Error in the syntax of either a TPXPictureValidator
-};                   # or a TDBPictureValidator
-
-# Validator option flags
-
-use constant {
-  voFill     => 0x0001,
-  voTransfer => 0x0002,
-  voReserved => 0x00fc,
-};
-
-# TVTransfer constants
-
-use constant {
-  vtDataSize => 0,
-  vtSetData  => 1,
-  vtGetData  => 2,
-};
-
 # TPXPictureValidator result type TPicResult
-
 use constant {
   prComplete     => 0,
   prIncomplete   => 1,
@@ -88,6 +67,26 @@ use constant {
   prSyntax       => 4,
   prAmbiguous    => 5,
   prIncompNoFill => 6,
+};
+
+# Validator option flags
+use constant {
+  voFill     => 0x0001,
+  voTransfer => 0x0002,
+  voReserved => 0x00fc,
+};
+
+# TValidator Status constants
+use constant {
+  vsOk     =>  0,
+  vsSyntax =>  1,    # Error in the syntax of either a TPXPictureValidator
+};                   # or a TDBPictureValidator
+
+# TVTransfer constants
+use constant {
+  vtDataSize => 0,
+  vtSetData  => 1,
+  vtGetData  => 2,
 };
 
 1
@@ -109,8 +108,8 @@ TUI::Validate::Const - constants for validator components
 
 =head1 DESCRIPTION
 
-C<TUI::Validate::Const> defines constants used by validation components
-within the TVision framework.
+This module defines constants used by validation components within the 
+L<TUI::Vision> framework.
 
 The constants in this module describe validator status codes, option flags,
 and data transfer operations. They are grouped by purpose and exported via
@@ -121,6 +120,14 @@ of these values is implemented and documented in the corresponding validator
 classes.
 
 =head1 CONSTANTS
+
+=head2 TPicResult constants (prXXXX)
+
+Result type for C<TPXPictureValidator> operations. 
+
+These constants represent the possible outcomes of picture-based validation, 
+indicating whether the input is complete, incomplete, empty, contains errors, 
+has syntax issues, is ambiguous, or is incomplete without filling.
 
 =head2 Validator status constants (vsXXXX)
 

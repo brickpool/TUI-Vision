@@ -1,11 +1,11 @@
 package TUI::Dialogs::Dialog;
 # ABSTRACT: Base dialog window class for dialog boxes
 
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -188,7 +188,7 @@ __END__
 
 =head1 NAME
 
-TDialog - base dialog window class for dialogs
+TUI::Dialogs::Dialog - base dialog window class for dialogs
 
 =head1 HIERARCHY
 
@@ -230,23 +230,21 @@ may also be inserted directly as non-modal windows.
 
 =head1 ATTRIBUTES
 
-The following attributes are inherited from C<TWindow> and managed internally.
+The following attributes are inherited from L<TWindow|TUI::Views::Window> and 
+managed internally.
 
-=over
+=head2 growMode
 
-=item growMode
+Window growth behavior flag inherited from L<TWindow|TUI::Views::Window> 
+(I<Int>).
 
-Window growth behavior flag inherited from C<TWindow> (I<Int>).
-
-=item flags
+=head2 flags
 
 Internal flag mask controlling movement and closing behavior (I<Int>).
 
-=item palette
+=head2 palette
 
 Identifier of the dialog palette used for rendering (I<Int>).
-
-=back
 
 =head1 CONSTRUCTOR
 
@@ -263,7 +261,8 @@ Creates a new dialog window.
 
 =item bounds
 
-Bounding rectangle defining the dialog position and size (I<TRect>).
+Bounding rectangle defining the dialog position and size 
+(L<TRect|TUI::Objects::Rect>).
 
 =item title
 
