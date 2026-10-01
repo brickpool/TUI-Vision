@@ -93,7 +93,7 @@ distribution:
 
 =item * View and windowing system (L<Views|TUI::Views>)
 
-=item * L<Dialogs|TUI::Dialogs> and widgets
+=item * L<Dialogs|TUI::Dialogs> and controls
 
 =item * L<Menus|TUI::Menus> and status lines
 
@@ -109,11 +109,17 @@ distribution:
 
 =item * Text rendering subsystem (L<TextView|TUI::TextView>)
 
+=item * Editor components (L<Editor|TUI::Editor>)
+
+=item * Color selection components (L<ColorSel|TUI::ColorSel>)
+
+=item * Help system (L<Help|TUI::Help>)
+
+=item * Turbo Vision Demo gadgets (L<Gadgets|TUI::Gadgets>)
+
 =item * L<Memory|TUI::Memory> utilities
 
 =item * Validation utilities (L<Validate|TUI::Validate>)
-
-=item * Color selection components (L<ColorSel|TUI::ColorSel>)
 
 =item * Unified OO L<toolkit|TUI::toolkit>
 

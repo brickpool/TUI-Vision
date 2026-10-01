@@ -176,10 +176,13 @@ MRO::Compat
 namespace::sweep
 PerlX::Assert
 Sub::Util
-Type::Tiny/Types::Standard
+Type::Tiny/Type::Params
 
 $LANG
 $LOCALE
+$TERM
+$COLORTERM
+$ESCDELAY
 
 $AUTOMATED_TESTING
 $NONINTERACTIVE_TESTING
