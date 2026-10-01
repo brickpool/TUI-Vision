@@ -341,7 +341,8 @@ sub getFileName {    # void ($s)
       else {
         fnmerge( $buf, $drive, $path, $name, undef );
         &$noWildChars( local $_ = '', $TExt );
-        substr( $buf, length( $buf ) ) = $_;
+        substr( $buf, length( $buf ) ) = $_
+          if length( $_ ) && $_ ne '.';
       }
     }
   } #/ if ( ( $name eq '' || ...))
