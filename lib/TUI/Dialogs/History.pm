@@ -1,7 +1,7 @@
 package TUI::Dialogs::History;
 # ABSTRACT: A TWindow-based history browser for input controls
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 use utf8;

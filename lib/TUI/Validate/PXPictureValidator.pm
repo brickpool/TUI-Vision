@@ -1,7 +1,7 @@
 package TUI::Validate::PXPictureValidator;
 # ABSTRACT: Validator for picture-based input validation with auto-fill support
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

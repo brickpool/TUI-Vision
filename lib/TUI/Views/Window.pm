@@ -1,7 +1,7 @@
 package TUI::Views::Window;
 # ABSTRACT: A base class for managing windows
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

@@ -1,7 +1,7 @@
 package TUI::Validate::FilterValidator;
 # ABSTRACT: character-set validator for input fields
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

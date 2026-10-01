@@ -1,7 +1,7 @@
 package TUI::Views::ListViewer;
 # ABSTRACT: Base class for list viewers
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

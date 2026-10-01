@@ -1,7 +1,7 @@
 package TUI::Views::Group;
 # ABSTRACT: Base class for all group components
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

@@ -1,7 +1,7 @@
 package TUI::Dialogs::HistoryWindow;
 # ABSTRACT: Window component showing and managing history list items
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

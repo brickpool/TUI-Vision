@@ -37,15 +37,11 @@ programming model and development experience into the Perl ecosystem itself.
 Developers can therefore study, extend and adapt the framework using ordinary 
 Perl code and familiar Perl development tools.
 
-As a result, L<TUI::Vision> should be regarded not simply as a binding to 
-I<Turbo Vision>, but as a Perl implementation inspired by and derived from the 
-original framework.
-
 =head2 Historical Background
 
 I<Turbo Vision> was introduced by Borland as a framework for building 
-text-based  user interfaces. At a time when graphical user interfaces were 
-becoming  increasingly important, I<Turbo Vision> demonstrated that many of the 
+text-based user interfaces. At a time when graphical user interfaces were 
+becoming increasingly important, I<Turbo Vision> demonstrated that many of the 
 same  concepts could be implemented successfully within a character-based 
 environment.
 
@@ -78,8 +74,8 @@ A minimal application can be created as follows:
     $app->run();
 
 Although simple, this example already demonstrates one of the most important 
-ideas behind TUI::Vision: applications are constructed from reusable framework 
-components rather than from direct terminal operations.
+ideas behind L<TUI::Vision> applications are constructed from reusable 
+framework components rather than from direct terminal operations.
 
 A deliberate design goal of L<TUI::Vision> is to keep dependencies low and 
 avoid compiled components wherever practical. This makes it easier to study the 
@@ -148,6 +144,6 @@ The next chapter introduces the basic steps required to create and run a
 L<TUI::Vision> application and provides the foundation for the more detailed 
 discussions that follow throughout this manual.
 
-L<next|TUI::Manual::02GettingStarted> chapter.
+L<next|TUI::Manual::02> chapter.
 
 =cut

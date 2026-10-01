@@ -503,8 +503,6 @@ sub setScreenMode {       # void ($class, $mode)
     if ( $mode & smColor256 ) 
     && $class->getColorCount() < 256;
 
-  $mode |= smColorHigh;
-
   # Set the appropriate output mode based on the requested screen mode.
   if ( $mode & smColorHigh ) {
     tb_set_output_mode( TB_OUTPUT_TRUECOLOR )

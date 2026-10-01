@@ -170,6 +170,6 @@ The next chapter examines the overall architecture of L<TUI::Vision> and
 introduces the view hierarchy upon which the remainder of the
 framework is built.
 
-L<next|TUI::Manual::03Architecture> chapter.
+L<next|TUI::Manual::03> chapter.
 
 =cut

@@ -1,7 +1,7 @@
 package TUI::Dialogs::RadioButtons;
 # ABSTRACT: Radio button cluster control based on TCluster
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

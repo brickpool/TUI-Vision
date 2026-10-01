@@ -1,7 +1,7 @@
 package TUI::Views::ScrollBar;
 # ABSTRACT: Class defining a scroll bar
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 use utf8;

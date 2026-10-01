@@ -25,6 +25,6 @@ TUI::Manual::08 - Collections and Containers in TUI::Vision
 
 =head2 Conclusion
 
-L<next|TUI::Manual::09StreamsAndPersistence> chapter.
+L<next|TUI::Manual::09> chapter.
 
 =cut

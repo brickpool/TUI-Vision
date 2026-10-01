@@ -1,7 +1,7 @@
 package TUI::Views::Util;
 # ABSTRACT: defines various utility functions for views
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

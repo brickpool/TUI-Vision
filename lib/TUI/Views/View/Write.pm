@@ -1,7 +1,7 @@
 package TUI::Views::View::Write;
 # ABSTRACT: TView write member functions.
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

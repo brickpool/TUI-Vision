@@ -25,6 +25,6 @@ TUI::Manual::09 - Streams and Persistence in TUI::Vision
 
 =head2 Conclusion
 
-L<next|TUI::Manual::10AdvancedTopics> chapter.
+L<next|TUI::Manual::10> chapter.
 
 =cut

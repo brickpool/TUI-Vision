@@ -662,6 +662,6 @@ Together these advanced topics illustrate how the original I<Turbo Vision>
 concepts have been adapted to modern Perl while preserving the architecture and 
 programming model that inspired the framework.
 
-L<first|TUI::Manual::01Introduction> chapter.
+L<first|TUI::Manual::01> chapter.
 
 =cut

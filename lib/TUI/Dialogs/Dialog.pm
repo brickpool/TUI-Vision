@@ -1,7 +1,7 @@
 package TUI::Dialogs::Dialog;
 # ABSTRACT: Base dialog window class for dialog boxes
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

@@ -1,7 +1,7 @@
 package TUI::toolkit::Types;
 # ABSTRACT: Type constraints that are based heavily on Type::Nano
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

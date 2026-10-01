@@ -1,7 +1,7 @@
 package TUI::Dialogs::StaticText;
 # ABSTRACT: Displays fixed text inside a dialog
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

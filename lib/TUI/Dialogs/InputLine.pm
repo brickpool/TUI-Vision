@@ -1,7 +1,7 @@
 package TUI::Dialogs::InputLine;
 # ABSTRACT: Editable single-line text input control for dialogs.
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

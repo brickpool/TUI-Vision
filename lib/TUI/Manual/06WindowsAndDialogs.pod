@@ -606,6 +606,6 @@ during normal operation, menu bars and status lines remain present throughout
 the lifetime of the application and form the persistent framework surrounding 
 the desktop.
 
-L<next|TUI::Manual::07MenuBarsAndStatusLines> chapter.
+L<next|TUI::Manual::07> chapter.
 
 =cut

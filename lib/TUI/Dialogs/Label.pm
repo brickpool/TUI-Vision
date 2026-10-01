@@ -1,7 +1,7 @@
 package TUI::Dialogs::Label;
 # ABSTRACT: Provides a descriptive label linked to another dialog control.
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 
@@ -247,8 +247,9 @@ internally by the label implementation.
 
 =head2 link
 
-Reference to the control associated with this label (I<TView>).  
-If set, activation of the label selects the linked control.
+Reference to the control associated with this label 
+(L<TView|TUI::Views::View>). If set, activation of the label selects the 
+linked control.
 
 =head2 light
 
@@ -281,7 +282,7 @@ Text displayed by the label. Marked characters may be used to define a hotkey
 =item link
 
 Optional control that receives focus when the label is activated
-(I<TView>). This parameter may be omitted.
+(L<TView|TUI::Views::View>). This parameter may be omitted.
 
 =back
 

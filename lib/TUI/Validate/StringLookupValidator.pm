@@ -1,7 +1,7 @@
 package TUI::Validate::StringLookupValidator;
 # ABSTRACT: lookup validator backed by a string list
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

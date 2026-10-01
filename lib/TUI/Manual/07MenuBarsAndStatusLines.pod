@@ -305,6 +305,6 @@ the framework established by L<TApplication|TUI::App::Application>,
 L<TDeskTop|TUI::App::DeskTop>, L<TMenuBar|TUI::Menus::MenuBar> and 
 L<TStatusLine|TUI::Menus::StatusLine>.
 
-L<next|TUI::Manual::08CollectionsAndContainers> chapter.
+L<next|TUI::Manual::08> chapter.
 
 =cut

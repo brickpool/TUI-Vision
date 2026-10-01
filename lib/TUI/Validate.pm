@@ -1,7 +1,7 @@
 package TUI::Validate;
 # ABSTRACT: Validation components for the TUI::Vision framework
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

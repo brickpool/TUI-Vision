@@ -25,6 +25,6 @@ TUI::Manual::03 - Architecture of TUI::Vision
 
 =head2 Conclusion
 
-L<next|TUI::Manual::04Views> chapter.
+L<next|TUI::Manual::04> chapter.
 
 =cut

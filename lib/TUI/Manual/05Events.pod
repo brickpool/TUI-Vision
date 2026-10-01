@@ -27,6 +27,6 @@ TUI::Manual::05 - Events in TUI::Vision
 
 =head2 Conclusion
 
-L<next|TUI::Manual::06WindowsAndDialogs> chapter.
+L<next|TUI::Manual::06> chapter.
 
 =cut

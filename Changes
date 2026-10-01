@@ -1,8 +1,9 @@
 Revision history for TUI::Vision
 
-2.0.2  2026-08-03
+2.0.2  2026-10-01
     - Add Termbox backend to support Unix platforms
     - Extended validation utilities to the framework
+    - Add a Extended Color Model
     - Improving the POD Documentation
 
 2.0.1  2026-05-12

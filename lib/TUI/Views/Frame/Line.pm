@@ -1,7 +1,7 @@
 package TUI::Views::Frame::Line;
 # ABSTRACT: TFrame frameLine member function.
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

@@ -1,7 +1,7 @@
 package TUI::Validate::RangeValidator;
 # ABSTRACT: integer range validator for numeric input
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

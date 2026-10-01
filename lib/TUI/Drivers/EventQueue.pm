@@ -1,7 +1,7 @@
 package TUI::Drivers::EventQueue;
 # ABSTRACT: Internal mouse event queue and dispatcher
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 

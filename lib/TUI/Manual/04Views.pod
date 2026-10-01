@@ -25,6 +25,6 @@ TUI::Manual::04 - Views and Groups in TUI::Vision
 
 =head2 Conclusion
 
-L<next|TUI::Manual::05Events> chapter.
+L<next|TUI::Manual::05> chapter.
 
 =cut

@@ -1,7 +1,7 @@
 package TUI::Dialogs::ListBox;
 # ABSTRACT: Provides a list box dialog with selection handling
 
-use 5.014;
+use 5.010;
 use strict;
 use warnings;
 
