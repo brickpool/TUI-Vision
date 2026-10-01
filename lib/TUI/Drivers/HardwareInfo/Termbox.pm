@@ -62,7 +62,11 @@ use TUI::Views::Const qw( cmScreenChanged );
 # -------------------------------------------------------------------------
 
 use constant TB_NONE => 0;
-use constant ESC_WAIT_DELAY => 100; # ms
+
+# Do not delay too much on ESC key presses, as the Alt modifier works well
+# in most modern terminals. Still, this delay helps Termbox::PP distinguish
+# special key sequences.
+use constant ESCDELAY => exists $ENV{ESCDELAY} ? 0+ $ENV{ESCDELAY} : 100;
 
 # The Termbox FFI version doesn't define all keys and attributes, 
 # so we define it here for use in the translation tables.
@@ -99,8 +103,9 @@ use if !PERL_ONLY, constant => {
   TB_KEY_ESC        => 0x1b,
   TB_KEY_SPACE      => 0x20,
   TB_KEY_BACKSPACE2 => 0x7f,
-  TB_HI_BLACK       => tb_has_truecolor() ? 0x20000000 : 0x2000,
-  TB_BRIGHT         => tb_has_truecolor() ? 0x40000000 : 0x4000,
+  # That's strange, the following attributes do not rely on truecolor
+  TB_HI_BLACK       => 0x2000,
+  TB_BRIGHT         => 0x4000,
 };
 
 BEGIN {
@@ -288,7 +293,7 @@ sub resume {     # void ($class)
         my $elapsed = $now - $esc_seen_at;
 
         return TB_ERR_NEED_MORE
-          if $elapsed < ESC_WAIT_DELAY;
+          if $elapsed < ESCDELAY;
 
         $$consumed_ref = 1;
 
@@ -497,6 +502,8 @@ sub setScreenMode {       # void ($class, $mode)
   $mode &= ~smColor256 
     if ( $mode & smColor256 ) 
     && $class->getColorCount() < 256;
+
+  $mode |= smColorHigh;
 
   # Set the appropriate output mode based on the requested screen mode.
   if ( $mode & smColorHigh ) {
