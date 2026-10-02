@@ -990,7 +990,7 @@ my %TV_TO_TB = (
   kbBack()      => [ TB_MOD_CTRL,  TB_KEY_BACKSPACE2,  0 ],
   kbCtrlBack()  => [ TB_MOD_CTRL,  TB_KEY_BACKSPACE,   0 ],
 
-  kbShiftTab()  => [ TB_MOD_SHIFT, TB_KEY_BACK_TAB,    0 ],
+  kbShiftTab()  => [ TB_NONE,      TB_KEY_BACK_TAB,    0 ],
   kbTab()       => [ TB_NONE,      TB_KEY_TAB,         0 ],
 
   kbCtrlEnter() => [ TB_MOD_CTRL,  TB_KEY_CTRL_J,      0 ],

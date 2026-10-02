@@ -29,6 +29,7 @@ use TUI::Drivers::Const qw(
   kbUp
   kbDown
 );
+use TUI::Drivers::HardwareInfo;
 use TUI::Drivers::Util qw( ctrlToArrow );
 use TUI::ColorSel::Const qw(
   :cmXXXX
@@ -107,11 +108,19 @@ sub draw {    # void ()
         my $c = $i * 4 + $j;
         $b->moveChar( $j * 3, $icon, $c, 3 );
         if ( $c == $self->{color} ) {
-          # We do not use the INVERSE BULLET "\x8" (U+25D8) character, but 
-          # rather BULLET "\x7" (U+2022) and invert the color, since some 
-          # Unicode fonts display the character differently than IBM437.
-          $b->putChar( $j * 3 + 1, "\x7" );
-          $b->putAttribute( $j * 3 + 1, $c == 0 ? 0x07 : ( $c << 4 ) );
+          # We do not use the INVERSE BULLET "\x8" (U+25D8) character, because 
+          # some Unicode fonts display the character differently than IBM437.
+          if ( THardwareInfo->getColorCount() > 8 ) {
+            # Use the BULLET ("\x7", U+2022) character and invert the color.
+            $b->putChar( $j * 3 + 1, "\x7" );
+            $b->putAttribute( $j * 3 + 1, $c == 0 ? 0x07 : ( $c << 4 ) );
+          }
+          else {
+            # Use the UPPER HALF BLOCK ("\xDF", U+2580) character 
+            # if only 8 colors are available.
+            $b->putChar( $j * 3 + 1, "\xdf" );
+            $b->putAttribute( $j * 3 + 1, $c == 0 ? 0x70 : $c );
+          }
         }
       }
     }
