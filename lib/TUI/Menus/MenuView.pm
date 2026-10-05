@@ -291,10 +291,12 @@ sub execute {    # $int ()
           DEFAULT: {
             $target = $self;
             my $ch = getAltChar( $e->{keyDown}{keyCode} );
-            $ch = $e->{keyDown}{charScan}{charCode} 
-              unless $ch;
-            $target = $self->$topMenu()
-              if $ch;
+            if ( $ch eq "\0" ) {
+              $ch = chr( $e->{keyDown}{charScan}{charCode} );
+            }
+            else {
+              $target = $self->$topMenu();
+            }
             my $p = $target->findItem( $ch );
             if ( !$p ) {
               $p = $self->$topMenu()->hotKey( $e->{keyDown}{keyCode} );
