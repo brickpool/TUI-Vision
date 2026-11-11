@@ -71,6 +71,7 @@ my (
   $focusView,
   $selectView,
   $findNext,
+  $doPut,
 );
 
 my $lock_value = sub {
@@ -204,7 +205,7 @@ sub awaken {    # void ()
     pos    => [],
   );
   my ( $self ) = $sig->( @_ );
-  $self->forEach( $doAwaken );
+  $self->forEach( $doAwaken, undef );
   return;
 }
 
@@ -244,15 +245,23 @@ sub insertView {    # void ($p, $Target|undef)
   else {
     if ( !$self->{last} ) {
       $p->next( $p );
+      $self->{last} = $p;
+      &$weaken( $p->{next} );
     }
     else {
-      $p->next( $self->{last}{next} );
-      $self->{last}->next( $p );
-    }
-    $self->{last} = $p;
+      my $last  = $self->{last};
+      my $first = $last->{next};
+      my $prev  = $last->prev();
 
-    # Set new weak reference
-    &$weaken( $p->prev()->{next} );
+      # Move the weak link to the new end of the ring.
+      $prev->next( $last );
+
+      $p->next( $first );
+      $last->next( $p );
+      &$weaken( $last->{next} );
+
+      $self->{last} = $p;
+    }
   } #/ else [ if ( $Target ) ]
   q/*
     require Devel::Cycle; 
