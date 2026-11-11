@@ -303,9 +303,15 @@ sub _my_moos_has {    # $return (\&orig, $self, @_)
     $args{is} = 'rw';
     $args{_skip_setup} = 1;
   }
-  if ( exists $args{default} && ref $args{default} ne 'CODE' ) {
-    my $default = $args{default};
-    $args{default} = sub { $default };
+  if ( exists $args{default} ) {
+    $args{default} = do {
+      my $d = $args{default};
+      my $r = ref $d;
+      $r eq 'HASH'  ? sub { +{%$d} } :
+      $r eq 'ARRAY' ? sub { [@$d] }  :
+      $r eq 'CODE'  ? $d             :
+                      sub { $d }     ;
+    };
   }
   return $self->$orig( %args );
 } #/ sub _my_moos_has
@@ -480,9 +486,9 @@ object system.
 
 =over 4
 
-=item * L<Moos>
-
 =item * L<Moo>
+
+=item * L<Moos>
 
 =item * L<Moose>
 

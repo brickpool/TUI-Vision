@@ -16,6 +16,7 @@ our @EXPORT = qw(
 );
 
 use Carp ();
+use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
@@ -356,6 +357,48 @@ $setUpDialog = sub {    # void ()
 
   return;
 }; #/ $setUpDialog = sub
+
+sub write :method {    # void ($os)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $os ) = $sig->( @_ );
+  $self->SUPER::write( $os );
+  $os->put(
+    $self->{dirList},
+    $self->{dirInput},
+    $self->{okButton},
+    $self->{chDirButton},
+  );
+  return;
+}
+
+sub read :method {    # $self ($is)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $is ) = $sig->( @_ );
+  $self->SUPER::read( $is );
+  $self->{dirList}     = $is->get();
+  $self->{dirInput}    = $is->get();
+  $self->{okButton}    = $is->get();
+  $self->{chDirButton} = $is->get();
+  $self->$setUpDialog();
+  return $self;
+}
+
+sub build {    # $obj ()
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( is_Str $class );
+  assert ( Storable::is_retrieving );
+  return $class->new(
+    options => cdNoLoadDir,
+    histId  => 0,
+  );
+}
 
 1
 

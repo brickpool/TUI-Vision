@@ -103,6 +103,7 @@ lib/TUI/Menus/Menu.pm
 lib/TUI/Menus/MenuBar.pm
 lib/TUI/Menus/MenuBox.pm
 lib/TUI/Menus/MenuItem.pm
+lib/TUI/Menus/MenuPopup.pm
 lib/TUI/Menus/MenuView.pm
 lib/TUI/Menus/StatusDef.pm
 lib/TUI/Menus/StatusItem.pm
@@ -120,6 +121,8 @@ lib/TUI/Objects/Object.pm
 lib/TUI/Objects/Point.pm
 lib/TUI/Objects/Rect.pm
 lib/TUI/Objects/SortedCollection.pm
+lib/TUI/Objects/Stream.pm
+lib/TUI/Objects/Streamable.pm
 lib/TUI/Objects/StringCollection.pm
 lib/TUI/StdDlg.pm
 lib/TUI/StdDlg/ChDirDialog.pm
@@ -202,6 +205,8 @@ t/03Objects/12TRect.t
 t/03Objects/22TCollection.t
 t/03Objects/23TSortedCollection.t
 t/03Objects/24TStringCollection.t
+t/03Objects/90Streamable.t
+t/03Objects/91Storable.t
 t/03Objects/99Objects.t
 t/04Validate/01load.t
 t/04Validate/02Const.t
@@ -211,6 +216,7 @@ t/04Validate/12TFilterValidator.t
 t/04Validate/13TRangeValidator.t
 t/04Validate/14TLookupValidator.t
 t/04Validate/15StringLookupValidator.t
+t/04Validate/91Storable.t
 t/04Validate/99Validate.t
 t/05Memory/01load.t
 t/05Memory/03Util.t
@@ -264,6 +270,7 @@ t/07Views/42TScroller.t
 t/07Views/43TListViewer.t
 t/07Views/50TWindowInit.t
 t/07Views/51TWindow.t
+t/07Views/91Storable.t
 t/07Views/99Views.t
 t/08Dialogs/01load.t
 t/08Dialogs/02Const.t
@@ -284,6 +291,7 @@ t/08Dialogs/34THistoryViewer.t
 t/08Dialogs/35THistInit.t
 t/08Dialogs/36THistoryWindow.t
 t/08Dialogs/37THistory.t
+t/08Dialogs/91Storable.t
 t/08Dialogs/99Dialogs.t
 t/09Menus/01load.t
 t/09Menus/02Const.t
@@ -292,10 +300,12 @@ t/09Menus/11TMenu.t
 t/09Menus/12TMenuView.t
 t/09Menus/13TMenuBar.t
 t/09Menus/14TMenuBox.t
+t/09Menus/15TMenuPopup.t
 t/09Menus/16TSubMenu.t
 t/09Menus/20TStatusLine.t
 t/09Menus/21TStatusItem.t
 t/09Menus/22TStatusDef.t
+t/09Menus/91Storable.t
 t/09Menus/99Menus.t
 t/10App/01load.t
 t/10App/02Const.t
@@ -305,6 +315,7 @@ t/10App/12TDeskTop.t
 t/10App/13TProgInit.t
 t/10App/14TProgram.t
 t/10App/15TApplication.t
+t/10App/91Storable.t
 t/10App/99App.t
 t/11TextView/01load.t
 t/11TextView/15TTextDevice.t
@@ -329,6 +340,7 @@ t/13StdDlg/20TDirEntry.t
 t/13StdDlg/21TDirCollection.t
 t/13StdDlg/22TDirListBox.t
 t/13StdDlg/23TChDirDialog.t
+t/13StdDlg/91Storable.t
 t/13StdDlg/99StdDlg.t
 t/14ColorSel/01load.t
 t/14ColorSel/10TColorDisplay.t
@@ -339,6 +351,7 @@ t/14ColorSel/14TMonoSelector.t
 t/14ColorSel/15TColorGroupList.t
 t/14ColorSel/16TColorItemList.t
 t/14ColorSel/17TColorDialog.t
+t/14ColorSel/91Storable.t
 t/14ColorSel/99Gadgets.t
 t/20Gadgets/01load.t
 t/20Gadgets/04PrintConstants.t
@@ -350,6 +363,7 @@ t/20Gadgets/17TMouseDialog.t
 t/20Gadgets/20TLineCollection.t
 t/20Gadgets/21TFileViewer.t
 t/20Gadgets/22TFileWindow.t
+t/20Gadgets/91Storable.t
 t/20Gadgets/99Gadgets.t
 t/99Vision.t
 xt/01Intro/05FirstDesktop.t

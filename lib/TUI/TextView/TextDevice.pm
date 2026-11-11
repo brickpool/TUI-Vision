@@ -244,11 +244,11 @@ sub sysseek      { ... }
 
 # stubs for the other methods
 
-sub write        { !!shift->syswrite(@_) }
-sub getlines     { wantarray ? () : Carp::croak('called in a scalar context') }
-sub fileno       { -1 }
-sub clearerr     { 0 }
-sub sysread      { 0 }
+sub write :method { !!shift->syswrite(@_) }
+sub getlines      { wantarray ? () : Carp::croak('called in a scalar context') }
+sub fileno        { -1 }
+sub clearerr      { 0 }
+sub sysread       { 0 }
 
 # tiehandle interface
 

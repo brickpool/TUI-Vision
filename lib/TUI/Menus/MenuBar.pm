@@ -15,6 +15,7 @@ our @EXPORT = qw(
   new_TMenuBar
 );
 
+use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
@@ -149,6 +150,17 @@ sub getItemRect {    # $rect ($item|undef)
     }
     $p = $p->{next};
   }
+}
+
+sub build {    # $obj ()
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( is_Str $class );
+  assert ( Storable::is_retrieving );
+  return $class->new(
+    bounds => TRect->new(), 
+    menu   => undef,
+  );
 }
 
 1

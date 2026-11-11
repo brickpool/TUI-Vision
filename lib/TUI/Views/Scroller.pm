@@ -15,6 +15,7 @@ our @EXPORT = qw(
   new_TScroller
 );
 
+use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
@@ -26,6 +27,8 @@ use TUI::Drivers::Const qw(
   evBroadcast
 );
 use TUI::Objects::Point;
+use TUI::Objects::Rect;
+use TUI::Objects::Stream;
 use TUI::Views::Const qw(
   cmScrollBarChanged
   cpScroller
@@ -268,6 +271,50 @@ $showSBar = sub {    # void ($sBar|undef)
   }
   return;
 };
+
+sub read :method {    # $self ($is)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $is ) = $sig->( @_ );
+  $self->SUPER::read( $is );
+  $self->{hScrollBar} = $is->get();
+  $self->{vScrollBar} = $is->get();
+  $self->{delta}      = $is->get();
+  $self->{limit}      = $is->get();
+  $self->{drawLock}   = 0;
+  $self->{drawFlag}   = false;
+  return $self;
+}
+
+sub write :method {    # void ($os)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $os ) = $sig->( @_ );
+  $self->SUPER::write( $os );
+  $os->put(
+    $self->{hScrollBar},
+    $self->{vScrollBar},
+    $self->{delta},
+    $self->{limit},
+  );
+  return;
+}
+
+sub build {    # $obj ()
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( is_Str $class );
+  assert ( Storable::is_retrieving );
+  return $class->new(
+    bounds      => TRect->new(),
+    aHScrollBar => undef,
+    aVScrollBar => undef,
+  );
+}
 
 1
 

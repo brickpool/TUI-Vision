@@ -18,6 +18,7 @@ our @EXPORT = qw(
 use Carp ();
 use Errno qw( EFAULT EINVAL );
 use Hash::Util::FieldHash qw( id );
+use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   is_Object
@@ -362,6 +363,14 @@ $freeItem = sub {
   delete $ITEMS{ $id } if $id;
   return;
 };
+
+sub STORABLE_freeze {   # @list ($cloning)
+  ...
+}
+
+sub STORABLE_attach {   # $obj ($cloning, $serialized)
+  ...
+}
 
 1
 

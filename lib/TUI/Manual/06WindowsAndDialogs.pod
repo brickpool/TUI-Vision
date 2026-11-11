@@ -37,8 +37,8 @@ desktop. While it provides a frame, a title and the controls required for
 moving, resizing and managing a window, its primary purpose is to act as a 
 container for other views.
 
-Unlike L<TDesktop|TUI::App::Desktop>, L<TMenuBar|TUI::Menus::MenuBar> and 
-L<TStatusLine|TUI::Views::StatusLine>, which exist as permanent parts of the 
+Unlike L<TDeskTop|TUI::App::DeskTop>, L<TMenuBar|TUI::Menus::MenuBar> and 
+L<TStatusLine|TUI::Menus::StatusLine>, which exist as permanent parts of the 
 application framework, windows provide workspaces in which application-specific 
 functionality is assembled from smaller building blocks.
 

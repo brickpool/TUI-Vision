@@ -16,6 +16,7 @@ our @EXPORT = qw(
 );
 
 use Scalar::Util qw( readonly );
+use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
@@ -629,6 +630,42 @@ $syntaxCheck = sub {    # $bool ()
 
   return $brkLevel == 0 && $brcLevel == 0;
 }; #/ $syntaxCheck = sub
+
+sub write :method {    # void ($os)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $os ) = $sig->( @_ );
+  $self->SUPER::write( $os );
+  $os->put( $self->{pic} );
+  return;
+}
+
+sub read :method {    # $self ($is)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $is ) = $sig->( @_ );
+
+  $self->SUPER::read( $is );
+  $self->{pic} = $is->get();
+  $self->{index} = $self->{jndex} = 0;
+
+  return $self;
+}
+
+sub build {    # $obj ()
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( is_Str $class );
+  assert ( Storable::is_retrieving );
+  return $class->new(
+    pic      => '',
+    autoFill => false,
+  );
+}
 
 1
 

@@ -24,6 +24,7 @@ use TUI::StdDlg;
 use TUI::MsgBox;
 
 use TUI::toolkit;
+use Storable qw( store_fd retrieve_fd );
 
 sub ::new_TVDemo { __PACKAGE__->new( argc => shift, argv => shift ) }
 
@@ -209,6 +210,84 @@ sub initStatusLine {
 }
 
 #
+# retrieveDesktop() function ( restores the previously stored Desktop )
+#
+
+sub retrieveDesktop {    # void ()
+  my ( $self ) = @_;
+  my $fileName = 'TVDEMO.DST';
+
+  unless ( -e $fileName ) {
+    messageBox( 'Could not find desktop file', mfOKButton | mfError );
+    return;
+  }
+  my $f;
+  unless ( open $f, '<:raw', $fileName ) {
+    messageBox( 'Could not open desktop file', mfOKButton | mfError );
+    return;
+  }
+  my $ok = eval {
+    my $stream = retrieve_fd( $f );
+    $self->loadDesktop( $stream );
+    1;
+  };
+  close $f;
+  unless ( $ok ) {
+    messageBox( 'Error reading desktop file', mfOKButton | mfError );
+  }
+  return;
+}
+
+#
+# saveDesktop() function ( saves the DeskTop by calling storeDesktop function )
+#
+
+sub saveDesktop {    # void ()
+  my ( $self ) = @_;
+  my $fileName = 'TVDEMO.DST';
+
+  my $f;
+  unless ( open $f, '>:raw', $fileName ) {
+    return;
+  }
+  my $stream = new_TStream();
+  my $ok = eval {
+    $self->storeDesktop( $stream );
+    store_fd( $stream, $f );
+    1;
+  };
+  close $f;
+  unless ( $ok ) {
+    messageBox( "Could not create $fileName.", mfOKButton | mfError );
+    unlink $fileName;
+  }
+  return;
+}
+
+#
+# writeView() function ( writes a view object to a resource file )
+#
+
+my $writeView = sub {    # void ($p, $strm)
+  my ( $p, $s ) = @_;
+  my $last = $deskTop->last;
+  $s->put( $p )
+    if $p != $last;
+  $s->put( undef );
+  return;
+};
+
+#
+# storeDesktop() function ( stores the Desktop in a resource file )
+#
+
+sub storeDesktop {    # void ($s)
+  my ( $self, $s ) = @_;
+  $deskTop->forEach( $writeView, $s );
+  return;
+}
+
+#
 # Tile function
 #
 
@@ -266,6 +345,16 @@ sub handleEvent {
 
       cmColorCmd == $_ and do {        #  Color control dialog box
         $self->colors();
+        last;
+      };
+
+      cmSaveCmd == $_ and do {         #  Save current desktop
+        $self->saveDesktop();
+        last;
+      };
+
+      cmRestoreCmd == $_ and do {      #  Restore saved desktop
+        $self->retrieveDesktop();
         last;
       };
 
@@ -563,6 +652,33 @@ sub idle {
 }
 
 #
+# closeView() function
+#
+
+my $closeView = sub {
+  my ( $p, $p1 ) = @_;
+  message( $p, evCommand, cmClose, $p1 );
+  return;
+};
+
+#
+# loadDesktop() function 
+#
+
+sub loadDesktop {    # void ($s)
+  my ( $self, $s ) = @_;
+  my $p;
+  if ( $deskTop->valid( cmClose ) ) {
+    $deskTop->forEach( $closeView, undef );    # Clear the desktop
+    do {
+      $p = $s->get();
+      $deskTop->insertBefore( $self->validView( $p ), $deskTop->last );
+    } while ( $p );
+  }
+  return;
+}
+
+#
 # Menubar initialization.
 #
 
@@ -598,7 +714,9 @@ sub initMenuBar {
   my $sub4 =
     new_TSubMenu( "~O~ptions", 0, hcOptions ) +
       new_TMenuItem( "~M~ouse...", cmMouseCmd, kbNoKey, hcOMouse ) +
-      new_TMenuItem( "~C~olors...", cmColorCmd, kbNoKey, hcOColors );
+      new_TMenuItem( "~C~olors...", cmColorCmd, kbNoKey, hcOColors ) +
+      new_TMenuItem( "~S~ave desktop", cmSaveCmd, kbNoKey, hcOSaveDesktop ) +
+      new_TMenuItem( "~R~etrieve desktop", cmRestoreCmd, kbNoKey, hcORestoreDesktop );
 
   $r->{b}{y} = $r->{a}{y} + 1;
   return new_TMenuBar( $r, $sub1 + $sub2 + $sub3 + $sub4 );

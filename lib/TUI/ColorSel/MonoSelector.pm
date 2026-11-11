@@ -16,6 +16,7 @@ our @EXPORT = qw(
 );
 
 use Carp ();
+use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw( :types );
 
@@ -23,6 +24,7 @@ use TUI::Drivers::Const qw( evBroadcast );
 use TUI::Dialogs::Cluster;
 use TUI::Dialogs::StrItem;
 use TUI::ColorSel::Const qw( :cmXXXX );
+use TUI::Objects::Rect;
 use TUI::Views::Util qw( message );
 
 sub TMonoSelector() { __PACKAGE__ }
@@ -139,6 +141,14 @@ sub movedTo {    # void ($item)
   $self->{value} = $monoColors[$item];
   $self->newColor();
   return;
+}
+
+sub build {    # $obj ()
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( is_Str $class );
+  assert ( Storable::is_retrieving );
+  return $class->new( bounds => TRect->new() );
 }
 
 1

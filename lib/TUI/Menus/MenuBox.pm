@@ -16,6 +16,7 @@ our @EXPORT = qw(
 );
 
 use List::Util qw( max );
+use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
@@ -232,6 +233,18 @@ $drawLine = sub {    # void ($b)
   assert ( is_HashLike $b );
   ...
 };
+
+sub build {    # $obj ()
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( is_Str $class );
+  assert ( Storable::is_retrieving );
+  return $class->new(
+    bounds     => TRect->new(), 
+    menu       => undef,
+    parentMenu => undef,
+  );
+}
 
 1
 

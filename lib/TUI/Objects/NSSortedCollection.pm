@@ -111,7 +111,7 @@ sub keyOf {    # $key ($item|undef)
 sub compare {    # $cmp ($key1, $key2)
   state $sig = signature(
     method => Object,
-    pos    => [Any, Any],
+    pos    => [Item, Item],
   );
   $sig->( @_ );
   return 0;
