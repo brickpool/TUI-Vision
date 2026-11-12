@@ -105,4 +105,4 @@ sub main {
   return 0;
 }
 
-exit main( scalar @ARGV, \@ARGV );
+exit main( @ARGV+1, [ $0, @ARGV ] );

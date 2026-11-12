@@ -11,6 +11,7 @@
 #
 #
 package TVDemo;
+use 5.010;
 
 use TUI::Objects;
 use TUI::Menus;
@@ -91,6 +92,8 @@ use constant {
   hcWindows         => 18,
 };
 
+use constant HELP_FILENAME => "DEMOHELP.HLP";
+
 has heap  => ( is => 'bare' );    # Heap view
 has clock => ( is => 'bare' );    # Clock view
 
@@ -101,30 +104,51 @@ has clock => ( is => 'bare' );    # Clock view
 #
 
 sub BUILDARGS {
+  my ( $class, %args ) = ( shift, @_ );
   return {
-    %{ shift->SUPER::BUILDARGS() },
-    argc   => $_{argc} || 0,
-    argv   => $_{argv} || [],
+    %{ $class->SUPER::BUILDARGS() },
+    argc   => $args{argc} // 0,
+    argv   => $args{argv} // [],
     bounds => new_TRect( 0, 0, 80, 25 ),
   };
 }
 
 sub BUILD {
-  my $self = shift;
+  my ( $self, $args ) = @_;
 
-  my $r = $self->getExtent();    # Create the clock view.
+  my $r = $self->getExtent();     # Create the clock view.
   $r->{a}{x} = $r->{b}{x} - 9;
   $r->{b}{y} = $r->{a}{y} + 1;
   $self->{clock} = new_TClockView( $r );
   $self->{clock}{growMode} = gfGrowLoX | gfGrowHiX;
   $self->insert( $self->{clock} );
 
-  $r = $self->getExtent();    # Create the heap view.
+  $r = $self->getExtent();        # Create the heap view.
   $r->{a}{x} = $r->{b}{x} - 13;
   $r->{a}{y} = $r->{b}{y} - 1;
   $self->{heap} = new_THeapView( $r );
   $self->{heap}{growMode} = gfGrowAll;
   $self->insert( $self->{heap} );
+
+  my $argc = $args->{argc};
+  my @argv = @{ $args->{argv} };
+  shift @argv;                    # skip argv[0].
+
+  while ( --$argc > 0 ) {         # Display files specified on command line.
+    my $fileSpec = shift @argv;
+    my $len      = length $fileSpec;
+
+    if ( substr( $fileSpec, $len - 1, 1 ) eq '\\' ) {
+      $fileSpec .= '*.*';
+    }
+    if ( index( $fileSpec, '*' ) >= 0 || index( $fileSpec, '?' ) >= 0 ) {
+      $self->openFile( $fileSpec );
+    }
+    else {
+      my $w = $self->validView( new_TFileWindow( $fileSpec ) );
+      $deskTop->insert( $w ) if $w;
+    }
+  }
 
   return;
 }
@@ -134,42 +158,34 @@ sub BUILD {
 #  Event loop to check for context help request
 #
 
-my $helpInUse = 0;
 sub getEvent {    # void ($event)
   my $self = shift;
   alias: for my $event ( shift ) {
+  state $helpInUse = false;
 
   $self->SUPER::getEvent( $event );
   $self->printEvent( $event );
 
   SWITCH: for ( $event->{what} ) {
     case: evCommand == $_ and do {
-    q[*
       if ( $event->{message}{command} == cmHelp && !$helpInUse ) {
-        $helpInUse = 1;
-
-        # Try to open help file
+        $helpInUse = true;
         my $helpStrm;
         if ( open $helpStrm, '<:raw', HELP_FILENAME ) {
-          my $hFile = THelpFile->new( $helpStrm );
-          my $w     = THelpWindow->new( $hFile, $self->getHelpCtx() );
-
-          if ( $self->validView( $w ) ) {
-            $self->execView( $w );
-            $self->destroy( $w );
-          }
-
+          # my $hFile = THelpFile->new( $helpStrm );
+          # my $w     = THelpWindow->new( $hFile, $self->getHelpCtx() );
+          # if ( $self->validView( $w ) ) {
+          #   $self->execView( $w );
+          #   $self->destroy( $w );
+          # }
           $self->clearEvent( $event );
-        } #/ if ( open $helpStrm, '<:raw'...)
-        else {
-          $self->messageBox( "Could not open help file", mfError | mfOKButton );
         }
-
-        $helpInUse = 0;
+        else {
+          messageBox( "Could not open help file", mfError | mfOKButton );
+        }
+        $helpInUse = false;
       } #/ if ( $event->{message}...)
       elsif ( $event->{message}{command} == cmVideoMode ) {
-    q*] if 0;
-      if ( $event->{message}{command} == cmVideoMode ) {
         $self->setScreenMode( $TUI::Drivers::Screen::screenMode ^ 1 );
       }
       last;
@@ -215,7 +231,7 @@ sub initStatusLine {
 
 sub retrieveDesktop {    # void ()
   my ( $self ) = @_;
-  my $fileName = 'TVDEMO.DST';
+  state $fileName = 'TVDEMO.DST';
 
   unless ( -e $fileName ) {
     messageBox( 'Could not find desktop file', mfOKButton | mfError );
@@ -244,7 +260,7 @@ sub retrieveDesktop {    # void ()
 
 sub saveDesktop {    # void ()
   my ( $self ) = @_;
-  my $fileName = 'TVDEMO.DST';
+  state $fileName = 'TVDEMO.DST';
 
   my $f;
   unless ( open $f, '>:raw', $fileName ) {
@@ -378,9 +394,9 @@ sub aboutDlgBox {
   $aboutBox->insert(
     new_TStaticText(
       new_TRect( 9, 2, 30, 9 ),
-        "\003Turbo Vision Demo\n\n" .        # These strings will be
-        "\003C++ Perl Port Version\n\n" .    # concatenated by the compiler.
-        "\003Copyright (c) 1994\n\n" .       # The \003 centers the line.
+        "\003Turbo Vision Demo\n\n" .     # These strings will be
+        "\003Perl Port Version\n\n" .     # concatenated by the compiler.
+        "\003Copyright (c) 1994\n\n" .    # The \003 centers the line.
         "\003Borland International"
     )
   );
@@ -568,16 +584,6 @@ sub mouse {
 }
 
 #
-# "Out of Memory" function ( called by validView() )
-#
-
-sub outOfMemory {
-  messageBox( "Not enough memory available to complete operation.",
-    mfError | mfOKButton );
-  return;
-}
-
-#
 # File Viewer function
 #
 
@@ -594,6 +600,16 @@ sub openFile {
       if $w;
   }
   $self->destroy( $d );
+  return;
+}
+
+#
+# "Out of Memory" function ( called by validView() )
+#
+
+sub outOfMemory {
+  messageBox( "Not enough memory available to complete operation.",
+    mfError | mfOKButton );
   return;
 }
 
@@ -627,8 +643,9 @@ sub printEvent {
 # isTileable() function ( checks a view on desktop is tileable or not )
 #
 
-my $isTileable = sub {
-  return shift->options & ofTileable != 0;
+my $isTileable = sub {    # $bool ($p, $p1)
+  my ( $p, $p1 ) = @_;
+  return ( $p->options & ofTileable ) != 0;
 };
 
 #
@@ -640,7 +657,7 @@ sub idle {
   $self->SUPER::idle();
   $self->{clock}->update();
   $self->{heap}->update();
-  if ( $deskTop->firstThat( $isTileable, 0 ) ) {
+  if ( $deskTop->firstThat( $isTileable, undef ) ) {
     $self->enableCommand( cmTile );
     $self->enableCommand( cmCascade );
   }
@@ -655,7 +672,7 @@ sub idle {
 # closeView() function
 #
 
-my $closeView = sub {
+my $closeView = sub {    # $void ($p, $p1)
   my ( $p, $p1 ) = @_;
   message( $p, evCommand, cmClose, $p1 );
   return;
@@ -716,7 +733,8 @@ sub initMenuBar {
       new_TMenuItem( "~M~ouse...", cmMouseCmd, kbNoKey, hcOMouse ) +
       new_TMenuItem( "~C~olors...", cmColorCmd, kbNoKey, hcOColors ) +
       new_TMenuItem( "~S~ave desktop", cmSaveCmd, kbNoKey, hcOSaveDesktop ) +
-      new_TMenuItem( "~R~etrieve desktop", cmRestoreCmd, kbNoKey, hcORestoreDesktop );
+      new_TMenuItem( "~R~etrieve desktop", cmRestoreCmd, kbNoKey, 
+        hcORestoreDesktop );
 
   $r->{b}{y} = $r->{a}{y} + 1;
   return new_TMenuBar( $r, $sub1 + $sub2 + $sub3 + $sub4 );
@@ -734,8 +752,8 @@ package main;
 #
 
 sub main {
-  my ( $argc, $argv ) = @_;
-  my $demoProgram = new_TVDemo( $argc, $argv );
+  my ( $argc, @argv ) = @_;
+  my $demoProgram = new_TVDemo( $argc, \@argv );
 
   $demoProgram->run();
   
@@ -743,4 +761,4 @@ sub main {
   return 0;
 }
 
-exit main( scalar @ARGV, \@ARGV );
+exit main( @ARGV+1, $0, @ARGV );

@@ -51,10 +51,11 @@ use constant cmChangeDrct => 102;
 }
 
 sub BUILDARGS {
+  my ( $class, %args ) = ( shift, @_ );
   return {
-    %{ shift->SUPER::BUILDARGS() },
-    argc   => $_{argc} || 0,
-    argv   => $_{argv} || [],
+    %{ $class->SUPER::BUILDARGS() },
+    argc   => $args{argc} // 0,
+    argv   => $args{argv} // [],
     bounds => new_TRect( 0, 0, 80, 25 ),
   };
 }
@@ -180,4 +181,4 @@ sub main {
   return 0;
 }
 
-exit main( scalar @ARGV, \@ARGV );
+exit main( @ARGV+1, [ $0, @ARGV ] );

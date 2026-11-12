@@ -153,4 +153,4 @@ sub main {
   return 0;
 }
 
-exit main();
+exit main( @ARGV+1, [ $0, @ARGV ] );
