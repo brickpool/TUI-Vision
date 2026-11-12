@@ -18,7 +18,9 @@ our @EXPORT_OK = qw(
 our %EXPORT_TAGS = (
 
   cmXXXX => [qw(
+    cmCharFocused
     cmFndEventView
+    cmAsciiTableCmdBase
   )],
 
   cpXXXX => [qw(
@@ -48,7 +50,9 @@ use TUI::StdDlg::Const qw( cmChangeDir );
 
 # Constants for Gadgets events
 use constant {
-  cmFndEventView => 114,
+  cmCharFocused       => 0,
+  cmFndEventView      => 114,
+  cmAsciiTableCmdBase => 910,
 };
 
 # History id for the change directory dialog

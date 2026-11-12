@@ -10,6 +10,8 @@ BEGIN {
   use_ok 'TUI::Gadgets::FileViewer';
   use_ok 'TUI::Gadgets::FileWindow';
   use_ok 'TUI::Gadgets::EventViewer';
+  use_ok 'TUI::Gadgets::AsciiChart';
+  use_ok 'TUI::Gadgets::Report';
 }
 
 subtest 'TFileViewer Storable roundtrip' => sub {
@@ -89,5 +91,34 @@ subtest 'TEventViewer Storable roundtrip' => sub {
   isa_ok( $restored->{interior}, 'TUI::TextView::Terminal' );
   is( $restored->{interior}{bufSize}, 256, 'recreates terminal with saved size' );
 }; #/ 'TEventViewer Storable roundtrip' => sub
+
+subtest 'TReport Storable roundtrip' => sub {
+  my $report = TReport->new(
+    bounds => TRect->new( ax => 0, ay => 0, bx => 32, by => 1 ),
+  );
+  $report->{asciiChar} = 65;
+
+  my $restored = thaw( freeze( $report ) );
+  isa_ok( $restored, TReport );
+  is( $restored->{asciiChar}, 65, 'preserves focused character' );
+  is_deeply( $restored->{size}, { x => 32, y => 1 }, 'preserves size' );
+}; #/ 'TReport Storable roundtrip' => sub
+
+subtest 'TAsciiChart Storable roundtrip' => sub {
+  my $chart = new_TAsciiChart();
+
+  my $restored = thaw( freeze( $chart ) );
+  isa_ok( $restored, TAsciiChart );
+  is( $restored->{title}, 'ASCII Chart', 'preserves title' );
+
+  my $children = sub {
+    my ( $view ) = @_;
+    my @types;
+    $view->forEach( sub { push @types, ref $_[0] }, undef );
+    return join ' ', sort @types;
+  };
+  is( $children->( $restored ), $children->( $chart ),
+    'restores the same children without duplicates' );
+}; #/ 'TAsciiChart Storable roundtrip' => sub
 
 done_testing();

@@ -14,6 +14,9 @@ BEGIN {
   use_ok 'TUI::Gadgets::LineCollection';
   use_ok 'TUI::Gadgets::FileViewer';
   use_ok 'TUI::Gadgets::FileWindow';
+  use_ok 'TUI::Gadgets::Table';
+  use_ok 'TUI::Gadgets::Report';
+  use_ok 'TUI::Gadgets::AsciiChart';
 }
 
 isa_ok(
@@ -28,5 +31,8 @@ isa_ok( TLineCollection->new( limit => 10, delta => 5 ), TLineCollection() );
 isa_ok( TFileViewer->new( bounds => TRect->new(), hScrollBar => undef, 
   vScrollBar => undef, fileName => $0 ), TFileViewer() );
 isa_ok( TFileWindow->new( fileName => $0 ), TFileWindow() );
+isa_ok( TTable->new( bounds => TRect->new() ), TTable() );
+isa_ok( TReport->new( bounds => TRect->new() ), TReport() );
+isa_ok( TAsciiChart->new(), TAsciiChart() );
 
 done_testing();

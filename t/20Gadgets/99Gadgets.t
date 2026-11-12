@@ -16,5 +16,8 @@ isa_ok( new_TMouseDialog(), TMouseDialog() );
 isa_ok( new_TLineCollection( 5, 5 ), TLineCollection() );
 isa_ok( new_TFileViewer( TRect->new(), undef, undef, $0 ), TFileViewer() );
 isa_ok( new_TFileWindow( $0 ), TFileWindow() );
+isa_ok( new_TTable( TRect->new() ), TTable() );
+isa_ok( new_TReport( TRect->new() ), TReport() );
+isa_ok( new_TAsciiChart(), TAsciiChart() );
 
 done_testing();

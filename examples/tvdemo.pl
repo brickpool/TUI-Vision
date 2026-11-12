@@ -334,6 +334,11 @@ sub handleEvent {
         last;
       };
 
+      cmAsciiCmd == $_ and do {        #  Open ASCII table
+        $self->asciiTable();
+        last;
+      };
+
       cmOpenCmd == $_ and do {         #  View a file
         $self->openFile("*.*");
         last;
@@ -409,6 +414,20 @@ sub aboutDlgBox {
   $self->executeDialog( $aboutBox );
   return;
 } #/ sub aboutDlgBox
+
+#
+# Ascii Chart function()
+#
+
+sub asciiTable {
+  my ( $self ) = @_;
+  my $chart = $self->validView( new_TAsciiChart() );
+  if ( $chart ) {
+    $chart->helpCtx( hcAsciiTable );
+    $deskTop->insert( $chart );
+  }
+  return;
+}
 
 #
 # Cascade function
@@ -708,6 +727,7 @@ sub initMenuBar {
       newLine() +
       new_TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
       newLine() +
+      new_TMenuItem( "Ascii ~T~able", cmAsciiCmd, kbNoKey, hcSAsciiTable ) +
       new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 
         "Alt-0" );
 
