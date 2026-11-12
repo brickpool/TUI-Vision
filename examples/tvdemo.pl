@@ -772,8 +772,8 @@ package main;
 #
 
 sub main {
-  my ( $argc, @argv ) = @_;
-  my $demoProgram = new_TVDemo( $argc, \@argv );
+  my ( $argc, $argv ) = @_;
+  my $demoProgram = new_TVDemo( $argc, $argv );
 
   $demoProgram->run();
   
@@ -781,4 +781,4 @@ sub main {
   return 0;
 }
 
-exit main( @ARGV+1, $0, @ARGV );
+exit main( @ARGV+1, [ $0, @ARGV ] );

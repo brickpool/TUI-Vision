@@ -3,6 +3,7 @@ Changes
 examples/demotbac.pl
 examples/hello.pl
 examples/mbcdemo.pl
+examples/shadowdemo.pl
 examples/tvdemo.pl
 examples/tvedit.pl
 examples/tvshell.pl
