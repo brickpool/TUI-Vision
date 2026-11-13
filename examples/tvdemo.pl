@@ -329,18 +329,23 @@ sub handleEvent {
         last;
       };
 
-      cmEventViewCmd == $_ and do {    #  Open Event Viewer
-        $self->eventViewer();
+      cmCalendarCmd == $_ and do {     #  Calendar Window
+        $self->calendar();
         last;
       };
 
-      cmAsciiCmd == $_ and do {        #  Open ASCII table
+      cmAsciiCmd == $_ and do {        #  Ascii Table
         $self->asciiTable();
         last;
       };
 
-      cmCalcCmd == $_ and do {         #  Open calculator
+      cmCalcCmd == $_ and do {         #  Calculator
         $self->calculator();
+        last;
+      };
+
+      cmEventViewCmd == $_ and do {    #  Open Event Viewer
+        $self->eventViewer();
         last;
       };
 
@@ -444,6 +449,20 @@ sub calculator {
   if ( $calc ) {
     $calc->helpCtx( hcCalculator );
     $deskTop->insert( $calc );
+  }
+  return;
+}
+
+#
+# Calendar function
+#
+
+sub calendar {
+  my ( $self ) = @_;
+  my $cal = $self->validView( new_TCalendarWindow() );
+  if ( $cal ) {
+    $cal->helpCtx( hcCalendar );
+    $deskTop->insert( $cal );
   }
   return;
 }
@@ -746,6 +765,7 @@ sub initMenuBar {
       newLine() +
       new_TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
       newLine() +
+      new_TMenuItem( "Ca~l~endar", cmCalendarCmd, kbNoKey, hcCalendar ) +
       new_TMenuItem( "Ascii ~T~able", cmAsciiCmd, kbNoKey, hcSAsciiTable ) +
       new_TMenuItem( "~C~alculator", cmCalcCmd, kbNoKey, hcCalculator ) +
       new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 

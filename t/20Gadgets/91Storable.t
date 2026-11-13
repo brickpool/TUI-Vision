@@ -13,6 +13,8 @@ BEGIN {
   use_ok 'TUI::Gadgets::AsciiChart';
   use_ok 'TUI::Gadgets::CalcDisplay';
   use_ok 'TUI::Gadgets::Calculator';
+  use_ok 'TUI::Gadgets::CalendarView';
+  use_ok 'TUI::Gadgets::CalendarWindow';
   use_ok 'TUI::Gadgets::Report';
 }
 
@@ -132,8 +134,8 @@ subtest 'TAsciiChart Storable roundtrip' => sub {
 }; #/ 'TAsciiChart Storable roundtrip' => sub
 
 subtest 'TCalcDisplay Storable roundtrip' => sub {
-  my $display = new_TCalcDisplay( 
-    TRect->new( ax => 3, ay => 2, bx => 21, by => 3 )
+  my $display = TCalcDisplay->new( 
+    bounds => TRect->new( ax => 3, ay => 2, bx => 21, by => 3 )
   );
   $display->{number} = '42';
   $display->{sign}   = '-';
@@ -146,7 +148,7 @@ subtest 'TCalcDisplay Storable roundtrip' => sub {
 }; #/ 'TCalcDisplay Storable roundtrip' => sub
 
 subtest 'TCalculator Storable roundtrip' => sub {
-  my $calc = new_TCalculator();
+  my $calc = TCalculator->new();
 
   my $restored = thaw( freeze( $calc ) );
   isa_ok( $restored, TCalculator );
@@ -161,5 +163,27 @@ subtest 'TCalculator Storable roundtrip' => sub {
   is( $children->( $restored ), $children->( $calc ),
     'restores the same children without duplicates' );
 }; #/ 'TCalculator Storable roundtrip' => sub
+
+subtest 'TCalendarView Storable roundtrip' => sub {
+  my $calendar = TCalendarView->new( 
+    bounds => TRect->new( ax => 0, ay => 0, bx => 22, by => 9 ) 
+  );
+  $calendar->{month} = 3;
+  $calendar->{year}  = 2031;
+
+  my $restored = thaw( freeze( $calendar ) );
+  isa_ok( $restored, TCalendarView );
+  is( $restored->{month}, 3, 'preserves month' );
+  is( $restored->{year}, 2031, 'preserves year' );
+  is( $restored->{curYear}, $calendar->{curYear}, 'preserves current year' );
+}; #/ 'TCalendarView Storable roundtrip' => sub
+
+subtest 'TCalendarWindow Storable roundtrip' => sub {
+  my $window = TCalendarWindow->new();
+
+  my $restored = thaw( freeze( $window ) );
+  isa_ok( $restored, TCalendarWindow );
+  is( $restored->{title}, 'Calendar', 'preserves title' );
+}; #/ 'TCalendarWindow Storable roundtrip' => sub
 
 done_testing();

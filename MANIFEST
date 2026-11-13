@@ -71,6 +71,8 @@ lib/TUI/Gadgets.pm
 lib/TUI/Gadgets/AsciiChart.pm
 lib/TUI/Gadgets/CalcDisplay.pm
 lib/TUI/Gadgets/Calculator.pm
+lib/TUI/Gadgets/CalendarView.pm
+lib/TUI/Gadgets/CalendarWindow.pm
 lib/TUI/Gadgets/ClickTester.pm
 lib/TUI/Gadgets/ClockView.pm
 lib/TUI/Gadgets/Const.pm
@@ -371,6 +373,7 @@ t/20Gadgets/21TFileViewer.t
 t/20Gadgets/22TFileWindow.t
 t/20Gadgets/23TAsciiChart.t
 t/20Gadgets/24TCalculator.t
+t/20Gadgets/25TCalendar.t
 t/20Gadgets/91Storable.t
 t/20Gadgets/99Gadgets.t
 t/99Vision.t

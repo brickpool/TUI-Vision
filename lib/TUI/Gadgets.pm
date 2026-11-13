@@ -16,6 +16,8 @@ use TUI::Gadgets::PrintConstants;
 use TUI::Gadgets::AsciiChart;
 use TUI::Gadgets::CalcDisplay;
 use TUI::Gadgets::Calculator;
+use TUI::Gadgets::CalendarView;
+use TUI::Gadgets::CalendarWindow;
 use TUI::Gadgets::ClickTester;
 use TUI::Gadgets::ClockView;
 use TUI::Gadgets::EventViewer;
@@ -34,6 +36,8 @@ sub import {
   TUI::Gadgets::AsciiChart->import::into( $target );
   TUI::Gadgets::CalcDisplay->import::into( $target );
   TUI::Gadgets::Calculator->import::into( $target );
+  TUI::Gadgets::CalendarView->import::into( $target );
+  TUI::Gadgets::CalendarWindow->import::into( $target );
   TUI::Gadgets::ClickTester->import::into( $target );
   TUI::Gadgets::ClockView->import::into( $target );
   TUI::Gadgets::EventViewer->import::into( $target );
@@ -53,6 +57,8 @@ sub unimport {
   TUI::Gadgets::AsciiChart->unimport::out_of( $caller );
   TUI::Gadgets::CalcDisplay->unimport::out_of( $caller );
   TUI::Gadgets::Calculator->unimport::out_of( $caller );
+  TUI::Gadgets::CalendarView->unimport::out_of( $caller );
+  TUI::Gadgets::CalendarWindow->unimport::out_of( $caller );
   TUI::Gadgets::ClickTester->unimport::out_of( $caller );
   TUI::Gadgets::ClockView->unimport::out_of( $caller );
   TUI::Gadgets::EventViewer->unimport::out_of( $caller );
@@ -125,6 +131,12 @@ The display view of the calculator gadget.
 
 =item * L<TCalculator|TUI::Gadgets::Calculator> -
 A calculator dialog with a display and twenty buttons.
+
+=item * L<TCalendarView|TUI::Gadgets::CalendarView> -
+A view showing a month calendar.
+
+=item * L<TCalendarWindow|TUI::Gadgets::CalendarWindow> -
+A window containing a month calendar.
 
 =item * L<Const|TUI::Gadgets::Const> -
 Symbolic constants for gadget behavior.
