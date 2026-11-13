@@ -196,7 +196,7 @@ sub drawState {    # void ($down)
       $i = 1;
     } #/ else [ if ( $down ) ]
 
-    if ( $y == $T && $self->{title} ) {
+    if ( $y == $T && defined $self->{title} ) {
       $self->$drawTitle( $b, $s, $i, $cButton, $down );
     }
 
