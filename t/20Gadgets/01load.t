@@ -21,6 +21,8 @@ BEGIN {
   use_ok 'TUI::Gadgets::Calculator';
   use_ok 'TUI::Gadgets::CalendarView';
   use_ok 'TUI::Gadgets::CalendarWindow';
+  use_ok 'TUI::Gadgets::PuzzleView';
+  use_ok 'TUI::Gadgets::PuzzleWindow';
 }
 
 isa_ok(
@@ -42,5 +44,7 @@ isa_ok( TCalcDisplay->new( bounds => TRect->new() ), TCalcDisplay() );
 isa_ok( TCalculator->new(), TCalculator() );
 isa_ok( TCalendarView->new( bounds => TRect->new() ), TCalendarView() );
 isa_ok( TCalendarWindow->new(), TCalendarWindow() );
+isa_ok( TPuzzleView->new( bounds => TRect->new() ), TPuzzleView() );
+isa_ok( TPuzzleWindow->new(), TPuzzleWindow() );
 
 done_testing();

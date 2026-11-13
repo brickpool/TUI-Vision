@@ -86,6 +86,8 @@ lib/TUI/Gadgets/HeapView/Win32.pm
 lib/TUI/Gadgets/LineCollection.pm
 lib/TUI/Gadgets/MouseDialog.pm
 lib/TUI/Gadgets/PrintConstants.pm
+lib/TUI/Gadgets/PuzzleView.pm
+lib/TUI/Gadgets/PuzzleWindow.pm
 lib/TUI/Gadgets/Report.pm
 lib/TUI/Gadgets/Table.pm
 lib/TUI/Help.pm
@@ -374,6 +376,7 @@ t/20Gadgets/22TFileWindow.t
 t/20Gadgets/23TAsciiChart.t
 t/20Gadgets/24TCalculator.t
 t/20Gadgets/25TCalendar.t
+t/20Gadgets/26TPuzzle.t
 t/20Gadgets/91Storable.t
 t/20Gadgets/99Gadgets.t
 t/99Vision.t

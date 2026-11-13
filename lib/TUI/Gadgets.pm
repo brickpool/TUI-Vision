@@ -26,6 +26,8 @@ use TUI::Gadgets::FileWindow;
 use TUI::Gadgets::HeapView;
 use TUI::Gadgets::LineCollection;
 use TUI::Gadgets::MouseDialog;
+use TUI::Gadgets::PuzzleView;
+use TUI::Gadgets::PuzzleWindow;
 use TUI::Gadgets::Report;
 use TUI::Gadgets::Table;
 
@@ -46,6 +48,8 @@ sub import {
   TUI::Gadgets::HeapView->import::into( $target );
   TUI::Gadgets::LineCollection->import::into( $target );
   TUI::Gadgets::MouseDialog->import::into( $target );
+  TUI::Gadgets::PuzzleView->import::into( $target );
+  TUI::Gadgets::PuzzleWindow->import::into( $target );
   TUI::Gadgets::Report->import::into( $target );
   TUI::Gadgets::Table->import::into( $target );
 }
@@ -67,6 +71,8 @@ sub unimport {
   TUI::Gadgets::HeapView->unimport::out_of( $caller );
   TUI::Gadgets::LineCollection->unimport::out_of( $caller );
   TUI::Gadgets::MouseDialog->unimport::out_of( $caller );
+  TUI::Gadgets::PuzzleView->unimport::out_of( $caller );
+  TUI::Gadgets::PuzzleWindow->unimport::out_of( $caller );
   TUI::Gadgets::Report->unimport::out_of( $caller );
   TUI::Gadgets::Table->unimport::out_of( $caller );
 }
@@ -137,6 +143,12 @@ A view showing a month calendar.
 
 =item * L<TCalendarWindow|TUI::Gadgets::CalendarWindow> -
 A window containing a month calendar.
+
+=item * L<TPuzzleView|TUI::Gadgets::PuzzleView> -
+A view showing a sliding tile puzzle.
+
+=item * L<TPuzzleWindow|TUI::Gadgets::PuzzleWindow> -
+A window containing a sliding tile puzzle.
 
 =item * L<Const|TUI::Gadgets::Const> -
 Symbolic constants for gadget behavior.

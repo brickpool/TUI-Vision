@@ -23,5 +23,7 @@ isa_ok( new_TCalcDisplay( TRect->new() ), TCalcDisplay() );
 isa_ok( new_TCalculator(), TCalculator() );
 isa_ok( new_TCalendarView( TRect->new() ), TCalendarView() );
 isa_ok( new_TCalendarWindow(), TCalendarWindow() );
+isa_ok( new_TPuzzleView( TRect->new() ), TPuzzleView() );
+isa_ok( new_TPuzzleWindow(), TPuzzleWindow() );
 
 done_testing();

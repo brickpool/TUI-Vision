@@ -226,6 +226,20 @@ sub initStatusLine {
 }
 
 #
+# Puzzle function
+#
+
+sub puzzle {
+  my ( $self ) = @_;
+  my $win = $self->validView( new_TPuzzleWindow() );
+  if ( $win ) {
+    $win->helpCtx( hcPuzzle );
+    $deskTop->insert( $win );
+  }
+  return;
+}
+
+#
 # retrieveDesktop() function ( restores the previously stored Desktop )
 #
 
@@ -289,7 +303,6 @@ my $writeView = sub {    # void ($p, $strm)
   my $last = $deskTop->last;
   $s->put( $p )
     if $p != $last;
-  $s->put( undef );
   return;
 };
 
@@ -300,6 +313,7 @@ my $writeView = sub {    # void ($p, $strm)
 sub storeDesktop {    # void ($s)
   my ( $self, $s ) = @_;
   $deskTop->forEach( $writeView, $s );
+  $s->put( undef );
   return;
 }
 
@@ -341,6 +355,11 @@ sub handleEvent {
 
       cmCalcCmd == $_ and do {         #  Calculator
         $self->calculator();
+        last;
+      };
+
+      cmPuzzleCmd == $_ and do {       #  Puzzle
+        $self->puzzle();
         last;
       };
 
@@ -765,6 +784,7 @@ sub initMenuBar {
       newLine() +
       new_TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
       newLine() +
+      new_TMenuItem( "~P~uzzle", cmPuzzleCmd, kbNoKey, hcSPuzzle ) +
       new_TMenuItem( "Ca~l~endar", cmCalendarCmd, kbNoKey, hcCalendar ) +
       new_TMenuItem( "Ascii ~T~able", cmAsciiCmd, kbNoKey, hcSAsciiTable ) +
       new_TMenuItem( "~C~alculator", cmCalcCmd, kbNoKey, hcCalculator ) +

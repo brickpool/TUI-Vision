@@ -27,6 +27,7 @@ our %EXPORT_TAGS = (
   cpXXXX => [qw(
     cpCalcPalette
     cpMousePalette
+    cpPuzzlePalette
   )],
 
   hlXXXX => [qw(
@@ -76,6 +77,11 @@ use constant {
 # Palette for TClickTester
 use constant {
   cpMousePalette => "\x07\x08",
+};
+
+# Palette for TPuzzleView
+use constant {
+  cpPuzzlePalette => "\x06\x07",
 };
 
 1

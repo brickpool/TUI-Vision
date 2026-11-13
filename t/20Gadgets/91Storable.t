@@ -15,6 +15,8 @@ BEGIN {
   use_ok 'TUI::Gadgets::Calculator';
   use_ok 'TUI::Gadgets::CalendarView';
   use_ok 'TUI::Gadgets::CalendarWindow';
+  use_ok 'TUI::Gadgets::PuzzleView';
+  use_ok 'TUI::Gadgets::PuzzleWindow';
   use_ok 'TUI::Gadgets::Report';
 }
 
@@ -185,5 +187,21 @@ subtest 'TCalendarWindow Storable roundtrip' => sub {
   isa_ok( $restored, TCalendarWindow );
   is( $restored->{title}, 'Calendar', 'preserves title' );
 }; #/ 'TCalendarWindow Storable roundtrip' => sub
+
+subtest 'TPuzzleView Storable roundtrip' => sub {
+  my $puzzle = TPuzzleView->new(
+    bounds => TRect->new( ax => 0, ay => 0, bx => 18, by => 4 )
+  );
+  $puzzle->{board}  = [ split //, 'ABCDEFGHIJKLMNO ' ];
+  $puzzle->{moves}  = 7;
+  $puzzle->{solved} = 1;
+
+  my $restored = thaw( freeze( $puzzle ) );
+  isa_ok( $restored, TPuzzleView );
+  is( join( '', @{ $restored->{board} } ), 'ABCDEFGHIJKLMNO ',
+    'preserves board' );
+  is( $restored->{moves}, 7, 'preserves moves' );
+  is( $restored->{solved}, 1, 'preserves solved state' );
+}; #/ 'TPuzzleView Storable roundtrip' => sub
 
 done_testing();
