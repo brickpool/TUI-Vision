@@ -9,40 +9,63 @@ our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
+use Import::Into;
+
+use TUI::Editors::Const;
+use TUI::Editors::Indicator;
+
+sub import {
+  my $target = caller;
+  TUI::Editors::Const->import::into( $target, qw( :all ) );
+  TUI::Editors::Indicator->import::into( $target );
+}
+
+sub unimport {
+  my $caller = caller;
+  TUI::Editors::Const->unimport::out_of( $caller );
+  TUI::Editors::Indicator->unimport::out_of( $caller );
+}
+
 1
 
 __END__
 
 =head1 NAME
 
-TUI::Editors - Editor-related modules for the framework
+TUI::Editors - Editor components for the TUI::Vision framework
 
 =head1 SYNOPSIS
 
+  use TUI::Objects;
   use TUI::Editors;
+
+  # Typical indicator setup inside a TApplication/TProgram subclass:
+  my $indicator = TIndicator->new(
+    bounds => TRect->new( ax => 0, ay => 23, bx => 80, by => 24 ),
+  );
+
+  $self->insert($indicator);
+
+  # Update the displayed cursor position and modified flag
+  $indicator->setValue( TPoint->new( x => 0, y => 0 ), !!0 );
 
 =head1 DESCRIPTION
 
-C<TUI::Editors> provides the editor-related view classes used throughout the
-L<TUI::Vision> framework.
+C<TUI::Editors> provides the editor components for the TUI::Vision framework.
+These modules are compatible with the editor subsystem of the classic
+I<Turbo Vision> framework where practical.
 
-The module currently serves primarily as a namespace for editor components and
-related functionality. Concrete editor implementations are provided by modules
-within the C<TUI::Editors::*> hierarchy.
+This module re-exports the following components:
 
-Editor views are responsible for displaying and manipulating text within the
-framework's event-driven user interface and are intended to provide behavior
-compatible with the original I<Turbo Vision> editor system where practical.
+=over 4
 
-=head1 COMPATIBILITY
+=item * L<Const|TUI::Editors::Const> -
+Symbolic constants for editor behavior.
 
-The design of the editor subsystem is inspired by Borland I<Turbo Vision>.
-Behavior, naming conventions, and APIs may therefore resemble their original
-I<Turbo Vision> counterparts where appropriate for the Perl implementation.
+=item * L<TIndicator|TUI::Editors::Indicator> -
+A view that displays the cursor position and modified state of an editor.
 
-=head1 SEE ALSO
-
-L<TUI::Vision>
+=back
 
 =head1 AUTHORS
 
@@ -53,6 +76,10 @@ L<TUI::Vision>
 =item * J. Schneider <brickpool@cpan.org> (Perl implementation and maintenance)
 
 =back
+
+=head1 CONTRIBUTORS
+
+Contributors are documented in the POD of the respective framework modules.
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -67,6 +67,8 @@ lib/TUI/Drivers/ScreenCharacter.pm
 lib/TUI/Drivers/SystemError.pm
 lib/TUI/Drivers/Util.pm
 lib/TUI/Editors.pm
+lib/TUI/Editors/Const.pm
+lib/TUI/Editors/Indicator.pm
 lib/TUI/Gadgets.pm
 lib/TUI/Gadgets/AsciiChart.pm
 lib/TUI/Gadgets/CalcDisplay.pm
@@ -363,6 +365,10 @@ t/14ColorSel/16TColorItemList.t
 t/14ColorSel/17TColorDialog.t
 t/14ColorSel/91Storable.t
 t/14ColorSel/99Gadgets.t
+t/15Editors/01load.t
+t/15Editors/13TIndicator.t
+t/15Editors/91Storable.t
+t/15Editors/99Editors.t
 t/20Gadgets/01load.t
 t/20Gadgets/04PrintConstants.t
 t/20Gadgets/13TClockView.t

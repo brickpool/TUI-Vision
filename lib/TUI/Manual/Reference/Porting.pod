@@ -275,7 +275,7 @@ Lists and History
  TMemo              (missing)                    [ ]
  TFileEditor        (missing)                    [ ]
  TEditWindow        (missing)                    [ ]
- TIndicator         (missing)                    [ ]
+ TIndicator         TUI::Editors::Indicator      [x]
  TTextDevice        TUI::TextView::TextDevice    [x]
  TTerminal          TUI::TextView::Terminal      [x]
 

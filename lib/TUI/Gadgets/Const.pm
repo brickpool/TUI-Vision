@@ -154,9 +154,7 @@ Constants are exported using the following tag-based export groups:
 
 =head1 SEE ALSO
 
-L<Gadgets|TUI::Gadgets>,
-L<TEventViewer|TUI::Gadgets::EventViewer>,
-L<TEvent|TUI::Drivers::Event>
+L<Gadgets|TUI::Gadgets>
 
 =head1 AUTHORS
 

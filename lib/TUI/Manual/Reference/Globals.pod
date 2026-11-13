@@ -177,6 +177,7 @@ inventory.
   $doubleDelay         TEventQueue            Double-click delay
   $downMouse           TEventQueue            Mouse-down state
   $downTicks           TEventQueue            Ticks since mouse press
+  $dragFrame           TIndicator             Drag frame drawing character
   $dragIcon            TFrame                 Drag window icon
   $drives              TDirListBox            Drives label text
   $drivesText          TChDirDialog           Drives label
@@ -239,6 +240,7 @@ inventory.
 
   $noMouse             THWMouse               Mouse hardware unavailable flag
   $normal              TMonoSelector          Normal text attribute
+  $normalFrame         TIndicator             Normal frame drawing character
 
   $okText              MsgBoxText             OK button label
   $okText              TChDirDialog           OK button label
