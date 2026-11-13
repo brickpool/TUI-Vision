@@ -339,6 +339,11 @@ sub handleEvent {
         last;
       };
 
+      cmCalcCmd == $_ and do {         #  Open calculator
+        $self->calculator();
+        last;
+      };
+
       cmOpenCmd == $_ and do {         #  View a file
         $self->openFile("*.*");
         last;
@@ -425,6 +430,20 @@ sub asciiTable {
   if ( $chart ) {
     $chart->helpCtx( hcAsciiTable );
     $deskTop->insert( $chart );
+  }
+  return;
+}
+
+#
+# Calculator function
+#
+
+sub calculator {
+  my ( $self ) = @_;
+  my $calc = $self->validView( new_TCalculator() );
+  if ( $calc ) {
+    $calc->helpCtx( hcCalculator );
+    $deskTop->insert( $calc );
   }
   return;
 }
@@ -728,6 +747,7 @@ sub initMenuBar {
       new_TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
       newLine() +
       new_TMenuItem( "Ascii ~T~able", cmAsciiCmd, kbNoKey, hcSAsciiTable ) +
+      new_TMenuItem( "~C~alculator", cmCalcCmd, kbNoKey, hcCalculator ) +
       new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 
         "Alt-0" );
 

@@ -20,10 +20,12 @@ our %EXPORT_TAGS = (
   cmXXXX => [qw(
     cmCharFocused
     cmFndEventView
+    cmCalcButton
     cmAsciiTableCmdBase
   )],
 
   cpXXXX => [qw(
+    cpCalcPalette
     cpMousePalette
   )],
 
@@ -52,6 +54,7 @@ use TUI::StdDlg::Const qw( cmChangeDir );
 use constant {
   cmCharFocused       => 0,
   cmFndEventView      => 114,
+  cmCalcButton        => 200,
   cmAsciiTableCmdBase => 910,
 };
 
@@ -63,6 +66,11 @@ use constant {
 # Maximum line length inside TFileViewer
 use constant {
   maxLineLength => 256,
+};
+
+# Palette for TCalcDisplay
+use constant {
+  cpCalcPalette => "\x13",
 };
 
 # Palette for TClickTester

@@ -17,6 +17,8 @@ BEGIN {
   use_ok 'TUI::Gadgets::Table';
   use_ok 'TUI::Gadgets::Report';
   use_ok 'TUI::Gadgets::AsciiChart';
+  use_ok 'TUI::Gadgets::CalcDisplay';
+  use_ok 'TUI::Gadgets::Calculator';
 }
 
 isa_ok(
@@ -34,5 +36,8 @@ isa_ok( TFileWindow->new( fileName => $0 ), TFileWindow() );
 isa_ok( TTable->new( bounds => TRect->new() ), TTable() );
 isa_ok( TReport->new( bounds => TRect->new() ), TReport() );
 isa_ok( TAsciiChart->new(), TAsciiChart() );
+isa_ok( TCalcDisplay->new( bounds => TRect->new( ax => 3, ay => 2, bx => 21, by => 3 ) ),
+  TCalcDisplay() );
+isa_ok( TCalculator->new(), TCalculator() );
 
 done_testing();

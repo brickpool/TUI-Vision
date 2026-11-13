@@ -11,6 +11,8 @@ BEGIN {
   use_ok 'TUI::Gadgets::FileWindow';
   use_ok 'TUI::Gadgets::EventViewer';
   use_ok 'TUI::Gadgets::AsciiChart';
+  use_ok 'TUI::Gadgets::CalcDisplay';
+  use_ok 'TUI::Gadgets::Calculator';
   use_ok 'TUI::Gadgets::Report';
 }
 
@@ -66,7 +68,11 @@ subtest 'TFileWindow Storable roundtrip' => sub {
   ok( $viewer->isValid(), 'restores valid viewer state' );
   is( $viewer->{fileLines}->getCount(), 2, 'restores file lines' );
   is( $viewer->{fileLines}->at( 0 ), 'Window line one', 'restores first line' );
-  is( $viewer->{fileLines}->at( 1 ), 'Window line two', 'restores second line' );
+  is( 
+    $viewer->{fileLines}->at( 1 ), 
+    'Window line two',
+    'restores second line'
+  );
 
   unlink $fileName;
 }; #/ 'TFileWindow Storable roundtrip' => sub
@@ -89,7 +95,11 @@ subtest 'TEventViewer Storable roundtrip' => sub {
   is( $restored->{title}, 'Event Viewer', 'restores active title' );
   isa_ok( $restored->{scrollBar}, 'TUI::Views::ScrollBar' );
   isa_ok( $restored->{interior}, 'TUI::TextView::Terminal' );
-  is( $restored->{interior}{bufSize}, 256, 'recreates terminal with saved size' );
+  is( 
+    $restored->{interior}{bufSize}, 
+    256, 
+    'recreates terminal with saved size'
+  );
 }; #/ 'TEventViewer Storable roundtrip' => sub
 
 subtest 'TReport Storable roundtrip' => sub {
@@ -120,5 +130,36 @@ subtest 'TAsciiChart Storable roundtrip' => sub {
   is( $children->( $restored ), $children->( $chart ),
     'restores the same children without duplicates' );
 }; #/ 'TAsciiChart Storable roundtrip' => sub
+
+subtest 'TCalcDisplay Storable roundtrip' => sub {
+  my $display = new_TCalcDisplay( 
+    TRect->new( ax => 3, ay => 2, bx => 21, by => 3 )
+  );
+  $display->{number} = '42';
+  $display->{sign}   = '-';
+
+  my $restored = thaw( freeze( $display ) );
+  isa_ok( $restored, TCalcDisplay );
+  is( $restored->{number}, '42', 'preserves displayed number' );
+  is( $restored->{sign}, '-', 'preserves sign' );
+  is_deeply( $restored->{size}, { x => 18, y => 1 }, 'preserves size' );
+}; #/ 'TCalcDisplay Storable roundtrip' => sub
+
+subtest 'TCalculator Storable roundtrip' => sub {
+  my $calc = new_TCalculator();
+
+  my $restored = thaw( freeze( $calc ) );
+  isa_ok( $restored, TCalculator );
+  is( $restored->{title}, 'Calculator', 'preserves title' );
+
+  my $children = sub {
+    my ( $view ) = @_;
+    my @types;
+    $view->forEach( sub { push @types, ref $_[0] }, undef );
+    return join ' ', sort @types;
+  };
+  is( $children->( $restored ), $children->( $calc ),
+    'restores the same children without duplicates' );
+}; #/ 'TCalculator Storable roundtrip' => sub
 
 done_testing();

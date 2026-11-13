@@ -19,5 +19,8 @@ isa_ok( new_TFileWindow( $0 ), TFileWindow() );
 isa_ok( new_TTable( TRect->new() ), TTable() );
 isa_ok( new_TReport( TRect->new() ), TReport() );
 isa_ok( new_TAsciiChart(), TAsciiChart() );
+isa_ok( new_TCalcDisplay( TRect->new( ax => 3, ay => 2, bx => 21, by => 3 ) ),
+  TCalcDisplay() );
+isa_ok( new_TCalculator(), TCalculator() );
 
 done_testing();

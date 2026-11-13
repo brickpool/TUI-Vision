@@ -283,7 +283,11 @@ Lists and History
 
  Class              Perl Module                  Status
  ------------------ ---------------------------- ------
- TCalcDisplay       (missing)                    [ ]
+ TAsciiChart        TUI::Gadgets::AsciiChart     [x]
+ TTable             TUI::Gadgets::Table          [x]
+ TReport            TUI::Gadgets::Report         [x]
+ TCalculator        TUI::Gadgets::Calculator     [x]
+ TCalcDisplay       TUI::Gadgets::CalcDisplay    [x]
  TCalendarView      (missing)                    [ ]
  TClickTester       TUI::Gadgets::ClickTester    [x]
  TClockView         TUI::Gadgets::ClockView      [x]
