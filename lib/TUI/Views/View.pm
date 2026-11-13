@@ -1331,7 +1331,7 @@ sub writeStr {    # void ($x, $y, $str, $color)
     pos    => [Int, Int, Str, PositiveOrZeroInt],
   );
   my ( $self, $x, $y, $str, $color ) = $sig->( @_ );
-  if ( $str ) {
+  if ( defined $str ) {
     my $length = length( $str );
     if ( $length > 0 ) {
       my $attr = $self->mapColor( $color )->$coerceAttr();
