@@ -90,8 +90,8 @@ subtest 'find() takes the search text and options from the dialog' => sub {
   local $TUI::Editors::Editor::editorDialog = sub {
     my ( $cmd, $rec ) = @_;
     return cmCancel unless $cmd == edFind;
-    $rec->{find}    = 'two';
-    $rec->{options} = efCaseSensitive | efDoReplace;
+    $rec->find( 'two' );
+    $rec->options( efCaseSensitive | efDoReplace );
     return cmOK;
   };
   local $TUI::Editors::Editor::findStr    = '';
@@ -120,9 +120,9 @@ subtest 'replace() replaces all matches from the dialog values' => sub {
     my ( $cmd, $rec ) = @_;
     push @messages, $cmd;
     return cmCancel unless $cmd == edReplace;
-    $rec->{find}    = 'one';
-    $rec->{replace} = 'two';
-    $rec->{options} = efReplaceAll | efCaseSensitive;
+    $rec->find( 'one' );
+    $rec->replace( 'two' );
+    $rec->options( efReplaceAll | efCaseSensitive );
     return cmOK;
   };
   $e->setCurPtr( 0, 0 );

@@ -15,6 +15,7 @@ our @EXPORT = qw(
   new_TEditor
 );
 
+use Class::Struct;
 use English qw( $INPUT_RECORD_SEPARATOR );
 use List::Util qw( max min );
 use TUI::toolkit;
@@ -62,6 +63,17 @@ use TUI::Views::Const qw(
 );
 use TUI::Views::Palette;
 use TUI::Views::View;
+
+struct TFindDialogRec => [
+  find    => '$',
+  options => '$',
+];
+
+struct TReplaceDialogRec => [
+  find    => '$',
+  replace => '$',
+  options => '$',
+];
 
 sub TEditor() { __PACKAGE__ }
 sub name() { 'TEditor' }
@@ -1056,14 +1068,14 @@ sub doSearchReplace {    # void ()
     $i = cmCancel;
     if ( !$self->search( $findStr, $editorFlags ) ) {
       my $both = efReplaceAll | efDoReplace;
-      $editorDialog->( edSearchFailed )
+      &$editorDialog( edSearchFailed )
         if ( $editorFlags & $both ) != $both;
     }
     elsif ( $editorFlags & efDoReplace ) {
       $i = cmYes;
       if ( $editorFlags & efPromptOnReplace ) {
         my $c = $self->makeGlobal( $self->{cursor} );
-        $i = $editorDialog->( edReplacePrompt, $c );
+        $i = &$editorDialog( edReplacePrompt, $c );
       }
       if ( $i == cmYes ) {
         $self->lock();
@@ -1102,10 +1114,13 @@ sub find {    # void ()
     pos    => [],
   );
   my ( $self ) = $sig->( @_ );
-  my $findRec = { find => $findStr, options => $editorFlags };
-  if ( $editorDialog->( edFind, $findRec ) != cmCancel ) {
-    $findStr     = $findRec->{find};
-    $editorFlags = $findRec->{options} & ~efDoReplace;
+  my $findRec = TFindDialogRec->new(
+    find    => $findStr, 
+    options => $editorFlags 
+  );
+  if ( &$editorDialog( edFind, $findRec ) != cmCancel ) {
+    $findStr     = $findRec->find;
+    $editorFlags = $findRec->options & ~efDoReplace;
     $self->doSearchReplace();
   }
   return;
@@ -1248,15 +1263,15 @@ sub replace {    # void ()
     pos    => [],
   );
   my ( $self ) = $sig->( @_ );
-  my $replaceRec = {
+  my $replaceRec = TReplaceDialogRec->new(
     find    => $findStr,
     replace => $replaceStr,
     options => $editorFlags,
-  };
-  if ( $editorDialog->( edReplace, $replaceRec ) != cmCancel ) {
-    $findStr     = $replaceRec->{find};
-    $replaceStr  = $replaceRec->{replace};
-    $editorFlags = $replaceRec->{options} | efDoReplace;
+  );
+  if ( &$editorDialog( edReplace, $replaceRec ) != cmCancel ) {
+    $findStr     = $replaceRec->find;
+    $replaceStr  = $replaceRec->replace;
+    $editorFlags = $replaceRec->options | efDoReplace;
     $self->doSearchReplace();
   }
   return;

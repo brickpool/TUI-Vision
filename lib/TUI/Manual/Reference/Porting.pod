@@ -272,6 +272,8 @@ Lists and History
  Class              Perl Module                  Status
  ------------------ ---------------------------- ------
  TEditor            TUI::Editors::Editor         [x]
+ TFindDialogRec     TUI::Editors::Editor         [x]
+ TReplaceDialogRec  TUI::Editors::Editor         [x]
  TMemo              (missing)                    [ ]
  TFileEditor        TUI::Editors::FileEditor     [x]
  TEditWindow        (missing)                    [ ]

@@ -680,7 +680,7 @@ C<use TUI::Editors::Const qw(sfSearchFailed);>.
 
 Editor message constants
 
-Identify the message an editor passes to its C<editorDialog> callback.
+Identify the message an editor passes to its C<$editorDialog> callback.
 
   Constant         Value  Usage
   ---------------- ------ ------------------------------------------------
@@ -696,7 +696,7 @@ Identify the message an editor passes to its C<editorDialog> callback.
   edReplace        9      Prompt for the replacement text
   edReplacePrompt  10     Ask whether to replace an occurrence
 
-B<See>: C<editorDialog> from L<TEditor|TUI::Editors::Editor>.
+B<See>: C<$editorDialog> from L<TEditor|TUI::Editors::Editor>.
 
 =head2 efXXXX
 
