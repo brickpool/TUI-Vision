@@ -45,6 +45,7 @@ our %EXPORT_TAGS = (
     cmStartSelect
     cmHideSelect
     cmIndentMode
+    cmUpdateTitle
   )],
 
   cpXXXX => [qw(
@@ -170,6 +171,7 @@ use constant {
   cmStartSelect => 520,
   cmHideSelect  => 521,
   cmIndentMode  => 522,
+  cmUpdateTitle => 523,
 };
 
 # Search and replace options

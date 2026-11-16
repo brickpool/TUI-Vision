@@ -10,5 +10,7 @@ BEGIN {
 
 isa_ok( new_TIndicator( TRect->new() ), TIndicator() );
 isa_ok( new_TEditor( TRect->new(), undef, undef, undef, 0 ), TEditor() );
+isa_ok( new_TFileEditor( TRect->new(), undef, undef, undef, undef ), 
+  TFileEditor() );
 
 done_testing();

@@ -20,7 +20,6 @@ use Encode qw( encode );
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   is_Object
-  :is
   :types
 );
 
@@ -164,6 +163,16 @@ with a different glyph and color, as in the original I<Turbo Vision> indicator.
 
 The view grows vertically with its owner's bottom edge, so it keeps its
 height when the owner is resized.
+
+=head1 ATTRIBUTES
+
+=head2 location
+
+Current cursor position (L<TPoint|TUI::Objects::Point>).
+
+=head2 modified
+
+Indicates whether the editor contents have been modified (I<Bool>).
 
 =head1 CONSTRUCTOR
 

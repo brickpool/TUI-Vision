@@ -9,6 +9,7 @@ BEGIN {
   use_ok 'TUI::Objects::Point';
   use_ok 'TUI::Editors::Indicator';
   use_ok 'TUI::Editors::Editor';
+  use_ok 'TUI::Editors::FileEditor';
 }
 
 subtest 'TIndicator Storable roundtrip' => sub {
@@ -55,5 +56,21 @@ subtest 'TEditor Storable roundtrip' => sub {
   is( $restored->{buffer}, '', 'does not stream the buffer text' );
   is( $restored->{curPtr}, 0, 'does not stream the cursor' );
 }; #/ 'TEditor Storable roundtrip' => sub
+
+subtest 'TFileEditor Storable roundtrip' => sub {
+  my $editor = TFileEditor->new(
+    bounds     => TRect->new( ax => 0, ay => 0, bx => 60, by => 20 ),
+    hScrollBar => undef,
+    vScrollBar => undef,
+    indicator  => undef,
+    fileName   => '',
+  );
+  $editor->{fileName} = 'notes.txt';
+
+  my $restored = thaw( freeze( $editor ) );
+  isa_ok( $restored, TFileEditor );
+  is( $restored->{fileName}, 'notes.txt', 'preserves the file name' );
+  is( $restored->{buffer}, '', 'does not stream the buffer text' );
+}; #/ 'TFileEditor Storable roundtrip' => sub
 
 done_testing();

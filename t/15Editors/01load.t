@@ -10,8 +10,13 @@ BEGIN {
   use_ok 'TUI::Editors::Indicator';
   use_ok 'TUI::Editors::Editor::Edits';
   use_ok 'TUI::Editors::Editor';
+  use_ok 'TUI::Editors::FileEditor';
 }
 
 isa_ok( TIndicator->new( bounds => TRect->new() ), TIndicator() );
+isa_ok( TEditor->new( bounds => TRect->new(), hScrollBar => undef,
+  vScrollBar => undef, indicator => undef, bufSize => 0 ), TEditor() );
+isa_ok( TFileEditor->new( bounds => TRect->new(), hScrollBar => undef,
+  vScrollBar => undef, indicator => undef, fileName => undef ), TFileEditor() );
 
 done_testing();

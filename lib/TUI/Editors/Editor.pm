@@ -21,7 +21,7 @@ use TUI::toolkit;
 use TUI::toolkit::Types qw(
   Maybe
   is_Object
-  :is
+  is_Str
   :types
 );
 
@@ -70,10 +70,10 @@ sub new_TEditor { __PACKAGE__->from(@_) }
 extends TView;
 
 # declare global variables
-our $editorDialog = sub {
-  die "TEditorDialog is not ported yet\n";
+our $editorDialog = sub {    # $command ($dialog, @_)
+  return cmCancel;
 };
-our $editorFlags  = 0;
+our $editorFlags  = efBackupFiles | efPromptOnReplace;
 our $findStr      = '';
 our $replaceStr   = '';
 our $clipboard    = undef;
@@ -411,169 +411,195 @@ sub handleEvent {    # void ($event)
     };
 
     evCommand == $_ and do {
-      my $command = $event->{message}{command};
-      # Find and replace run outside the lock, as in the original.
-      cmFind == $command and do {
-        $self->find();
-        last;
-      };
-      cmReplace == $command and do {
-        $self->replace();
-        last;
-      };
-      cmSearchAgain == $command and do {
-        $self->doSearchReplace();
-        last;
-      };
-
-      $self->lock();
-      SWITCH: for ( $command ) {
-
-        cmCharLeft == $_ and do {
-          $self->setCurPtr( $self->prevChar( $self->{curPtr} ), $selectMode );
+      SWITCH: for ( $event->{message}{command} ) {
+        cmFind == $_ and do {
+          $self->find();
           last;
         };
-        cmCharRight == $_ and do {
-          $self->setCurPtr( $self->nextChar( $self->{curPtr} ), $selectMode );
+        cmReplace == $_ and do {
+          $self->replace();
           last;
         };
-        cmWordLeft == $_ and do {
-          $self->setCurPtr( $self->prevWord( $self->{curPtr} ), $selectMode );
-          last;
-        };
-        cmWordRight == $_ and do {
-          $self->setCurPtr( $self->nextWord( $self->{curPtr} ), $selectMode );
-          last;
-        };
-        cmLineStart == $_ and do {
-          $self->setCurPtr( $self->lineStart( $self->{curPtr} ), $selectMode );
-          last;
-        };
-        cmLineEnd == $_ and do {
-          $self->setCurPtr( $self->lineEnd( $self->{curPtr} ), $selectMode );
-          last;
-        };
-        cmLineUp == $_ and do {
-          $self->setCurPtr( $self->lineMove( $self->{curPtr}, -1 ), $selectMode );
-          last;
-        };
-        cmLineDown == $_ and do {
-          $self->setCurPtr( $self->lineMove( $self->{curPtr}, 1 ), $selectMode );
-          last;
-        };
-        cmPageUp == $_ and do {
-          $self->setCurPtr( 
-            $self->lineMove( $self->{curPtr}, 1 - $self->{size}{y} ), 
-            $selectMode 
-          );
-          last;
-        };
-        cmPageDown == $_ and do {
-          $self->setCurPtr(
-            $self->lineMove( $self->{curPtr}, $self->{size}{y} - 1 ), 
-            $selectMode
-          );
-          last;
-        };
-        cmTextStart == $_ and do { 
-          $self->setCurPtr( 0, $selectMode ); 
-          last; 
-        };
-        cmTextEnd == $_ and do {
-          $self->setCurPtr( length( $self->{buffer} ), $selectMode );
-          last;
-        };
-        cmBackSpace == $_ and do {
-          $self->deleteRange( 
-            $self->prevChar( $self->{curPtr} ), 
-            $self->{curPtr}, 
-            true
-          );
-          last;
-        };
-        cmDelChar == $_ and do {
-          $self->deleteRange( 
-            $self->{curPtr}, 
-            $self->nextChar( $self->{curPtr} ), 
-            true
-          );
-          last;
-        };
-        cmDelWord == $_ and do {
-          $self->deleteRange(
-            $self->{curPtr}, 
-            $self->nextWord( $self->{curPtr} ), 
-            false
-          );
-          last;
-        };
-        cmDelStart == $_ and do {
-          $self->deleteRange( 
-            $self->lineStart( $self->{curPtr} ), 
-            $self->{curPtr}, 
-            false 
-          );
-          last;
-        };
-        cmDelEnd == $_ and do {
-          $self->deleteRange( 
-            $self->{curPtr}, 
-            $self->lineEnd( $self->{curPtr} ), 
-            false 
-          );
-          last;
-        };
-        cmDelLine == $_ and do {
-          $self->deleteRange(
-            $self->lineStart( $self->{curPtr} ), 
-            $self->nextLine( $self->{curPtr} ), 
-            false 
-          );
-          last;
-        };
-        cmInsMode == $_ and do {
-          $self->toggleInsMode();
-          last; 
-        };
-        cmStartSelect == $_ and do {
-          $self->startSelect(); 
-          last; 
-        };
-        cmHideSelect == $_ and do {
-          $self->hideSelect(); 
-          last; 
-        };
-        cmIndentMode == $_ and do {
-          $self->{autoIndent} = !$self->{autoIndent};
-          last;
-        };
-        cmClear == $_ and do { 
-          $self->deleteSelect(); 
-          last; 
-        };
-        cmCut == $_ and do {
-          $self->clipCut();
-          last;
-        };
-        cmCopy == $_ and do {
-          $self->clipCopy();
-          last;
-        };
-        cmPaste == $_ and do {
-          $self->clipPaste();
-          last;
-        };
-        cmUndo == $_ and do {
-          $self->undo();
+        cmSearchAgain == $_ and do {
+          $self->doSearchReplace();
           last;
         };
         DEFAULT: {
+          $self->lock();
+          SWITCH: for ( $event->{message}{command} ) {
+
+            cmCharLeft == $_ and do {
+              $self->setCurPtr( 
+                $self->prevChar( $self->{curPtr} ), 
+                $selectMode
+              );
+              last;
+            };
+            cmCharRight == $_ and do {
+              $self->setCurPtr( 
+                $self->nextChar( $self->{curPtr} ), 
+                $selectMode 
+              );
+              last;
+            };
+            cmWordLeft == $_ and do {
+              $self->setCurPtr( 
+                $self->prevWord( $self->{curPtr} ), 
+                $selectMode 
+              );
+              last;
+            };
+            cmWordRight == $_ and do {
+              $self->setCurPtr( 
+                $self->nextWord( $self->{curPtr} ), 
+                $selectMode 
+              );
+              last;
+            };
+            cmLineStart == $_ and do {
+              $self->setCurPtr( 
+                $self->lineStart( $self->{curPtr} ), 
+                $selectMode 
+              );
+              last;
+            };
+            cmLineEnd == $_ and do {
+              $self->setCurPtr( 
+                $self->lineEnd( $self->{curPtr} ), 
+                $selectMode 
+              );
+              last;
+            };
+            cmLineUp == $_ and do {
+              $self->setCurPtr( 
+                $self->lineMove( $self->{curPtr}, -1 ), 
+                $selectMode 
+              );
+              last;
+            };
+            cmLineDown == $_ and do {
+              $self->setCurPtr( 
+                $self->lineMove( $self->{curPtr}, 1 ), 
+                $selectMode 
+              );
+              last;
+            };
+            cmPageUp == $_ and do {
+              $self->setCurPtr( 
+                $self->lineMove( $self->{curPtr}, 1 - $self->{size}{y} ), 
+                $selectMode 
+              );
+              last;
+            };
+            cmPageDown == $_ and do {
+              $self->setCurPtr(
+                $self->lineMove( $self->{curPtr}, $self->{size}{y} - 1 ), 
+                $selectMode
+              );
+              last;
+            };
+            cmTextStart == $_ and do { 
+              $self->setCurPtr( 0, $selectMode ); 
+              last; 
+            };
+            cmTextEnd == $_ and do {
+              $self->setCurPtr( length( $self->{buffer} ), $selectMode );
+              last;
+            };
+            cmBackSpace == $_ and do {
+              $self->deleteRange( 
+                $self->prevChar( $self->{curPtr} ), 
+                $self->{curPtr}, 
+                true
+              );
+              last;
+            };
+            cmDelChar == $_ and do {
+              $self->deleteRange( 
+                $self->{curPtr}, 
+                $self->nextChar( $self->{curPtr} ), 
+                true
+              );
+              last;
+            };
+            cmDelWord == $_ and do {
+              $self->deleteRange(
+                $self->{curPtr}, 
+                $self->nextWord( $self->{curPtr} ), 
+                false
+              );
+              last;
+            };
+            cmDelStart == $_ and do {
+              $self->deleteRange( 
+                $self->lineStart( $self->{curPtr} ), 
+                $self->{curPtr}, 
+                false 
+              );
+              last;
+            };
+            cmDelEnd == $_ and do {
+              $self->deleteRange( 
+                $self->{curPtr}, 
+                $self->lineEnd( $self->{curPtr} ), 
+                false 
+              );
+              last;
+            };
+            cmDelLine == $_ and do {
+              $self->deleteRange(
+                $self->lineStart( $self->{curPtr} ), 
+                $self->nextLine( $self->{curPtr} ), 
+                false 
+              );
+              last;
+            };
+            cmInsMode == $_ and do {
+              $self->toggleInsMode();
+              last; 
+            };
+            cmStartSelect == $_ and do {
+              $self->startSelect(); 
+              last; 
+            };
+            cmHideSelect == $_ and do {
+              $self->hideSelect(); 
+              last; 
+            };
+            cmIndentMode == $_ and do {
+              $self->{autoIndent} = !$self->{autoIndent};
+              last;
+            };
+            cmClear == $_ and do { 
+              $self->deleteSelect(); 
+              last; 
+            };
+            cmCut == $_ and do {
+              $self->clipCut();
+              last;
+            };
+            cmCopy == $_ and do {
+              $self->clipCopy();
+              last;
+            };
+            cmPaste == $_ and do {
+              $self->clipPaste();
+              last;
+            };
+            cmUndo == $_ and do {
+              $self->undo();
+              last;
+            };
+            DEFAULT: {
+              $self->unlock();
+              return;
+            }
+          }
+          $self->trackCursor( $centerCursor );
           $self->unlock();
-          return;
         }
+        last;
       }
-      $self->trackCursor( $centerCursor );
-      $self->unlock();
       last;
     };
 
@@ -893,7 +919,7 @@ sub valid {    # $bool ($command)
   return $self->{isValid};
 }
 
-sub charPos {    # $col ($self, $p, $target)
+sub charPos {    # $col ($p, $target)
   state $sig = signature(
     method => Object,
     pos    => [PositiveOrZeroInt, PositiveOrZeroInt],
@@ -909,7 +935,7 @@ sub charPos {    # $col ($self, $p, $target)
   return $pos;
 }
 
-sub charPtr {    # $pos ($self, $p, $target)
+sub charPtr {    # $pos ($p, $target)
   state $sig = signature(
     method => Object,
     pos    => [PositiveOrZeroInt, Int],
@@ -1201,7 +1227,7 @@ sub nextWord {    # $pos ($p)
   return $p;
 }
 
-sub prevWord {    # $pos ($self, $p)
+sub prevWord {    # $pos ($p)
   state $sig = signature(
     method => Object,
     pos    => [PositiveOrZeroInt],
@@ -1450,6 +1476,152 @@ Undo, clipboard (C<clipCopy>, C<clipCut>, C<clipPaste>), search and replace
 (C<find>, C<replace>, C<search>) and streaming (C<read>, C<write>) are
 available. The C<bufSize> argument is stored but not enforced, because the
 Perl buffer grows as needed.
+
+=head1 ATTRIBUTES
+
+=head2 buffer
+
+Text buffer (I<Str>).
+
+=head2 bufSize
+
+Size of the buffer (I<Int>). This is a read only attribute (the Perl buffer 
+grows as needed).
+
+=head2 bufLen
+
+Length of the buffer (I<PositiveOrZeroInt>).
+
+=head2 gapLen
+
+Length of the gap in the buffer (I<PositiveOrZeroInt>).
+
+=head2 selStart
+
+Start of the selection (I<PositiveOrZeroInt>).
+
+=head2 selEnd
+
+End of the selection (I<PositiveOrZeroInt>).
+
+=head2 curPtr
+
+Current cursor position (I<PositiveOrZeroInt>).
+
+=head2 curPos
+
+Current cursor position as a point (L<TPoint|TUI::Objects::Point>).
+
+=head2 delta
+
+Delta for scrolling (L<TPoint|TUI::Objects::Point>).
+
+=head2 limit
+
+Limit for scrolling (L<TPoint|TUI::Objects::Point>).
+
+=head2 drawLine
+
+Line to draw (I<Int>).
+
+=head2 drawPtr
+
+Draw pointer (I<PositiveOrZeroInt>).
+
+=head2 delCount
+
+Delete count (I<PositiveOrZeroInt>).
+
+=head2 insCount
+
+Insert count (I<Int>).
+
+=head2 isValid
+
+Indicates whether the editor is valid (I<Bool>).
+
+=head2 canUndo
+
+Indicates whether undo is enabled (I<Bool>).
+
+=head2 modified
+
+Indicates whether the buffer has been modified (I<Bool>).
+
+=head2 selecting
+
+Indicates whether text is being selected (I<Bool>).
+
+=head2 overwrite
+
+Indicates whether overwrite mode is enabled (I<Bool>).
+
+=head2 autoIndent
+
+Indicates whether auto-indent is enabled (I<Bool>).
+
+=head2 lockCount
+
+Lock count (I<PositiveOrZeroInt>).
+
+=head2 updateFlags
+
+Update flags (I<PositiveOrZeroInt>).
+
+=head2 keyState
+
+Key state (I<Int>).
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+  my $editor = TEditor->new(
+    bounds     => $bounds,
+    hScrollBar => $hScrollBar | undef,
+    vScrollBar => $vScrollBar | undef,
+    indicator  => $indicator  | undef,
+    bufSize    => $bufSize,
+  );
+
+Creates a new editor with the specified buffer size.
+
+=over
+
+=item bounds
+
+Bounding rectangle of the view (L<TRect|TUI::Objects::Rect>).
+
+=item hScrollBar
+
+Optional horizontal scroll bar (L<TScrollBar|TUI::Views::ScrollBar> or 
+C<undef>).
+
+=item vScrollBar
+
+Optional vertical scroll bar (L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
+
+=item indicator
+
+Optional position indicator (L<TIndicator|TUI::Editors::Indicator> or C<undef>).
+
+=item bufSize
+
+Buffer size (I<PositiveOrZeroInt>).
+
+=back
+
+=head2 new_TEditor
+
+  my $editor = new_TEditor(
+    $bounds,
+    $hScrollBar | undef,
+    $vScrollBar | undef,
+    $indicator  | undef,
+    $bufSize,
+  );
+
+Factory-style constructor using positional arguments.
 
 =head1 METHODS
 
