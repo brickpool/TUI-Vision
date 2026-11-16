@@ -46,16 +46,14 @@ our $dragFrame   = encode( cp437 => "═" );
 our $normalFrame = encode( cp437 => "─" );
 
 # protected attributes
-has location => ( is => 'bare' );
-has modified => ( is => 'bare' );
+has location => ( is => 'ro', default => sub { TPoint->new } );
+has modified => ( is => 'ro', default => false );
 
 sub BUILD {    # void (\%args)
   my ( $self, $args ) = @_;
   assert ( @_ == 2 );
   assert ( is_Object $self );
   $self->{growMode} = gfGrowLoY | gfGrowHiY;
-  $self->{location} = TPoint->new( x => 0, y => 0 );
-  $self->{modified} = !!0;
   return;
 }
 
@@ -153,7 +151,7 @@ TUI::Editors::Indicator - indicator which displays the editor cursor position
   use TUI::toolkit;
 
   my $indicator = new_TIndicator( $bounds );
-  $indicator->setValue( TPoint->new( x => 0, y => 0 ), false );
+  $indicator->setValue( TPoint->new(), false );
 
 =head1 DESCRIPTION
 

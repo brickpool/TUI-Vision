@@ -13,17 +13,20 @@ use Import::Into;
 
 use TUI::Editors::Const;
 use TUI::Editors::Indicator;
+use TUI::Editors::Editor;
 
 sub import {
   my $target = caller;
   TUI::Editors::Const->import::into( $target, qw( :all ) );
   TUI::Editors::Indicator->import::into( $target );
+  TUI::Editors::Editor->import::into( $target );
 }
 
 sub unimport {
   my $caller = caller;
   TUI::Editors::Const->unimport::out_of( $caller );
   TUI::Editors::Indicator->unimport::out_of( $caller );
+  TUI::Editors::Editor->unimport::out_of( $caller );
 }
 
 1
@@ -47,7 +50,7 @@ TUI::Editors - Editor components for the TUI::Vision framework
   $self->insert($indicator);
 
   # Update the displayed cursor position and modified flag
-  $indicator->setValue( TPoint->new( x => 0, y => 0 ), !!0 );
+  $indicator->setValue( TPoint->new(), false );
 
 =head1 DESCRIPTION
 
@@ -61,6 +64,10 @@ This module re-exports the following components:
 
 =item * L<Const|TUI::Editors::Const> -
 Symbolic constants for editor behavior.
+
+=item * L<TEditor|TUI::Editors::Editor> -
+The core multi-line text editor (buffer, cursor, drawing, keyboard and
+mouse handling).
 
 =item * L<TIndicator|TUI::Editors::Indicator> -
 A view that displays the cursor position and modified state of an editor.

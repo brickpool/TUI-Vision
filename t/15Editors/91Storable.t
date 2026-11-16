@@ -8,6 +8,7 @@ BEGIN {
   use_ok 'TUI::Objects::Rect';
   use_ok 'TUI::Objects::Point';
   use_ok 'TUI::Editors::Indicator';
+  use_ok 'TUI::Editors::Editor';
 }
 
 subtest 'TIndicator Storable roundtrip' => sub {
@@ -27,5 +28,32 @@ subtest 'TIndicator Storable roundtrip' => sub {
   is( $restored->{location}{y}, 0, 'does not stream cursor row' );
   ok( !$restored->{modified}, 'does not stream modified state' );
 }; #/ 'TIndicator Storable roundtrip' => sub
+
+subtest 'TEditor Storable roundtrip' => sub {
+  my $indicator = TIndicator->new(
+    bounds => TRect->new( ax => 0, ay => 23, bx => 40, by => 24 ),
+  );
+  my $editor = TEditor->new(
+    bounds     => TRect->new( ax => 0, ay => 0, bx => 60, by => 20 ),
+    hScrollBar => undef,
+    vScrollBar => undef,
+    indicator  => $indicator,
+    bufSize    => 4096,
+  );
+  $editor->canUndo( !!0 );
+  $editor->insertText( "abc\ndef", 7, !!0 );
+
+  my $restored = thaw( freeze( $editor ) );
+  isa_ok( $restored, TEditor );
+  is_deeply( $restored->{size}, { x => 60, y => 20 }, 'preserves size' );
+  isa_ok( $restored->{indicator}, TIndicator );
+  is( $restored->{bufSize}, 4096, 'preserves buffer size' );
+  ok( !$restored->{canUndo}, 'preserves canUndo' );
+  ok( $restored->{isValid}, 'restored editor is valid' );
+
+  # as in Turbo Vision, the text and cursor are not streamed
+  is( $restored->{buffer}, '', 'does not stream the buffer text' );
+  is( $restored->{curPtr}, 0, 'does not stream the cursor' );
+}; #/ 'TEditor Storable roundtrip' => sub
 
 done_testing();

@@ -1291,7 +1291,7 @@ sub writeBuf {    # void ($x, $y, $w, $h, $b)
   my ( $self, $x, $y, $w, $h, $b ) = $sig->( @_ );
   while ( $h-- > 0 ) {
     $self->$writeView( $x, $y++, $w, $b );
-    alias: $b = sub { \@_ }->( @$b[ $w .. $#$b ] );
+    alias: $b = sub { \@_ }->( @$b[ $w .. $#$b ] ) if $h;
   }
   return;
 }

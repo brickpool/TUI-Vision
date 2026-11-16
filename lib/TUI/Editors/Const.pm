@@ -11,12 +11,79 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 
 use Exporter 'import';
 
-our @EXPORT_OK = qw();
+our @EXPORT_OK = qw(
+  maxLineLength
+  sfSearchFailed
+);
 
 our %EXPORT_TAGS = (
 
+  cmXXXX => [qw(
+    cmFind
+    cmReplace
+    cmSearchAgain
+    cmCharLeft
+    cmCharRight
+    cmWordLeft
+    cmWordRight
+    cmLineStart
+    cmLineEnd
+    cmLineUp
+    cmLineDown
+    cmPageUp
+    cmPageDown
+    cmTextStart
+    cmTextEnd
+    cmNewLine
+    cmBackSpace
+    cmDelChar
+    cmDelWord
+    cmDelStart
+    cmDelEnd
+    cmDelLine
+    cmInsMode
+    cmStartSelect
+    cmHideSelect
+    cmIndentMode
+  )],
+
   cpXXXX => [qw(
+    cpEditor
     cpIndicator
+  )],
+
+  edXXXX => [qw(
+    edOutOfMemory
+    edReadError
+    edWriteError
+    edCreateError
+    edSaveModify
+    edSaveUntitled
+    edSaveAs
+    edFind
+    edSearchFailed
+    edReplace
+    edReplacePrompt
+  )],
+
+  efXXXX => [qw(
+    efCaseSensitive
+    efWholeWordsOnly
+    efPromptOnReplace
+    efReplaceAll
+    efDoReplace
+    efBackupFiles
+  )],
+
+  smXXXX => [qw(
+    smExtend
+    smDouble
+  )],
+
+  ufXXXX => [qw(
+    ufUpdate
+    ufLine
+    ufView
   )],
 
 );
@@ -34,9 +101,89 @@ our %EXPORT_TAGS = (
       @EXPORT_OK;
 }
 
-# Palette for TIndicator
+# Palettes
 use constant {
+  cpEditor    => "\x06\x07",
   cpIndicator => "\x02\x03",
+};
+
+# Update flags
+use constant {
+  ufUpdate => 0x01,
+  ufLine   => 0x02,
+  ufView   => 0x04,
+};
+
+# Selection modes
+use constant {
+  smExtend => 0x01,
+  smDouble => 0x02,
+};
+
+use constant {
+  sfSearchFailed => 0xFFFF,
+};
+
+# Editor messages
+use constant {
+  edOutOfMemory   => 0,
+  edReadError     => 1,
+  edWriteError    => 2,
+  edCreateError   => 3,
+  edSaveModify    => 4,
+  edSaveUntitled  => 5,
+  edSaveAs        => 6,
+  edFind          => 7,
+  edSearchFailed  => 8,
+  edReplace       => 9,
+  edReplacePrompt => 10,
+};
+
+# Commands
+use constant {
+  cmFind        => 82,
+  cmReplace     => 83,
+  cmSearchAgain => 84,
+};
+
+use constant {
+  cmCharLeft    => 500,
+  cmCharRight   => 501,
+  cmWordLeft    => 502,
+  cmWordRight   => 503,
+  cmLineStart   => 504,
+  cmLineEnd     => 505,
+  cmLineUp      => 506,
+  cmLineDown    => 507,
+  cmPageUp      => 508,
+  cmPageDown    => 509,
+  cmTextStart   => 510,
+  cmTextEnd     => 511,
+  cmNewLine     => 512,
+  cmBackSpace   => 513,
+  cmDelChar     => 514,
+  cmDelWord     => 515,
+  cmDelStart    => 516,
+  cmDelEnd      => 517,
+  cmDelLine     => 518,
+  cmInsMode     => 519,
+  cmStartSelect => 520,
+  cmHideSelect  => 521,
+  cmIndentMode  => 522,
+};
+
+# Search and replace options
+use constant {
+  efCaseSensitive   => 0x0001,
+  efWholeWordsOnly  => 0x0002,
+  efPromptOnReplace => 0x0004,
+  efReplaceAll      => 0x0008,
+  efDoReplace       => 0x0010,
+  efBackupFiles     => 0x0100,
+};
+
+use constant {
+  maxLineLength => 256,
 };
 
 1
@@ -72,6 +219,42 @@ Color palette constants used by editor components.
 These values define the color schemes for editor elements, such as the
 position indicator L<TIndicator|TUI::Editors::Indicator>.
 
+=head2 Editor messages (edXXXX)
+
+Message identifiers used by the editor components to report state to the
+application, such as a failed search (C<edSearchFailed>) or a request to save
+modified text (C<edSaveModify>).
+
+=head2 Editor command constants (cmXXXX)
+
+Command identifiers used by the editor components.
+
+These values are delivered via C<< $event->{message}{command} >> and are handled
+by L<TEditor|TUI::Editors::Editor>, including the search and replace commands
+(C<cmFind>, C<cmReplace>, C<cmSearchAgain>).
+
+=head2 Editor update flags (ufXXXX)
+
+Flags that tell L<TEditor|TUI::Editors::Editor> which parts of the view must be
+redrawn when it is updated: the whole view (C<ufView>), a single line
+(C<ufLine>), or the update state itself (C<ufUpdate>).
+
+=head2 Editor selection modes (smXXXX)
+
+Flags that describe how the cursor movement of L<TEditor|TUI::Editors::Editor>
+extends the current selection: extending it (C<smExtend>) and selecting by word
+(C<smDouble>).
+
+=head2 Editor search and replace options (efXXXX)
+
+Option flags for the search and replace dialog of the editor, used by
+L<TEditor|TUI::Editors::Editor> C<find>, C<replace> and C<search>.
+
+=head2 Editor line length (mlXXXX)
+
+C<maxLineLength> is the maximum length of a line in an editor, used as the
+horizontal scroll limit of L<TEditor|TUI::Editors::Editor>.
+
 =head1 EXPORT TAGS
 
 Constants are exported using the following tag-based export groups:
@@ -79,6 +262,18 @@ Constants are exported using the following tag-based export groups:
 =over
 
 =item * C<:cpXXXX> - editor color palettes
+
+=item * C<:edXXXX> - editor messages
+
+=item * C<:cmXXXX> - editor command identifiers
+
+=item * C<:ufXXXX> - editor update flags
+
+=item * C<:smXXXX> - editor selection modes
+
+=item * C<:efXXXX> - editor search and replace options
+
+=item * C<:mlXXXX> - editor line length
 
 =item * C<:all> - import all constants
 

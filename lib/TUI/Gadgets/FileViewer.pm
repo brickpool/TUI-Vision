@@ -51,7 +51,7 @@ extends TScroller;
 # public attributes
 has fileName  => ( is => 'rw', default => sub { die 'required' } );
 has fileLines => ( is => 'rw' );
-has isValid   => ( is => 'rw', default => !!0 );
+has isValid   => ( is => 'rw', default => false );
 
 sub BUILDARGS {    # \%args (%args)
   state $sig = signature(

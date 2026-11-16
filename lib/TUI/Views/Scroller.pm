@@ -343,7 +343,7 @@ TUI::Views::Scroller - base class for scrollable views
     aHScrollBar => $hBar,
     aVScrollBar => $vBar
   );
-  
+
   $scroller->setLimit(100, 50);
   $scroller->scrollTo(10, 5);
 
@@ -408,7 +408,8 @@ read-only).
     vScrollBar => $vBar | undef,
   );
 
-Creates a new scroller with the specified bounds and optional scroll bars.
+Creates a new scroller with the specified bounds. Both scroll bar arguments are
+required, but either may be C<undef>.
 
 =over
 

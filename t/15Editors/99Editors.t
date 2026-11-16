@@ -9,5 +9,6 @@ BEGIN {
 }
 
 isa_ok( new_TIndicator( TRect->new() ), TIndicator() );
+isa_ok( new_TEditor( TRect->new(), undef, undef, undef, 0 ), TEditor() );
 
 done_testing();

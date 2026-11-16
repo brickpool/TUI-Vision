@@ -107,6 +107,19 @@ the user interface.
  $validSignedChars   Validator pattern for signed numeric input
  $validUnsignedChars Validator pattern for unsigned numeric input
 
+=head2 Editors
+
+These variables hold the shared state of the editor search, replace and
+clipboard functions. They are package variables of
+L<TUI::Editors::Editor|TUI::Editors::Editor> and are shared by all editor
+instances.
+
+ $clipboard          Editor holding the clipboard contents
+ $editorDialog       Dialog callback, a dummy until TEditorDialog is ported
+ $editorFlags        Search and replace option flags
+ $findStr            Last search text
+ $replaceStr         Last replacement text
+
 =head2 Platform Backends
 
 These variables are maintained by platform-specific backend
@@ -159,6 +172,7 @@ inventory.
   $chdirText           TChDirDialog           Change directory action label
   $clearOnSuspend      TScreen                Clear screen on suspend flag
   $clearText           TFileDialog            Clear action label
+  $clipboard           TEditor                Editor holding the clipboard contents
   $closeIcon           TFrame                 Close window icon
   $commandSetChanged   TView                  Command set modified flag
   $colors              TColorDialog           Color selection label
@@ -181,6 +195,8 @@ inventory.
   $dragIcon            TFrame                 Drag window icon
   $drives              TDirListBox            Drives label text
   $drivesText          TChDirDialog           Drives label
+  $editorDialog        TEditor                Dialog callback, dummy until TEditorDialog is ported
+  $editorFlags         TEditor                Search and replace option flags
 
   $emptyText           TListViewer            Empty list placeholder text
   $errorAttr           TView                  Error display attribute
@@ -192,6 +208,7 @@ inventory.
   $exitText            TProgram               Exit command label text
 
   $filesText           TFileDialog            Files section label
+  $findStr             TEditor                Last search text
   $firstDir            TDirListBox            First directory tree element
   $forText             TColorDialog           Foreground color label
   $frameChars          TFrame                 Frame drawing characters
@@ -258,6 +275,7 @@ inventory.
   $pmText              TFileInfoPane          PM time indicator
 
   $repeatDelay         TEventQueue            Auto-repeat delay
+  $replaceStr          TEditor                Last replacement text
   $revertText          TChDirDialog           Revert action label
   $rightArrow          TInputLine             Right overflow indicator
 
