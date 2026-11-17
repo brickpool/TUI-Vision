@@ -51,6 +51,7 @@ our %EXPORT_TAGS = (
   cpXXXX => [qw(
     cpEditor
     cpIndicator
+    cpMemo
   )],
 
   edXXXX => [qw(
@@ -106,6 +107,7 @@ our %EXPORT_TAGS = (
 use constant {
   cpEditor    => "\x06\x07",
   cpIndicator => "\x02\x03",
+  cpMemo      => "\x1A\x1B",
 };
 
 # Update flags

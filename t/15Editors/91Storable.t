@@ -10,6 +10,7 @@ BEGIN {
   use_ok 'TUI::Editors::Indicator';
   use_ok 'TUI::Editors::Editor';
   use_ok 'TUI::Editors::FileEditor';
+  use_ok 'TUI::Editors::EditWindow';
 }
 
 subtest 'TIndicator Storable roundtrip' => sub {
@@ -72,5 +73,19 @@ subtest 'TFileEditor Storable roundtrip' => sub {
   is( $restored->{fileName}, 'notes.txt', 'preserves the file name' );
   is( $restored->{buffer}, '', 'does not stream the buffer text' );
 }; #/ 'TFileEditor Storable roundtrip' => sub
+
+subtest 'TEditWindow Storable roundtrip' => sub {
+  my $win = TEditWindow->new(
+    bounds   => TRect->new( ax => 0, ay => 0, bx => 40, by => 12 ),
+    fileName => 'notes.txt',
+    number   => 1,
+  );
+
+  my $restored = thaw( freeze( $win ) );
+  isa_ok( $restored, TEditWindow );
+  isa_ok( $restored->{editor}, TFileEditor );
+  like( $restored->{editor}{fileName}, qr/notes\.txt\z/,
+    'preserves the file name' );
+}; #/ 'TEditWindow Storable roundtrip' => sub
 
 done_testing();

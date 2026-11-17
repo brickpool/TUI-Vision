@@ -115,10 +115,12 @@ L<TUI::Editors::Editor|TUI::Editors::Editor> and are shared by all editor
 instances.
 
  $clipboard          Editor holding the clipboard contents
+ $clipboardTitle     Title of the clipboard window
  $editorDialog       Dialog callback, a dummy until TEditorDialog is ported
  $editorFlags        Search and replace option flags
  $findStr            Last search text
  $replaceStr         Last replacement text
+ $untitled           Title of an editor window without a file name
 
 =head2 Platform Backends
 
@@ -173,6 +175,7 @@ inventory.
   $clearOnSuspend      TScreen                Clear screen on suspend flag
   $clearText           TFileDialog            Clear action label
   $clipboard           TEditor                Editor holding the clipboard contents
+  $clipboardTitle      TEditWindow            Title of the clipboard window
   $closeIcon           TFrame                 Close window icon
   $commandSetChanged   TView                  Command set modified flag
   $colors              TColorDialog           Color selection label
@@ -297,6 +300,7 @@ inventory.
   $tooManyFiles        TFileList              Too many files message
 
   $underline           TMonoSelector          Underlined text attribute
+  $untitled            TEditWindow            Title of an editor window without a file name
   $unZoomIcon          TFrame                 Unzoom window icon
 
   $vChars              TScrollBar             Vertical scrollbar characters

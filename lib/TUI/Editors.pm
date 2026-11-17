@@ -14,14 +14,18 @@ use Import::Into;
 use TUI::Editors::Const;
 use TUI::Editors::Indicator;
 use TUI::Editors::Editor;
+use TUI::Editors::EditWindow;
 use TUI::Editors::FileEditor;
+use TUI::Editors::Memo;
 
 sub import {
   my $target = caller;
   TUI::Editors::Const->import::into( $target, qw( :all ) );
   TUI::Editors::Indicator->import::into( $target );
   TUI::Editors::Editor->import::into( $target );
+  TUI::Editors::EditWindow->import::into( $target );
   TUI::Editors::FileEditor->import::into( $target );
+  TUI::Editors::Memo->import::into( $target );
 }
 
 sub unimport {
@@ -29,7 +33,9 @@ sub unimport {
   TUI::Editors::Const->unimport::out_of( $caller );
   TUI::Editors::Indicator->unimport::out_of( $caller );
   TUI::Editors::Editor->unimport::out_of( $caller );
+  TUI::Editors::EditWindow->unimport::out_of( $caller );
   TUI::Editors::FileEditor->unimport::out_of( $caller );
+  TUI::Editors::Memo->unimport::out_of( $caller );
 }
 
 1
@@ -75,6 +81,14 @@ mouse handling).
 =item * L<TFileEditor|TUI::Editors::FileEditor> -
 A L<TEditor|TUI::Editors::Editor> bound to a file on disk (load, save,
 save as, backup files).
+
+=item * L<TEditWindow|TUI::Editors::EditWindow> -
+A L<TWindow|TUI::Views::Window> that hosts a
+L<TFileEditor|TUI::Editors::FileEditor> together with its scrollbars and
+indicator.
+
+=item * L<TMemo|TUI::Editors::Memo> -
+A L<TEditor|TUI::Editors::Editor> that transfers its text as dialog data.
 
 =item * L<TIndicator|TUI::Editors::Indicator> -
 A view that displays the cursor position and modified state of an editor.

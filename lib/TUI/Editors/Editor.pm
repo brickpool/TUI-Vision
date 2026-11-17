@@ -1957,6 +1957,24 @@ Returns the validity flag of the editor.
 
 Writes the editor state to the stream C<$os>. The text is not streamed.
 
+=head1 STRUCTURES
+
+C<TFindDialogRec> and C<TReplaceDialogRec> are the data records of the search
+and replace dialogs. They are built with L<Class::Struct> as array references,
+and they are used by the C<find> and C<replace> methods.
+
+=over
+
+=item * C<TFindDialogRec> has the attributes C<find> (the search text) and
+C<options> (the editor flags).
+
+=item * C<TReplaceDialogRec> has the attributes C<find> (the search text),
+C<replace> (the replacement text) and C<options> (the editor flags).
+
+=back
+
+  my $findRec = TFindDialogRec->new( find => 'text', options => 0 );
+
 =head1 SEE ALSO
 
 L<Editors|TUI::Editors>,

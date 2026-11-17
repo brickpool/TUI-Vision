@@ -297,6 +297,23 @@ C<$group1>.
 
 In both cases the head of the resulting structure is returned.
 
+=head1 STRUCTURES
+
+C<TColorIndex> is the data record of the color dialog. It is built with
+L<Class::Struct> as an array reference, and it stores the state of the color
+groups. It has the following elements:
+
+=over
+
+=item * C<groupIndex> - the index of the focused color group (I<Int>).
+
+=item * C<colorSize> - the number of color groups (I<Int>).
+
+=item * C<colorIndex> - the selected color index of each color group, as an
+array reference (I<ArrayRef>).
+
+=back
+
 =head1 SEE ALSO
 
 L<TColorItem|TUI::Dialogs::ColorItem>,
