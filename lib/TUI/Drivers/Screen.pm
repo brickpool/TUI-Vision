@@ -50,6 +50,8 @@ sub END {
 sub resume {    # void ($class)
   my $class = shift;
   assert ( $class and !ref $class );
+  THardwareInfo->setUpConsole()
+    if THardwareInfo->can('setUpConsole');
   $startupMode   = $class->getCrtMode();
   $startupCursor = $class->getCursorType();
   if ( $screenMode != $startupMode ) {
@@ -69,6 +71,8 @@ sub suspend {    # void ($class)
     $class->clearScreen();
   }
   $class->setCursorType( $startupCursor );
+  THardwareInfo->restoreConsole()
+    if THardwareInfo->can('restoreConsole');
   return;
 } #/ sub suspend
 

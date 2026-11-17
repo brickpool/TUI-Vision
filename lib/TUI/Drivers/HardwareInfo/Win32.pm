@@ -288,7 +288,7 @@ INIT {
         $sbInfo[dwSizeY] = $sbInfo[srWindowBottom] - $sbInfo[srWindowTop] + 1;
         $consoleHandle[cnOutput]->Size( @sbInfo[dwSizeX, dwSizeY] );
       }
-      $consoleHandle[cnOutput]->Display();
+      __PACKAGE__->setUpConsole();
     }
 
     die "Error: cannot get a console.\n" 
@@ -302,8 +302,7 @@ INIT {
 }
 
 END {
-  $consoleHandle[cnStartup]->Display()
-    if ref $consoleHandle[cnStartup];
+  __PACKAGE__->restoreConsole();
   Win32::Console::Free()
     if $ownsConsole;
 }
@@ -466,6 +465,18 @@ sub freeScreenBuffer {  #  void ($class, \@buffer)
   assert ( ref $_[1] and !readonly @{$_[1]} );
   $_[1] = [];
   return;
+}
+
+sub setUpConsole {    # void ($class)
+  assert ( $_[0] and !ref $_[0] );
+  $consoleHandle[cnOutput]->Display()
+    if ref $consoleHandle[cnOutput];
+}
+
+sub restoreConsole {    # void ($class)
+  assert ( $_[0] and !ref $_[0] );
+  $consoleHandle[cnStartup]->Display()
+    if ref $consoleHandle[cnStartup];
 }
 
 # Mouse functions.

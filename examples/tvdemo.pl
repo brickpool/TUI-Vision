@@ -116,6 +116,10 @@ sub BUILDARGS {
 sub BUILD {
   my ( $self, $args ) = @_;
 
+  # DOS shell is only supported on Win32.
+  $self->disableCommand( cmDOS_Cmd )
+    unless THardwareInfo->isa( 'TUI::Drivers::HardwareInfo::Win32' );
+
   my $r = $self->getExtent();     # Create the clock view.
   $r->{a}{x} = $r->{b}{x} - 9;
   $r->{b}{y} = $r->{a}{y} + 1;
@@ -327,6 +331,22 @@ sub tile {
 }
 
 #
+# DOS Shell Command.
+#
+
+sub shell {
+  my ( $self ) = @_;
+  return unless 
+    THardwareInfo->isa( 'TUI::Drivers::HardwareInfo::Win32' );
+  $self->suspend();
+  print "Type EXIT to return...\n";
+  system( $ENV{COMSPEC} );
+  $self->resume();
+  $self->redraw();
+  return;
+}
+
+#
 # DemoApp::handleEvent()
 #  Event loop to distribute the work.
 #
@@ -375,6 +395,11 @@ sub handleEvent {
 
       cmChDirCmd == $_ and do {        #  Change directory
         $self->changeDir();
+        last;
+      };
+
+      cmDOS_Cmd == $_ and do {         #  DOS shell
+        $self->shell();
         last;
       };
 
@@ -785,7 +810,7 @@ sub initMenuBar {
       new_TMenuItem( "~A~bout...", cmAboutCmd, kbNoKey, hcSAbout ) +
       newLine() +
       new_TMenuItem( "~P~uzzle", cmPuzzleCmd, kbNoKey, hcSPuzzle ) +
-      new_TMenuItem( "Ca~l~endar", cmCalendarCmd, kbNoKey, hcCalendar ) +
+      new_TMenuItem( "Ca~l~endar", cmCalendarCmd, kbNoKey, hcSCalendar ) +
       new_TMenuItem( "Ascii ~T~able", cmAsciiCmd, kbNoKey, hcSAsciiTable ) +
       new_TMenuItem( "~C~alculator", cmCalcCmd, kbNoKey, hcCalculator ) +
       new_TMenuItem( "~E~vent Viewer", cmEventViewCmd, kbAlt0, hcNoContext, 
@@ -796,6 +821,7 @@ sub initMenuBar {
       new_TMenuItem( "~O~pen...", cmOpenCmd, kbF3, hcFOpen, "F3" ) +
       new_TMenuItem( "~C~hange Dir...", cmChDirCmd, kbNoKey, hcFChangeDir ) +
       newLine() +
+      new_TMenuItem( "~D~OS Shell", cmDOS_Cmd, kbNoKey, hcFDosShell ) +
       new_TMenuItem( "E~x~it", cmQuit, kbAltX, hcFExit, "Alt-X" );
 
   my $sub3 =
