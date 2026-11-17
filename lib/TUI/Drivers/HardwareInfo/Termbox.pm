@@ -1213,6 +1213,19 @@ $convertKeyCode = sub {    # $keyCode ($event)
     return kbPgDn  if $key == TB_KEY_PGDN;
   }
 
+  # Shift selects text in the editor through controlKeyState. Shifted
+  # navigation keys keep the unmodified key code, as in Turbo Vision.
+  if ( $mod & TB_MOD_SHIFT ) {
+    return kbUp    if $key == TB_KEY_ARROW_UP;
+    return kbDown  if $key == TB_KEY_ARROW_DOWN;
+    return kbLeft  if $key == TB_KEY_ARROW_LEFT;
+    return kbRight if $key == TB_KEY_ARROW_RIGHT;
+    return kbHome  if $key == TB_KEY_HOME;
+    return kbEnd   if $key == TB_KEY_END;
+    return kbPgUp  if $key == TB_KEY_PGUP;
+    return kbPgDn  if $key == TB_KEY_PGDN;
+  }
+
   return kbNoKey();
 };
 
