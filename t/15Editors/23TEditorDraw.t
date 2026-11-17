@@ -2,8 +2,11 @@ use strict;
 use warnings;
 
 use Test::More;
-use TUI::Editors::Editor;
-use TUI::Objects::Rect;
+
+BEGIN {
+  use_ok 'TUI::Editors::Editor';
+  use_ok 'TUI::Objects::Rect';
+}
 
 {
   package MyEditor;

@@ -2,18 +2,13 @@ use strict;
 use warnings;
 
 use Test::More;
-use TUI::Editors::Editor;
-use TUI::Editors::Const qw(
-  edFind
-  edReplace
-  edSearchFailed
-  efCaseSensitive
-  efDoReplace
-  efReplaceAll
-  efWholeWordsOnly
-);
-use TUI::Objects::Rect;
-use TUI::Views::Const qw( cmCancel cmOK );
+
+BEGIN {
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Const', qw( cmCancel cmOK );
+  use_ok 'TUI::Editors::Const', qw( :edXXXX :efXXXX );
+  use_ok 'TUI::Editors::Editor';
+}
 
 sub new_editor {
   my ( $text ) = @_;

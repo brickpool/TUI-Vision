@@ -10,13 +10,13 @@ use File::Temp qw( tempdir );
 BEGIN {
   use_ok 'TUI::Drivers::Const', qw( evBroadcast evNothing );
   use_ok 'TUI::Drivers::Event';
-  use_ok 'TUI::Editors::Const', qw( cmUpdateTitle );
-  use_ok 'TUI::Editors::EditWindow';
-  use_ok 'TUI::Editors::Editor';
-  use_ok 'TUI::Editors::FileEditor';
   use_ok 'TUI::Objects::Point';
   use_ok 'TUI::Objects::Rect';
   use_ok 'TUI::Views::Const', qw( sfVisible );
+  use_ok 'TUI::Editors::Const', qw( cmUpdateTitle );
+  use_ok 'TUI::Editors::Editor';
+  use_ok 'TUI::Editors::FileEditor';
+  use_ok 'TUI::Editors::EditWindow';
 }
 
 my $dir = tempdir( CLEANUP => 1 );

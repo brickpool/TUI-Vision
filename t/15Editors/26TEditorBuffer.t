@@ -3,8 +3,11 @@ use warnings;
 
 use Test::More;
 use English qw( $INPUT_RECORD_SEPARATOR );
-use TUI::Editors::Editor;
-use TUI::Objects::Rect;
+
+BEGIN {
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Editors::Editor';
+}
 
 sub new_editor {
   return TEditor->new( 

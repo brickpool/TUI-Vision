@@ -10,11 +10,11 @@ use File::Temp qw( tempdir );
 BEGIN {
   use_ok 'TUI::Drivers::Const', qw( evCommand evNothing );
   use_ok 'TUI::Drivers::Event';
-  use_ok 'TUI::Editors::Const', qw( efBackupFiles edSaveModify );
-  use_ok 'TUI::Editors::FileEditor';
-  use_ok 'TUI::Editors::Editor';
   use_ok 'TUI::Objects::Rect';
-  use_ok 'TUI::Views::Const', qw( cmCancel cmNo cmSave cmValid cmYes );
+  use_ok 'TUI::Views::Const', qw( :cmXXXX );
+  use_ok 'TUI::Editors::Const', qw( efBackupFiles edSaveModify );
+  use_ok 'TUI::Editors::Editor';
+  use_ok 'TUI::Editors::FileEditor';
 }
 
 my $dir = tempdir( CLEANUP => 1 );

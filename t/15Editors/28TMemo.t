@@ -9,9 +9,9 @@ use Storable qw( freeze thaw );
 BEGIN {
   use_ok 'TUI::Drivers::Const', qw( evKeyDown evNothing kbTab );
   use_ok 'TUI::Drivers::Event';
-  use_ok 'TUI::Editors::Memo';
-  use_ok 'TUI::Editors::Editor';
   use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Editors::Editor';
+  use_ok 'TUI::Editors::Memo';
 }
 
 sub new_memo {

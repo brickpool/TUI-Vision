@@ -518,6 +518,10 @@ sub handleEvent {    # void ($event)
               $self->setCurPtr( length( $self->{buffer} ), $selectMode );
               last;
             };
+            cmNewLine == $_ and do {
+              $self->newLine();
+              last;
+            };
             cmBackSpace == $_ and do {
               $self->deleteRange( 
                 $self->prevChar( $self->{curPtr} ), 

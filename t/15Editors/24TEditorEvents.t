@@ -2,18 +2,26 @@ use strict;
 use warnings;
 
 use Test::More;
-use TUI::Editors::Editor;
-use TUI::Drivers::Const qw( evNothing evKeyDown evCommand kbLeft kbRight kbHome kbEnd kbDel kbCtrlQ );
-use TUI::Drivers::Event;
-use TUI::Editors::Const qw( cmCharLeft cmTextEnd cmFind );
-use TUI::Editors::Indicator;
-use TUI::Views::Const qw( cmCopy cmCut cmPaste cmUndo sfActive sfVisible );
-use TUI::Views::View;
-use TUI::Objects::Rect;
+
+BEGIN {
+  use_ok 'TUI::Drivers::Const', qw( evNothing evKeyDown evCommand :kbXXXX );
+  use_ok 'TUI::Drivers::Event';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Const', qw( :cmXXXX sfActive sfVisible );
+  use_ok 'TUI::Views::View';
+  use_ok 'TUI::Editors::Const', qw( cmCharLeft cmTextEnd cmFind );
+  use_ok 'TUI::Editors::Indicator';
+  use_ok 'TUI::Editors::Editor';
+}
 
 sub new_editor {
-  my $e = TEditor->new( bounds => TRect->new( ax => 0, ay => 0, bx => 20, by => 5 ),
-    hScrollBar => undef, vScrollBar => undef, indicator => undef, bufSize => 0 );
+  my $e = TEditor->new(
+    bounds     => TRect->new( ax => 0, ay => 0, bx => 20, by => 5 ),
+    hScrollBar => undef, 
+    vScrollBar => undef, 
+    indicator  => undef, 
+    bufSize    => 0,
+  );
   $e->insertText( "abc\r\ndef", 8, !!0 );
   return $e;
 }
@@ -29,24 +37,33 @@ sub command {
 }
 
 subtest 'setState(sfActive) shows and hides the indicator' => sub {
-  my $ind = TIndicator->new( bounds => TRect->new( ax => 0, ay => 0, bx => 8, by => 1 ) );
-  my $e = TEditor->new( bounds => TRect->new( ax => 0, ay => 0, bx => 20, by => 5 ),
-    hScrollBar => undef, vScrollBar => undef, indicator => $ind, bufSize => 0 );
+  my $ind = TIndicator->new(
+    bounds => TRect->new( ax => 0, ay => 0, bx => 8, by => 1 ) 
+  );
+  my $e = TEditor->new(
+    bounds     => TRect->new( ax => 0, ay => 0, bx => 20, by => 5 ),
+    hScrollBar => undef, vScrollBar => undef, indicator => $ind, bufSize => 0
+  );
   $e->setState( sfActive, !!1 );
-  ok( $ind->{state} & sfVisible, 'indicator is shown when the editor becomes active' );
+  ok( $ind->{state} & sfVisible,
+    'indicator is shown when the editor becomes active' );
   $e->setState( sfActive, !!0 );
-  ok( !( $ind->{state} & sfVisible ), 'indicator is hidden when the editor is deactivated' );
+  ok( !( $ind->{state} & sfVisible ),
+    'indicator is hidden when the editor is deactivated' );
 };
 
-subtest 'setCmdState() enables commands only while the editor is active' => sub {
+subtest 'setCmdState() enables commands only while editor is active' => sub {
   my $e = new_editor();
   $e->setSelect( 0, 3, !!0 );
   $e->setCmdState( cmCut, !!1 );
-  ok( !TView->commandEnabled( cmCut ), 'an inactive editor does not enable cmCut' );
+  ok( !TView->commandEnabled( cmCut ),
+    'an inactive editor does not enable cmCut' );
   $e->setState( sfActive, !!1 );
-  ok( TView->commandEnabled( cmCut ), 'an active editor with a selection enables cmCut' );
+  ok( TView->commandEnabled( cmCut ),
+    'an active editor with a selection enables cmCut' );
   $e->setState( sfActive, !!0 );
-  ok( !TView->commandEnabled( cmCut ), 'deactivating the editor disables cmCut' );
+  ok( !TView->commandEnabled( cmCut ), 
+    'deactivating the editor disables cmCut' );
 };
 
 subtest 'convertEvent() maps quick keys after a prefix key' => sub {
@@ -72,6 +89,27 @@ subtest 'cursor keys move the cursor' => sub {
   is( $e->{curPos}{x}, 3, 'kbEnd moves to the line end' );
 };
 
+subtest 'Enter inserts a line break at the cursor' => sub {
+  my $e = new_editor();
+  $e->setCurPtr( 3, 0 );
+  $e->handleEvent( key( kbEnter ) );
+  is( $e->{curPos}{y}, 1, 'cursor moves to the next line' );
+  is( $e->{curPos}{x}, 0, 'cursor is at the start of the new line' );
+  is( $e->{buffer}, "abc\n\r\ndef", 'line break is inserted at the cursor' );
+};
+
+subtest 'Shift+cursor key extends the selection' => sub {
+  my $e = new_editor();
+  $e->handleEvent( key( kbEnd ) );
+  my $ev = key( kbLeft );    # Shift+Left as delivered by the Termbox backend
+  $ev->{keyDown}{controlKeyState} = kbShift;
+  $e->handleEvent( $ev );
+  is( $e->{curPtr}, 7, 'Shift+Left moves the cursor one character left' );
+  ok( $e->hasSelection(), 'Shift+Left creates a selection' );
+  is( $e->{selStart}, 7, 'selection starts at the new cursor position' );
+  is( $e->{selEnd}, 8, 'selection ends at the old cursor position' );
+};
+
 subtest 'printable keys insert text' => sub {
   my $e = new_editor();
   $e->handleEvent( key( ord 'x' ) );
@@ -83,7 +121,8 @@ subtest 'kbDel deletes the character at the cursor' => sub {
   my $e = new_editor();
   $e->handleEvent( key( kbHome ) );
   $e->handleEvent( key( kbDel ) );
-  is( $e->{buffer}, "abc\r\nef", 'kbHome goes to line start, first character of line 2 removed' );
+  is( $e->{buffer}, "abc\r\nef",
+  'kbHome goes to line start, first character of line 2 removed' );
 };
 
 subtest 'commands are dispatched through the command table' => sub {
@@ -94,7 +133,7 @@ subtest 'commands are dispatched through the command table' => sub {
   is( $e->{curPtr}, 7, 'cmCharLeft moves one character left' );
 };
 
-subtest 'quick keys (Ctrl-Q followed by a letter) are mapped to commands' => sub {
+subtest 'quick keys (Ctrl-Q followed by a letter) are mapped' => sub {
   my $e = new_editor();
   $e->handleEvent( key( kbCtrlQ ) );
   is( $e->{keyState}, 1, 'Ctrl-Q waits for a second key' );
@@ -136,7 +175,8 @@ subtest 'cmPaste inserts the clipboard at the cursor' => sub {
   my $e = new_editor();
   $e->setCurPtr( 3, 0 );
   $e->handleEvent( command( cmPaste ) );
-  is( $e->{buffer}, "abcXY\r\ndef", 'clipboard text is inserted at the cursor' );
+  is( $e->{buffer}, "abcXY\r\ndef", 
+    'clipboard text is inserted at the cursor' );
 };
 
 subtest 'cmUndo reverts the last change' => sub {

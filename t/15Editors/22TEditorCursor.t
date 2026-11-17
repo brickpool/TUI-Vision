@@ -2,15 +2,23 @@ use strict;
 use warnings;
 
 use Test::More;
-use TUI::Editors::Editor;
-use TUI::Editors::Const qw( smExtend );
-use TUI::Objects::Point;
-use TUI::Objects::Rect;
-use TUI::Views::Const qw( sfCursorIns );
+
+BEGIN {
+  use_ok 'TUI::Objects::Point';
+  use_ok 'TUI::Objects::Rect';
+  use_ok 'TUI::Views::Const', qw( sfCursorIns );
+  use_ok 'TUI::Editors::Const', qw( smExtend );
+  use_ok 'TUI::Editors::Editor';
+}
 
 sub new_editor {
-  my $e = TEditor->new( bounds => TRect->new( ax => 0, ay => 0, bx => 10, by => 3 ),
-    hScrollBar => undef, vScrollBar => undef, indicator => undef, bufSize => 0 );
+  my $e = TEditor->new(
+    bounds     => TRect->new( ax => 0, ay => 0, bx => 10, by => 3 ),
+    hScrollBar => undef, 
+    vScrollBar => undef, 
+    indicator  => undef, 
+    bufSize    => 0
+  );
   $e->insertText( "abcdefghijklmnop\r\nxyz\r\n12345", 28, !!0 );
   return $e;
 }
@@ -35,7 +43,8 @@ subtest 'setCurPtr() with smExtend selects the range' => sub {
 subtest 'scrollTo() clamps to the limits' => sub {
   my $e = new_editor();
   $e->scrollTo( 1000, 1000 );
-  is( $e->{delta}{x}, $e->{limit}{x} - $e->{size}{x}, 'horizontal delta clamped' );
+  is( $e->{delta}{x}, $e->{limit}{x} - $e->{size}{x},
+    'horizontal delta clamped' );
   is( $e->{delta}{y}, $e->{limit}{y} - $e->{size}{y}, 'vertical delta clamped' );
   $e->scrollTo( -5, -5 );
   is( $e->{delta}{x}, 0, 'negative x clamped to zero' );
@@ -43,14 +52,16 @@ subtest 'scrollTo() clamps to the limits' => sub {
 };
 
 subtest 'changeBounds() clamps the scroll position to the new size' => sub {
-  my $e = TEditor->new( bounds => TRect->new( ax => 0, ay => 0, bx => 10, by => 3 ),
-    hScrollBar => undef, vScrollBar => undef, indicator => undef, bufSize => 0 );
+  my $e = TEditor->new(
+    bounds     => TRect->new( ax => 0, ay => 0, bx => 10, by => 3 ),
+    hScrollBar => undef, vScrollBar => undef, indicator => undef, bufSize => 0
+  );
   $e->insertText( 'abcdefghijklmnopqrstuvwxyz', 26, !!0 );
   $e->scrollTo( 20, 0 );
   ok( $e->{delta}{x} > 0, 'editor is scrolled before the resize' );
   $e->changeBounds( TRect->new( ax => 0, ay => 0, bx => 250, by => 3 ) );
-  is( $e->{size}{x}, 250, 'size follows the new bounds' );
-  is( $e->{delta}{x}, 6, 'delta is clamped to maxLineLength - width' );
+  is( $e->{size}{x},  250, 'size follows the new bounds' );
+  is( $e->{delta}{x}, 6,   'delta is clamped to maxLineLength - width' );
 };
 
 subtest 'trackCursor() keeps the cursor visible' => sub {
