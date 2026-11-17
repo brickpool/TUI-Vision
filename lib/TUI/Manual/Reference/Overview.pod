@@ -86,6 +86,9 @@ TUI::Manual::Reference::Overview - Overview of TUI::Vision Classes
     +- TScroller
     |  |
     |  +- TFileViewer
+    |  +- TOutlineViewer
+    |  |  +- TOutline
+    |  |
     |  +- TTextDevice
     |     +- TTerminal
     |
@@ -112,6 +115,7 @@ TUI::Manual::Reference::Overview - Overview of TUI::Vision Classes
     +-- Memory/   - Memory manager
     +-- Menus/    - TMenuBar, TMenuBox, TStatusLine, etc.
     +-- Objects/  - TObject, TPoint, TRect, TCollection, TSortedCollection, etc.
+    +-- Outline/  - TNode, TOutlineViewer, TOutline.
     +-- StdDlg/   - TFileDialog, TChDirDialog, TDirListBox, etc.
     +-- TextView/ - TTextDevice, TTerminal, etc.
     +-- toolkit/  - Object toolkit

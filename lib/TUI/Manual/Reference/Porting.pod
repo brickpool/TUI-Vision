@@ -44,6 +44,7 @@ practical usability rather than theoretical completeness.
   [x] Implemented
   [o] Partially implemented
   [+] Port extension
+  [-] Port reduction
 
 The status table is intended as a practical guide rather than a strict
 feature checklist.
@@ -76,6 +77,13 @@ The class is specific to the Perl port and has no direct equivalent in the
 original I<Turbo Vision> implementation. It was introduced to support
 additional functionality provided by modern terminals, color handling or
 the Perl implementation architecture.
+
+=item [-] Port reduction
+
+The class was present in the original I<Turbo Vision> implementation but is
+not included in the Perl port. This may be due to differences in the Perl
+implementation architecture or because the functionality is not required in
+the current framework.
 
 =back
 
@@ -136,6 +144,14 @@ detail.
  TScrollBar         TUI::Views::ScrollBar        [x]
  TScroller          TUI::Views::Scroller         [x]
  TListViewer        TUI::Views::ListViewer       [x]
+
+=head3 Outline System
+
+ Class              Perl Module                  Status
+ ------------------ ---------------------------- ------
+ TNode              (missing)                    [ ]
+ TOutlineViewer     (missing)                    [ ]
+ TOutline           (missing)                    [ ]
 
 =head3 Application Framework
 
@@ -262,10 +278,15 @@ Lists and History
  TLineCollection      TUI::Gadgets::LineCollection      [x]
  TSortedCollection    TUI::Objects::SortedCollection    [x]
  TStringCollection    TUI::Objects::StringCollection    [x]
- TStringList          (missing)                         [ ]
- TStrListMaker        (missing)                         [ ]
- TResourceCollection  (missing)                         [ ]
- TResourceFile        (missing)                         [ ]
+ TStringList          (not ported)                      [-]
+ TStrListMaker        (not ported)                      [-]
+ TResourceCollection  (not ported)                      [-]
+ TResourceFile        (not ported)                      [-]
+
+The resource and string-list classes from the original I<Turbo Vision>
+implementation are currently not ported. The Perl implementation uses its 
+existing storage facilities instead, and no current framework component 
+requires these compatibility classes.
 
 =head3 Editors and Text Devices
 

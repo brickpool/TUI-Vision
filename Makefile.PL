@@ -97,6 +97,8 @@ WriteMakefile1(
         => { file => 'lib/TUI/MsgBox.pm', version => '2.0.2' },
       'TUI::Objects' 
         => { file => 'lib/TUI/Objects.pm', version => '2.0.2' },
+      'TUI::Outline'
+        => { file => 'lib/TUI/Outline.pm', version => '2.0.2' },
       'TUI::StdDlg'
         => { file => 'lib/TUI/StdDlg.pm', version => '2.0.2' },
       'TUI::TextView'

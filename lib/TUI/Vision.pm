@@ -26,6 +26,7 @@ use TUI::Memory;
 use TUI::Validate;
 use TUI::ColorSel;
 use TUI::Editors;
+use TUI::Outline;
 use TUI::Help;
 use TUI::toolkit;
 
@@ -46,6 +47,7 @@ sub import {
   TUI::Validate->import::into( $target );
   TUI::ColorSel->import::into( $target );
   TUI::Editors->import::into( $target );
+  TUI::Outline->import::into( $target );
   TUI::Help->import::into( $target );
   TUI::toolkit->import::into( $target );
 }
@@ -67,6 +69,7 @@ sub unimport {
   TUI::Validate->unimport::out_of( $caller );
   TUI::ColorSel->unimport::out_of( $caller );
   TUI::Editors->unimport::out_of( $caller );
+  TUI::Outline->unimport::out_of( $caller );
   TUI::Help->unimport::out_of( $caller );
   TUI::toolkit->unimport::out_of( $caller );
 }
@@ -87,7 +90,7 @@ TUI::Vision - Perl TUI Framework (Turbo Vision 2.0 Port)
 
   # Imports the framework aggregators (Objects, App, Views, Dialogs,
   # Menus, Drivers, Gadgets, StdDlg, MsgBox, TextView, Memory, ColorSel, 
-  # Editors, Help, Validate)
+  # Editors, Outline, Help, Validate)
   # and the toolkit helpers into your package.
 
 =head1 DESCRIPTION
