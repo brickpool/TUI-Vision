@@ -8,10 +8,12 @@ BEGIN {
   use_ok 'TUI::Help::HelpBase';
   use_ok 'TUI::Help::HelpIndex';
   use_ok 'TUI::Help::TopicDefinition';
+  use_ok 'TUI::Help::HelpTopic';
 }
 
 isa_ok( TRefTable->new( limit => 10, delta => 5 ), TRefTable() );
 isa_ok( THelpIndex->new(), THelpIndex() );
+isa_ok( THelpTopic->new(), THelpTopic() );
 isa_ok( TTopicDefinition->new( topic => 'Introduction', value => 100 ),
   TTopicDefinition() );
 done_testing();

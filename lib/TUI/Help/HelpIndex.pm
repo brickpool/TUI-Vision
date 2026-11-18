@@ -17,15 +17,19 @@ our @EXPORT = qw(
   new_THelpIndex
 );
 
+use Storable qw( freeze thaw );
 use TUI::toolkit;
-use TUI::toolkit::Types qw( :types );
+use TUI::toolkit::Types qw( :is :types );
 use TUI::Objects::Object;
+use TUI::Objects::Stream;
+use TUI::Objects::Streamable;
 
 sub THelpIndex() { __PACKAGE__ }
 sub name() { 'THelpIndex' };
 sub new_THelpIndex { __PACKAGE__->from(@_) }
 
 extends TObject;
+with: *DOES = TStreamable->can('DOES');
 
 # public attributes
 has size  => ( is => 'bare', default => 0 );
@@ -77,6 +81,60 @@ sub size {    # $size ()
   return $self->{size};
 }
 
+sub STORABLE_freeze {    # @list ($cloning)
+  my ( $self, $cloning ) = @_;
+  assert ( is_Object $self );
+  assert ( is_Bool $cloning );
+  assert ( not $cloning );
+
+  my $stream = TStream->new();
+  $self->write( $stream );
+  return freeze $stream;
+}
+
+sub STORABLE_attach {    # $obj ($cloning, $serialized)
+  my ( $class, $cloning, $serialized ) = @_;
+  assert ( is_Str $class );
+  assert ( is_Bool $cloning );
+  assert ( is_Str $serialized );
+  assert ( not $cloning );
+
+  my $self = $class->build();
+  my $stream = thaw $serialized;
+  return $self->read( $stream );
+}
+
+sub write :method {    # void ($os)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $os ) = $sig->( @_ );
+  assert ( Storable::is_storing );
+  $os->put( $self->size, @{ $self->{index} } );
+  return;
+}
+
+sub read :method {    # $self ($is)
+  state $sig = signature(
+    method => Object,
+    pos    => [Object],
+  );
+  my ( $self, $is ) = $sig->( @_ );
+  assert ( Storable::is_retrieving );
+  my $size = $is->get();
+  $self->{index} = [ map { $is->get() } 1 .. $size ];
+  return $self;
+}
+
+sub build {    # $obj ()
+  my ( $class ) = @_;
+  assert ( @_ == 1 );
+  assert ( is_Str $class );
+  assert ( Storable::is_retrieving );
+  return $class->new();
+}
+
 1
 
 __END__
@@ -109,8 +167,9 @@ C<THelpIndex> maps numeric help contexts to positions in a compiled help
 file.
 
 The class follows the context-index behavior of Turbo Vision C++ 2.0,
-using a Perl array for storage. The original streaming interface is not
-implemented.
+using a Perl array for storage. It supports C<Storable> persistence through
+L<TUI::Objects::Streamable> and L<TUI::Objects::Stream>, preserving every
+allocated slot, including unused entries.
 
 Contexts without a recorded position return C<-1>.
 

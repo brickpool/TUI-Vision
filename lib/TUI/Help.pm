@@ -14,12 +14,14 @@ use Import::Into;
 use TUI::Help::HelpBase;
 use TUI::Help::RefTable;
 use TUI::Help::TopicDefinition;
+use TUI::Help::HelpTopic;
 use TUI::Help::HelpIndex;
 
 sub import {
   my $target = caller;
   TUI::Help::RefTable->import::into( $target );
   TUI::Help::TopicDefinition->import::into( $target );
+  TUI::Help::HelpTopic->import::into( $target );
   TUI::Help::HelpIndex->import::into( $target );
 }
 
@@ -27,6 +29,7 @@ sub unimport {
   my $caller = caller;
   TUI::Help::RefTable->unimport::out_of( $caller );
   TUI::Help::TopicDefinition->unimport::out_of( $caller );
+  TUI::Help::HelpTopic->unimport::out_of( $caller );
   TUI::Help::HelpIndex->unimport::out_of( $caller );
 }
 
@@ -67,6 +70,10 @@ Help context position index, including C<THelpIndex> and C<new_THelpIndex>.
 =item * L<TTopicDefinition|TUI::Help::TopicDefinition>
 Linked topic definition, including C<TTopicDefinition> and
 C<new_TTopicDefinition>.
+
+=item * L<THelpTopic|TUI::Help::HelpTopic>
+Paragraph text, wrapping, and cross-references, including C<THelpTopic>
+and C<new_THelpTopic>, with C<Storable> persistence.
 
 =back
 
