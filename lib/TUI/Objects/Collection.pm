@@ -81,7 +81,7 @@ sub write :method {    # void ($os)
     $self->{delta},
   );
   for ( my $idx = 0 ; $idx < $self->{count} ; $idx++ ) {
-    $self->writeItem( $self->{items}[$idx], $os );
+    $self->writeItem( $self->SUPER::at( $idx ), $os );
   }
 
   return;
@@ -100,7 +100,7 @@ sub read :method {    # $self ($is)
   $self->{delta} = $is->get();
   $self->setLimit( $savedLimit );
   for ( my $idx = 0 ; $idx < $self->{count} ; $idx++ ) {
-    $self->{items}[$idx] = $self->readItem( $is );
+    $self->SUPER::atPut( $idx, $self->readItem( $is ) );
   }
 
   return $self;
