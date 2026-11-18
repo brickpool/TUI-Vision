@@ -151,7 +151,7 @@ detail.
  ------------------ ---------------------------- ------
  TNode              TUI::Outline::Node           [x]
  TOutlineViewer     TUI::Outline::OutlineViewer  [x]
- TOutline           (missing)                    [ ]
+ TOutline           TUI::Outline::Outline        [x]
 
 =head3 Application Framework
 

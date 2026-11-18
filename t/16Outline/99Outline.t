@@ -13,5 +13,7 @@ is( cmOutlineItemSelected, 301, 'cmOutlineItemSelected successfully imported' );
 
 isa_ok( new_TNode( '', undef, undef, 1 ), TNode() );
 isa_ok( new_TOutlineViewer( TRect->new(), undef, undef ), TOutlineViewer() );
+isa_ok( new_TOutline( TRect->new(), undef, undef, new_TNode( 'Root' ) ),
+  TOutline() );
 
 done_testing();

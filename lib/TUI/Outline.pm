@@ -14,12 +14,14 @@ use Import::Into;
 use TUI::Outline::Const;
 use TUI::Outline::Node;
 use TUI::Outline::OutlineViewer;
+use TUI::Outline::Outline;
 
 sub import {
   my $target = caller;
   TUI::Outline::Const->import::into( $target, qw( :all ) );
   TUI::Outline::Node->import::into( $target );
   TUI::Outline::OutlineViewer->import::into( $target );
+  TUI::Outline::Outline->import::into( $target );
 }
 
 sub unimport {
@@ -27,6 +29,7 @@ sub unimport {
   TUI::Outline::Const->unimport::out_of( $caller );
   TUI::Outline::Node->unimport::out_of( $caller );
   TUI::Outline::OutlineViewer->unimport::out_of( $caller );
+  TUI::Outline::Outline->unimport::out_of( $caller );
 }
 
 1
@@ -69,6 +72,9 @@ Node of an outline tree (text, children, next sibling, and expanded state).
 
 =item * L<TOutlineViewer|TUI::Outline::OutlineViewer>
 Abstract scrollable view that draws and navigates an outline tree.
+
+=item * L<TOutline|TUI::Outline::Outline>
+Concrete outline viewer that displays a tree of C<TNode> objects.
 
 =back
 
