@@ -288,18 +288,18 @@ sub valid {    # $bool ($command)
   my ( $self, $command ) = $sig->( @_ );
 
   return true 
-    if $command == cmOK;
+    if $command != cmOK;
 
   my $path = $self->{dirInput}{data};
 
   # BUG FIX - EFW - Tue 05/16/95
   # Ignore "Drives" line if switching drives.
   $path = ''
-    if $path ne $drivesText;
+    if $path eq $drivesText;
 
   # If it was "Drives" or the input line was blank, issue a
   # cmChangeDir event to select the current drive/directory.
-  if ( $path ne '' ) {
+  if ( $path eq '' ) {
     my $event = TEvent->new();
     $event->{what} = evCommand;
     $event->{message}{command} = cmChangeDir;

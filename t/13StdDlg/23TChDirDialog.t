@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 
+use Cwd ();
+use File::Temp ();
 use Test::More;
 use Test::Exception;
 
@@ -14,6 +16,7 @@ BEGIN {
     cmChangeDir
     cmDirSelection
   );
+  use_ok 'TUI::Views::Const', qw( cmOK cmCancel );
   use_ok 'TUI::StdDlg::ChDirDialog';
   require_ok 'TUI::toolkit';
 }
@@ -76,6 +79,26 @@ subtest 'handleEvent() cmDirSelection survives' => sub {
 
 subtest 'valid() survives' => sub {
   lives_ok { $dlg->valid( 0 ) } 'valid() does not die';
+};
+
+subtest 'valid(cmOK) changes to the entered directory' => sub {
+  my $orig = Cwd::getcwd();
+  my $target = File::Temp::tempdir( CLEANUP => 1 );
+  $dlg->{dirInput}{data} = $target;
+
+  ok( $dlg->valid( cmOK ), 'valid(cmOK) accepts a valid directory' );
+  is( Cwd::getcwd(), Cwd::abs_path( $target ), 'current directory changed' );
+
+  chdir $orig;
+};
+
+subtest 'valid(cmCancel) does not change the directory' => sub {
+  my $orig = Cwd::getcwd();
+  my $target = File::Temp::tempdir( CLEANUP => 1 );
+  $dlg->{dirInput}{data} = $target;
+
+  ok( $dlg->valid( cmCancel ), 'valid(cmCancel) is accepted' );
+  is( Cwd::getcwd(), $orig, 'current directory unchanged' );
 };
 
 subtest 'shutDown() survives' => sub {
