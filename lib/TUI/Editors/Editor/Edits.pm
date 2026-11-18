@@ -1,5 +1,5 @@
 package TUI::Editors::Editor::Edits;
-# ABSTRACT: TEditor buffer and line functions (ported from EDITS.ASM)
+# ABSTRACT: TEditor buffer and line functions (1:1 port)
 
 use 5.010;
 use strict;
@@ -184,11 +184,27 @@ __END__
 
 TUI::Editors::Editor::Edits - TEditor buffer and line functions
 
+=head1 SYNOPSIS
+
+  use TUI::Objects;
+  use TUI::Editors;
+
+  my $editor = new_TEditor(
+    TRect->new( ax => 0, ay => 0, bx => 80, by => 24 ),
+    undef,
+    undef,
+    undef,
+    1024,
+  );
+
+  my $start = $editor->lineStart( $pos );
+  my $char  = $editor->bufChar( $pos );
+
 =head1 DESCRIPTION
 
 C<TUI::Editors::Editor::Edits> implements the low-level buffer, line
 navigation, formatting, and character movement operations used by
-L<TUI::Editors::Editor>.
+L<TEditor|TUI::Editors::Editor>.
 
 The implementation preserves the original Turbo Vision editor API while using
 native Perl string operations. Buffer positions refer to characters in the
@@ -316,7 +332,7 @@ is no preceding line.
 
 =head1 SEE ALSO
 
-L<TUI::Editors::Editor>
+L<TEditor|TUI::Editors::Editor>
 
 =head1 AUTHORS
 

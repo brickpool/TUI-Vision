@@ -826,10 +826,11 @@ TUI::Outline::OutlineViewer - abstract base for scrollable outline viewers
 
 =head1 SYNOPSIS
 
-  use TUI::Outline;
-  use TUI::Views;
-
   package MyOutlineViewer {
+    use TUI::toolkit;
+    use TUI::Outline;
+    use TUI::Views;
+
     extends TOutlineViewer;
     # implement adjust, getChild, getNumChildren, getRoot, getText,
     # hasChildren and isExpanded
@@ -848,9 +849,9 @@ C<getText>, C<hasChildren> and C<isExpanded>. The viewer then draws the
 graph (level lines and expand/retract markers) for each visible node, handles
 keyboard and mouse navigation, and expands or retracts nodes.
 
-The explicit C<disposeNode> of the original is not ported. Memory of the node
-tree is managed by Perl reference counting. The stream functions are ported as
-Storable hooks (C<write>, C<read>, C<build>).
+The explicit disposal of nodes is not needed. Memory of the node tree is
+managed by Perl reference counting. Streaming is supported through Storable
+serialization.
 
 =head1 ATTRIBUTES
 

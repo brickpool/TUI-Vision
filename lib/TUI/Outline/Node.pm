@@ -112,9 +112,8 @@ TUI::Outline::Node - node of an outline tree used by outline viewers
 
 =head1 SYNOPSIS
 
+  use TUI::toolkit;
   use TUI::Outline;
-
-  my $child = TNode->new( text => 'Child' );
   my $root  = TNode->new(
     text      => 'Root',
     childList => $child,
@@ -135,9 +134,8 @@ Trees are built by linking nodes through C<childList> and C<next>. A node with
 no children has C<childList> set to C<undef>; the last sibling has C<next> set
 to C<undef>.
 
-In the Perl implementation, memory is managed automatically by reference
-counting, so the destructor and string copy handling of the C++ original are
-not needed.
+Memory is managed automatically by Perl's reference counting, so no explicit
+destructor or copy handling is required.
 
 =head1 ATTRIBUTES
 

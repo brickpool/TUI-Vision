@@ -58,24 +58,28 @@ TUI::Help - Help-related modules for the framework
 
   use TUI::Help;
 
-  my $table = new_TRefTable( 10, 5 );
-  my $reference = $table->getReference( 'Introduction' );
+  open my $stream, '<:raw', 'help.hlp' or die;
+  my $hFile = THelpFile->new( stream => $stream );
+  my $window = THelpWindow->new(
+    hFile   => $hFile,
+    context => 0,
+  );
 
 =head1 DESCRIPTION
 
 C<TUI::Help> provides help-related view classes and functionality for the 
 L<TUI::Vision> framework.
 
-The module loads L<THelpBase|TUI::Help::HelpBase>, making its C<TParagraph>,
-C<TCrossRef>, and C<TReference> records available.
+The module loads L<TUI::Help::HelpBase>, which defines the C<TParagraph>,
+C<TCrossRef>, and C<TReference> records. They are not re-exported.
 
-This module re-exports the following modules:
+This module re-exports symbols from the following modules:
 
 =over 4
 
-=item * L<Const|TUI::Help::Const> -
+=item * L<TUI::Help::Const> -
 Symbolic constants for help behavior, including C<MAXHELPTOPICID>, the
-C<:cXXXX> palette constants, and the C<:stXXXX> state constants.
+C<:cXXXX> palette constants, and the C<:wrapXXXX> state constants.
 
 =item * L<TRefTable|TUI::Help::RefTable>
 Sorted symbol table of topic references, including C<TRefTable> and
@@ -107,15 +111,9 @@ C<new_THelpWindow>.
 =back
 
 Help related views are responsible for displaying and managing help content 
-within the framework's user interface and are intended to provide behavior 
-compatible with the original I<Turbo Vision> help system where practical.
-
-=head1 COMPATIBILITY
-
-The design of the help subsystem is inspired by Borland I<Turbo Vision> help 
-framework. Behavior, naming conventions, and APIs may therefore resemble 
-their original I<Turbo Vision> counterparts where appropriate for the Perl 
-implementation.
+within the framework's user interface. The design is inspired by the Borland
+I<Turbo Vision> help framework, so behavior and naming may resemble the
+original where practical.
 
 =head1 AUTHORS
 

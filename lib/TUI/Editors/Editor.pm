@@ -1485,16 +1485,59 @@ TUI::Editors::Editor - multi-line text editor view
     TView
       TEditor
 
+=head1 SYNOPSIS
+
+  use TUI::Objects;
+  use TUI::Editors;
+
+  my $editor = new_TEditor(
+    TRect->new( ax => 0, ay => 0, bx => 80, by => 24 ),
+    undef,
+    undef,
+    undef,
+    1024,
+  );
+
+  $editor->insertText( 'Hello, world!', 13, 0 );
+
 =head1 DESCRIPTION
 
 C<TEditor> is a view that edits a text buffer. Lines may end with CR, LF or
 CR LF (a CR LF pair counts as one line break for cursor movement). The buffer
 is a native Perl string; positions are character positions.
 
-Undo, clipboard (C<clipCopy>, C<clipCut>, C<clipPaste>), search and replace
-(C<find>, C<replace>, C<search>) and streaming (C<read>, C<write>) are
-available. The C<bufSize> argument is stored but not enforced, because the
+Undo, clipboard (C<clipCopy>, C<clipCut>, C<clipPaste>) and search and replace
+(C<find>, C<replace>, C<search>) are available. The C<bufSize> argument is stored but not enforced, because the
 Perl buffer grows as needed.
+
+The buffer and line helpers (C<bufChar>, C<bufPtr>, C<formatLine>, C<lineEnd>,
+C<lineStart>, C<nextChar>, C<nextLine>, C<prevChar>, C<prevLine>) are documented
+in L<TUI::Editors::Editor::Edits>.
+
+=head1 VARIABLES
+
+The following global variables hold the search, replace and clipboard state
+shared by all editors.
+
+=head2 $clipboard
+
+The editor that holds the clipboard contents.
+
+=head2 $editorDialog
+
+Dialog callback, a dummy until TEditorDialog is ported.
+
+=head2 $editorFlags
+
+Search and replace option flags.
+
+=head2 $findStr
+
+Last search text.
+
+=head2 $replaceStr
+
+Last replacement text.
 
 =head1 ATTRIBUTES
 
@@ -1504,16 +1547,20 @@ Text buffer (I<Str>).
 
 =head2 bufSize
 
-Size of the buffer (I<Int>). This is a read only attribute (the Perl buffer 
-grows as needed).
+Size of the buffer (I<Int>). It is stored but not enforced, because the Perl
+buffer grows as needed.
 
-=head2 bufLen
+=head2 hScrollBar
 
-Length of the buffer (I<PositiveOrZeroInt>).
+Horizontal scroll bar (L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
 
-=head2 gapLen
+=head2 vScrollBar
 
-Length of the gap in the buffer (I<PositiveOrZeroInt>).
+Vertical scroll bar (L<TScrollBar|TUI::Views::ScrollBar> or C<undef>).
+
+=head2 indicator
+
+Position indicator (L<TIndicator|TUI::Editors::Indicator> or C<undef>).
 
 =head2 selStart
 
@@ -1597,9 +1644,9 @@ Key state (I<Int>).
 
   my $editor = TEditor->new(
     bounds     => $bounds,
-    hScrollBar => $hScrollBar | undef,
-    vScrollBar => $vScrollBar | undef,
-    indicator  => $indicator  | undef,
+    hScrollBar => $hScrollBar,    # or undef
+    vScrollBar => $vScrollBar,    # or undef
+    indicator  => $indicator,     # or undef,
     bufSize    => $bufSize,
   );
 
@@ -1634,9 +1681,9 @@ Buffer size (I<PositiveOrZeroInt>).
 
   my $editor = new_TEditor(
     $bounds,
-    $hScrollBar | undef,
-    $vScrollBar | undef,
-    $indicator  | undef,
+    $hScrollBar,    # or undef
+    $vScrollBar,    # or undef
+    $indicator,     # or undef
     $bufSize,
   );
 
@@ -1669,6 +1716,15 @@ line is read up to C<$target>. Tabs advance to the next tab stop.
 
 Returns the buffer position of the display column C<$target> on the line that
 starts at C<$p>.
+
+=head2 checkScrollBar
+
+  $editor->checkScrollBar($event, $scrollBar, $value);
+
+Checks whether the scroll bar C<$scrollBar> was moved by the event C<$event>.
+If so, C<$value> is set to the new position of the scroll bar and the view is
+marked for redrawing. C<$value> is passed by alias, so pass a variable, not a
+literal.
 
 =head2 clipCopy
 
@@ -1721,11 +1777,35 @@ Deletes the selected text.
 
 Releases the buffer; the buffer is set to C<undef>.
 
+=head2 doSearchReplace
+
+  $editor->doSearchReplace;
+
+Performs a search for C<$findStr> with the options in C<$editorFlags>. If the
+replace options are set, it also replaces the match, asking through
+C<$editorDialog> when prompting is enabled. It repeats while C<efReplaceAll>
+is set.
+
+=head2 doUpdate
+
+  $editor->doUpdate;
+
+Redraws the parts of the view marked in C<updateFlags>, updates the scroll bars
+and the indicator, and clears the flags. C<update> calls it when the editor is
+not locked.
+
 =head2 draw
 
   $editor->draw;
 
 Draws the visible part of the editor.
+
+=head2 drawLines
+
+  $editor->drawLines($y, $count, $linePtr);
+
+Draws C<$count> lines starting at row C<$y> of the view. The first line starts
+at buffer position C<$linePtr>.
 
 =head2 find
 
@@ -1828,13 +1908,6 @@ Returns the position of the start of the next word after C<$p>.
   my $pos = $editor->prevWord($p);
 
 Returns the position of the start of the previous word before C<$p>.
-
-=head2 read
-
-  $editor->read($is);
-
-Reads the editor state from the stream C<$is> and returns the editor. The text
-is not streamed; the buffer starts empty.
 
 =head2 replace
 
@@ -1955,12 +2028,6 @@ Enables or disables the editing commands according to the editor state.
 
 Returns the validity flag of the editor.
 
-=head2 write
-
-  $editor->write($os);
-
-Writes the editor state to the stream C<$os>. The text is not streamed.
-
 =head1 STRUCTURES
 
 C<TFindDialogRec> and C<TReplaceDialogRec> are the data records of the search
@@ -1981,7 +2048,8 @@ C<replace> (the replacement text) and C<options> (the editor flags).
 
 =head1 SEE ALSO
 
-L<Editors|TUI::Editors>,
+L<TUI::Editors>,
+L<TUI::Editors::Editor::Edits>,
 L<TView|TUI::Views::View>
 
 =head1 AUTHORS

@@ -252,11 +252,10 @@ TUI::Outline::Outline - outline viewer that displays a tree of TNode objects
 
 =head1 SYNOPSIS
 
+  use TUI::toolkit;
   use TUI::Objects;
   use TUI::Outline;
   use TUI::Views;
-
-  my $child   = TNode->new( text => 'Child' );
   my $root    = TNode->new(
     text      => 'Root',
     childList => $child,
@@ -279,10 +278,9 @@ L<TOutlineViewer|TUI::Outline::OutlineViewer> on top of the node attributes.
 The constructor updates the viewer, so the outline is ready to draw after
 creation. Expanding or retracting a node changes its C<expanded> attribute.
 
-The C++ destructor of the original is not ported. The tree is freed by Perl
-reference counting. The stream functions are ported as Storable hooks
-(C<write>, C<read>, C<build>); the node tree is written as a flat sequence of
-primitive values, and the root is preceded by a presence flag, since an empty
+The tree is freed by Perl reference counting. Streaming is supported through
+Storable serialization, which writes the node tree as a flat sequence of
+primitive values; the root is preceded by a presence flag, since an empty
 outline has no root node to write.
 
 =head1 ATTRIBUTES
@@ -378,19 +376,6 @@ Returns true if C<$node> has at least one child.
   my $bool = $outline->isExpanded($node);
 
 Returns the C<expanded> attribute of C<$node>.
-
-=head2 readNode
-
-  my $node = $outline->readNode($is);
-
-Reads a node and its subtree from the stream C<$is>, as written by
-C<writeNode>, and returns it as a new L<TNode|TUI::Outline::Node>.
-
-=head2 writeNode
-
-  $outline->writeNode($node, $os);
-
-Writes C<$node> and its subtree to the stream C<$os>.
 
 =head1 SEE ALSO
 

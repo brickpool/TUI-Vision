@@ -164,15 +164,17 @@ with a different glyph and color, as in the original I<Turbo Vision> indicator.
 The view grows vertically with its owner's bottom edge, so it keeps its
 height when the owner is resized.
 
-=head1 ATTRIBUTES
+=head1 VARIABLES
 
-=head2 location
+The following global variables define the frame glyphs of C<TIndicator>.
 
-Current cursor position (L<TPoint|TUI::Objects::Point>).
+=head2 $dragFrame
 
-=head2 modified
+Drag frame drawing character.
 
-Indicates whether the editor contents have been modified (I<Bool>).
+=head2 $normalFrame
+
+Normal frame drawing character.
 
 =head1 CONSTRUCTOR
 
@@ -242,7 +244,7 @@ True if the editor contents have been modified.
 
 =head1 SEE ALSO
 
-L<Editors|TUI::Editors>,
+L<TUI::Editors>,
 L<TView|TUI::Views::View>
 
 =head1 AUTHORS

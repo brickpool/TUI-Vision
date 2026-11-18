@@ -174,7 +174,7 @@ inventory.
   $chdirText           TChDirDialog           Change directory action label
   $clearOnSuspend      TScreen                Clear screen on suspend flag
   $clearText           TFileDialog            Clear action label
-  $clipboard           TEditor                Editor holding the clipboard contents
+  $clipboard           TEditor                Clipboard holding the contents
   $clipboardTitle      TEditWindow            Title of the clipboard window
   $closeIcon           TFrame                 Close window icon
   $commandSetChanged   TView                  Command set modified flag
@@ -198,7 +198,7 @@ inventory.
   $dragIcon            TFrame                 Drag window icon
   $drives              TDirListBox            Drives label text
   $drivesText          TChDirDialog           Drives label
-  $editorDialog        TEditor                Dialog callback, dummy until TEditorDialog is ported
+  $editorDialog        TEditor                Dialog callback
   $editorFlags         TEditor                Search and replace option flags
 
   $emptyText           TListViewer            Empty list placeholder text
@@ -301,7 +301,7 @@ inventory.
   $tooManyFiles        TFileList              Too many files message
 
   $underline           TMonoSelector          Underlined text attribute
-  $untitled            TEditWindow            Title of an editor window without a file name
+  $untitled            TEditWindow            Editor title without a file name
   $unZoomIcon          TFrame                 Unzoom window icon
 
   $vChars              TScrollBar             Vertical scrollbar characters

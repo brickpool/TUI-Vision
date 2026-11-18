@@ -90,16 +90,13 @@ TUI::Help::TopicDefinition - linked help-topic definition
 
 C<TTopicDefinition> associates a topic name with its numeric help-context
 value. Definitions can be linked through C<next> to form a list, as in the
-help compiler's C<tvhc.h> and C<tvhc.cpp>.
+original Borland help compiler.
 
 Construction stores the supplied name and value and initializes C<next>
 to C<undef>. Perl scalar storage replaces the original string allocation
 and copying.
 
-Destruction releases the topic name and the reference to the next
-definition. The remaining chain is freed when no other references retain
-its nodes; external Perl references remain valid. No streaming interface
-or C<Storable> integration is provided.
+No streaming interface or C<Storable> integration is provided.
 
 =head1 ATTRIBUTES
 
@@ -144,7 +141,7 @@ Positional factory taking the topic name and numeric value.
 
 =head1 SEE ALSO
 
-L<TUI::Help>, L<TUI::Help::HelpBase>, L<TUI::Objects::Object>,
+L<TUI::Help>, L<TUI::Help::HelpBase>, L<TObject|TUI::Objects::Object>,
 L<TUI::toolkit::Types>
 
 =head1 AUTHORS

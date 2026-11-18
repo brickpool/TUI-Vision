@@ -137,8 +137,8 @@ window that presents online help. The window has a fixed size of 50 columns by
 
 When the window is constructed, it inserts a
 L<THelpViewer|TUI::Help::HelpViewer> into its interior. The viewer is inset by
-one column on the left and right and by one row at the top and bottom. It has a
-horizontal and a vertical standard scroll bar, both of which handle keyboard
+two columns on the left and right and by one row at the top and bottom. It has
+a horizontal and a vertical standard scroll bar, both of which handle keyboard
 input. The viewer shows the help topic that belongs to the context number
 passed to the constructor. Topics are read from the
 L<THelpFile|TUI::Help::HelpFile> object passed as C<hFile>.

@@ -166,9 +166,9 @@ TUI::Help::HelpIndex - help context position index
 C<THelpIndex> maps numeric help contexts to positions in a compiled help
 file.
 
-The class follows the context-index behavior of Turbo Vision C++ 2.0,
-using a Perl array for storage. It supports C<Storable> persistence through
-L<TUI::Objects::Streamable> and L<TUI::Objects::Stream>, preserving every
+The class follows the Turbo Vision context-index behavior, using a Perl
+array for storage. It supports C<Storable> persistence through
+L<TStreamable|TUI::Objects::Streamable> and L<TStream|TUI::Objects::Stream>, preserving every
 allocated slot, including unused entries.
 
 Contexts without a recorded position return C<-1>.
@@ -236,12 +236,11 @@ C<$i> must be non-negative; an assertion checks this precondition.
   my $size = $index->size();
 
 Returns the number of allocated index slots as C<PositiveOrZeroInt>,
-calculated from the current index array. This accessor is read-only;
-the size is not maintained as a separate stored count.
+computed from the current index array on each call.
 
 =head1 SEE ALSO
 
-L<TUI::Help>, L<TUI::Help::HelpFile>, L<TUI::Objects::Object>
+L<TUI::Help>, L<THelpFile|TUI::Help::HelpFile>, L<TObject|TUI::Objects::Object>
 
 =head1 AUTHORS
 

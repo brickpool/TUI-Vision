@@ -62,9 +62,9 @@ TUI::Help::HelpBase - paragraph and reference records for the help system
 
 =head1 DESCRIPTION
 
-This module defines the C<TParagraph> and C<TCrossRef> records declared in
-Turbo Vision C++ 2.0's C<HELPBASE.H>, and C<TReference> from the help
-compiler's C<tvhc.h>. All three are array-based L<Class::Struct> objects
+This module defines the C<TParagraph> and C<TCrossRef> records of the
+Turbo Vision help-base design, and the C<TReference> record of the original
+Borland help compiler. All three are array-based L<Class::Struct> objects
 with named constructors and read/write field accessors.
 
 All fields use scalar storage. The field descriptions below use the type
@@ -168,7 +168,7 @@ the original C<Content> union is represented; fix-up lists are not supported.
 
 =head1 SEE ALSO
 
-L<TUI::Help::HelpTopic>
+L<THelpTopic|TUI::Help::HelpTopic>
 
 =head1 AUTHORS
 

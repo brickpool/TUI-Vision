@@ -233,20 +233,6 @@ L<TEditor|TUI::Editors::Editor>.
 Ignores a C<kbTab> key down event. All other events are passed to
 L<TEditor|TUI::Editors::Editor>.
 
-=head2 read
-
-  $memo->read( $is );
-
-Reads the editor data and the text of the memo from the stream. The text is
-used only if the memo is valid after reading the editor data.
-
-=head2 write
-
-  $memo->write( $os );
-
-Writes the editor data and the buffer length and text of the memo to the
-stream.
-
 =head1 STRUCTURES
 
 =head2 TMemoData

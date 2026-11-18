@@ -88,18 +88,26 @@ TUI::Vision - Perl TUI Framework (Turbo Vision 2.0 Port)
 
   use TUI::Vision;
 
-  # Imports the framework aggregators (Objects, App, Views, Dialogs,
-  # Menus, Drivers, Gadgets, StdDlg, MsgBox, TextView, Memory, ColorSel, 
-  # Editors, Outline, Help, Validate)
-  # and the toolkit helpers into your package.
+  # Imports the constants (:all), the framework aggregators (Objects, App,
+  # Views, Dialogs, Menus, Drivers, Gadgets, StdDlg, MsgBox, TextView,
+  # Memory, Validate, ColorSel, Editors, Outline, Help) and the toolkit
+  # helpers into your package.
 
 =head1 DESCRIPTION
 
 C<TUI::Vision> is the top-level umbrella module of the framework.
 
 It aggregates and re-exports the main subsystem modules through
-C<Import::Into>, so applications can import the common surface via a single 
-C<use TUI::Vision;> statement.
+C<Import::Into>, so applications can import the common surface via a single
+C<use TUI::Vision;> statement. C<import> also imports the constants of
+L<TUI::Const> (all tags, C<:all>); C<no TUI::Vision;> removes the imports
+again via C<unimport>.
+
+The re-exported modules are L<TUI::Objects>, L<TUI::App>, L<TUI::Views>,
+L<TUI::Dialogs>, L<TUI::Menus>, L<TUI::Drivers>, L<TUI::Gadgets>,
+L<TUI::StdDlg>, L<TUI::MsgBox>, L<TUI::TextView>, L<TUI::Memory>,
+L<TUI::Validate>, L<TUI::ColorSel>, L<TUI::Editors>, L<TUI::Outline>,
+L<TUI::Help>, and L<TUI::toolkit>.
 
 =head1 AUTHORS
 

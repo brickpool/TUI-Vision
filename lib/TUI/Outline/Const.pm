@@ -75,10 +75,9 @@ TUI::Outline::Const - constants for outline views
 
 =head1 SYNOPSIS
 
-  use TUI::Outline::Const qw(:all);
+  use TUI::Outline;
 
-  # or import specific constant groups
-  use TUI::Outline::Const qw(:ovXXXX :cmXXXX);
+  my $flags = ovExpanded | ovChildren;
 
 =head1 DESCRIPTION
 
@@ -99,13 +98,43 @@ these constants is documented in the corresponding outline classes.
 Flags describing the state of a node while its graph is drawn. These flags may
 be combined.
 
+=over 4
+
+=item * C<ovExpanded> (0x01)
+
+Set if the node is expanded or has no children. If it is not set, the node has
+children and is retracted.
+
+=item * C<ovChildren> (0x02)
+
+Set if the node has children and is expanded.
+
+=item * C<ovLast> (0x04)
+
+Set if the node is the last child of its parent.
+
+=back
+
 =head2 Command constants (cmXXXX)
 
-Command identifiers used by outline views.
+=over 4
+
+=item * C<cmOutlineItemSelected> (301)
+
+Command identifier for the selection of an outline item. The outline viewers
+of this port do not send this command.
+
+=back
 
 =head2 Palette identifiers (cpXXXX)
 
-Palette identifiers used by outline views.
+=over 4
+
+=item * C<cpOutlineViewer>
+
+Palette layout of C<TOutlineViewer>, used by its C<getPalette> method.
+
+=back
 
 =head1 EXPORT TAGS
 

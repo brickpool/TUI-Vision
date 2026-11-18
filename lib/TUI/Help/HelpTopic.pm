@@ -467,10 +467,10 @@ TUI::Help::HelpTopic - help-topic paragraphs, wrapping, and cross-references
 
 =head1 DESCRIPTION
 
-C<THelpTopic> holds a linked list of paragraphs and an array of
-cross-references, following Turbo Vision C++ 2.0's C<HELPBASE.H> and
-C<HELPBASE.CPP>. The C<TParagraph> and C<TCrossRef> records are loaded from
-L<TUI::Help::HelpBase>.
+C<THelpTopic> follows the I<Turbo Vision> topic design. It holds a linked list 
+of paragraphs and an array of cross-references. The C<TParagraph> and
+C<TCrossRef> records are defined in L<TUI::Help::HelpBase>. L<TUI::Help> does 
+not export them, but they are available once it is loaded.
 
 Paragraphs may use explicit line breaks or word wrapping at the configured
 width. Wrapping retains the whitespace at a word boundary and does not
@@ -484,10 +484,10 @@ paragraph text. Cross-reference locations use a zero-based column and a
 one-based displayed line.
 
 The topic supports C<Storable> persistence through
-L<TUI::Objects::Streamable> and L<TUI::Objects::Stream>. Paragraph text,
-sizes, wrap flags, and cross-reference values are preserved. The display
-width and line-reading cache are not persisted; set the width again after
-restoring a topic.
+L<TStreamable|TUI::Objects::Streamable> and L<TStream|TUI::Objects::Stream>. 
+Paragraph text, sizes, wrap flags, and cross-reference values are preserved. 
+The display width and line-reading cache are not persisted; set the width again 
+after restoring a topic.
 
 =head2 Commonly Used Features
 
@@ -568,7 +568,8 @@ referenced scalars before calling.
 Updates the point's zero-based column and one-based line, and writes the
 stored length and target context to the scalar outputs. The index must be
 within the current cross-reference count; an assertion checks this
-precondition. The record must describe a valid location in the topic.
+precondition. The stored offset must not exceed the total length of the
+paragraph text; a larger offset is not checked and fails with a Perl error.
 
 =head2 getLine
 
@@ -623,8 +624,8 @@ Paragraphs with wrapping disabled are not limited to this width.
 
 =head1 SEE ALSO
 
-L<TUI::Help>, L<TUI::Help::HelpBase>, L<TUI::Help::HelpFile>,
-L<TUI::Help::HelpIndex>, L<TUI::Objects::Object>
+L<TUI::Help>, L<TUI::Help::HelpBase>, L<THelpFile|TUI::Help::HelpFile>,
+L<THelpIndex|TUI::Help::HelpIndex>, L<TObject|TUI::Objects::Object>
 
 =head1 AUTHORS
 

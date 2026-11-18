@@ -36,6 +36,8 @@ sub unimport {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 TUI::Outline - Outline-related modules for the framework
@@ -63,7 +65,7 @@ This module re-exports the following modules:
 
 =over 4
 
-=item * L<Const|TUI::Outline::Const>
+=item * L<TUI::Outline::Const>
 Symbolic constants for outline views (node flags, commands, and palette
 identifiers).
 

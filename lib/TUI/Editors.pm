@@ -71,7 +71,7 @@ This module re-exports the following components:
 
 =over 4
 
-=item * L<Const|TUI::Editors::Const> -
+=item * L<TUI::Editors::Const> -
 Symbolic constants for editor behavior.
 
 =item * L<TEditor|TUI::Editors::Editor> -

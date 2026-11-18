@@ -164,8 +164,8 @@ TUI::Help::RefTable - sorted symbol table of help-topic references
 
 =head1 DESCRIPTION
 
-C<TRefTable> ports the topic-reference symbol table from the help compiler's
-C<tvhc.h> and C<tvhc.cpp>. It stores the C<TReference> records defined by
+C<TRefTable> ports the topic-reference symbol table of the original Borland
+help compiler. It stores the C<TReference> records defined by
 L<TUI::Help::HelpBase> in case-sensitive topic-name order.
 
 Looking up a known name returns its existing record. An unknown name
@@ -176,16 +176,11 @@ Only numeric values are represented. The original forward-reference
 fix-up lists are not supported. Initializing C<val> to zero is the
 numeric-only adaptation of the original empty fix-up list.
 
-The table owns its internally managed entries: C<shouldDelete> defaults
-to true, so destruction releases them from the collection's storage.
-External Perl references remain valid until their own references are
-released.
-
 The item-streaming methods are empty, as in the original: no reference
 records are written, and reading an item returns C<undef>. Storable
 therefore preserves only the inherited collection metadata. Restoring a
 nonempty table produces undefined entries, not a usable symbol table.
-The inherited streaming machinery uses L<TUI::Objects::Stream> objects,
+The inherited streaming machinery uses L<TStream|TUI::Objects::Stream> objects,
 not filehandles.
 
 =head2 Commonly Used Features
@@ -225,7 +220,7 @@ Positional factory taking the initial capacity and growth increment.
 =head1 METHODS
 
 Collection access, search, insertion, and removal are inherited from
-L<TUI::Objects::SortedCollection> and L<TUI::Objects::NSCollection>.
+L<TSortedCollection|TUI::Objects::SortedCollection> and L<TNSCollection|TUI::Objects::NSCollection>.
 
 =head2 compare
 
@@ -252,7 +247,7 @@ Returns the C<Str> topic name of a C<TReference> object.
 =head1 SEE ALSO
 
 L<TUI::Help>, L<TUI::Help::HelpBase>,
-L<TUI::Objects::SortedCollection>, L<TUI::Objects::NSCollection>,
+L<TSortedCollection|TUI::Objects::SortedCollection>, L<TNSCollection|TUI::Objects::NSCollection>,
 L<TUI::toolkit::Types>
 
 =head1 AUTHORS

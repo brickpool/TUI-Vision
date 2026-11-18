@@ -21,6 +21,12 @@ TUI::Manual::Reference::Overview - Overview of TUI::Vision Classes
   |     |
   |     +- TFileCollection
   |     +- TStringCollection
+  |     +- TRefTable
+  |
+  +- THelpFile
+  +- THelpIndex
+  +- THelpTopic
+  +- TTopicDefinition
   |
   +- TGroup
   |  |
@@ -38,6 +44,7 @@ TUI::Manual::Reference::Overview - Overview of TUI::Vision Classes
   |     |  +- TMouseDialog
   |     |
   |     +- TFileWindow
+  |     +- THelpWindow
   |     +- THistoryWindow
   |
   +- TView
@@ -85,6 +92,7 @@ TUI::Manual::Reference::Overview - Overview of TUI::Vision Classes
     +- TScrollBar
     +- TScroller
     |  |
+    |  +- THelpViewer
     |  +- TFileViewer
     |  +- TOutlineViewer
     |  |  +- TOutline

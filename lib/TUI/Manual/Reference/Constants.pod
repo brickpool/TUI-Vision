@@ -473,8 +473,8 @@ collection.
 
 =head2 MAXHELPTOPICID
 
-The maximum help-topic ID accepted by the parser, C<16379>. Available
-from L<TUI::Help::Const> individually or through C<:all>.
+The maximum help-topic ID accepted by the parser. Its value is documented in
+L<TUI::Help::Const>, which exports it individually or through C<:all>.
 
 =head2 maxViewWidth
 

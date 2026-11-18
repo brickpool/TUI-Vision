@@ -22,7 +22,7 @@ our %EXPORT_TAGS = (
     cHelpWindow
   )],
 
-  stXXXX => [qw(
+  wrapXXXX => [qw(
     undefined
     wrapping
     notWrapping
@@ -72,19 +72,21 @@ TUI::Help::Const - constants for the help system
 
 =head1 SYNOPSIS
 
-  use TUI::Help::Const qw( MAXHELPTOPICID :cXXXX );
+  use TUI::Help;
 
 =head1 DESCRIPTION
 
-Defines the help-topic ID limit from the help compiler's C<tvhc.h> and
-the palette strings from Turbo Vision C++ 2.0's C<HELPBASE.H>.
+Defines the help-topic ID limit from the original Borland help compiler and
+the palette strings from the Turbo Vision help-base design.
 No constants are exported by default.
 
 =head1 CONSTANTS
 
 =head2 MAXHELPTOPICID
 
-Maximum topic ID accepted by the help-topic parser: C<16379>.
+Maximum topic ID accepted by the help-topic parser. The original Borland
+help compiler defines C<16379>; this port uses that value shifted left by 16 bits, so the
+constant is C<16379 << 16> (C<1073414144>).
 
 =head2 Help palettes (cXXXX)
 
@@ -126,6 +128,10 @@ C<2>. The current paragraph preserves line breaks without word wrapping.
 
 Imports C<cHelpViewer> and C<cHelpWindow>.
 
+=item :wrapXXXX
+
+Imports C<undefined>, C<wrapping>, and C<notWrapping>.
+
 =item :all
 
 Imports all constants, including C<MAXHELPTOPICID>, C<undefined>,
@@ -137,7 +143,7 @@ Every constant may also be imported individually.
 
 =head1 SEE ALSO
 
-L<TUI::Help>, L<TUI::Help::HelpFile>,
+L<TUI::Help>, L<THelpFile|TUI::Help::HelpFile>,
 L<TUI::Manual::Reference::Constants>
 
 =head1 AUTHORS

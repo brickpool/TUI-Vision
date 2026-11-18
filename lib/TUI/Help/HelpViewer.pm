@@ -372,7 +372,10 @@ TUI::Help::HelpViewer - scrollable help topic viewer
 
 =head1 HIERARCHY
 
-  TObject -> TView -> TScroller -> THelpViewer
+  TObject
+    TView
+      TScroller
+        THelpViewer
 
 =head1 SYNOPSIS
 
@@ -551,8 +554,8 @@ Other keys and events are not consumed.
 
 =head1 SEE ALSO
 
-L<TUI::Help>, L<TUI::Help::HelpFile>, L<TUI::Help::HelpTopic>,
-L<TUI::Help::Const>, L<TUI::Views::Scroller>
+L<TUI::Help>, L<THelpFile|TUI::Help::HelpFile>, L<THelpTopic|TUI::Help::HelpTopic>,
+L<TUI::Help::Const>, L<TScroller|TUI::Views::Scroller>
 
 =head1 AUTHORS
 

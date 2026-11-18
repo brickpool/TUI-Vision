@@ -257,7 +257,7 @@ TUI::Editors::EditWindow - window that hosts a file editor
 
 C<TEditWindow> is a L<TWindow|TUI::Views::Window> that contains a
 L<TFileEditor|TUI::Editors::FileEditor> together with horizontal and vertical
-scrollbars and an L<indicator|TUI::Editors::Indicator>. The scrollbars and the
+scrollbars and an L<TIndicator|TUI::Editors::Indicator>. The scrollbars and the
 indicator are created hidden; the editor shows them when it needs them.
 
 The window is marked as tileable and has a minimum size of 24 x 6. Its title

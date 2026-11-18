@@ -202,10 +202,9 @@ TUI::Editors::Const - constants for editor components
 
 =head1 SYNOPSIS
 
-  use TUI::Editors::Const qw( :all );
+  use TUI::Editors;
 
-  # or import specific constant groups
-  use TUI::Editors::Const qw( :cpXXXX );
+  my $flags = efReplaceAll | efPromptOnReplace;
 
 =head1 DESCRIPTION
 
@@ -254,10 +253,11 @@ extends the current selection: extending it (C<smExtend>) and selecting by word
 Option flags for the search and replace dialog of the editor, used by
 L<TEditor|TUI::Editors::Editor> C<find>, C<replace> and C<search>.
 
-=head2 Editor line length (mlXXXX)
+=head2 Editor line length (maxLineLength)
 
 C<maxLineLength> is the maximum length of a line in an editor, used as the
-horizontal scroll limit of L<TEditor|TUI::Editors::Editor>.
+horizontal scroll limit of L<TEditor|TUI::Editors::Editor>. It is exported by
+C<:all> and can also be imported by name.
 
 =head1 EXPORT TAGS
 
@@ -277,15 +277,13 @@ Constants are exported using the following tag-based export groups:
 
 =item * C<:efXXXX> - editor search and replace options
 
-=item * C<:mlXXXX> - editor line length
-
-=item * C<:all> - import all constants
+=item * C<:all> - import all constants, including C<maxLineLength>
 
 =back
 
 =head1 SEE ALSO
 
-L<Editors|TUI::Editors>
+L<TUI::Editors>
 
 =head1 AUTHORS
 

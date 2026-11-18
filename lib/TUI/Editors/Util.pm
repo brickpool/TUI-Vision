@@ -96,22 +96,17 @@ TUI::Editors::Util - Utility functions for editor buffers
 
 =head1 SYNOPSIS
 
-  use TUI::Editors::Util qw(
-    countLines
-    iScan
-    scan
-  );
+  use TUI::Editors;
 
-  my $lines = countLines($buffer);
-  my $count = countLines($buffer, $length);
-
-  my $pos = scan($block, $size, $string);
-  my $ipos = iScan($block, $size, $string);
+  # The umbrella module does not re-export these functions.
+  my $buffer = "first\nsecond\n";
+  my $lines  = TUI::Editors::Util::countLines($buffer);
+  my $ipos   = TUI::Editors::Util::iScan($buffer, length $buffer, 'second');
 
 =head1 DESCRIPTION
 
 C<TUI::Editors::Util> provides low-level line-counting and search functions
-used by L<TUI::Editors::Editor>.
+used by L<TEditor|TUI::Editors::Editor>.
 
 The functions preserve the buffer-and-length calling convention of the
 original I<Turbo Vision> editor utilities while using native Perl strings.
@@ -165,13 +160,13 @@ Searches for the first exact occurrence of C<$string> within the first
 C<$size> Perl characters of C<$block>.
 
 The comparison is case-sensitive. The returned position is relative to the
-beginning of C<$block>. 
+beginning of C<$block>.
 
 C<sfSearchFailed> is returned when C<$string> is empty or no match is found.
 
 =head1 SEE ALSO
 
-L<TUI::Editors::Editor>
+L<TEditor|TUI::Editors::Editor>
 
 =head1 AUTHORS
 
@@ -189,7 +184,7 @@ Copyright (c) 1990-1994, 1997 by Borland International
 
 Copyright (c) 2026 the L</AUTHORS> as listed above.
 
-This software is licensed under the MIT license (see the LICENSE file, which is 
+This software is licensed under the MIT license (see the LICENSE file, which is
 part of the distribution).
 
 =cut

@@ -24,7 +24,7 @@ use TUI::toolkit::Types qw(
 
 use TUI::Help::Const qw(
   MAXHELPTOPICID
-  :stXXXX
+  :wrapXXXX
 );
 use TUI::Help::HelpBase;
 use TUI::Help::HelpIndex;
@@ -538,12 +538,13 @@ TUI::Help::HelpFile - help-source indexing and topic parsing
 
 =head1 SYNOPSIS
 
-  use TUI::Help::HelpFile;
+  use TUI::Help;
 
   open my $source, '<', 'help.txt' or die $!;
-  my $helpFile = THelpFile->new( stream => $source );
+  my $helpFile = new_THelpFile( $source );
+  my $topic = $helpFile->getTopic( 3 );
 
-  # The caller owns the handle.
+  # Topics are read on demand, so close the handle only after the last read.
   close $source or die $!;
 
 =head1 DESCRIPTION
@@ -656,7 +657,7 @@ C<Unimplemented>.
 
 =head1 SEE ALSO
 
-L<TUI::Help>, L<TUI::Objects::Object>
+L<TUI::Help>, L<TObject|TUI::Objects::Object>
 
 =head1 AUTHORS
 
