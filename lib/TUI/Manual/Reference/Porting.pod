@@ -149,8 +149,8 @@ detail.
 
  Class              Perl Module                  Status
  ------------------ ---------------------------- ------
- TNode              (missing)                    [ ]
- TOutlineViewer     (missing)                    [ ]
+ TNode              TUI::Outline::Node           [x]
+ TOutlineViewer     TUI::Outline::OutlineViewer  [x]
  TOutline           (missing)                    [ ]
 
 =head3 Application Framework

@@ -9,6 +9,26 @@ our $VERSION = '2.000002';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
+use Import::Into;
+
+use TUI::Outline::Const;
+use TUI::Outline::Node;
+use TUI::Outline::OutlineViewer;
+
+sub import {
+  my $target = caller;
+  TUI::Outline::Const->import::into( $target, qw( :all ) );
+  TUI::Outline::Node->import::into( $target );
+  TUI::Outline::OutlineViewer->import::into( $target );
+}
+
+sub unimport {
+  my $caller = caller;
+  TUI::Outline::Const->unimport::out_of( $caller );
+  TUI::Outline::Node->unimport::out_of( $caller );
+  TUI::Outline::OutlineViewer->unimport::out_of( $caller );
+}
+
 1
 
 __END__
@@ -21,29 +41,36 @@ TUI::Outline - Outline-related modules for the framework
 
   use TUI::Outline;
 
+  # Outline constants (ovXXXX, cmXXXX, cpXXXX) are imported by default
+  my $flags = ovExpanded | ovChildren;
+
 =head1 DESCRIPTION
 
 C<TUI::Outline> provides outline-related view classes and functionality for the
 L<TUI::Vision> framework.
 
-The module currently serves primarily as a namespace for outline components and
-related functionality. Concrete outline implementations are provided by modules
-within the C<TUI::Outline::*> hierarchy.
+Concrete outline implementations are provided by modules within the
+C<TUI::Outline::*> hierarchy.
 
 Outline-related views are intended for displaying and navigating hierarchical
 information within the framework's user interface and follow the concepts of
 the original I<Turbo Vision> outline subsystem where practical.
 
-=head1 COMPATIBILITY
+This module re-exports the following modules:
 
-The design of the outline subsystem is based on the outline facilities provided
-by Borland I<Turbo Vision> 2.0. Behavior, naming conventions, and APIs may
-therefore resemble their original I<Turbo Vision> counterparts where
-appropriate for the Perl implementation.
+=over 4
 
-=head1 SEE ALSO
+=item * L<Const|TUI::Outline::Const>
+Symbolic constants for outline views (node flags, commands, and palette
+identifiers).
 
-L<TUI::Vision>
+=item * L<TNode|TUI::Outline::Node>
+Node of an outline tree (text, children, next sibling, and expanded state).
+
+=item * L<TOutlineViewer|TUI::Outline::OutlineViewer>
+Abstract scrollable view that draws and navigates an outline tree.
+
+=back
 
 =head1 AUTHORS
 
