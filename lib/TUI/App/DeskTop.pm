@@ -182,8 +182,8 @@ sub handleEvent {    # void ($event)
       DEFAULT: {
         return;
       }
-      $self->clearEvent( $event );
     }
+    $self->clearEvent( $event );
   }
 }
 
