@@ -23,6 +23,8 @@ use TUI::Gadgets;
 use TUI::ColorSel;
 use TUI::StdDlg;
 use TUI::MsgBox;
+use TUI::Help;
+use FindBin qw( $Bin );
 
 use TUI::toolkit;
 use Storable qw( store_fd retrieve_fd );
@@ -92,7 +94,8 @@ use constant {
   hcWindows         => 18,
 };
 
-use constant HELP_FILENAME => "DEMOHELP.HLP";
+use constant HELP_FILENAME => "$FindBin::Bin/demohelp.txt";
+use constant DESKTOP_FILENAME => "$FindBin::Bin/TVDEMO.DST";
 
 has heap  => ( is => 'bare' );    # Heap view
 has clock => ( is => 'bare' );    # Clock view
@@ -176,12 +179,15 @@ sub getEvent {    # void ($event)
         $helpInUse = true;
         my $helpStrm;
         if ( open $helpStrm, '<:raw', HELP_FILENAME ) {
-          # my $hFile = THelpFile->new( $helpStrm );
-          # my $w     = THelpWindow->new( $hFile, $self->getHelpCtx() );
-          # if ( $self->validView( $w ) ) {
-          #   $self->execView( $w );
-          #   $self->destroy( $w );
-          # }
+          my $hFile = THelpFile->new( stream => $helpStrm );
+          my $w = THelpWindow->new(
+            hFile   => $hFile,
+            context => $self->getHelpCtx(),
+          );
+          if ( $self->validView( $w ) ) {
+            $self->execView( $w );
+            $self->destroy( $w );
+          }
           $self->clearEvent( $event );
         }
         else {
@@ -249,14 +255,13 @@ sub puzzle {
 
 sub retrieveDesktop {    # void ()
   my ( $self ) = @_;
-  state $fileName = 'TVDEMO.DST';
 
-  unless ( -e $fileName ) {
+  unless ( -e DESKTOP_FILENAME ) {
     messageBox( 'Could not find desktop file', mfOKButton | mfError );
     return;
   }
   my $f;
-  unless ( open $f, '<:raw', $fileName ) {
+  unless ( open $f, '<:raw', DESKTOP_FILENAME ) {
     messageBox( 'Could not open desktop file', mfOKButton | mfError );
     return;
   }
@@ -278,10 +283,9 @@ sub retrieveDesktop {    # void ()
 
 sub saveDesktop {    # void ()
   my ( $self ) = @_;
-  state $fileName = 'TVDEMO.DST';
 
   my $f;
-  unless ( open $f, '>:raw', $fileName ) {
+  unless ( open $f, '>:raw', DESKTOP_FILENAME ) {
     return;
   }
   my $stream = new_TStream();
@@ -292,8 +296,9 @@ sub saveDesktop {    # void ()
   };
   close $f;
   unless ( $ok ) {
-    messageBox( "Could not create $fileName.", mfOKButton | mfError );
-    unlink $fileName;
+    messageBox( "Could not create " . DESKTOP_FILENAME . ".", 
+      mfOKButton | mfError );
+    unlink DESKTOP_FILENAME;
   }
   return;
 }
