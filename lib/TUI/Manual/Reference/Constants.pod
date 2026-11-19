@@ -78,8 +78,8 @@ throughout the framework:
 
 Button Flags constants
 
-The C<bfXXXX> values are passed as a bit mask to C<< TButton->new >> and specify 
-button attributes, as shown in the table:
+The C<bfXXXX> values are passed as a bit mask to C<< TButton->new >> and
+specify button attributes, as shown in the table:
 
   Constant        Value   Usage
   --------------- ------- --------------------------------------------------
@@ -164,12 +164,12 @@ C<100..255>, and C<1000..65535>.
   cmResize            6   cmResize is sent when a window is resized. Also
                           see wfMove and wfGrow. By convention, Ctrl-F5 is
                           often used to zoom a window.
-  cmNext              7   Causes the last window on the desktop to be moved
-                          to in front of all the others. F6 is often used as
-                          a short cut key for this command.
-  cmPrev              8   Moves the first window on the desktop to behind all
-                          the other windows. Shift-F6 is often used as a
-                          short cut key for this command.
+  cmNext              7   Selects the window behind the focused one in
+                          Z-order, which brings it to the front. F6 is often
+                          used as a short cut key for this command.
+  cmPrev              8   Moves the focused window behind all the other
+                          windows. Shift-F6 is often used as a short cut key
+                          for this command.
   cmOk                9   In a dialog, this value is returned if the Okay
                           button was pressed.
   cmCancel            10  In a dialog, this value is returned if the Cancel
