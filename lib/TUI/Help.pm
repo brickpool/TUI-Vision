@@ -11,27 +11,40 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 
 use Import::Into;
 
+use TUI::Help::Const;
 use TUI::Help::HelpBase;
 use TUI::Help::RefTable;
 use TUI::Help::TopicDefinition;
 use TUI::Help::HelpTopic;
 use TUI::Help::HelpIndex;
+use TUI::Help::HelpFile;
+use TUI::Help::HelpViewer;
+use TUI::Help::HelpWindow;
 
 sub import {
   my $target = caller;
+  TUI::Help::Const->import::into( $target, qw( :all ) );
   TUI::Help::RefTable->import::into( $target );
   TUI::Help::TopicDefinition->import::into( $target );
   TUI::Help::HelpTopic->import::into( $target );
   TUI::Help::HelpIndex->import::into( $target );
+  TUI::Help::HelpFile->import::into( $target );
+  TUI::Help::HelpViewer->import::into( $target );
+  TUI::Help::HelpWindow->import::into( $target );
 }
 
 sub unimport {
   my $caller = caller;
+  TUI::Help::Const->unimport::out_of( $caller );
   TUI::Help::RefTable->unimport::out_of( $caller );
   TUI::Help::TopicDefinition->unimport::out_of( $caller );
   TUI::Help::HelpTopic->unimport::out_of( $caller );
   TUI::Help::HelpIndex->unimport::out_of( $caller );
+  TUI::Help::HelpFile->unimport::out_of( $caller );
+  TUI::Help::HelpViewer->unimport::out_of( $caller );
+  TUI::Help::HelpWindow->unimport::out_of( $caller );
 }
+
 
 1
 
@@ -60,6 +73,10 @@ This module re-exports the following modules:
 
 =over 4
 
+=item * L<Const|TUI::Help::Const> -
+Symbolic constants for help behavior, including C<MAXHELPTOPICID>, the
+C<:cXXXX> palette constants, and the C<:stXXXX> state constants.
+
 =item * L<TRefTable|TUI::Help::RefTable>
 Sorted symbol table of topic references, including C<TRefTable> and
 C<new_TRefTable>.
@@ -75,10 +92,19 @@ C<new_TTopicDefinition>.
 Paragraph text, wrapping, and cross-references, including C<THelpTopic>
 and C<new_THelpTopic>, with C<Storable> persistence.
 
-=back
+=item * L<THelpFile|TUI::Help::HelpFile>
+Help file source and topic lookup, including C<THelpFile> and
+C<new_THelpFile>.
 
-The remaining help classes are currently skeletons and are not loaded or
-re-exported by this module.
+=item * L<THelpViewer|TUI::Help::HelpViewer>
+Scrollable help topic view, including C<THelpViewer> and
+C<new_THelpViewer>.
+
+=item * L<THelpWindow|TUI::Help::HelpWindow>
+Centered help window hosting a C<THelpViewer>, including C<THelpWindow> and
+C<new_THelpWindow>.
+
+=back
 
 Help related views are responsible for displaying and managing help content 
 within the framework's user interface and are intended to provide behavior 

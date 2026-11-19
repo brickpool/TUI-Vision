@@ -235,6 +235,7 @@ inventory.
   $informationText     MsgBoxText             Information dialog title
   $initFrame           TFrame                 Frame initialization table
   $insertState         HardwareInfo::*        Insert/overwrite input mode
+  $invalidContext      THelpFile              Uninitialized help context text
   $invalidDriveText    TFileDialog            Invalid drive message
   $invalidFileText     TFileDialog            Invalid file message
   $invalidText         TChDirDialog           Invalid directory message

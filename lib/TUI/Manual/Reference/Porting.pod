@@ -328,12 +328,15 @@ requires these compatibility classes.
 
  Class              Perl Module                  Status
  ------------------ ---------------------------- ------
- TParagraph         (missing)                    [ ]
- TCrossRef          (missing)                    [ ]
- THelpTopic         (missing)                    [ ]
- THelpIndex         (missing)                    [ ]
- THelpFile          (missing)                    [ ]
- THelpViewer        (missing)                    [ ]
- THelpWindow        (missing)                    [ ]
+ TParagraph         TUI::Help::HelpBase          [x]
+ TCrossRef          TUI::Help::HelpBase          [x]
+ TReference         TUI::Help::HelpBase          [x]
+ TRefTable          TUI::Help::RefTable          [x]
+ TTopicDefinition   TUI::Help::TopicDefinition   [x]
+ THelpTopic         TUI::Help::HelpTopic         [x]
+ THelpIndex         TUI::Help::HelpIndex         [x]
+ THelpFile          TUI::Help::HelpFile          [o]
+ THelpViewer        TUI::Help::HelpViewer        [x]
+ THelpWindow        TUI::Help::HelpWindow        [x]
 
 =cut
