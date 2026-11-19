@@ -96,29 +96,12 @@ B<Note>: It's up to the programmer to ensure that each
 L<TGroup|TUI::Views::Group> entity (L<TDialog|TUI:.Dialogs::Dialog> is 
 descended from L<TGroup|TUI::Views::Group>) has only one default button.
 
-=head2 undefined / wrapping / notWrapping
+=head2 :wrapXXXX
 
 Paragraph states available from L<TUI::Help::Const> individually or through
-C<:all>. C<undefined> is C<0> before a wrapping mode has been selected.
+C<:wrapXXXX>. C<undefined> is C<0> before a wrapping mode has been selected.
 C<wrapping> is C<1> and enables word wrapping;
 C<notWrapping> is C<2> and preserves explicit line breaks.
-
-=head2 cXXXX
-
-Help palette strings, available from L<TUI::Help::Const> individually or
-through C<:cXXXX>:
-
-=over
-
-=item cHelpViewer
-
-C<"\x06\x07\x08">, the help viewer palette.
-
-=item cHelpWindow
-
-C<"\x80\x81\x82\x83\x84\x85\x86\x87">, the help window palette.
-
-=back
 
 =head2 cmXXXX
 

@@ -461,23 +461,23 @@ which backend toolkit is already in use.
 
 =head1 BACKEND BEHAVIOR
 
-If any of these toolkit's are already loaded, C<TUI::toolkit> uses them
-directly:
+C<TUI::toolkit> checks the following toolkits in this order and uses the
+first one that is already loaded:
 
 =over 4
 
-=item * C<Moos> - primary minimal backend (defaults to this when available)
+=item * C<Moose> - full meta-object system
 
 =item * C<Moo> - lightweight attribute and method generator
 
-=item * C<Moose> - full meta-object system
+=item * C<Moos> - minimal backend
 
 =back
 
 No attempt is made to replace or extend the backend beyond injecting
 C<dump> and C<DESTROY> when appropriate.
 
-If none of Moos/Moo/Moose are loaded, a very small L<LUNIVERSAL::Object> based 
+If none of Moose/Moo/Moos is loaded, a very small L<UNIVERSAL::Object> based 
 OO layer is used.  This exists only to keep modules functional in environments 
 where no of the other toolkits are available. It is not intended to be a full 
 object system.
@@ -506,7 +506,7 @@ J. Schneider <brickpool@cpan.org>
 
 =head1 LICENSE
 
-Copyright (c) 2024-2026 the L</AUTHORS> as listed above.
+Copyright (c) 2024-2026 the L</AUTHOR> as listed above.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

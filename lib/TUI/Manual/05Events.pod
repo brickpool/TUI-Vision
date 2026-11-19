@@ -13,7 +13,7 @@ TUI::Manual::05 - Events in TUI::Vision
 
 =head1 EVENTS
 
-The previous chapters described the structural side of TUI::Vision.
+The previous chapters described the structural side of L<TUI::Vision>.
 
 Views form a view tree. Groups organize their subviews through
 C<next> and C<last>, while C<current> establishes a selection path
@@ -22,7 +22,7 @@ across nested groups.
 This structure alone, however, does not make an application
 interactive.
 
-TUI::Vision is driven by events.
+L<TUI::Vision> is driven by events.
 
 A keystroke, mouse movement or mouse click produces an event.
 Components of the framework may also generate events in order to
@@ -52,7 +52,7 @@ A keyboard event contains information about the key that was pressed.
 A mouse event contains information about the mouse position and button
 state. Message events carry a command and additional information.
 
-TUI::Vision therefore separates three distinct tasks:
+L<TUI::Vision> therefore separates three distinct tasks:
 
     Event generation
           │
@@ -71,7 +71,7 @@ to react when such an event reaches it.
 
 =head2 The Event Loop
 
-At the center of every running TUI::Vision application is the event
+At the center of every running L<TUI::Vision> application is the event
 loop.
 
 In simplified form it can be represented as:
@@ -86,7 +86,7 @@ In simplified form it can be represented as:
             ▼
        handleEvent()
 
-The classic Turbo Vision implementation expresses the same principle
+The classic I<Turbo Vision> implementation expresses the same principle
 essentially as:
 
     getEvent( event );
@@ -128,7 +128,7 @@ The origin of an event is also largely independent of the event model
 used by the application. A backend translates native input into the
 corresponding L<TEvent|TUI::Drivers::Event> representation. Views then
 operate on the
-common Turbo Vision event model regardless of the underlying terminal
+common I<Turbo Vision> event model regardless of the underlying terminal
 environment.
 
 An event that remains unhandled may eventually return to the modal
@@ -141,7 +141,7 @@ was found.
 
 Not every event takes the same route through the view tree.
 
-Turbo Vision distinguishes three conceptual routing categories:
+I<Turbo Vision> distinguishes three conceptual routing categories:
 
     positional events
 
@@ -168,7 +168,6 @@ Assume that several views overlap the same screen position:
               mouse position
                     │
                     ▼
-
               ┌───────────┐
               │  View A   │      front
               └───────────┘
@@ -201,14 +200,17 @@ chapter becomes significant:
                        application
                             │
                          current
+                            │
                             ▼
                          deskTop
                             │
                          current
+                            │
                             ▼
                           window
                             │
                          current
+                            │
                             ▼
                          scroller
 
@@ -323,7 +325,7 @@ Code handling C<cmOpen> therefore does not normally need to know
 whether the command was produced by a menu, a hotkey or some other
 view.
 
-Turbo Vision traditionally uses command names beginning with C<cm>.
+I<Turbo Vision> traditionally uses command names beginning with C<cm>.
 Framework commands and application-specific commands share the same
 event mechanism, although applications should keep their own command
 values distinct from those reserved by the framework.
@@ -383,17 +385,17 @@ answered.
 
 In simplified form:
 
-                         TGroup
-                           │
-                      evBroadcast
-                           │
-              ┌────────────┼────────────┐
-              ▼            ▼            ▼
-            View A       View B       TGroup
-                                         │
-                                  ┌──────┴──────┐
-                                  ▼             ▼
-                                View C        View D
+    .                    TGroup
+    .                      │
+    .                 evBroadcast
+    .                      │
+    .         ┌────────────┼────────────┐
+    .         ▼            ▼            ▼
+    .       View A       View B       TGroup
+    .                                    │
+    .                             ┌──────┴──────┐
+    .                             ▼             ▼
+    .                           View C        View D
 
 As with other traversal operations, the Z-order of each group
 determines the order in which its subviews see the broadcast.
@@ -421,14 +423,14 @@ The communication therefore changes from a direct dependency:
 to a message distributed through the existing view structure:
 
     View A
-      │
-      ▼
+       │
+       ▼
     Broadcast
-      │
-      ▼
+       │
+       ▼
     View tree
-      │
-      ▼
+       │
+       ▼
     interested View
 
 The sender does not necessarily need to know which concrete view will
@@ -499,7 +501,7 @@ from its base class.
 Usually a derived view needs only to handle additional events while
 retaining the standard behavior already implemented by its ancestors.
 
-A typical TUI::Vision handler therefore looks like this sketch:
+A typical L<TUI::Vision> handler therefore looks like this sketch:
 
     sub handleEvent {
         my ( $self, $event ) = @_;
@@ -599,7 +601,7 @@ entire event mechanism.
 
 =head2 Conclusion
 
-Events provide the dynamic side of the TUI::Vision framework.
+Events provide the dynamic side of the L<TUI::Vision> framework.
 
 The view structure described in the previous chapters determines the
 paths through which events may travel.
@@ -616,7 +618,7 @@ view has fully handled an event, the event becomes C<evNothing> and no
 longer participates in normal event propagation.
 
 Together, the mechanisms described in chapters 03 through 05 form the
-core of the Turbo Vision programming model:
+core of the I<Turbo Vision> programming model:
 
     Architecture
          │
@@ -629,8 +631,7 @@ core of the Turbo Vision programming model:
          ▼
     Application behavior
 
-The next chapter, L<Windows and Dialogs|TUI::Manual::06>, applies these
-mechanisms to two of the most important composite views in TUI::Vision:
-windows and dialogs.
+The L<next chapter|TUI::Manual::06> applies these mechanisms to two of the most 
+important composite views in L<TUI::Vision>: windows and dialogs.
 
 =cut

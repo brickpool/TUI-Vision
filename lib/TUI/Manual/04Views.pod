@@ -14,7 +14,7 @@ TUI::Manual::04 - Views and Groups in TUI::Vision
 =head1 VIEWS AND GROUPS
 
 The previous chapter introduced the view tree as the runtime structure
-of a TUI::Vision application. This chapter now examines the mechanisms
+of a L<TUI::Vision> application. This chapter now examines the mechanisms
 used to organize individual views within that tree.
 
 L<TView|TUI::Views::View> represents the fundamental unit. Every view
@@ -95,21 +95,21 @@ surrounding groups to place it within the overall structure.
 L<TGroup|TUI::Views::Group> is itself a L<TView|TUI::Views::View>, but
 additionally manages an ordered set of subviews.
 
-In the classic Turbo Vision model these subviews are not treated as a
+In the classic I<Turbo Vision> model these subviews are not treated as a
 simple linear list. Their C<next> links form a closed ring.
 
 With three views, the ring can be represented in simplified form as:
 
-          View A ──next──▶ View B ──next──▶ View C
-             ▲                                     │
-             └──────────────────next───────────────┘
+    .     View A ──next──▶ View B ──next──▶ View C
+    .        ▲                                     │
+    .        └──────────────────next───────────────┘
 
 Every view therefore refers to the next view belonging to the same
 group. The final view refers back to the first.
 
 A ring has no inherent beginning or end. The group therefore provides
 additional relationships that give this cycle an order that can be
-used by Turbo Vision.
+used by I<Turbo Vision>.
 
 Of particular importance are C<last> and C<current>.
 
@@ -118,15 +118,15 @@ C<last> identifies a fixed reference point within the ring.
 Starting from C<last>, the first view can be obtained through its
 C<next> link:
 
-                                          last
-                                            │
-                                            ▼
-          View A ──next──▶ View B ──next──▶ View C
-             ▲                                     │
-             └──────────────────next───────────────┘
-             ▲
-             │
-         last->next
+    .                                     last
+    .                                       │
+    .                                       ▼
+    .     View A ──next──▶ View B ──next──▶ View C
+    .        ▲                                     │
+    .        └──────────────────next───────────────┘
+    .        ▲
+    .        │
+    .    last->next
 
 The cyclic structure can therefore be interpreted in a defined order:
 
@@ -153,14 +153,14 @@ C<current> serves a different purpose.
 
 C<current> identifies the subview currently selected within the group:
 
-                         TGroup
-                            │
-                         current
-                            │
-                            ▼
-          View A ──next──▶ View B ──next──▶ View C
-             ▲                                     │
-             └──────────────────next───────────────┘
+    .                    TGroup
+    .                       │
+    .                    current
+    .                       │
+    .                       ▼
+    .     View A ──next──▶ View B ──next──▶ View C
+    .        ▲                                     │
+    .        └──────────────────next───────────────┘
 
 In this example C<View B> is the current view. Its position within the
 ring does not change as a result.
@@ -181,15 +181,15 @@ group.
 The views can be imagined as surfaces stacked above one another, where
 views in front obscure those behind them:
 
-            ┌─────────────┐
-            │   View A    │       front (first)
-            └─────────────┘
-            ┌─────────────┐
-            │   View B    │
-            └─────────────┘
-            ┌─────────────┐
-            │   View C    │       back (last)
-            └─────────────┘
+    ┌─────────────┐
+    │   View A    │       front (first)
+    └─────────────┘
+    ┌─────────────┐
+    │   View B    │
+    └─────────────┘
+    ┌─────────────┐
+    │   View C    │       back (last)
+    └─────────────┘
 
 The stack belongs to the group. The owner relation is separate: the group
 owns its subviews, and each subview refers back to its group.
@@ -203,10 +203,10 @@ The structure of a group therefore combines several responsibilities:
 
     TGroup
       │
-      ├── next / last ─────▶ ordering
-      │                       and Z-order
+      ├── next / last ─────► ordering
+      │                      and Z-order
       │
-      └── current ──────────▶ selection
+      └── current ─────────► selection
 
 Changing the order does not change the view tree as an ownership
 structure. The views continue to belong to the same group, but may
@@ -242,12 +242,12 @@ C<(10,5)>.
 The view itself, however, operates within its own local coordinate
 system:
 
-          ┌────────────────────────┐
-          │ (0,0) ─────▶ x         │
-          │   │                    │
-          │   ▼ y                  │
-          │                        │
-          └────────────────────────┘
+    .     ┌────────────────────────┐
+    .     │ (0,0) ─────▶ x         │
+    .     │   │                    │
+    .     │   ▼ y                  │
+    .     │                        │
+    .     └────────────────────────┘
 
 Drawing code within the view therefore does not need to know its
 absolute position on the screen.
@@ -259,7 +259,7 @@ a window or dialog without requiring changes to its drawing code.
 When the size of the owner changes, the geometry of its subviews may
 also change.
 
-Turbo Vision describes this relationship through C<growMode>.
+I<Turbo Vision> describes this relationship through C<growMode>.
 
 A horizontally growing view could initially appear as follows:
 
@@ -294,7 +294,7 @@ describes how the view responds to changes in its owner's geometry.
 The position of a view within a group does not by itself determine
 whether that view is visible, selected or focused.
 
-Turbo Vision uses state flags such as:
+I<Turbo Vision> uses state flags such as:
 
     sfVisible
     sfSelected
@@ -312,15 +312,15 @@ of it and obscure part or all of its area.
 
 This is where view state and Z-order meet:
 
-               front
-
-              View A       sfVisible
-                │
-              View B       sfVisible
-                │
-              View C       sfVisible
-
-               back
+    .         front
+    .
+    .         View A       sfVisible
+    .           │
+    .         View B       sfVisible
+    .           │
+    .         View C       sfVisible
+    .
+    .         back
 
 All three views may have C<sfVisible> set even though C<View C> is
 partially or completely obscured by views in front of it.
@@ -330,35 +330,35 @@ within its group.
 
 The selected view is represented by C<current>:
 
-                         TGroup
-                            │
-                         current
-                            │
-                            ▼
-                          View B
-                            │
-                       sfSelected
+    .                    TGroup
+    .                       │
+    .                    current
+    .                       │
+    .                       ▼
+    .                     View B
+    .                       │
+    .                  sfSelected
 
 If the selected view is itself a group, that view may in turn have its
 own C<current> subview.
 
 Across several nested groups this produces a selection path:
 
-                       application
-                            │
-                         current
-                            ▼
-                         deskTop
-                            │
-                         current
-                            ▼
-                          window
-                            │
-                         current
-                            ▼
-                        inputLine
-                            │
-                        sfFocused
+    .                  application
+    .                       │
+    .                    current
+    .                       ▼
+    .                    deskTop
+    .                       │
+    .                    current
+    .                       ▼
+    .                     window
+    .                       │
+    .                    current
+    .                       ▼
+    .                   inputLine
+    .                       │
+    .                   sfFocused
 
 Every group involved in this path identifies the next active view
 through C<current>.
@@ -403,14 +403,14 @@ events delivered by the framework.
 Conceptually, an application-specific view therefore has two major
 aspects:
 
-                         TView
-                           │
-                 ┌─────────┴─────────┐
-                 │                   │
-               draw             handleEvent
-                 │                   │
-                 ▼                   ▼
-           screen output       event reaction
+    .                    TView
+    .                      │
+    .            ┌─────────┴─────────┐
+    .            │                   │
+    .          draw             handleEvent
+    .            │                   │
+    .            ▼                   ▼
+    .      screen output       event reaction
 
 The view does not poll the keyboard or mouse itself.
 
@@ -468,7 +468,7 @@ structure.
 
 This completes the structural side of the view system.
 
-The following chapter, L<Events in TUI::Vision|TUI::Manual::05>, adds its
-dynamic counterpart: the creation, distribution and processing of events.
+The L<following chapter|TUI::Manual::05> adds its dynamic counterpart: the 
+creation, distribution and processing of events.
 
 =cut
