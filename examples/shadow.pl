@@ -190,3 +190,161 @@ sub main {
 }
 
 exit main( @ARGV+1, [ $0, @ARGV ] );
+
+#---------------------------------------------------------#
+
+use Getopt::Long qw(GetOptions);
+use Pod::Usage qw(pod2usage);
+
+# Command line options handling for help and manual pages
+BEGIN {
+  my ( $help, $man );
+  GetOptions(
+    'help|?' => \$help,
+    'man'    => \$man,
+  ) or pod2usage( -verbose => 0, -exitval => 2 );
+  pod2usage( -verbose => 0, -exitval => 0 ) if $help;
+  pod2usage( -verbose => 2, -exitval => 0 ) if $man;
+}
+
+__END__
+
+=pod
+
+=head1 NAME
+
+shadow.pl - Turbo Vision shadow demonstration
+
+=head1 SYNOPSIS
+
+  shadow.pl [options]
+
+  Options:
+    -?, --help    Show brief usage information
+        --man     Show the complete manual
+
+=head1 DESCRIPTION
+
+C<shadow.pl> demonstrates the configurable drop shadows used by
+I<Turbo Vision> L<TView|TUI::Views::View> objects.
+
+The application provides a L<TDialog|TUI::Dialogs::Dialog> for changing
+the global shadow attribute and the horizontal and vertical shadow
+size.  Changes can be applied immediately so their effect on the user
+interface can be observed directly.
+
+Press C<F7> or select C<Shadow Dialog> from the File menu to open the
+configuration dialog.
+
+=head1 SHADOW DIALOG
+
+The Shadow Dialog uses three numeric
+L<TInputLine|TUI::Dialogs::InputLine> controls:
+
+=over 4
+
+=item C<Shadow Attr>
+
+Sets the character attribute used to draw view shadows.
+
+The value must be in the range 0 to 255.
+
+=item C<Shadow Size>
+
+Sets the horizontal and vertical size of view shadows.
+
+Both values must be in the range 0 to 20.
+
+=item C<Draw View>
+
+When activated, the L<TButton|TUI::Dialogs::Button> causes the
+L<TDialog|TUI::Dialogs::Dialog> to validate the entered values, apply
+them to the global shadow settings, and redraw the desktop so that the
+changes become immediately visible.
+
+=back
+
+=head1 KEYBOARD SHORTCUTS
+
+=over 4
+
+=item C<F7>
+
+Open the Shadow Dialog.
+
+=item C<F10>
+
+Activate the menu bar.
+
+=item C<Alt-X>
+
+Exit the application.
+
+=back
+
+=head1 DEMONSTRATED FEATURES
+
+This example demonstrates:
+
+=over 4
+
+=item *
+
+Changing the global I<Turbo Vision> shadow attribute.
+
+=item *
+
+Changing the horizontal and vertical shadow size.
+
+=item *
+
+Using validated numeric input fields.
+
+=item *
+
+Using C<getData()> and C<setData()> to exchange structured data with
+a L<TDialog|TUI::Dialogs::Dialog>.
+
+=item *
+
+Handling an application-specific dialog command.
+
+=item *
+
+Redrawing the desktop after changing global display properties.
+
+=back
+
+=head1 ORIGINAL SOURCE
+
+This program is a Perl port based on C<SHADOW.PAS>, an I<Turbo Vision>
+example for Turbo Pascal 6.0.
+
+The original example is attributed to:
+
+  Copyright (c) 1991 by tewi Verlag GmbH
+
+The Perl version preserves the purpose and observable behavior of the
+original example while adapting its dialog controls and data exchange
+to the L<TUI::Vision> API.
+
+=head1 SEE ALSO
+
+L<TUI::App>,
+L<TUI::Dialogs>,
+L<TUI::Validate>,
+L<TUI::Views>
+
+=head1 COPYRIGHT
+
+The original Pascal example is attributed to:
+
+  Copyright (c) 1991 by tewi Verlag GmbH
+
+This Perl version is based on that example and the I<Turbo Vision>
+interfaces implemented by L<TUI::Vision>.
+
+See the L<TUI::Vision> distribution for copyright and licensing
+information relating to the Perl implementation.
+
+=cut

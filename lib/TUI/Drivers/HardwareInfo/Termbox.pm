@@ -9,7 +9,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000002';
+our $VERSION = '2.000003';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -1412,6 +1412,53 @@ class-level method calls.
 Terminal resources are initialized automatically when the module is loaded and
 released automatically when the program terminates.
 
+=head1 VARIABLES
+
+The following variables are internal to the L<Termbox> backend implementation 
+and are not part of the portable L<THardwareInfo|TUI::Drivers::HardwareInfo> 
+interface.
+
+=head2 $insertState
+
+Tracks the current insert mode state (I<Bool>).
+
+=head2 $platform
+
+Contains the platform classification string (I<Str>) determined at module
+initialization.
+
+=head2 $pendingEvent
+
+Indicates whether a Termbox input event has been buffered
+(I<PositiveOrZeroInt>).
+
+=head2 $lastButtons
+
+Stores the most recently observed mouse button state (I<PositiveOrZeroInt>).
+
+=head1 IMPLEMENTATION
+
+This module contains the Termbox-specific implementation behind
+L<THardwareInfo|TUI::Drivers::HardwareInfo>. Public API semantics and usage are 
+documented in L<THardwareInfo|TUI::Drivers::HardwareInfo>.
+
+In this backend, those methods are mapped to Termbox facilities for terminal
+input handling, screen output, cursor management, timing, and mouse support.
+
+The implementation provides translation between L<TUI::Vision> key codes,
+character codes, mouse events, and the corresponding Termbox event model.
+
+When L<Termbox::PP> is used, an additional input hook distinguishes a
+standalone C<Esc> key press from the beginning of an escape sequence. This hook 
+requires access to the pure Perl implementation's input state and is not
+installed when the native FFI-based L<Termbox> implementation is used.
+
+The native L<Termbox> FFI implementation is available only on non-Windows
+systems.
+
+The exact implementation details here are backend-specific and may differ from
+other platform implementations.
+
 =head1 ENVIRONMENT
 
 The environment variables in this section affect backend selection, input
@@ -1531,53 +1578,6 @@ When enabled, it sets C<TB_OPT_ATTR_W> to C<32> unless that variable has
 already been configured explicitly.
 
 New applications should prefer C<TB_OPT_ATTR_W> or C<TB_LIB_OPTS>.
-
-=head1 VARIABLES
-
-The following variables are internal to the L<Termbox> backend implementation 
-and are not part of the portable L<THardwareInfo|TUI::Drivers::HardwareInfo> 
-interface.
-
-=head2 $insertState
-
-Tracks the current insert mode state (I<Bool>).
-
-=head2 $platform
-
-Contains the platform classification string (I<Str>) determined at module
-initialization.
-
-=head2 $pendingEvent
-
-Indicates whether a Termbox input event has been buffered
-(I<PositiveOrZeroInt>).
-
-=head2 $lastButtons
-
-Stores the most recently observed mouse button state (I<PositiveOrZeroInt>).
-
-=head1 IMPLEMENTATION
-
-This module contains the Termbox-specific implementation behind
-L<THardwareInfo|TUI::Drivers::HardwareInfo>. Public API semantics and usage are 
-documented in L<THardwareInfo|TUI::Drivers::HardwareInfo>.
-
-In this backend, those methods are mapped to Termbox facilities for terminal
-input handling, screen output, cursor management, timing, and mouse support.
-
-The implementation provides translation between L<TUI::Vision> key codes,
-character codes, mouse events, and the corresponding Termbox event model.
-
-When L<Termbox::PP> is used, an additional input hook distinguishes a
-standalone C<Esc> key press from the beginning of an escape sequence. This hook 
-requires access to the pure Perl implementation's input state and is not
-installed when the native FFI-based L<Termbox> implementation is used.
-
-The native L<Termbox> FFI implementation is available only on non-Windows
-systems.
-
-The exact implementation details here are backend-specific and may differ from
-other platform implementations.
 
 =head1 SEE ALSO
 

@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000002';
+our $VERSION = '2.000003';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -163,9 +163,12 @@ to true.
 
   my $node = TNode->new(
     text      => $text,
-    childList => $child,   # optional
-    next      => $next,    # optional
-    expanded  => $bool,    # optional
+    # optional
+    (
+      childList => $child | undef,    
+      next      => $next  | undef,
+      expanded  => $bool,
+    )
   );
 
 Creates a new C<TNode>. Only C<text> is required. The C<childList> and C<next>

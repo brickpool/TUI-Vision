@@ -873,3 +873,556 @@ sub main {
 }
 
 exit main( @ARGV+1, [ $0, @ARGV ] );
+
+#---------------------------------------------------------#
+
+use Getopt::Long qw(GetOptions);
+use Pod::Usage qw(pod2usage);
+
+# Command line options handling for help and manual pages
+BEGIN {
+  my ( $help, $man );
+  GetOptions(
+    'help|?' => \$help,
+    'man'    => \$man,
+  ) or pod2usage( -verbose => 0, -exitval => 2 );
+  pod2usage( -verbose => 0, -exitval => 0 ) if $help;
+  pod2usage( -verbose => 2, -exitval => 0 ) if $man;
+}
+
+__END__
+
+=pod
+
+=head1 NAME
+
+tvdemo.pl - Turbo Vision 2.0 demonstration application
+
+=head1 SYNOPSIS
+
+  tvdemo.pl [options] [file ...]
+
+  Options:
+    -?, --help    Show brief usage information
+        --man     Show the complete manual
+
+=head1 DESCRIPTION
+
+C<tvdemo.pl> is a Perl port of the TVDEMO application supplied with
+Borland I<Turbo Vision> 2.0 for C++.
+
+TVDEMO is a comprehensive demonstration of the I<Turbo Vision> application
+framework.  Rather than concentrating on a single control, it combines
+menus, windows, dialogs, gadgets, event handling, context-sensitive
+help, file viewing, desktop management, color and mouse configuration,
+and several small demonstration applications in one program.
+
+The Perl version follows the structure and behavior of the original
+application while using the corresponding L<TUI::Vision> classes and
+runtime facilities.
+
+One or more file names may be specified on the command line.  Files are
+opened automatically in viewer windows when the application starts.
+File specifications containing wildcards open the file-selection
+dialog.
+
+=head1 USER INTERFACE
+
+The application provides four main menus: System, File, Windows, and
+Options.
+
+The menu commands exercise different parts of the I<Turbo Vision>
+framework and are also intended as examples of how application commands
+are dispatched from C<handleEvent()>.
+
+=head2 System menu
+
+The System menu contains the demonstration programs and general
+application commands.
+
+=over 4
+
+=item C<Video mode>
+
+Changes the active screen mode.
+
+=item C<About...>
+
+Displays information about the I<Turbo Vision> demonstration.
+
+=item C<Puzzle>
+
+Opens the sliding puzzle demonstration.
+
+=item C<Calendar>
+
+Opens the interactive calendar window.
+
+=item C<Ascii Table>
+
+Opens an ASCII character table.
+
+=item C<Calculator>
+
+Opens the calculator demonstration.
+
+=item C<Event Viewer>
+
+Opens or toggles the event viewer.  The event viewer displays events
+received by the application and can be used to observe I<Turbo Vision>'s
+event-driven operation.
+
+=back
+
+=head2 File menu
+
+=over 4
+
+=item C<Open...>
+
+Displays a file dialog and opens the selected file in a viewer window.
+
+=item C<Change Dir...>
+
+Displays the standard change-directory dialog.
+
+=item C<DOS Shell>
+
+Temporarily suspends the TUI, starts the system command processor, and
+restores and redraws the application after the command processor exits.
+
+This operation is available only when the Win32 backend is active.
+
+=item C<Exit>
+
+Terminates the application.
+
+=back
+
+=head2 Windows menu
+
+The Windows menu operates on windows currently present on the desktop.
+
+=over 4
+
+=item C<Resize/move>
+
+Allows the selected window to be resized or moved.
+
+=item C<Zoom>
+
+Toggles the selected window between its normal and zoomed sizes.
+
+=item C<Next>
+
+Selects the next window.
+
+=item C<Close>
+
+Closes the selected window.
+
+=item C<Tile>
+
+Arranges tileable windows so that they share the available desktop
+area.
+
+=item C<Cascade>
+
+Arranges the current windows in a cascading layout.
+
+=back
+
+The Tile and Cascade commands are enabled only when the desktop
+contains a tileable view.
+
+=head2 Options menu
+
+=over 4
+
+=item C<Mouse...>
+
+Displays the mouse configuration dialog.  Changes made in the dialog
+are applied to the event queue.
+
+=item C<Colors...>
+
+Displays the I<Turbo Vision> color dialog.
+
+The dialog exposes the palette entries used by the desktop, menus,
+dialogs, viewer, puzzle, calendar, and ASCII table.  Accepted changes
+are applied to the application palette and the screen is redrawn using
+the new colors.
+
+=item C<Save desktop>
+
+Stores the views currently present on the desktop in C<TVDEMO.DST>.
+
+=item C<Retrieve desktop>
+
+Restores a previously saved desktop from C<TVDEMO.DST>.
+
+=back
+
+=head1 COMMAND LINE FILES
+
+Files specified after the options are opened automatically when TVDEMO
+starts.
+
+For example:
+
+  tvdemo.pl README.txt
+
+Multiple file names may be specified:
+
+  tvdemo.pl README.txt Changes.txt
+
+File specifications containing C<*> or C<?> are passed to the Open File
+dialog so that a matching file can be selected interactively.
+
+A specification ending in a directory separator is completed with
+C<*.*> before the file dialog is opened.
+
+=head1 CONTEXT-SENSITIVE HELP
+
+Press C<F1> to request help for the currently active view or command.
+
+Each relevant menu item, dialog, and demonstration window has a help
+context.  TVDEMO obtains the current help context and opens a
+L<THelpWindow|TUI::Help::HelpWindow> at the corresponding topic.
+
+The Perl port reads its help topics from:
+
+  demohelp.txt
+
+This differs from the original C++ demonstration, where the help source
+was processed by the I<Turbo Vision> Help Compiler.  The difference is in
+the help-file representation rather than in TVDEMO's context-sensitive
+help model.
+
+The handling and format of help files are described by
+L<THelpFile|TUI::Help::HelpFile>.
+
+=head1 DEMONSTRATION WINDOWS
+
+=head2 Puzzle
+
+The Puzzle window demonstrates a small interactive application inside a
+I<Turbo Vision> window.  It has its own help context and participates in
+normal desktop window management.
+
+=head2 Calendar
+
+The Calendar window displays an interactive monthly calendar.  The
+current date is initialized from the system date.
+
+=head2 ASCII Table
+
+The ASCII Table demonstrates a custom selectable view and coordinated
+display of character information.
+
+=head2 Calculator
+
+The Calculator demonstrates a complete dialog-like application with its
+own input and display handling.
+
+=head2 File Viewer
+
+Files are displayed using L<TFileWindow|TUI::Gadgets::FileWindow>.
+File windows participate in the normal desktop operations and may
+therefore be moved, resized, zoomed, closed, tiled, and cascaded.
+
+=head2 Event Viewer
+
+The Event Viewer exposes the application's event stream.
+
+While it is active, events received through C<getEvent()> are sent to
+the viewer.  Selecting the Event Viewer command again toggles whether
+the existing viewer is actively recording events.
+
+=head1 DESKTOP PERSISTENCE
+
+TVDEMO demonstrates persistence of an application's desktop.
+
+C<Save desktop> stores the views on the desktop in:
+
+  TVDEMO.DST
+
+C<Retrieve desktop> closes the current desktop views and recreates the
+views stored in that file.
+
+Only the desktop views are persisted.  Application-level views such as
+the menu bar, clock, and heap display remain part of the running
+application.
+
+This demonstrates the I<Turbo Vision> concept of streamable views while
+using the persistence mechanism provided by the Perl implementation.
+
+=head1 APPLICATION GADGETS
+
+TVDEMO places two continuously updated gadgets in the application
+frame.
+
+=head2 Clock
+
+The clock displays the current time and is refreshed while the
+application is idle.
+
+=head2 Heap display
+
+The heap gadget displays runtime memory information and is also
+refreshed while the application is idle.
+
+The original I<Turbo Vision> demonstration supplied both gadgets as part
+of its example code.
+
+=head1 EVENT PROCESSING
+
+TVDEMO demonstrates several layers of I<Turbo Vision> event processing.
+
+C<getEvent()> receives events from the underlying application framework.
+It additionally handles context-sensitive help, the video-mode command,
+and application event monitoring.
+
+C<handleEvent()> dispatches application-specific commands such as
+opening demonstration windows, executing file operations, changing
+options, and saving or restoring the desktop.
+
+The application also uses command and broadcast events to communicate
+between views, including the Event Viewer.
+
+This separation illustrates the central I<Turbo Vision> model in which
+input, commands, view communication, and application actions are
+represented through L<TEvent|TUI::Drivers::Event> objects.
+
+=head1 IDLE PROCESSING
+
+The application overrides its idle processing to update the clock and
+heap gadgets.
+
+It also examines the desktop and enables or disables the Tile and
+Cascade commands depending on whether tileable views are currently
+available.
+
+This demonstrates that command availability in I<Turbo Vision> can reflect
+the current state of the user interface rather than being fixed when
+the menus are constructed.
+
+=head1 KEYBOARD SHORTCUTS
+
+=over 4
+
+=item C<F1>
+
+Open context-sensitive help.
+
+=item C<F3>
+
+Open a file.
+
+=item C<F5>
+
+Zoom or restore the selected window.
+
+=item C<F6>
+
+Select the next window.
+
+=item C<F10>
+
+Activate the menu bar.
+
+=item C<Ctrl-F5>
+
+Resize or move the selected window.
+
+=item C<Alt-F3>
+
+Close the selected window.
+
+=item C<Alt-0>
+
+Open or toggle the Event Viewer.
+
+=item C<Alt-X>
+
+Exit the application.
+
+=item C<Shift-Delete>
+
+Cut selected text where supported by the active view.
+
+=item C<Ctrl-Insert>
+
+Copy selected text where supported by the active view.
+
+=item C<Shift-Insert>
+
+Paste text where supported by the active view.
+
+=back
+
+=head1 DEMONSTRATED FEATURES
+
+TVDEMO brings together a broad selection of I<Turbo Vision> facilities:
+
+=over 4
+
+=item *
+
+Application initialization and the
+L<TApplication|TUI::App::Application> event loop.
+
+=item *
+
+Menus, status lines, commands, and keyboard shortcuts.
+
+=item *
+
+Multiple independent and modal windows.
+
+=item *
+
+Standard dialogs for files and directories.
+
+=item *
+
+Context-sensitive help and help contexts.
+
+=item *
+
+Custom views and application-specific window classes.
+
+=item *
+
+Event handling, command events, and broadcast events.
+
+=item *
+
+Dynamic command enabling and disabling.
+
+=item *
+
+File viewing and command-line file opening.
+
+=item *
+
+Window management, including resize, zoom, tile, and cascade.
+
+=item *
+
+Application palettes and interactive color configuration.
+
+=item *
+
+Mouse configuration.
+
+=item *
+
+Continuous idle-time gadgets.
+
+=item *
+
+Observation of the application event stream.
+
+=item *
+
+Serialization and restoration of desktop views.
+
+=item *
+
+Suspending and resuming the application around an external command
+processor.
+
+=back
+
+=head1 ORIGINAL SOURCE
+
+This program is a Perl port of the TVDEMO demonstration supplied with
+Borland I<Turbo Vision> 2.0 for C++.
+
+The original demonstration is implemented by a collection of source
+files centered around:
+
+  TVDEMO.H
+  TVDEMO1.CPP
+  TVDEMO2.CPP
+  TVDEMO3.CPP
+
+Additional source files implement the individual demonstrations and
+supporting views, including the puzzle, calendar, ASCII table,
+calculator, file viewer, event viewer, application gadgets, and mouse
+dialog.
+
+TVDEMO was designed as an integrated demonstration of the I<Turbo Vision>
+framework rather than as an example of a single class.  The application
+shows how independent I<Turbo Vision> components cooperate through the
+desktop, event system, command system, palettes, streams, and help
+contexts.
+
+The Perl port preserves the structure and observable behavior of the
+original demonstration while expressing it through L<TUI::Vision>.
+
+=head1 PORTING NOTES
+
+The principal intentional difference concerns the help data.
+
+The original I<Turbo Vision> example used help data prepared by the
+I<Turbo Vision> Help Compiler.  The L<TUI::Vision> port uses
+C<demohelp.txt> directly through L<THelpFile|TUI::Help::HelpFile>.  The
+application-level context handling
+remains equivalent: help contexts select topics which are displayed in
+a L<THelpWindow|TUI::Help::HelpWindow>.
+
+Desktop persistence is implemented using the L<TUI::Vision> stream
+representation and Perl persistence facilities while preserving
+TVDEMO's original Save Desktop and Retrieve Desktop operations.
+
+The DOS Shell command is exposed only by the Win32 backend, where the
+system command processor is obtained from C<COMSPEC>.
+
+=head1 FILES
+
+=over 4
+
+=item C<demohelp.txt>
+
+Context-sensitive help data used by L<THelpFile|TUI::Help::HelpFile>.
+
+=item C<TVDEMO.DST>
+
+Desktop state written by C<Save desktop> and read by
+C<Retrieve desktop>.
+
+=back
+
+Both files are located relative to the TVDEMO program.
+
+=head1 SEE ALSO
+
+L<TUI::Vision>,
+L<TUI::App>,
+L<TUI::ColorSel>,
+L<TUI::Dialogs>,
+L<TUI::Gadgets>,
+L<TUI::Help>,
+L<TUI::Menus>,
+L<TUI::MsgBox>,
+L<TUI::StdDlg>,
+L<TUI::Views>
+
+=head1 COPYRIGHT
+
+The original TVDEMO sources contain the following copyright notice:
+
+  Turbo Vision - Version 2.0
+
+  Copyright (c) 1994 by Borland International
+  All Rights Reserved.
+
+This Perl version is a port of the original demonstration for
+L<TUI::Vision>.
+
+See the L<TUI::Vision> distribution for copyright and licensing
+information relating to the Perl implementation.
+
+=cut

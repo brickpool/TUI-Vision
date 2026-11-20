@@ -5,7 +5,7 @@ use 5.010;
 use strict;
 use warnings;
 
-our $VERSION = '2.000002';
+our $VERSION = '2.000003';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 
@@ -407,8 +407,8 @@ TUI::StdDlg::FindFirstRec::Unix - Unix implementation of FindFirstRec
 
 =head1 DESCRIPTION
 
-C<TUI::StdDlg::FindFirstRec::Unix> provides the Unix-specific implementation of 
-the C<FindFirstRec> directory search interface.
+This module provides the Unix-specific implementation of the 
+L<FindFirstRec|TUI::StdDlg::FindFirstRec> directory search interface.
 
 The implementation maps the generic search operations to native Unix directory 
 handling using directory streams and file status information.
@@ -417,23 +417,19 @@ Path names are split into a search directory and a wildcard pattern. Directory
 entries are matched against the wildcard and converted into I<Turbo Vision> 
 compatible C<find_t> records.
 
-=head1 CONSTRUCTOR
+=head1 IMPLEMENTATION
 
-=head2 allocate
+This module contains the Unix-specific implementation behind
+L<FindFirstRec|TUI::StdDlg::FindFirstRec>. Public API semantics and usage are 
+documented in usage are documented in the
+L<FindFirstRec|TUI::StdDlg::FindFirstRec> module.
 
-Creates or reinitializes a directory search associated with a C<find_t>
-record.
+In this implementation, the module translates the generic directory search 
+operations into the corresponding Unix system calls and manages the search 
+context accordingly.
 
-=head1 METHODS
-
-=head2 get
-
-Retrieves the search context associated with a C<find_t> record.
-
-=head2 next
-
-Advances the search and updates the associated C<find_t> structure with
-information about the next matching filesystem entry.
+The exact implementation details here are platform-specific and may differ from
+other platforms.
 
 =head1 AUTHORS
 

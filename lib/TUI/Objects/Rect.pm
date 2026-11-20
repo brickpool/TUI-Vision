@@ -8,7 +8,7 @@ use warnings;
 use List::Util qw( min max );
 use TUI::Objects::Point;
 
-our $VERSION = '2.000002';
+our $VERSION = '2.000003';
 $VERSION =~ tr/_//d;
 our $AUTHORITY = 'cpan:BRICKPOOL';
 

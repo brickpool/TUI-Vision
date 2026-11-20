@@ -29,6 +29,8 @@
 #      the new TBackground object you have defined.
 #------------------------------------------------------------------------
 #
+#      Turbo Vision - Version 1.0
+#
 #      Copyright (c) 1991 by Borland International
 #      All Rights Reserved.
 #
@@ -193,3 +195,105 @@ package main;
 my $sampleProgram = TSampleProgram->new();
 $sampleProgram->run();
 exit;
+
+#========================================================================
+
+use Getopt::Long qw(GetOptions);
+use Pod::Usage qw(pod2usage);
+
+# Command line options handling for help and manual pages
+BEGIN {
+  my ( $help, $man );
+  GetOptions(
+    'help|?' => \$help,
+    'man'    => \$man,
+  ) or pod2usage( -verbose => 0, -exitval => 2 );
+  pod2usage( -verbose => 0, -exitval => 0 ) if $help;
+  pod2usage( -verbose => 2, -exitval => 0 ) if $man;
+}
+
+__END__
+
+=pod
+
+=head1 NAME
+
+color1.pl - I<Turbo Vision> example for modifying the desktop pattern
+
+=head1 SYNOPSIS
+
+  color1.pl [options]
+
+  Options:
+    -?, --help    Brief usage information
+        --man     Full documentation
+
+=head1 DESCRIPTION
+
+This example demonstrates how to modify the I<Turbo Vision> desktop
+pattern and palette.
+
+A L<TDeskTop|TUI::App::DeskTop> subclass overrides C<initBackground()>
+to instantiate a specialized L<TBackground|TUI::App::Background> with
+a selected pattern character.  A L<TBackground|TUI::App::Background>
+subclass overrides C<getPalette()> to provide a custom desktop palette.
+
+The L<TApplication|TUI::App::Application> class overrides
+C<initDeskTop()> so the customized desktop is used instead of the
+default desktop.
+
+=head1 ORIGINAL EXAMPLE
+
+This program is a Perl port of the Borland Technical Support example
+C<COLOR1>, "I<Turbo Vision> - Modifying the desktop pattern".
+
+The original example was provided by the Technical Support staff at
+Borland International as a courtesy and not as part of a Borland
+product.  It demonstrated the following steps:
+
+=over
+
+=item 1.
+
+Derive a class from L<TDeskTop|TUI::App::DeskTop> and override
+C<initBackground()> to select the desktop pattern.
+
+=item 2.
+
+Override L<TApplication|TUI::App::Application>'s C<initDeskTop()> to
+create the new desktop.
+
+=item 3.
+
+Derive a class from L<TBackground|TUI::App::Background> and override
+C<getPalette()> to provide a custom palette.
+
+=item 4.
+
+Use the specialized background when initializing the new desktop.
+
+=back
+
+The Perl version preserves the structure and behavior of the
+original example while expressing it through the L<TUI::Vision> API.
+
+=head1 ORIGINAL SOURCE
+
+The original source was C<COLOR1.ZIP>, titled
+I<Turbo Vision> - Modifying the desktop pattern, and provided by
+Borland Technical Support.
+
+The original archive was distributed from Borland's public Turbo
+Vision support archive.
+
+=head1 COPYRIGHT AND LICENSE
+
+The original example contains the following copyright notice:
+
+  Copyright (c) 1991 by Borland International
+  All Rights Reserved.
+
+This Perl port is distributed according to the licensing terms of
+L<TUI::Vision>.
+
+=cut

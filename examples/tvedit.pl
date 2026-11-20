@@ -349,3 +349,244 @@ sub main {
 }
 
 exit main( @ARGV+1, [ $0, @ARGV ] );
+
+#---------------------------------------------------------#
+
+use Getopt::Long qw(GetOptions);
+use Pod::Usage qw(pod2usage);
+
+# Command line options handling for help and manual pages
+BEGIN {
+  my ( $help, $man );
+  GetOptions(
+    'help|?' => \$help,
+    'man'    => \$man,
+  ) or pod2usage( -verbose => 0, -exitval => 2 );
+  pod2usage( -verbose => 0, -exitval => 0 ) if $help;
+  pod2usage( -verbose => 2, -exitval => 0 ) if $man;
+}
+
+__END__
+
+=pod
+
+=head1 NAME
+
+tvedit.pl - Turbo Vision text editor demonstration
+
+=head1 SYNOPSIS
+
+  tvedit.pl [options] [file ...]
+
+  Options:
+    -?, --help    Show brief usage information
+        --man     Show the complete manual
+
+=head1 DESCRIPTION
+
+C<tvedit.pl> is a Perl port of the I<Turbo Vision> 2.0 TVEDIT example
+application.
+
+It demonstrates how the I<Turbo Vision> editor classes can be combined
+into a complete multiple-window text editor.  The application supports
+creating, opening, editing, and saving text files, clipboard operations,
+undo, search and replace, and management of multiple editor windows.
+
+One or more files may be specified on the command line.  Each file is
+opened in a separate editor window when the application starts.  If no
+file is specified, the application starts with an empty desktop and a
+new document can be created from the File menu.
+
+=head1 USER INTERFACE
+
+=head2 File menu
+
+The File menu provides commands for creating a new document, opening an
+existing file, saving the current document, saving under a different
+name, changing the current directory, and exiting the application.
+
+=head2 Edit menu
+
+The Edit menu provides undo, cut, copy, paste, and clear operations.
+
+A hidden editor window is used as the shared clipboard for editor
+windows within the application.
+
+=head2 Search menu
+
+The Search menu provides find, replace, and search-again operations.
+
+The Find dialog supports case-sensitive searches and matching whole
+words.  The Replace dialog additionally supports prompting before each
+replacement and replacing all occurrences.
+
+=head2 Windows menu
+
+The Windows menu provides commands for resizing, moving, zooming,
+selecting, and closing editor windows.
+
+=head1 KEYBOARD SHORTCUTS
+
+=over 4
+
+=item C<F2>
+
+Save the current document.
+
+=item C<F3>
+
+Open a file.
+
+=item C<Ctrl-N>
+
+Create a new document.
+
+=item C<Ctrl-Q>
+
+Exit the application.
+
+=item C<Ctrl-W>
+
+Close the current editor window.
+
+=item C<F5>
+
+Zoom or restore the current editor window.
+
+=item C<F6>
+
+Select the next window.
+
+=item C<Shift-F6>
+
+Select the previous window.
+
+=item C<F10>
+
+Activate the menu bar.
+
+=item C<Ctrl-U>
+
+Undo the last editing operation.
+
+=item C<Shift-Delete>
+
+Cut the selected text.
+
+=item C<Ctrl-Insert>
+
+Copy the selected text.
+
+=item C<Shift-Insert>
+
+Paste text from the clipboard.
+
+=item C<Ctrl-Delete>
+
+Delete the selected text.
+
+=item C<Ctrl-F5>
+
+Resize or move the current window.
+
+=back
+
+=head1 DEMONSTRATED FEATURES
+
+This example demonstrates:
+
+=over 4
+
+=item *
+
+Creating a multiple-document editor application derived from
+L<TApplication|TUI::App::Application>.
+
+=item *
+
+Opening editor windows for files specified on the command line.
+
+=item *
+
+Creating new documents and opening existing files through standard
+file dialogs.
+
+=item *
+
+Using L<TEditWindow|TUI::Editors::EditWindow> for file-backed editor
+windows.
+
+=item *
+
+Providing a shared clipboard through a hidden editor window.
+
+=item *
+
+Connecting editor commands to menu and status-line items.
+
+=item *
+
+Implementing find and replace dialogs with input histories and search
+options.
+
+=item *
+
+Handling editor requests for file errors, save confirmation, search
+failure, and replacement confirmation.
+
+=item *
+
+Cascading multiple editor windows on the desktop.
+
+=item *
+
+Reporting memory allocation failures through a message box.
+
+=back
+
+=head1 ORIGINAL SOURCE
+
+This program is a Perl port of the TVEDIT demonstration supplied with
+Borland I<Turbo Vision> 2.0 for C++.
+
+The original application is divided into the following source files:
+
+  TVEDIT.H
+  TVEDIT1.CPP
+  TVEDIT2.CPP
+  TVEDIT3.CPP
+
+The C++ example demonstrates the construction of a complete text editor
+using L<TApplication|TUI::App::Application>,
+L<TEditWindow|TUI::Editors::EditWindow>,
+L<TEditor|TUI::Editors::Editor>, standard file
+dialogs, menus, status lines, and application-specific dialog handling.
+
+The Perl port preserves the structure and observable behavior of the
+original example while expressing it through the L<TUI::Vision> API.
+
+=head1 SEE ALSO
+
+L<TUI::App>,
+L<TUI::Dialogs>,
+L<TUI::Editors>,
+L<TUI::Menus>,
+L<TUI::MsgBox>,
+L<TUI::StdDlg>,
+L<TUI::Views>
+
+=head1 COPYRIGHT
+
+The original TVEDIT example contains the following copyright notice:
+
+  Turbo Vision - Version 2.0
+
+  Copyright (c) 1994 by Borland International
+  All Rights Reserved.
+
+This Perl version is a port of the original example for L<TUI::Vision>.
+
+See the L<TUI::Vision> distribution for copyright and licensing
+information relating to the Perl implementation.
+
+=cut

@@ -450,3 +450,227 @@ sub main {
 }
 
 exit main( @ARGV + 1, [ $0, @ARGV ] );
+
+#---------------------------------------------------------#
+
+use Getopt::Long qw(GetOptions);
+use Pod::Usage qw(pod2usage);
+
+# Command line options handling for help and manual pages
+BEGIN {
+  my ( $help, $man );
+  GetOptions(
+    'help|?' => \$help,
+    'man'    => \$man,
+  ) or pod2usage( -verbose => 0, -exitval => 2 );
+  pod2usage( -verbose => 0, -exitval => 0 ) if $help;
+  pod2usage( -verbose => 2, -exitval => 0 ) if $man;
+}
+
+__END__
+
+=pod
+
+=head1 NAME
+
+tvdir.pl - Turbo Vision directory outline demonstration
+
+=head1 SYNOPSIS
+
+  tvdir.pl [options] [drive]
+
+  Options:
+    -?, --help    Show brief usage information
+        --man     Show the complete manual
+
+=head1 DESCRIPTION
+
+C<tvdir.pl> is a Perl port of the I<Turbo Vision> 2.0 TVDIR example
+application.
+
+It demonstrates the L<TOutline|TUI::Outline::Outline> control by displaying
+a directory tree together with the files contained in the currently
+selected directory.
+
+The directory tree is shown in the left pane.  Moving the focus to a
+different directory updates the file pane on the right and changes the
+window title to the selected path.
+
+An optional drive or directory may be specified on the command line.
+If none is specified, the current directory is used.
+
+=head1 DIRECTORY VIEW
+
+The directory window consists of two coordinated views.
+
+The left pane contains an outline representing the directory hierarchy.
+Directories can be expanded, collapsed, and selected using the normal
+L<TOutline|TUI::Outline::Outline> controls.
+
+The right pane displays the files in the currently focused directory,
+including file size, modification date and time, and DOS file
+attributes.
+
+Selecting another directory in the outline automatically refreshes the
+file pane.
+
+=head1 DIRECTORY SCANNING
+
+The directory hierarchy is scanned when a directory window is created.
+
+While the tree is being built, a temporary C<Please Wait...> window
+shows the directory currently being scanned.
+
+The resulting hierarchy is represented by L<TNode|TUI::Outline::Node> objects
+and used as the root structure of the L<TOutline|TUI::Outline::Outline>
+control.
+
+=head1 FILE INFORMATION
+
+The file pane displays one row for each file in the selected directory.
+
+Each row contains:
+
+=over 4
+
+=item *
+
+The file name.
+
+=item *
+
+The file size.
+
+=item *
+
+The modification date.
+
+=item *
+
+The modification time.
+
+=item *
+
+DOS archive, read-only, system, and hidden attributes.
+
+=back
+
+=head1 USER INTERFACE
+
+=head2 File menu
+
+C<New Window...> opens another directory window for the configured
+drive or directory.
+
+C<Exit> terminates the application.
+
+=head2 System menu
+
+C<About...> displays information about the TVDIR demonstration.
+
+=head1 KEYBOARD SHORTCUTS
+
+=over 4
+
+=item C<Alt-N>
+
+Open another directory window.
+
+=item C<Alt-A>
+
+Open the About dialog.
+
+=item C<F10>
+
+Activate the menu bar.
+
+=item C<Alt-X>
+
+Exit the application.
+
+=back
+
+=head1 DEMONSTRATED FEATURES
+
+This example demonstrates:
+
+=over 4
+
+=item *
+
+Displaying hierarchical data with
+L<TOutline|TUI::Outline::Outline> and L<TNode|TUI::Outline::Node>.
+
+=item *
+
+Building a directory hierarchy recursively.
+
+=item *
+
+Using scroll bars with an outline and a custom scrolling view.
+
+=item *
+
+Synchronizing two views through command events.
+
+=item *
+
+Updating a file list when the focused outline node changes.
+
+=item *
+
+Drawing formatted file information with
+L<TDrawBuffer|TUI::Views::DrawBuffer>.
+
+=item *
+
+Displaying a temporary progress window while constructing a view.
+
+=item *
+
+Creating and managing multiple directory windows.
+
+=item *
+
+Applying minimum and maximum size limits to a resizable window.
+
+=back
+
+=head1 ORIGINAL SOURCE
+
+This program is a Perl port of C<TVDIR.CPP>, the TVDIR demonstration
+supplied with Borland I<Turbo Vision> 2.0 for C++.
+
+The original example demonstrates the
+L<TOutline|TUI::Outline::Outline> control by presenting a directory tree
+alongside a view of the files in the selected directory.
+
+The Perl port preserves the structure and observable behavior of the
+original example while adapting directory access, object construction,
+and view management to the L<TUI::Vision> API.
+
+=head1 SEE ALSO
+
+L<TUI::App>,
+L<TUI::Dialogs>,
+L<TUI::Menus>,
+L<TUI::Objects>,
+L<TUI::Outline>,
+L<TUI::StdDlg>,
+L<TUI::Views>
+
+=head1 COPYRIGHT
+
+The original TVDIR.CPP example contains the following copyright notice:
+
+  Turbo Vision - Version 2.0
+
+  Copyright (c) 1994 by Borland International
+  All Rights Reserved.
+
+This Perl version is a port of the original example for L<TUI::Vision>.
+
+See the L<TUI::Vision> distribution for copyright and licensing
+information relating to the Perl implementation.
+
+=cut
