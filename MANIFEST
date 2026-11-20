@@ -4,7 +4,7 @@ examples/color1.pl
 examples/demohelp.txt
 examples/hello.pl
 examples/mbcdemo.pl
-examples/shadowdemo.pl
+examples/shadow.pl
 examples/tvdemo.pl
 examples/tvdir.pl
 examples/tvedit.pl
