@@ -1,0 +1,2880 @@
+# PODNAME: TUI::Manual::Reference::Forms
+# ABSTRACT: FRM format of Microsoft Visual Basic for MS-DOS 1.0
+
+__END__
+
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+FRM - Technical documentation of the form model and text-based FRM format
+for Microsoft Visual Basic for MS-DOS 1.0
+
+=head1 STATUS
+
+Working specification of the text-based VBDOS FRM Version 1.00 format.
+Unverified serialization details are explicitly marked as unresolved.
+
+=head1 PURPOSE AND SCOPE
+
+Visual Basic for MS-DOS 1.0 includes a Form Designer that stores complete
+text-mode user interfaces in C<.FRM> form modules. The text representation
+is useful beyond VBDOS itself because it preserves the information needed
+to reconstruct an interactive DOS form: the object tree, character-cell
+geometry, colors, control properties, container relationships, control
+arrays, menus, keyboard behavior, and the BASIC source associated with the
+form.
+
+This document explains that representation so a programmer can implement a
+reader, writer, converter, editor, or form designer without depending on the
+original VBDOS development environment. It is intended to answer practical
+questions such as:
+
+=over 4
+
+=item *
+
+Where does the serialized Form begin and end inside a C<.FRM> module?
+
+=item *
+
+How are Forms, controls, menus, and nested containers represented?
+
+=item *
+
+How are object names, properties, C<Index> values, strings, and Boolean
+values stored?
+
+=item *
+
+How do C<Char()> values preserve DOS character-cell coordinates and sizes?
+
+=item *
+
+How do C<QBColor()> values preserve the VBDOS 16-color palette?
+
+=item *
+
+How are container membership, OptionButton groups, control arrays, tab
+order, access keys, and menu hierarchy distinguished from one another?
+
+=item *
+
+Which parts of a Form module are serialized object data and which parts are
+ordinary BASIC source that must be preserved separately?
+
+=back
+
+The goal is not merely to list VBDOS properties. The goal is to document how
+those properties and relationships combine into a form that can be parsed,
+understood, modified, and written again without silently changing its
+meaning.
+
+Microsoft's VBDOS help defines the object and property semantics. Ramm's
+contemporary description explains how the Form Designer uses those objects
+in practice. The sample applications shipped with Microsoft Visual Basic
+for MS-DOS provide primary examples of the concrete Version 1.00 text
+representation.
+Where these sources do not establish a serialization rule, this document
+leaves the rule unresolved instead of importing behavior from later Visual
+Basic FRM formats.
+
+This is specifically a reference for the text-based VBDOS FRM format. It is
+not a complete Visual Basic language reference, run-time reference, or
+description of the binary FRM representation. Run-time behavior is included
+where a programmer needs it to interpret stored form data correctly.
+
+=head1 FORM MODULES
+
+A Visual Basic project consists of form modules and code modules. Form
+modules use the C<.FRM> extension; code modules use C<.BAS>.
+
+The C<Module Definitions> topic divides the binary FRM representation it
+describes into three parts:
+
+=over 4
+
+=item 1. Form-module identifier or header
+
+Microsoft help names a form-module header that identifies the file as a
+valid form module and describes the locations of form data and event
+procedures. Its concrete representation in the text-based FRM format has
+not yet been established.
+
+=item 2. Form data
+
+The form data contains the initial values of form properties, control
+properties, and control names. It therefore includes the design-time
+model of the user interface.
+
+=item 3. BASIC source code
+
+Form code includes data declarations, general procedures, and event
+procedures associated with a form and its controls. Form code is stored in
+the same file as the form. Event procedures and general procedures in a
+form module are private to that module.
+
+=back
+
+A C<.FRM> module can also be a project's startup module. If the startup
+module is a form, the application begins by loading that form and then
+waits for form events.
+
+=head1 TEXT-BASED FRM FORMAT
+
+The Form Designer can save forms in binary or text form. This document
+covers only the text-based representation.
+
+The examples in this chapter come primarily from the sample applications
+shipped with Microsoft Visual Basic for MS-DOS. The examples were printed by
+VBDOS to text files, preserving the Form layout followed by the Version 1.00
+object listing. Microsoft help and Ramm are used to explain the semantics of
+the objects and properties.
+
+=head2 Complete Microsoft example: Clock
+
+A complete example is more useful than a synthetic combination of isolated
+controls. The Microsoft Clock sample is small enough to show in full and its
+VBDOS printout contains both the rendered Form and the complete Version 1.00
+object tree.
+
+The printout is:
+
+    +|-|   Clock   |v|+
+    |  Settings       |
+    |             +---|
+    |      Time   | Ti|
+    |      Date   +---|
+    |                 |
+    +-----------------+
+    Version 1.00
+    BEGIN Form frmClock
+        AutoRedraw   = 0
+        BackColor    = QBColor(7)
+        BorderStyle  = 1
+        Caption      = "Clock"
+        ControlBox   = -1
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(7)
+        Left         = Char(32)
+        MaxButton    = 0
+        MinButton    = -1
+        MousePointer = 0
+        Tag          = ""
+        Top          = Char(8)
+        Visible      = -1
+        Width        = Char(19)
+        WindowState  = 0
+        BEGIN Label lblTime
+            Alignment    = 2
+            AutoSize     = 0
+            BackColor    = QBColor(7)
+            BorderStyle  = 0
+            Caption      = "Time"
+            DragMode     = 0
+            Enabled      = -1
+            ForeColor    = QBColor(0)
+            Height       = Char(1)
+            Left         = Char(3)
+            MousePointer = 0
+            TabIndex     = 0
+            Tag          = ""
+            Top          = Char(1)
+            Visible      = -1
+            Width        = Char(11)
+        END
+        BEGIN Label lblDate
+            Alignment    = 2
+            AutoSize     = 0
+            BackColor    = QBColor(7)
+            BorderStyle  = 0
+            Caption      = "Date"
+            DragMode     = 0
+            Enabled      = -1
+            ForeColor    = QBColor(0)
+            Height       = Char(1)
+            Left         = Char(3)
+            MousePointer = 0
+            TabIndex     = 1
+            Tag          = ""
+            Top          = Char(2)
+            Visible      = 0
+            Width        = Char(11)
+        END
+        BEGIN Timer tmrClockTick
+            Enabled      = -1
+            Interval     = 1000
+            Left         = Char(13)
+            Tag          = ""
+            Top          = Char(0)
+        END
+        BEGIN Menu mnuSettings
+            Caption      = "&Settings"
+            Checked      = 0
+            Enabled      = -1
+            Separator    = 0
+            Tag          = ""
+            Visible      = -1
+            BEGIN Menu mnuSetOptions
+                Caption      = "24 &Hour"
+                Checked      = 0
+                Enabled      = -1
+                Index        = 0
+                Separator    = 0
+                Tag          = ""
+                Visible      = -1
+            END
+            BEGIN Menu mnuSetOptions
+                Caption      = "&Seconds"
+                Checked      = -1
+                Enabled      = -1
+                Index        = 1
+                Separator    = 0
+                Tag          = ""
+                Visible      = -1
+            END
+            BEGIN Menu mnuSetOptions
+                Caption      = "&Date"
+                Checked      = 0
+                Enabled      = -1
+                Index        = 2
+                Separator    = 0
+                Tag          = ""
+                Visible      = -1
+            END
+            BEGIN Menu mnuSetOptions
+                Caption      = "-"
+                Checked      = 0
+                Enabled      = -1
+                Index        = 3
+                Separator    = -1
+                Tag          = ""
+                Visible      = -1
+            END
+            BEGIN Menu mnuSetOptions
+                Caption      = "A&larm..."
+                Checked      = 0
+                Enabled      = -1
+                Index        = 4
+                Separator    = 0
+                Tag          = ""
+                Visible      = -1
+            END
+            BEGIN Menu mnuSetOptions
+                Caption      = "&About..."
+                Checked      = 0
+                Enabled      = -1
+                Index        = 5
+                Separator    = 0
+                Tag          = ""
+                Visible      = -1
+            END
+        END
+    END
+
+The first seven lines are the Form as printed by VBDOS. The serialized object
+tree starts at C<Version 1.00>. C<frmClock> contains two
+L<Labels|/Label>, one L<Timer|/Timer>, and one top-level L<Menu|/Menu>.
+The Menu contains six C<mnuSetOptions> elements with
+C<Index = 0> through C<5>, so the same example also demonstrates a Menu
+L<control array|/Menu control arrays>, nesting, a checked item, a
+L<separator|/Separators>, L<access keys|/Access keys>, explicit
+L<default values|/Defaults>, and Timer design-time coordinates.
+
+C<lblTime> is centered with C<Alignment = 2> and visible. C<lblDate> is also
+centered but starts with C<Visible = 0>. C<tmrClockTick> has no visible runtime
+representation, yet its design-time C<Left> and C<Top> values are printed.
+
+The remainder of this chapter refers back to this real Microsoft example and
+to additional Microsoft sample fragments where another control type is more
+representative.
+
+=head2 Version line
+
+All examined Microsoft sample printouts use:
+
+    Version 1.00
+
+No alternative Version 1.00 spelling has been observed. A writer seeking
+compatibility with the known files should emit this spelling. A reader may
+choose to accept harmless variations, but that is reader policy and not a
+property established by the sources.
+
+The version line is useful as an anchor because BASIC source can exist on
+both sides of the serialized object tree. A reader should not assume that
+the Form starts at byte zero or that everything before the first C<BEGIN>
+is disposable.
+
+=head2 Object blocks
+
+The complete Clock example opens its outer object with:
+
+    BEGIN Form frmClock
+        ...
+    END
+
+Controls use the same construction:
+
+    BEGIN CommandButton Command1
+        ...
+    END
+
+The second token identifies the object type. The following token carries
+the object name: C<FormName> for a Form and C<CtlName> for a control or
+menu. In the observed text listings there is no separate
+C<FormName = ...> or C<CtlName = ...> assignment inside those blocks.
+
+The Microsoft Directory sample confirms the same representation:
+
+    Version 1.00
+    BEGIN Form Form1
+        ...
+        BEGIN DirListBox Dir1
+            ...
+        END
+    END
+
+Blocks are recursive. The Menu in the complete Clock example remains open
+while its C<mnuSetOptions> child blocks are written. Each C<END> closes
+exactly one currently open object. This makes a stack a natural implementation
+model, but the stack is a parser technique rather than a claim about VBDOS
+internals.
+
+Observed object types in the source collections include C<Form>, C<Menu>,
+C<CheckBox>, C<CommandButton>, C<DirListBox>, C<DriveListBox>,
+C<FileListBox>, C<Frame>, C<Label>, C<OptionButton>, C<PictureBox>, and
+C<TextBox>. The Microsoft object model contains additional types discussed
+later; absence from these particular listings is not evidence that another
+type cannot occur in a text FRM file.
+
+The Microsoft BookLook and Quick Chart samples also show C<MDIForm> as an
+outer form type:
+
+    Version 1.00
+    BEGIN MDIForm frmBooklook
+        ...
+    END
+
+A reader must therefore accept both C<Form> and C<MDIForm> at the root of the
+Version 1.00 object tree.
+
+=head2 Property assignments
+
+Inside the object block, one property is represented as an assignment:
+
+    PropertyName = value
+
+The complete Clock example contains different value forms side by side:
+
+    Visible   = -1
+    Caption   = "&Settings"
+    BackColor = QBColor(7)
+    Height    = Char(7)
+
+The Microsoft samples show the same pattern in real source. For example,
+a TextBox contains:
+
+    BackColor    = QBColor(15)
+    BorderStyle  = 1
+    DragMode     = 0
+    Enabled      = -1
+    ForeColor    = QBColor(0)
+    Height       = Char(1)
+    Left         = Char(1)
+    MousePointer = 0
+    MultiLine    = 0
+    ScrollBars   = 0
+    TabIndex     = 0
+    TabStop      = -1
+    Tag          = ""
+    Text         = ""
+    Top          = Char(1)
+    Visible      = -1
+    Width        = Char(35)
+
+The printed sources visually align assignments, but the available evidence
+does not establish fixed columns as syntax. The same is true for property
+order. A reader should parse names and values. A writer targeting the
+observed convention should keep one property assignment per line and a
+stable, readable order rather than invent an alternative representation.
+
+=head2 Value representation
+
+An FRM property value is not always represented as a bare scalar. The
+observed files use distinct textual forms. Recognizing the form first keeps
+a parser from accidentally losing VBDOS-specific information.
+
+The complete Clock example contains several important cases:
+
+    BorderStyle = 1
+    Visible     = -1
+    Caption     = "Clock"
+    Height      = Char(7)
+    BackColor   = QBColor(7)
+
+The Microsoft Notepad and BookLook samples provide shortcut values such as:
+
+    Shortcut = {F2}
+
+=head3 Integer values
+
+Bare decimal integers occur for ordinary numeric and enumerated properties:
+
+    BorderStyle = 2
+    MousePointer = 6
+    TabIndex = 11
+    WindowState = 0
+
+The property definition supplies the semantics. C<2> is therefore not a
+universal FRM value with one meaning: in C<BorderStyle> it identifies a
+border style, while another property can use the same number for a different
+enumeration or numeric quantity.
+
+A reader should preserve the integer first and interpret it according to
+the property's documented type and range. The
+L<control reference|/CONTROL REFERENCE> describes control-specific values.
+
+=head3 Boolean values
+
+Boolean properties use VBDOS numeric Boolean values:
+
+    Enabled = -1
+    Visible = -1
+    Cancel  = 0
+    Default = 0
+
+C<-1> represents True and C<0> represents False. This representation is
+visible repeatedly in the Microsoft samples.
+
+The complete Clock example includes both Boolean representations. The Form
+is visible while C<lblDate> is initially hidden:
+
+    Visible = -1
+    ...
+    Visible = 0
+
+A property-aware parser may expose these values as Booleans. A lossless
+model should still know how VBDOS serialized them so that writing the file
+does not silently introduce a different representation.
+
+=head3 String values
+
+Strings are enclosed in double quotes:
+
+    Caption = "Example"
+    Tag     = ""
+    Text    = ""
+
+The empty string is therefore explicitly represented as C<"">. Captions
+also demonstrate that the serialized string can contain an access-key
+marker:
+
+    Caption = "E&xit"
+
+The ampersand is significant to the VBDOS control or menu semantics and is
+part of the stored string. A parser should not remove it merely because a
+later UI layer may display the next character specially.
+
+A double quote inside a string is escaped by doubling it. For example, the
+value:
+
+    Last"2"
+
+is serialized as:
+
+    "Last""2"""
+
+The first and last double quotes delimit the FRM string. Each embedded double
+quote is represented by two consecutive double quotes. A reader therefore
+converts C<""> inside a quoted string to one literal C<"> character; a writer
+doubles each literal C<"> before adding the surrounding delimiters.
+
+=head3 Character-cell values: Char()
+
+C<Char()> is fundamental to understanding VBDOS geometry. Visual Basic for
+MS-DOS presents a text-mode user interface. Positions and dimensions in the
+observed FRM files are represented in character cells rather than in the
+pixel- or twip-oriented coordinate systems a programmer may know from
+Windows Visual Basic.
+
+The complete Clock example uses:
+
+    Height = Char(7)
+    Left   = Char(32)
+    Top    = Char(8)
+    Width  = Char(19)
+
+This describes a Form 19 character cells wide and 7 character cells high,
+positioned at column 32 and row 8 in its containing coordinate system.
+
+The Microsoft Seek sample provides a direct example:
+
+    BEGIN FileListBox File1
+        Height = Char(11)
+        Left   = Char(48)
+        Top    = Char(7)
+        Width  = Char(26)
+        ...
+    END
+
+The L<FileListBox|/FileListBox> is therefore 26 columns wide and 11 rows
+high. Its upper left corner is at column 48, row 7 relative to its container.
+
+C<Char(48)> must not be interpreted as "character number 48" or as a call
+to produce an ASCII character. Within these FRM geometry properties it is
+the textual representation of a dimension or coordinate measured in
+character cells.
+
+Container nesting changes the coordinate origin. The Microsoft Spin sample
+provides a compact Frame example:
+
+    BEGIN Frame Frame1
+        Left = Char(2)
+        Top  = Char(2)
+        ...
+        BEGIN OptionButton Option1
+            Left = Char(1)
+            Top  = Char(1)
+            ...
+        END
+    END
+
+C<Option1> starts at column 1, row 1 relative to C<Frame1>, not relative to
+the Form. A renderer can calculate an absolute position when required, but
+a reader/writer model must retain the relative coordinate and parent object.
+Flattening the child to one absolute coordinate would change the information
+required to reproduce the FRM object tree.
+
+A convenient intermediate representation is conceptually:
+
+    kind     CharacterCell
+    value    48
+
+This does not prescribe a Perl class or parser implementation. Its purpose
+is to keep the VBDOS unit visible until a later layer deliberately maps it
+to Turbo Vision or another target UI.
+
+=head3 Color values: QBColor()
+
+Color properties in the observed files are represented with C<QBColor()>:
+
+    BackColor = QBColor(15)
+    ForeColor = QBColor(0)
+
+The argument belongs to the traditional 16-color BASIC palette:
+
+     0  Black           8  Gray
+     1  Blue            9  Light Blue
+     2  Green          10  Light Green
+     3  Cyan           11  Light Cyan
+     4  Red            12  Light Red
+     5  Magenta        13  Light Magenta
+     6  Yellow         14  Light Yellow
+     7  White          15  Bright White
+
+A Microsoft sample TextBox fragment likewise uses:
+
+    BackColor = QBColor(15)
+    ForeColor = QBColor(0)
+
+specifies a bright-white background and black foreground.
+
+C<QBColor(n)> should be parsed as a structured FRM value form, not evaluated
+as arbitrary BASIC program text. For example:
+
+    kind     QBColor
+    value    15
+
+preserves the original palette number. Converting that palette number to a
+Turbo Vision color attribute, ANSI color, or RGB value belongs to a separate
+mapping layer. The FRM parser should not make that target-specific decision.
+
+The Form Designer exposes the same complete 16-color palette directly.
+Selecting a foreground or background color updates C<ForeColor> or
+C<BackColor>. This is a palette-index operation rather than an RGB color
+picker and corresponds to C<QBColor(0)> through C<QBColor(15)> in text FRM.
+
+=head3 Shortcut values
+
+The Microsoft Notepad sample shows function-key shortcuts in braces:
+
+    Shortcut = {F2}
+
+This is a distinct observed value form. It should not be confused with a
+quoted Caption access key such as:
+
+    Caption = "&File"
+
+C<{F2}> is a shortcut property value. C<&> inside a Caption marks an access
+key. Both describe keyboard interaction, but they are represented and used
+differently; see L<access keys|/Access keys>.
+
+Only shortcut spellings actually observed or established by VBDOS
+documentation should be treated as known grammar. The complete set of
+possible brace expressions remains to be documented from evidence.
+
+=head2 Nested containers
+
+Object-block indentation is not merely visual formatting.
+They represent containment:
+
+    BEGIN Frame Frame1
+        ...
+        BEGIN OptionButton Option1
+            ...
+        END
+        BEGIN OptionButton Option2
+            ...
+        END
+    END
+
+VBDOS documents L<Form|/Forms>, L<Frame|/Frame>, and
+L<PictureBox|/PictureBox> as control containers. The Microsoft Spin and Chart
+samples show child controls lexically nested inside container blocks. No
+separate C<Parent = ...> assignment is required in the observed representation.
+
+The nesting determines both the hierarchy and the coordinate system. It can
+also affect behavior. L<OptionButtons|/OptionButton> in the same container
+form a functional L<option group|/OPTIONBUTTON GROUPS>; putting them into
+different Frame or PictureBox containers creates independent groups.
+
+A parser that places every control directly under the Form would therefore
+lose semantics even if it retained C<Left>, C<Top>, C<Width>, and C<Height>.
+
+=head2 Control arrays
+
+Control arrays are independent of container nesting. VBDOS defines a control
+array as controls of the same type sharing C<CtlName> and event procedures,
+with C<Index> distinguishing individual members. See also
+L<control-array semantics|/CONTROL ARRAYS>.
+
+The Microsoft Calculator, Check Register, and Chart samples provide direct
+serialization examples. Repeated TextBox blocks
+have the same name and different indexes:
+
+    BEGIN TextBox txtLayer2Text
+        Height   = Char(3)
+        Index    = 3
+        Left     = Char(12)
+        TabIndex = 3
+        Text     = "Layer 4"
+        Top      = Char(10)
+        Width    = Char(17)
+        ...
+    END
+
+    BEGIN TextBox txtLayer2Text
+        Height   = Char(3)
+        Index    = 4
+        Left     = Char(12)
+        TabIndex = 4
+        Text     = "Layer 5"
+        Top      = Char(13)
+        Width    = Char(17)
+        ...
+    END
+
+The C<BEGIN> line still contains the shared C<CtlName>. C<Index> is an
+ordinary property inside each block. Consequently, C<CtlName> alone is not
+a unique key for controls in a parser.
+
+Conceptually, lookup needs at least:
+
+    object type
+    CtlName
+    optional Index
+
+A control without C<Index> is not implicitly array element zero. Absence of
+the property means that it is not a member of a control array.
+
+Containment and array membership must remain separate. A set of OptionButtons
+can all be children of one Frame and simultaneously members of one control
+array. The Frame determines the option group and coordinate origin; the
+shared name plus C<Index> determines programmatic array identity.
+
+=head2 Menus
+
+Menus use the same block mechanism as other objects, but their nesting
+represents menu hierarchy. The Microsoft BookLook sample shows, in reduced
+form:
+
+    BEGIN Menu mnuFile
+        Caption   = "&File"
+        Checked   = 0
+        Enabled   = -1
+        Separator = 0
+        Tag       = ""
+        Visible   = -1
+
+        BEGIN Menu mnuFileLoad
+            Caption   = "&Open Existing Data File"
+            Enabled   = -1
+            Separator = 0
+            Visible   = -1
+        END
+
+        BEGIN Menu mnuFileSave
+            Caption   = "&Save Current Data"
+            Enabled   = -1
+            Separator = 0
+            Shortcut  = {F2}
+            Visible   = -1
+        END
+    END
+
+C<mnuFileLoad> and C<mnuFileSave> are children of C<mnuFile>. A parser must
+therefore preserve menu nesting rather than flatten all Menu blocks into a
+single list attached to the Form.
+
+The observed source order is the menu order; no separate order property is
+present in these examples. C<&> inside C<Caption> remains part of the stored
+string and marks the access key. C<Shortcut = {F2}> is a separate keyboard
+shortcut property. C<Separator> is serialized numerically like other Boolean
+properties.
+
+Menu control arrays use the same documented C<CtlName>/C<Index> model as
+other control arrays. A concrete menu-array serialization should still be
+quoted only when it is found in the sources; the general array semantics do
+not justify inventing an unobserved listing.
+
+=head2 BASIC code placement
+
+A C<.FRM> is a Form module, not merely an object-description resource. BASIC
+source and the serialized Form therefore coexist in the same file.
+
+Microsoft sample modules preserve BASIC source outside the printed Form
+definition. A typical boundary after the final control and Form is:
+
+    END
+    END
+    COMMON SHARED LF = ""
+
+    SUB Command1_Click ()
+        ...
+    END SUB
+
+The first C<END> closes the last open child block. The second closes the
+Form. C<COMMON SHARED> and the following C<SUB> are BASIC source rather than
+FRM object properties.
+
+The form module may also contain BASIC material outside the object listing.
+This means that a reader cannot simply define the file as "Form data followed
+by BASIC". For lossless handling it should preserve text outside the
+serialized Form block on either side.
+
+The FRM-specific requirement is to preserve object names and indexes so
+VBDOS can maintain the association with BASIC event procedures. Event
+procedures themselves use BASIC syntax.
+
+=head2 Defaults
+
+The real listings explicitly write many properties whose values are also
+documented defaults:
+
+    DragMode    = 0
+    Enabled     = -1
+    Tag         = ""
+    Visible     = -1
+    WindowState = 0
+
+The Microsoft Calculator sample CommandButtons likewise write both:
+
+    Cancel  = 0
+    Default = 0
+
+although False is the documented default for both properties.
+
+The evidence therefore establishes that text FRM writers can emit default
+values. It does not establish that every default must always be written or
+which values an original Form Designer may omit.
+
+The Form Designer creates each new object with initial property values.
+Consequently, an explicitly stored default can simply be the unchanged value
+created by the Designer. Its presence does not prove that the user edited the
+property.
+
+For a reader, omission and explicit default are semantically related but not
+necessarily textually equivalent when lossless rewriting is desired. It is
+useful to distinguish "property not present" from "property present with its
+default value" even when both lead to the same VBDOS runtime state.
+
+=head2 Comments in BASIC source
+
+Comments are BASIC source and are not part of the serialized Form object
+tree.
+
+Microsoft BASIC supports both C<REM> and an apostrophe as comment forms:
+
+    REM Initialize the form
+
+    ' Initialize the form
+
+    X = 1  ' Current selection
+
+Comments can occur in BASIC source before or after the serialized Form
+definition. A lossless FRM reader must preserve them together with the
+surrounding BASIC source.
+
+A comment must not be interpreted while parsing property assignments or
+object blocks merely because its text happens to contain FRM keywords:
+
+    ' BEGIN Form Test
+
+is BASIC comment text, not the beginning of another serialized Form.
+
+Likewise:
+
+    ' Version 1.00
+
+does not identify a second form definition.
+
+=head2 Practical reader model
+
+A text FRM file is best understood as a BASIC form module containing one
+serialized object tree.
+
+For a reader, the file can be viewed as three consecutive regions:
+
+    +----------------------------------------------------------+
+    | BASIC source before the Form definition                  |
+    |                                                          |
+    | declarations, directives, comments, shared variables     |
+    +----------------------------------------------------------+
+                            |
+                            v
+                     Version 1.00
+                            |
+                            v
+    +----------------------------------------------------------+
+    | Serialized Form object tree                              |
+    |                                                          |
+    | Form                                                     |
+    | `-- properties                                           |
+    | `-- controls                                             |
+    |     |-- properties                                       |
+    |     `-- nested controls                                  |
+    | `-- menus                                                |
+    |     `-- nested menu items                                |
+    +----------------------------------------------------------+
+                            |
+                         final END
+                            |
+                            v
+    +----------------------------------------------------------+
+    | BASIC source after the Form definition                   |
+    |                                                          |
+    | declarations, event procedures, general procedures       |
+    | comments                                                 |
+    +----------------------------------------------------------+
+
+The important boundary is therefore not simply "FRM data followed by
+BASIC". The Microsoft printed samples establish the Version 1.00 object
+listing; surrounding BASIC remains part of the Form module and must be
+preserved when present.
+
+A lossless reader must preserve all three regions.
+
+=head3 Reading the object tree
+
+Within the serialized region, C<BEGIN> and C<END> describe a tree.
+
+Consider this reduced example:
+
+    Version 1.00
+    BEGIN Form Form1
+        Caption = "Example"
+        Width   = Char(40)
+
+        BEGIN Frame Frame1
+            Caption = "&Mode"
+
+            BEGIN OptionButton Option1
+                Caption = "&Automatic"
+                Left    = Char(1)
+                Top     = Char(1)
+                Value   = -1
+            END
+
+            BEGIN OptionButton Option2
+                Caption = "&Manual"
+                Left    = Char(1)
+                Top     = Char(2)
+                Value   = 0
+            END
+        END
+
+        BEGIN CommandButton Command1
+            Caption = "E&xit"
+            Left    = Char(26)
+            Top     = Char(7)
+        END
+    END
+
+    SUB Command1_Click ()
+        ...
+    END SUB
+
+The corresponding object tree is:
+
+    Form Form1
+    |
+    +-- Caption = "Example"
+    +-- Width   = Char(40)
+    |
+    +-- Frame Frame1
+    |   |
+    |   +-- Caption = "&Mode"
+    |   |
+    |   +-- OptionButton Option1
+    |   |   +-- Caption = "&Automatic"
+    |   |   +-- Left    = Char(1)
+    |   |   +-- Top     = Char(1)
+    |   |   `-- Value   = -1
+    |   |
+    |   `-- OptionButton Option2
+    |       +-- Caption = "&Manual"
+    |       +-- Left    = Char(1)
+    |       +-- Top     = Char(2)
+    |       `-- Value   = 0
+    |
+    `-- CommandButton Command1
+        +-- Caption = "E&xit"
+        +-- Left    = Char(26)
+        `-- Top     = Char(7)
+
+The C<SUB Command1_Click> procedure does not belong to that tree. It is
+BASIC source associated with C<Command1> by name.
+
+=head3 Structural grammar
+
+The observed block structure can be expressed more precisely in EBNF.
+
+The grammar below describes only structures established by the available
+Version 1.00 source listings. It deliberately leaves unresolved lexical
+details outside the evidence.
+
+    form-block =
+        "BEGIN", form-type, object-name,
+        { property | object-block },
+        "END";
+
+    form-type =
+        "Form" | "MDIForm";
+
+    object-block =
+        control-block
+      | menu-block;
+
+    control-block =
+        "BEGIN", control-type, object-name,
+        { property | control-block },
+        "END";
+
+    menu-block =
+        "BEGIN", "Menu", object-name,
+        { property | menu-block },
+        "END";
+
+    property =
+        property-name, "=", value;
+
+    value =
+        integer
+      | string
+      | char-value
+      | color-value
+      | shortcut-value;
+
+    char-value =
+        "Char", "(", integer, ")";
+
+    color-value =
+        "QBColor", "(", integer, ")";
+
+The grammar describes the structure. It does not imply that arbitrary
+nesting is semantically valid. VBDOS determines which controls can contain
+children and which properties are valid for each object type.
+
+For example:
+
+    BEGIN Frame Frame1
+        Caption = "&Mode"
+
+        BEGIN OptionButton Option1
+            Caption = "&Automatic"
+            Value   = -1
+        END
+    END
+
+matches the grammar as:
+
+    control-block
+        control-type = Frame
+        object-name  = Frame1
+
+        property
+            Caption = "&Mode"
+
+        control-block
+            control-type = OptionButton
+            object-name  = Option1
+
+            property
+                Caption = "&Automatic"
+
+            property
+                Value = -1
+                
+=head3 Parsing property values
+
+Property parsing has two stages.
+
+First read the lexical value form:
+
+    Width     = Char(40)
+    BackColor = QBColor(15)
+    Visible   = -1
+    Caption   = "Example"
+    Shortcut  = {F2}
+
+This yields distinct representations:
+
+    Char(40)       character-cell value
+    QBColor(15)    VBDOS color value
+    -1             integer value
+    "Example"      string value
+    {F2}           shortcut value
+
+Only then should the property definition supply the semantic meaning.
+
+For example:
+
+    Visible = -1
+
+can be interpreted as Boolean True because C<Visible> is documented as a
+Boolean property.
+
+By contrast:
+
+    MousePointer = 6
+
+contains the same lexical kind of integer but C<6> is an enumeration value,
+not Boolean True.
+
+The reader should therefore not convert every non-zero integer to a Boolean.
+
+=head3 Preserving structure
+
+The parsed model should preserve more than the effective visual result.
+
+For example:
+
+    BEGIN Frame Frame1
+        Left = Char(10)
+
+        BEGIN TextBox Text1
+            Left = Char(2)
+        END
+    END
+
+could be rendered at an absolute horizontal position of 12 character cells.
+
+The stored model should nevertheless retain:
+
+    Form
+    `-- Frame1
+        |-- Left = Char(10)
+        `-- Text1
+            `-- Left = Char(2)
+
+rather than replacing C<Text1.Left> with C<Char(12)>.
+
+The nesting determines the parent relationship and the coordinate system.
+For OptionButtons it can additionally determine the functional option
+group.
+
+=head3 Preserving control arrays
+
+A similar rule applies to control arrays.
+
+Given:
+
+    BEGIN TextBox txtLayer2Text
+        Index = 3
+        ...
+    END
+
+    BEGIN TextBox txtLayer2Text
+        Index = 4
+        ...
+    END
+
+both controls intentionally have the same name.
+
+A representation keyed only by C<CtlName> would lose one of them.
+
+The model must preserve:
+
+    TextBox txtLayer2Text
+        Index = 3
+
+    TextBox txtLayer2Text
+        Index = 4
+
+C<CtlName> and optional C<Index> together describe the programmatic
+identity required for a control-array member.
+
+=head3 Preserving source text
+
+Finally, an FRM reader intended for editing or conversion should preserve
+BASIC source outside the object tree.
+
+For example:
+
+    ' Load the current data set
+
+    SUB Command1_Click ()
+        ...
+    END SUB
+
+is not decoration around the FRM data. It is part of the Form module.
+
+The same applies to declarations, directives, general procedures, and
+comments before or after the serialized object tree.
+
+A reader that only returns the Form tree can be sufficient for inspection.
+A reader intended to write the module again must retain the surrounding
+BASIC text as well.
+
+=head3 Resulting reader model
+
+The complete parsed form module can therefore be thought of as:
+
+    FormModule
+    |
+    +-- source_before
+    |
+    +-- version = 1.00
+    |
+    +-- form
+    |   |
+    |   +-- type
+    |   +-- name
+    |   +-- properties
+    |   `-- children
+    |       |
+    |       +-- controls
+    |       +-- containers and their children
+    |       `-- menus and their children
+    |
+    `-- source_after
+
+Each object similarly preserves:
+
+    Object
+    |
+    +-- type
+    +-- name
+    +-- optional Index
+    +-- ordered properties
+    `-- ordered children
+
+This is not intended to prescribe a particular Perl class hierarchy.
+It describes the information that must remain available if the file is to
+be understood and written again without changing its FRM semantics.
+
+=head1 OBJECT MODEL
+
+=head2 Forms
+
+A form is the basic visual container for controls and can be used as a
+window or dialog. Each form module contains one form. The form is
+identified by C<FormName>, a design-time property that is not available at
+run time.
+
+According to the VBDOS help, form properties include:
+
+    AutoRedraw   BackColor      BorderStyle   Caption
+    ControlBox   CurrentX       CurrentY      DragMode
+    Enabled      ForeColor      FormName      FormType
+    Height       Left           MaxButton     MinButton
+    MousePointer Parent         ScaleHeight   ScaleWidth
+    Tag          Top            Visible       Width
+    WindowState
+
+Not every one of these properties can be assumed to appear as an initial
+value in a text FRM file. The storage rules still need to be established.
+However, a format specification must not discard a design-time property
+as irrelevant without evidence.
+
+C<FormType> distinguishes standard forms (0, the default) from MDI
+containers (1).
+
+=head2 Controls
+
+VBDOS provides the following standard control types:
+
+=over 4
+
+=item *
+
+L<CheckBox|/CheckBox>
+
+=item *
+
+L<ComboBox|/ComboBox>
+
+=item *
+
+L<CommandButton|/CommandButton>
+
+=item *
+
+L<DirListBox|/DirListBox>
+
+=item *
+
+L<DriveListBox|/DriveListBox>
+
+=item *
+
+L<FileListBox|/FileListBox>
+
+=item *
+
+L<Frame|/Frame>
+
+=item *
+
+L<HScrollBar|/HScrollBar and VScrollBar> and
+L<VScrollBar|/HScrollBar and VScrollBar>
+
+=item *
+
+L<Label|/Label>
+
+=item *
+
+L<ListBox|/ListBox>
+
+=item *
+
+L<Menu|/Menu>
+
+=item *
+
+L<OptionButton|/OptionButton>
+
+=item *
+
+L<PictureBox|/PictureBox>
+
+=item *
+
+L<TextBox|/TextBox>
+
+=item *
+
+L<Timer|/Timer>
+
+=back
+
+VBDOS also supports L<Custom|/Custom> controls. Custom controls are provided
+through custom-control libraries and Quick Libraries, and appear as
+L<PictureBox|/PictureBox>-like controls in the Form Designer at design time.
+Their control-specific properties, events, and methods are defined by the
+respective library. FRM documentation must therefore not assume that only
+properties of the built-in standard controls can occur.
+
+The detailed entries and links to related control types appear in
+L</CONTROL REFERENCE>.
+
+=head2 Control names
+
+The C<CtlName> property identifies a control and is not available at run
+time.
+
+A valid control name:
+
+=over 4
+
+=item *
+
+begins with an alphabetic character,
+
+=item *
+
+is followed by alphanumeric characters or underscores,
+
+=item *
+
+is at most 40 characters long.
+
+=back
+
+The 40-character limit also affects event-procedure names: the control
+name, an underscore, and the longest event name must not exceed the limit
+in total.
+
+By default, the Form Designer assigns type-dependent names such as
+C<CheckN>, C<ComboN>, C<CommandN>, C<DirN>, C<DriveN>, C<FileN>,
+C<FrameN>, C<HScrollN>, C<LabelN>, C<ListN>, C<OptionN>, C<PictureN>,
+C<TextN>, C<TimerN>, and C<VscrollN>.
+
+=head1 CONTAINERS AND NESTING
+
+=head2 Containers
+
+A container is an object on which other controls can be placed. The VBDOS
+help identifies the following as control containers:
+
+=over 4
+
+=item *
+
+L<Form|/Forms>,
+
+=item *
+
+L<Frame|/Frame>,
+
+=item *
+
+L<PictureBox|/PictureBox>.
+
+=back
+
+Controls placed on one of these objects are its children.
+
+The MDI relationship is different: an MDI container form can contain one
+or more child forms. This relationship is also part of the VBDOS
+parent/child model, but it is not the same as a control contained in a
+Frame or PictureBox.
+
+=head2 Relative coordinates
+
+The C<Left> and C<Top> properties are defined relative to the respective
+container. For controls, these properties are specifically relative; the
+property reference documents a range of 0 to 254 for both forms and
+controls.
+
+When a container is moved, its children move with it. Their positions
+relative to the container's upper-left corner remain unchanged. Child
+objects cannot be moved outside the boundaries of their container.
+
+This behavior is important to an FRM reader: a control must not be
+reconstructed solely from absolute screen coordinates if doing so would
+lose its container relationship.
+
+=head2 Parent
+
+At run time, C<Parent> returns the container of a child control or child
+form. The property is not available at design time and is read-only at run
+time.
+
+C<Parent> therefore describes the run-time view of a structural
+relationship. This does B<not> imply that a property line such as
+C<Parent=...> must occur in a text FRM file. The Microsoft Spin and Chart
+samples serialize children inside the C<BEGIN>/C<END> block of their
+container without a separate C<Parent> assignment.
+
+=head2 Container effects
+
+Container relationships affect more than coordinates. For parent/child
+relationships, Microsoft help documents, among other things, the
+propagation of visibility and activation in container forms. Ramm's
+description of Frame illustrates the corresponding practical model for
+control containers: controls are positioned relative to the Frame, move
+with it, and disappear with it when the Frame becomes invisible.
+
+=head1 OPTIONBUTTON GROUPS
+
+L<OptionButton|/OptionButton> controls form groups in which only one
+option at a time can be selected.
+
+The Form Designer treats OptionButtons as group members. To create
+multiple independent groups, the relevant controls must be placed in
+different L<Frame|/Frame> or L<PictureBox|/PictureBox> containers.
+
+The functional group of an OptionButton is therefore determined by the
+container structure described in L</CONTAINERS AND NESTING>. This grouping
+is B<not> the same as a L<control array|/CONTROL ARRAYS>.
+
+For example, three OptionButtons can simultaneously:
+
+=over 4
+
+=item *
+
+be children of the same L<Frame|/Frame>,
+
+=item *
+
+form one OptionButton group because of that container,
+
+=item *
+
+and be members of a control array because they share a C<CtlName> but
+have different C<Index> values, as described in L</CONTROL ARRAYS>.
+
+=back
+
+These three relationships must remain distinct when interpreting an FRM
+file.
+
+=head1 CONTROL ARRAYS
+
+=head2 Definition
+
+A control array consists of controls of the same type that share a
+C<CtlName> and the same event procedures. Each element has its own
+C<Index>.
+
+C<Index> has the following meaning:
+
+    no value        Control is not a member of a control array
+    0 .. 32767      unique index within the array
+
+If no index is assigned, the control is not a member of an array by
+default.
+
+=head2 Creation in the Form Designer
+
+A control array can be created at design time by assigning an index to
+the first control and giving subsequent controls the same C<CtlName>.
+When a second control with that name is created, VBDOS asks whether to
+create a control array. If confirmed, unique indexes are assigned
+automatically.
+
+The Index property documentation also states that when two or more
+controls share a C<CtlName>, the first available array index is assigned
+automatically.
+
+Ramm also describes the copy-and-paste workflow that commonly creates this
+state. A pasted control initially retains the copied C<CtlName>. Because two
+controls with the same name indicate a possible control array, the Form
+Designer asks whether the pasted control should become an array element.
+
+If the user confirms, VBDOS keeps the common C<CtlName> and assigns an
+available C<Index>. If the user declines, the pasted control must receive a
+distinct C<CtlName>. Repeated names in an FRM file must therefore not be
+rejected as accidental duplicates.
+
+The occurrence of the same C<CtlName> on multiple controls is therefore
+not an accidental name collision, but part of the VBDOS control-array
+model. The same rule applies to L<Menu|/Menu> controls that form a menu
+control array.
+
+=head2 Event procedures
+
+Events from a control array are handled by a shared event procedure. The
+index of the element that raised the event is passed as an additional
+argument:
+
+    SUB ctlname_Click (Index AS INTEGER)
+        ...
+    END SUB
+
+The general syntax for control events is:
+
+    SUB ctlname_event ([Index AS INTEGER] ...)
+
+The optional C<Index> argument identifies the control-array form.
+
+If C<CtlName> is changed after an event procedure has been created, the
+procedure name must also be changed; otherwise VBDOS can no longer
+associate the control with the procedure.
+
+=head2 Dynamic elements
+
+Control arrays are dynamic. Additional elements can be added at run time
+with C<LOAD ctlname[index%]> and removed with C<UNLOAD ctlname[index%]>.
+Design-time controls cannot be removed at run time.
+
+For some uses, such as dynamic menu arrays, at least one initial element
+must exist at design time.
+
+Run-time dynamism does not establish whether dynamically created
+elements appear in the FRM file. The elements present at design time are
+the initial concern for an FRM specification.
+
+=head1 MENUS
+
+=head2 Menu controls
+
+Menus are created in the Menu Design Window, not with the Form
+Designer's standard toolbox. A menu control is an individual menu title,
+menu item, or separator.
+
+Documented menu information includes:
+
+    Caption
+    CtlName
+    Index
+    Tag
+    Checked
+    Enabled
+    Visible
+    Separator
+    Shortcut Key
+    Hierarchy level
+    Order
+
+Not all of this information appears as an ordinary property in the
+general menu-control property list. For the FRM format, the important
+point is that the Designer must preserve this information. The Microsoft
+BookLook, Notepad, Chart, and Clock samples show menu nesting, Menu control
+arrays, separators, and shortcut representations.
+
+=head2 Hierarchy
+
+The Menu Design Window manages menu items hierarchically. Nested items are
+displayed with indentation. Ramm describes menus as supporting up to five
+levels. One Microsoft Menu Designer description uses a six-level counting
+formulation. The difference may concern whether the top-level menu bar is
+counted as a level; the available sources do not resolve that terminology.
+
+The serialized hierarchy itself is unambiguous: each nested C<Menu> block
+adds one parent/child level. Moving an item left or right changes this
+nesting. Moving it up or down changes sibling order. A writer must preserve
+both lexical nesting and child order; neither is represented by C<TabIndex>.
+
+=head2 Access keys
+
+An ampersand (C<&>) immediately before a character in C<Caption> defines
+an access key. This applies to menus and to controls with a Caption
+property.
+
+For controls that can receive focus themselves, the access key activates
+that control. A Label cannot receive focus. Its access key therefore moves
+the focus forward in tab order to the next control that can receive it.
+
+There is no explicit reference from the Label to that control in the FRM
+file. The association is expressed through C<Caption>, C<TabIndex>, and
+the tab-stop behavior of the following control.
+
+The Microsoft Quick Chart sample demonstrates this directly:
+
+    BEGIN Label Label2
+        Caption  = "&Main Title"
+        TabIndex = 1
+        ...
+    END
+
+    BEGIN TextBox txtMain
+        TabIndex = 2
+        TabStop  = -1
+        ...
+    END
+
+C<&Main Title> defines C<Alt+M> as the access key. C<Label2> cannot
+receive focus. Its position in the tab order is C<1>, so VBDOS continues
+to the next control in tab order. C<txtMain> has C<TabIndex = 2> and
+C<TabStop = -1>, and therefore receives the focus.
+
+The same Form contains two further examples:
+
+    BEGIN Label Label1
+        Caption  = "X-&Axis Title"
+        Index    = 0
+        TabIndex = 3
+        ...
+    END
+
+    BEGIN TextBox txtXaxis
+        TabIndex = 4
+        TabStop  = -1
+        ...
+    END
+
+    BEGIN Label Label1
+        Caption  = "&Y-Axis Title"
+        Index    = 1
+        TabIndex = 5
+        ...
+    END
+
+    BEGIN TextBox txtYaxis
+        TabIndex = 6
+        TabStop  = -1
+        ...
+    END
+
+The effective relationships are therefore:
+
+    Alt+M   Label2(1)     -> txtMain(2)
+    Alt+A   Label1(0)(3)  -> txtXaxis(4)
+    Alt+Y   Label1(1)(5)  -> txtYaxis(6)
+
+The numbers in parentheses after the control names above represent
+C<TabIndex>, except C<Label1(0)> and C<Label1(1)>, where the first number
+is the control-array C<Index>.
+
+This distinction is important. The two C<Label1> controls form a control
+array because they share C<CtlName> and have different C<Index> values.
+That relationship is independent of their access-key targets. Access-key
+routing is determined by tab order, not by C<CtlName> or C<Index>.
+
+An FRM reader must therefore not invent or store a separate Label-to-control
+reference. Preserving C<Caption>, C<TabIndex>, C<TabStop>, the control
+hierarchy, and the normal focus semantics is sufficient to preserve the
+relationship.
+
+For menus, an access key and a shortcut are different mechanisms:
+
+    Caption  = "&Save"
+    Shortcut = {F2}
+
+C<Alt+S> is derived from C<Caption> and operates in the context of the
+visible menu level. C<F2> is a separate Shortcut and can invoke the menu
+item's C<Click> event without opening the menu, regardless of focus.
+
+=head2 Separators
+
+A menu item can be displayed as a separator bar by setting
+C<Separator=True>. In the Menu Designer, a single C<-> as the caption
+also produces a separator.
+
+=head2 Menu control arrays
+
+Menu controls can also form control arrays. The elements share a
+C<CtlName>, have individual C<Index> values, and retain their other
+property values. Shared events are handled by an event procedure with an
+index argument, as described in L</CONTROL ARRAYS>.
+
+A Menu C<CtlName> normally identifies one menu control. Reusing the name is
+valid when the controls form a Menu control array and their C<Index> values
+distinguish the individual elements.
+
+=head1 TAB ORDER AND FOCUS
+
+=head2 TabIndex
+
+C<TabIndex> describes a control's position in the tab order. For C<n>
+controls with a TabIndex, the valid range is C<0> through C<n-1>.
+
+By default, VBDOS assigns tab order in the order in which controls are
+drawn on the form. When a C<TabIndex> is changed in the Form Designer,
+the other values are adjusted automatically.
+
+=head2 TabStop
+
+C<TabStop> determines whether tab navigation stops at a control:
+
+    True (-1)    Default; the control is a tab stop
+    False (0)    the control is skipped during tab navigation
+
+A control with C<TabStop=False> retains its C<TabIndex> and therefore
+its place in the tab order.
+
+L<Frame|/Frame> and L<Label|/Label> controls cannot receive focus. When tab
+navigation reaches one of them, focus instead moves to the next control
+that can receive it.
+
+=head2 Default and Cancel
+
+For L<CommandButtons|/CommandButton>, C<Default=True> marks the form's
+default button.
+Only one button on a form can be the default button.
+
+C<Cancel=True> marks the form's cancel button. The default for both
+properties is False.
+
+=head1 GEOMETRY
+
+=head2 Left and Top
+
+C<Left> and C<Top> give the left and top positions of a form or control
+relative to its container. The documented range is 0 to 254.
+
+=head2 Height and Width
+
+For controls, the documented maximum height and width is 254 characters.
+For forms, minimum and maximum values also depend on screen size, border,
+and form elements.
+
+A form's outer dimensions include its border and title bar. By contrast,
+C<ScaleHeight> and C<ScaleWidth> return the inner dimensions of a form or
+PictureBox.
+
+=head1 DESIGN-TIME PROPERTIES
+
+=head2 Relevance to FRM
+
+For the FRM format, the most relevant properties are those that can be
+set at design time and describe an initial object state. VBDOS help
+explicitly distinguishes design time from run time and marks many
+properties as available only at run time or read-only at run time.
+
+A property that the help marks as unavailable at design time cannot be
+set to a design-time value in the Form Designer. This alone does not
+establish how it is serialized in text or which derived run-time
+information an FRM reader must calculate. Such properties are therefore
+documented, but clearly identified as unavailable at design time.
+
+=head2 Identity and metadata
+
+    FormName
+    CtlName
+    Index
+    Tag
+
+C<FormName> identifies forms; C<CtlName> identifies controls. C<Index>
+defines membership in a control array. C<Tag> stores an arbitrary
+identification string; its default is the empty string.
+
+=head2 Visibility and activation
+
+C<Visible> uses True (-1) and False (0); the default is True.
+
+C<Enabled> uses True (-1) and False (0); the default is True. Disabled or
+invisible controls cannot receive focus.
+
+=head2 Caption and Text
+
+C<Caption> denotes static display text or a form's title-bar text. It
+applies to L<CheckBox|/CheckBox>, L<CommandButton|/CommandButton>,
+L<Form|/Forms>, L<Frame|/Frame>, L<Label|/Label>, L<Menu|/Menu>, and
+L<OptionButton|/OptionButton>.
+
+C<Text> denotes editable or selectable text for L<ComboBox|/ComboBox>,
+L<ListBox|/ListBox>, and L<TextBox|/TextBox>. At design time, the default
+for ComboBox and TextBox is the respective C<CtlName>; for ListBox or
+ComboBox with C<Style=2>, the default is the empty string.
+
+=head2 Colors
+
+C<BackColor> and C<ForeColor> use color attributes from 0 to 15. The
+general defaults are BackColor 7 (white) and ForeColor 0 (black), where
+the respective property applies to the object.
+
+=head1 CONTROL REFERENCE
+
+This section describes the controls documented by the Microsoft VBDOS help.
+The property lists combine each compact control summary with the C<Applies To>
+information in the individual property topics. This is necessary because the
+compact summaries omit some applicable properties.
+
+Properties that are unavailable at design time remain part of the VBDOS
+object model, but must not automatically be treated as values stored in a
+text FRM file. Each control description identifies such cases where they are
+material to an FRM reader or writer.
+
+=head2 CheckBox
+
+A CheckBox represents an independently switchable option. Unlike an
+L<OptionButton|/OptionButton>, it is not part of a mutually exclusive group.
+Its C<Value> property is not a VBDOS Boolean value. It uses three
+control-specific states:
+
+    0    unchecked (default)
+    1    checked
+    2    grayed / unavailable
+
+This differs from properties such as C<Enabled> and C<Visible>, where True is
+represented by C<-1>. A reader must therefore interpret C<Value> according to
+the control type rather than convert every nonzero value to Boolean True.
+
+Documented properties:
+
+    BackColor    Caption   CtlName    DragMode
+    Enabled      ForeColor Height     Index
+    Left         MousePointer Parent  TabIndex
+    TabStop      Tag       Top        Value
+    Visible      Width
+
+The Microsoft Setup sample contains this observed CheckBox array element:
+
+    BEGIN CheckBox ChkOption
+        BackColor    = QBColor(7)
+        Caption      = ""
+        DragMode     = 0
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(1)
+        Index        = 1
+        Left         = Char(3)
+        MousePointer = 0
+        TabIndex     = 4
+        TabStop      = -1
+        Tag          = ""
+        Top          = Char(3)
+        Value        = 1
+        Visible      = 0
+        Width        = Char(41)
+    END
+
+C<Value = 1> means checked. The sample simultaneously demonstrates a
+CheckBox control-array element and an initially invisible control.
+
+=head2 ComboBox
+
+A ComboBox combines an edit field like a L<TextBox|/TextBox> with a list like
+a L<ListBox|/ListBox>. C<Style> determines which parts are available:
+
+    0    Dropdown Combo (default)
+    1    Simple Combo
+    2    Dropdown List without editing
+
+Documented properties:
+
+    BackColor  CtlName    DragMode     Enabled
+    ForeColor  Height     Index        Left
+    List       ListCount  ListIndex    MousePointer
+    Parent     SelLength  SelStart     SelText
+    Sorted     Style      TabIndex     TabStop
+    Tag        Text       Top          Visible
+    Width
+
+C<List>, C<ListCount>, and C<ListIndex> are not available at design time.
+C<ListCount> is also read-only at run time. C<SelLength>, C<SelStart>, and
+C<SelText> describe the current run-time selection in the edit field, as
+they do for a L<TextBox|/TextBox>.
+
+At design time, C<Text> defaults to C<CtlName> for styles 0 and 1. For
+C<Style = 2>, C<Text> defaults to the empty string and is read-only at run
+time. These rules belong to the ComboBox object model; the available source
+listings do not establish serialized design-time list contents.
+
+The Microsoft Control Panel sample contains this observed ComboBox:
+
+    BEGIN ComboBox cboWallpaper
+        BackColor    = QBColor(7)
+        DragMode     = 0
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(1)
+        Left         = Char(37)
+        MousePointer = 0
+        Sorted       = 0
+        Style        = 2
+        TabIndex     = 40
+        TabStop      = -1
+        Tag          = ""
+        Top          = Char(13)
+        Visible      = -1
+        Width        = Char(18)
+    END
+
+C<Style = 2> makes this a Dropdown List. No editable initial C<Text> is
+stored in the printed object block.
+
+=head2 CommandButton
+
+A CommandButton performs an action when selected.
+
+Documented properties:
+
+    BackColor   Cancel   Caption      CtlName
+    Default     DragMode Enabled      ForeColor
+    Height      Index    Left         MousePointer
+    Parent      TabIndex TabStop      Tag
+    Top         Value    Visible      Width
+
+C<Default> and C<Cancel> are properties of an individual CommandButton, but
+they assign that button a form-wide role. Only one CommandButton can be the
+Default button of a L<Form|/Forms>. Both properties default to False (C<0>).
+
+C<Value> is not available for CommandButton at design time.
+
+The Microsoft Calculator sample contains this observed control:
+
+    BEGIN CommandButton Command1
+        BackColor   = QBColor(15)
+        Cancel      = 0
+        Caption     = "EXIT"
+        Default     = 0
+        DragMode    = 0
+        Enabled     = -1
+        Height      = Char(3)
+        Left        = Char(63)
+        MousePointer = 0
+        TabIndex    = 15
+        TabStop     = -1
+        Tag         = ""
+        Top         = Char(18)
+        Visible     = -1
+        Width       = Char(10)
+    END
+
+The explicit C<Cancel = 0> and C<Default = 0> show that documented defaults
+may be serialized rather than omitted.
+
+=head2 DirListBox
+
+A DirListBox displays a hierarchical directory list, unlike the
+file-oriented list in a L<FileListBox|/FileListBox>.
+
+Documented properties:
+
+    BackColor  CtlName   DragMode     Enabled
+    ForeColor  Height    Index        Left
+    List       ListCount ListIndex    MousePointer
+    Parent     Path      TabIndex     TabStop
+    Tag        Top       Visible      Width
+
+C<Path>, C<List>, C<ListCount>, and C<ListIndex> are unavailable at design
+time. C<List> and C<ListCount> are read-only at run time. For a DirListBox,
+C<ListIndex = -1> identifies the current directory path when the control is
+loaded at run time.
+
+The Microsoft Directory sample demonstrates that these run-time values
+need not occur in the
+serialized control:
+
+    BEGIN DirListBox Dir1
+        Height   = Char(6)
+        Left     = Char(48)
+        TabIndex = 12
+        Top      = Char(1)
+        Width    = Char(26)
+        ...
+    END
+
+=head2 DriveListBox
+
+A DriveListBox displays the valid drives available to the program. It can
+be paired with a L<DirListBox|/DirListBox> or L<FileListBox|/FileListBox>
+to let the user choose a drive before navigating files.
+
+Documented properties:
+
+    BackColor   CtlName   DragMode     Drive
+    Enabled     ForeColor Height       Index
+    Left        List      ListCount    ListIndex
+    MousePointer Parent   TabIndex     TabStop
+    Tag         Top       Visible      Width
+
+C<Drive>, C<List>, C<ListCount>, and C<ListIndex> are unavailable at design
+time. C<List> and C<ListCount> are read-only at run time. In addition,
+C<Height> and C<Width> are read-only at design time for a DriveListBox.
+
+The Microsoft Font Toolkit sample contains:
+
+    BEGIN DriveListBox Drive1
+        Height   = Char(1)
+        Left     = Char(48)
+        TabIndex = 11
+        Top      = Char(0)
+        Width    = Char(27)
+        ...
+    END
+
+The stored dimensions describe the generated control even though the Form
+Designer does not allow them to be freely changed.
+
+=head2 FileListBox
+
+A FileListBox displays file names and filters them by file attributes and a
+file-name pattern. It complements a L<DirListBox|/DirListBox> and
+L<DriveListBox|/DriveListBox> when a form provides file navigation.
+
+Documented properties:
+
+    Archive    BackColor CtlName    DragMode
+    Enabled    FileName  ForeColor  Height
+    Hidden     Index     Left       List
+    ListCount  ListIndex MousePointer Normal
+    Parent     Path      Pattern    ReadOnly
+    System     TabIndex  TabStop    Tag
+    Top        Visible   Width
+
+C<FileName>, C<Path>, C<List>, C<ListCount>, and C<ListIndex> are unavailable
+at design time. C<List> and C<ListCount> are read-only at run time.
+
+The attribute-filter defaults are:
+
+    Archive     True (-1)
+    Hidden      False (0)
+    Normal      True (-1)
+    ReadOnly    True (-1)
+    System      False (0)
+    Pattern     "*.*"
+
+The Microsoft Seek sample stores the complete default filter explicitly:
+
+    BEGIN FileListBox File1
+        Archive  = -1
+        Hidden   = 0
+        Normal   = -1
+        Pattern  = "*.*"
+        ReadOnly = -1
+        System   = 0
+        ...
+    END
+
+=head2 Frame
+
+A Frame is a control container, like a L<PictureBox|/PictureBox>. It groups
+controls visually and defines a separate coordinate system. It is
+particularly important for creating independent
+L<OptionButton|/OptionButton> groups.
+
+Documented properties:
+
+    BackColor   Caption  CtlName    DragMode
+    Enabled     ForeColor Height    Index
+    Left        MousePointer Parent TabIndex
+    Tag         Top      Visible    Width
+
+The compact Frame summary does not list C<DragMode>, while the C<DragMode>
+property topic explicitly includes Frame under C<Applies To>. This reference
+therefore includes C<DragMode>. C<ForeColor> is likewise confirmed by its
+individual property topic.
+
+Controls nested inside a Frame retain coordinates relative to that Frame,
+as described under L</CONTAINERS AND NESTING>.
+Moving or hiding the Frame affects its children without changing their stored
+relative C<Left> and C<Top> values.
+
+The Microsoft Spin sample provides a direct container example:
+
+    BEGIN Frame Frame1
+        BackColor    = QBColor(7)
+        Caption      = "Spin Control"
+        DragMode     = 0
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(8)
+        Left         = Char(6)
+        MousePointer = 0
+        TabIndex     = 0
+        Tag          = ""
+        Top          = Char(1)
+        Visible      = -1
+        Width        = Char(26)
+        BEGIN TextBox Text1
+            ...
+            Left = Char(1)
+            Top  = Char(1)
+            ...
+        END
+        BEGIN Custom VSpin
+            ...
+        END
+    END
+
+The nested blocks establish C<Frame1> as the parent and coordinate system of
+both standard and Custom controls.
+
+=head2 HScrollBar and VScrollBar
+
+Horizontal and vertical scroll bars represent a value between C<Min> and
+C<Max>. Their orientation is determined by the control type, not by a
+property.
+
+Documented properties:
+
+    Attached     BackColor    CtlName     DragMode
+    Enabled      ForeColor    Height      Index
+    LargeChange  Left         Max         Min
+    MousePointer Parent       SmallChange TabIndex
+    TabStop      Tag          Top         Value
+    Visible      Width
+
+The compact scroll-bar summary omits C<BackColor> and C<ForeColor>, but the
+color-property topic explicitly includes both HScrollBar and VScrollBar.
+
+The documented ranges and defaults are:
+
+    LargeChange    1 .. 32767       default 1
+    SmallChange    1 .. 32767       default 1
+    Min           -32768 .. 32767   default 0
+    Max           -32768 .. 32767   default 32767
+    Value          Min .. Max
+
+C<Attached> is read-only at run time. It reports whether the scroll bar is
+attached to the lower or right edge of its Form; it does not define whether
+the control is horizontal or vertical.
+
+The Microsoft Help sample contains both orientations:
+
+    BEGIN HScrollBar hscHelp
+        Attached     = -1
+        DragMode     = 0
+        Enabled      = -1
+        Height       = Char(1)
+        LargeChange  = 20
+        Left         = Char(8)
+        Max          = 32767
+        Min          = 1
+        MousePointer = 0
+        SmallChange  = 1
+        TabIndex     = 6
+        TabStop      = 0
+        Tag          = ""
+        Top          = Char(20)
+        Value        = 1
+        Visible      = -1
+        Width        = Char(63)
+    END
+
+    BEGIN VScrollBar vscHelp
+        Attached     = -1
+        ...
+    END
+
+The control type establishes orientation. C<Attached = -1> is explicitly
+printed for both controls.
+
+=head2 Label
+
+A Label displays text that the user cannot edit directly.
+
+Documented properties:
+
+    Alignment   AutoSize   BackColor  BorderStyle
+    Caption     CtlName    DragMode   Enabled
+    ForeColor   Height     Index      Left
+    MousePointer Parent    TabIndex   Tag
+    Top         Visible    Width
+
+C<Alignment> uses:
+
+    0    left (default)
+    1    right
+    2    centered
+
+C<AutoSize> uses:
+
+    False (0)    default; fixed size, excess Caption is clipped
+    True (-1)    resize the Label to fit its Caption
+
+A Label cannot receive focus. If its C<Caption> contains an access key, the
+L<access key|/Access keys> moves focus to the next focusable control in
+L<tab order|/TAB ORDER AND FOCUS>:
+
+    Caption = "&Name"
+
+Here C<Alt+N> activates the access key; the ampersand remains part of the
+serialized Caption string.
+
+The Microsoft Clock sample provides two observed Label blocks. The visible
+time label is:
+
+    BEGIN Label lblTime
+        Alignment    = 2
+        AutoSize     = 0
+        BackColor    = QBColor(7)
+        BorderStyle  = 0
+        Caption      = "Time"
+        DragMode     = 0
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(1)
+        Left         = Char(3)
+        MousePointer = 0
+        TabIndex     = 0
+        Tag          = ""
+        Top          = Char(1)
+        Visible      = -1
+        Width        = Char(11)
+    END
+
+C<AutoSize = 0> means that the stored C<Height> and C<Width> remain fixed.
+C<Alignment = 2> centers C<Caption> inside the Label. The second Clock Label,
+C<lblDate>, has the same geometry but C<TabIndex = 1>, C<Top = Char(2)>, and
+C<Visible = 0>.
+
+=head2 ListBox
+
+A ListBox displays a list from which the user can select an item. A
+L<ComboBox|/ComboBox> also includes a list.
+
+Documented properties:
+
+    BackColor  CtlName    DragMode     Enabled
+    ForeColor  Height     Index        Left
+    List       ListCount  ListIndex    MousePointer
+    Parent     Sorted     TabIndex     TabStop
+    Tag        Text       Top          Visible
+    Width
+
+C<List> and C<ListIndex> are unavailable at design time. C<ListCount> is
+unavailable at design time and read-only at run time. C<Text> is read-only at
+run time and defaults to the empty string at design time.
+
+C<Sorted = -1> causes new items to be sorted alphabetically without regard to
+case; the default is C<Sorted = 0>. Because C<List> is unavailable at design
+time, the current evidence does not establish an FRM representation for
+pre-populated ListBox items.
+
+The Microsoft Help sample contains two ListBoxes with different initial
+states:
+
+    BEGIN ListBox lstSearch
+        BackColor    = QBColor(7)
+        DragMode     = 0
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(14)
+        Left         = Char(1)
+        MousePointer = 0
+        Sorted       = -1
+        TabIndex     = 1
+        TabStop      = -1
+        Tag          = ""
+        Top          = Char(2)
+        Visible      = -1
+        Width        = Char(37)
+    END
+
+    BEGIN ListBox lstHistory
+        ...
+        Sorted  = 0
+        Visible = 0
+        ...
+    END
+
+The first list is sorted and visible; the second is unsorted and initially
+hidden. Neither block contains design-time C<List> contents.
+
+=head2 Menu
+
+A Menu control represents a top-level menu title, submenu item, command, or
+separator. Its serialized hierarchy is described under L</MENUS>. Menu
+controls are created in the Menu Designer rather than with the normal Form
+toolbox.
+
+Documented properties:
+
+    Caption   Checked  CtlName Enabled
+    Index     Parent   Separator Tag
+    Visible
+
+The Menu Designer additionally records shortcut keys, hierarchy, and source
+order. The Microsoft BookLook and Clock samples confirm nested Menu blocks, Menu
+control arrays, separators, and shortcuts:
+
+    BEGIN Menu mnuFile
+        Caption   = "&File"
+        Checked   = 0
+        Enabled   = -1
+        Separator = 0
+        Tag       = ""
+        Visible   = -1
+
+        BEGIN Menu mnuFileSave
+            Caption   = "&Save Current Data"
+            Checked   = 0
+            Enabled   = -1
+            Separator = 0
+            Shortcut  = {F2}
+            Tag       = ""
+            Visible   = -1
+        END
+    END
+
+The nested block establishes the parent menu. Source order establishes menu
+order in the observed files. C<&> in C<Caption> defines an access key, while
+C<Shortcut = {F2}> defines a separate keyboard shortcut.
+
+Menu controls can form control arrays by sharing C<CtlName> and using distinct
+C<Index> values. Their event procedure receives the selected index, as
+described under L</Menu control arrays>.
+
+=head2 OptionButton
+
+An OptionButton represents one choice in a mutually exclusive group, as
+described under L</OPTIONBUTTON GROUPS>. Unlike a L<CheckBox|/CheckBox>,
+selecting one OptionButton clears the selection of another OptionButton in
+the same group.
+
+Documented properties:
+
+    BackColor    Caption   CtlName    DragMode
+    Enabled      ForeColor Height     Index
+    Left         MousePointer Parent  TabIndex
+    TabStop      Tag       Top        Value
+    Visible      Width
+
+C<Value = 0> is the default and means not selected. C<Value = -1> means
+selected. This differs from CheckBox, whose checked state is C<Value = 1>.
+
+The parent container determines the functional OptionButton group.
+Different L<Frame|/Frame> or L<PictureBox|/PictureBox> containers create
+independent groups. C<CtlName> and C<Index> separately determine whether the
+OptionButtons also form a L<control array|/CONTROL ARRAYS>. Both
+relationships may apply to the same controls.
+
+The Microsoft Check Register sample contains an OptionButton control array:
+
+    BEGIN OptionButton optTransType
+        BackColor    = QBColor(7)
+        Caption      = "&Check/Withdrawl"
+        DragMode     = 0
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(1)
+        Index        = 0
+        Left         = Char(44)
+        MousePointer = 0
+        TabIndex     = 8
+        TabStop      = 0
+        Tag          = ""
+        Top          = Char(1)
+        Value        = 0
+        Visible      = -1
+        Width        = Char(19)
+    END
+
+    BEGIN OptionButton optTransType
+        Caption = "&Deposit"
+        Index   = 1
+        ...
+    END
+
+The shared C<CtlName> and different C<Index> values define the control array.
+The parent container independently determines the functional option group.
+
+=head2 PictureBox
+
+A PictureBox displays text or ASCII graphics produced with C<PRINT> and can
+also act as a control container, like a L<Frame|/Frame>. It can also define
+the boundary of an L<OptionButton|/OptionButton> group.
+
+Documented properties:
+
+    AutoRedraw   BackColor   BorderStyle CtlName
+    CurrentX     CurrentY    DragMode    Enabled
+    ForeColor    Height      Index       Left
+    MousePointer Parent      ScaleHeight ScaleWidth
+    TabIndex     TabStop     Tag         Top
+    Visible      Width
+
+C<Left> and C<Top> position the PictureBox in its parent. C<Height> and
+C<Width> describe its outer size. By contrast, C<ScaleHeight> and
+C<ScaleWidth> report its derived inner dimensions and are read-only.
+C<CurrentX> and C<CurrentY> identify the current text-output position inside
+the PictureBox.
+
+C<AutoRedraw = 0> is the default. With C<AutoRedraw = -1>, VBDOS maintains a
+persistent memory image for repainting.
+
+Child controls are serialized inside the PictureBox block. Their coordinates
+remain relative to the PictureBox rather than to the outer L<Form|/Forms>.
+
+The Microsoft Calculator sample contains this observed PictureBox:
+
+    BEGIN PictureBox pctKeyTrap
+        AutoRedraw   = 0
+        BackColor    = QBColor(7)
+        BorderStyle  = 1
+        DragMode     = 0
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(2)
+        Left         = Char(2)
+        MousePointer = 0
+        TabIndex     = 0
+        TabStop      = -1
+        Tag          = ""
+        Top          = Char(18)
+        Visible      = -1
+        Width        = Char(23)
+    END
+
+Other Microsoft samples place child controls inside PictureBox blocks; the
+same C<BEGIN>/C<END> nesting establishes their parent relationship.
+
+=head2 TextBox
+
+A TextBox provides an editable text field. A L<ComboBox|/ComboBox> can also
+provide an edit field.
+
+Documented properties:
+
+    BackColor   BorderStyle  CtlName    DragMode
+    Enabled     ForeColor    Height     Index
+    Left        MousePointer MultiLine  Parent
+    ScrollBars  SelLength    SelStart   SelText
+    TabIndex    TabStop      Tag        Text
+    Top         Visible      Width
+
+C<MultiLine> defaults to False (C<0>) and is read-only at run time. It
+determines whether the TextBox can contain more than one line.
+
+C<ScrollBars> uses:
+
+    0    none (default)
+    1    horizontal
+    2    vertical
+    3    horizontal and vertical
+
+Scroll bars are meaningful for a multiline TextBox and use the same
+horizontal and vertical directions as
+L<HScrollBar and VScrollBar|/HScrollBar and VScrollBar>.
+
+C<SelLength>, C<SelStart>, and C<SelText> describe run-time selection state
+and are not ordinary design-time FRM values.
+
+At design time, C<Text> defaults to C<CtlName>. Therefore the following
+observed Microsoft sample value is an explicit empty initial value rather
+than the documented default:
+
+    BEGIN TextBox Text1
+        MultiLine = 0
+        ScrollBars = 0
+        Text = ""
+        ...
+    END
+
+=head2 Timer
+
+A Timer raises a C<Timer> event after the number of milliseconds specified by
+C<Interval>. It is represented in the Form Designer but is not visible at
+run time.
+Microsoft's Clock sample shows that a Timer nevertheless has printed design-
+time C<Left> and C<Top> coordinates.
+
+Documented properties:
+
+    CtlName  Enabled  Index  Interval
+    Left     Parent   Tag    Top
+
+C<Interval> ranges from C<0> to C<65535> milliseconds. C<0> is the default
+and disables Timer events. A positive Interval produces events only while
+C<Enabled = -1>.
+
+A Timer can be a member of a L<control array|/CONTROL ARRAYS> through its
+shared C<CtlName> and individual C<Index>, just like other controls. Its
+event procedure follows the form-module event naming described in
+L</Event association>.
+
+The L<Microsoft Clock sample|/Complete Microsoft example: Clock> provides
+an observed Timer block:
+
+    BEGIN Timer tmrClockTick
+        Enabled  = -1
+        Interval = 1000
+        Left     = Char(13)
+        Tag      = ""
+        Top      = Char(0)
+    END
+
+The Timer is not visible at run time, but the Designer still assigns and
+prints C<Left> and C<Top> positions. These coordinates are therefore valid
+Timer design-time data and must not be discarded by an FRM reader.
+
+=head2 Custom
+
+Custom controls extend the built-in control types through C<.LIB> and
+C<.QLB> libraries. In the Form Designer they appear as
+L<PictureBox|/PictureBox>-like controls, but their libraries define their
+additional properties, events, and methods.
+
+The VBDOS help names C<Left>, C<Top>, C<Width>, C<Height>, and
+C<BorderStyle> as properties whose changes are visible at design time. The
+Designer does not necessarily validate all control-specific property ranges.
+C<IF TYPEOF> recognizes C<Custom> as a valid control type.
+
+A generic FRM reader must therefore preserve unknown control types and
+unknown properties. Discarding them would make lossless rewriting of Forms
+containing Custom controls impossible.
+
+The L<Frame|/Frame> example from the Microsoft Spin sample contains a Custom
+control. The same sample establishes the concrete Custom-control block form:
+
+    BEGIN Custom VSpin
+        Action       = 0
+        Alignment    = 0
+        AutoRedraw   = 0
+        BackColor    = QBColor(7)
+        BorderStyle  = 0
+        Caption      = ""
+        DragMode     = 0
+        Enabled      = -1
+        ForeColor    = QBColor(0)
+        Height       = Char(2)
+        Left         = Char(13)
+        MousePointer = 0
+        Tag          = ""
+        Top          = Char(1)
+        TypeID       = "Spin"
+        Visible      = -1
+        Width        = Char(4)
+        ... library-defined properties ...
+    END
+
+C<Custom> is the serialized object type. The object name is C<VSpin>, and
+C<TypeID = "Spin"> identifies the Custom-control implementation. The sample
+also prints many library-defined properties. A generic reader must preserve
+the complete property set even when it does not understand those properties.
+
+=head1 BASIC CODE AND EVENTS
+
+=head2 Form code
+
+Form code includes all declarations and procedures associated with a
+form, including control event procedures. It is stored in the same file
+as the form.
+
+Form modules do not allow executable statements at module level. General
+procedures and event procedures in a form module are not accessible from
+other modules.
+
+=head2 Event association
+
+Event procedures are associated through an object name and an event
+name:
+
+    SUB objectname_eventname (parameters)
+        ...
+    END SUB
+
+The prefix C<Form_> is used for the form, for example:
+
+    SUB Form_Load ()
+        ...
+    END SUB
+
+For controls, C<CtlName> is used. For control arrays, C<Index AS INTEGER>
+is added as an argument; see
+L<control-array event procedures|/Event procedures>.
+
+The relationship between stored C<CtlName>/C<Index> values and the
+available BASIC code is therefore relevant to a future FRM parser
+specification, even if the parser initially preserves the BASIC code
+only as text without loss.
+
+=head1 DESIGNER SEMANTICS RELEVANT TO THE FORMAT
+
+The Form Designer determines how many states found in an FRM file are
+created. These details describe design-time behavior relevant to a reader,
+writer, converter, or replacement designer. General editor navigation that
+does not affect stored form data is outside this reference.
+
+=head2 Form Designer workspace
+
+The Form Designer consists of the menu bar, control toolbox, Properties bar,
+16-color palette, and Form workspace.
+
+The toolbox is extended when Quick Libraries containing Custom controls are
+loaded. A replacement designer must therefore not assume that the built-in
+control set is complete.
+
+=head2 Creating and arranging controls
+
+A control is created by selecting its type in the toolbox and drawing its
+rectangle on the active Form. The initial pointer position establishes the
+upper-left corner; dragging establishes the initial size. Existing controls
+can subsequently be moved or resized.
+
+During these operations, the Properties bar displays position and size in
+character cells. Drawing a TextBox at column 4, row 2 with a width of 20
+columns produces geometry equivalent to:
+
+    Left  = Char(4)
+    Top   = Char(2)
+    Width = Char(20)
+
+The accepted Height depends on the control type and rectangle accepted by the
+Designer. The resulting FRM values remain character-cell measurements, not
+pixels or Windows twips.
+
+=head2 Properties bar
+
+At design time, the Properties bar displays only properties applicable to
+the selected object. Text and numeric values can be entered; Boolean and
+enumerated values can be selected from lists.
+
+Position values are displayed as row and column of the upper-left corner;
+size values are displayed in character cells. C<Shift+F2> moves to the
+property-name field, C<F2> moves to the value field, and C<F4> opens the value
+list.
+
+When another object is selected, the currently selected property remains
+active. This allows the same property, such as C<Caption>, to be inspected or
+changed quickly across several controls.
+
+=head2 Color palette
+
+The Form Designer exposes all 16 VBDOS colors directly. Selecting a foreground
+or background color updates C<ForeColor> or C<BackColor>. Text FRM represents
+the same palette choice through C<QBColor(n)> rather than an RGB triple; see
+L<color values|/Color values: QBColor()>.
+
+    BackColor = QBColor(15)
+    ForeColor = QBColor(0)
+
+=head2 Copying controls and control arrays
+
+Copying and pasting a control initially reproduces its C<CtlName>. The Form
+Designer then asks whether the pasted control should become an element of a
+control array.
+
+Accepting keeps the shared C<CtlName> and assigns an available C<Index>.
+Declining requires a distinct control name. This workflow produces repeated
+C<BEGIN type name> blocks with different C<Index> properties, as described in
+L<control-array creation|/Creation in the Form Designer>.
+
+=head2 Text versus binary storage
+
+C<Save Form As...> offers a choice between binary and text storage. This
+changes the representation of the same form module, not its object model.
+
+Ramm recommends text storage when the Form is to be inspected or processed
+with an editor or another tool. Text FRM is therefore an intended tooling and
+interchange representation, not merely a diagnostic dump.
+
+=head2 Visual and structural printing
+
+The Form Designer distinguishes printing a Form as it appears on screen from
+printing its objects and properties. The visual result is not a substitute
+for the stored object tree, property values, and relationships.
+
+=head2 Menu Designer operations
+
+The Menu Designer edits C<Caption>, C<CtlName>, C<Index>, C<Checked>,
+C<Enabled>, C<Visible>, separators, and shortcuts. Menu items can be moved up
+or down among siblings and left or right between hierarchy levels.
+
+In text FRM, sibling order is represented by source order. Changing menu
+level changes lexical C<Menu> nesting. A writer must preserve both forms of
+information rather than invent an C<Order> property or reuse C<TabIndex>.
+See L<menu hierarchy|/Hierarchy>.
+
+    Caption  = "&Save"
+    Shortcut = {F2}
+
+C<Alt+S> operates through the visible menu hierarchy. C<F2> can invoke the
+menu item's C<Click> event without opening the menu and independently of the
+control that currently has focus.
+
+=head1 ADDITIONAL FRM-RELATED HELP TOPICS
+
+A completeness check against Microsoft help revealed additional topics
+relevant to a future full format specification, but not described in
+detail in this first draft.
+
+=head2 BorderStyle, ControlBox, MinButton, and MaxButton
+
+The form's appearance is not determined by C<BorderStyle> alone.
+C<ControlBox>, C<MinButton>, and C<MaxButton> also affect the title bar
+and controls. For forms, C<BorderStyle> has values from 0 to 6; the
+default is 2 (Sizable Single). Label, PictureBox, and TextBox have their
+own C<BorderStyle> values from 0 to 2, with control-specific defaults.
+
+=head2 AutoRedraw, CurrentX/CurrentY, and ScaleHeight/ScaleWidth
+
+Form and PictureBox have their own output model. C<CurrentX> and
+C<CurrentY> indicate the current text-output position (0 to 254, default
+0). C<ScaleHeight> and C<ScaleWidth> return the interior size; their
+values are derived from Height/Width and the border or menu bar, and are
+read-only. C<AutoRedraw> determines whether a persistent background
+image is maintained. These properties are distinct from the container
+position model represented by C<Left>/C<Top>.
+
+=head2 DragMode and MousePointer
+
+C<DragMode> has the values 0 (Manual, the default) and 1 (Automatic).
+C<MousePointer> uses an enumerated value from 0 to 12, mapped to defined
+DOS pointer shapes. Both properties are documented for many forms and
+controls and must not be omitted indiscriminately from a format analysis.
+
+=head2 WindowState
+
+C<WindowState> applies to forms and has the values 0 (Normal, the
+default), 1 (Minimized), and 2 (Maximized). The help describes this
+property as a run-time property; it must not be assumed to be stored as a
+design-time value without evidence from an FRM file.
+
+=head2 File controls and filters
+
+For L<FileListBox|/FileListBox>, C<Archive>, C<Hidden>, C<Normal>, C<ReadOnly>, 
+and C<System> are documented as Boolean filters. The defaults are True for
+Archive, Normal, and ReadOnly, and False for Hidden and System. The
+default C<Pattern> is C<*.*>. Depending on the control, C<FileName>,
+C<Path>, C<Drive>, C<List>, C<ListCount>, and C<ListIndex> explicitly
+have run-time or read-only semantics; this distinction must be preserved.
+
+=head2 Properties without a direct design-time value
+
+The help also lists derived or run-time-only properties in the object
+model, such as C<Parent>, C<ScaleHeight>, C<ScaleWidth>, C<ListCount>,
+C<ListIndex>, C<FileName>, C<Path>, C<Drive>, and, in some cases,
+C<List>. These belong in the conceptual control reference, but must not
+automatically be treated as stored property values in a text FRM file.
+
+=head1 COMPATIBILITY NOTES
+
+The structures documented above are sufficient to describe the observed
+Version 1.00 text FRM files.
+
+Some details of the original Form Designer remain undocumented. They do
+not affect the object model described in this document, but may matter
+when exact byte-for-byte compatibility with the original VBDOS tools is
+required.
+
+=head2 Property omission
+
+VBDOS defines default values for many properties, and observed FRM files
+frequently write those defaults explicitly:
+
+    Enabled = -1
+    Visible = -1
+    Tag     = ""
+
+and:
+
+    Cancel  = 0
+    Default = 0
+
+It is not established under which conditions the original Form Designer
+may omit properties whose values equal their defaults.
+
+A reader must therefore support documented defaults without assuming that
+their property assignments are necessarily present. See also
+L<defaults|/Defaults>.
+
+=head2 Lexical representation
+
+VBDOS uses horizontal tab characters (C<\t>) to indent the serialized
+object tree. Each additional object level adds another level of
+indentation.
+
+For example:
+
+    BEGIN Form Form1
+        BEGIN Frame Frame1
+            BEGIN TextBox Text1
+                Text = ""
+            END
+        END
+    END
+
+In the original representation, the indentation before C<BEGIN Frame> and
+C<BEGIN TextBox> is produced with tab characters rather than spaces.
+
+Spaces are also accepted for indentation. Indentation is therefore
+structural formatting for human readability; the C<BEGIN>/C<END> nesting
+defines the actual object hierarchy.
+
+Property assignments conventionally use additional horizontal whitespace
+to align the equals signs:
+
+    BackColor    = QBColor(7)
+    BorderStyle  = 1
+    Caption      = "Example"
+    MousePointer = 0
+
+A reader should not depend on the visual column of the equals sign. It
+should ignore insignificant horizontal whitespace around the property name,
+equals sign, and value.
+
+A writer intended to reproduce the VBDOS style should use tabs for object
+indentation and spaces for property alignment.
+
+=head2 Physical file representation
+
+Text FRM files use the DOS text representation expected by VBDOS:
+
+    character encoding    CP437
+    line ending           CRLF
+
+The file is therefore byte-oriented DOS text rather than UTF-8 or a
+Windows code page introduced by later versions of Visual Basic.
+
+Characters in property values must be decoded and encoded using CP437.
+This is particularly important for non-ASCII characters and DOS-specific
+characters whose byte values differ from modern Unicode encodings.
+
+Lines are terminated by the two-byte DOS sequence C<CR LF>.
+
+A reader may normalize CP437 text and line endings internally, but a writer
+targeting VBDOS should emit CP437 and CRLF explicitly.
+
+Indentation is independent of the character encoding: VBDOS conventionally
+uses the ASCII horizontal-tab byte C<09> for object nesting, while spaces
+may also be used as indentation.
+
+=head1 SOURCES AND EVIDENCE
+
+This specification uses different sources for different kinds of evidence.
+Microsoft documentation is authoritative for VBDOS object and property
+semantics; contemporary documentation explains Form Designer behavior; and
+published source listings establish concrete text serialization.
+
+=head2 Microsoft VBDOS help
+
+The primary semantic source is the Microsoft Visual Basic for MS-DOS 1.0
+online help, exported from C<VBDOS.HLP> with HELPMAKE. It documents the
+VBDOS object model, the standard controls, their properties, valid values,
+defaults, design-time and run-time availability, events and methods, and the
+Form Designer.
+
+The help describes C<.FRM> form modules and explains that a form module
+contains form information together with BASIC declarations and procedures.
+Its general module-definition topic describes the binary representation, so
+that description is not treated as proof of the text-format grammar.
+
+=head2 Frederik Ramm
+
+Frederik Ramm, I<Programmieren mit Visual Basic für DOS>, Vieweg, 1993,
+ISBN 3-528-05338-0, is a contemporary description of VBDOS Standard and
+Professional Edition.
+
+For this specification it is particularly useful because it describes Form
+Designer behavior rather than only individual property definitions. This
+includes control naming, parents and children, Frame and PictureBox
+containers, OptionButton grouping, control arrays, menus, and the choice
+between binary and text storage when saving a Form.
+
+=head2 Microsoft sample applications
+
+Visual Basic for MS-DOS ships with sample applications and toolkits whose
+source headers grant a royalty-free right to use, modify, reproduce, and
+distribute the supplied samples and modified versions. The notice also states
+that Microsoft provides no warranty, obligations, or liability for those
+samples and toolkits.
+
+The examples in this specification are taken from those Microsoft-supplied
+projects and were printed by VBDOS to text files. They therefore provide
+primary Version 1.00 evidence while retaining the original object/property
+layout produced by the VBDOS print function.
+
+The samples used here include Calculator, BookLook, Quick Chart, Check
+Register, Clock, Control Panel, Font Toolkit, Graphics Example, Help, Notepad,
+Quick Library Viewer, Seek, Setup, and the Spin Custom Control example.
+
+Together they establish ordinary Forms and C<MDIForm>, standard controls,
+control arrays, nested containers, menus and Menu control arrays, separators,
+multiple shortcut forms, HScrollBar and VScrollBar, Timer design-time
+coordinates, and the concrete C<Custom>/C<TypeID> representation.
+
+The royalty-free permission applies to the supplied sample applications and
+toolkits. It must not be interpreted as a general license grant for Microsoft
+Visual Basic for MS-DOS or its documentation.
+
+=head1 EDITOR AND LICENSE
+
+    This document was researched, compiled, structured, and edited by
+    J. Schneider.
+
+    The editor claims no copyright or ownership in Microsoft Visual Basic for
+    MS-DOS, its documentation, the FRM format, or material originating from
+    the sources identified above. Copyright and other rights in those source
+    materials remain with their respective rights holders.
+
+    To the extent that copyright or related rights exist in the editor's
+    original contributions to this documentation, those contributions are
+    made available under the Creative Commons CC0 1.0 Universal Public Domain
+    Dedication.
+
+    Microsoft sample material reproduced in this document remains Copyright
+    (C) Microsoft Corporation. The Visual Basic for MS-DOS sample
+    applications and toolkits include a notice granting a royalty-free right
+    to use, modify, reproduce, and distribute those samples and modified
+    versions. That permission is specific to the supplied samples and
+    toolkits and is not a general license for Visual Basic for MS-DOS or its
+    documentation.
+
+    CC0 applies only to the editor's original text, structure, and other
+    original contributions to this documentation. It does not replace or
+    override rights and notices attached to Microsoft or other source
+    material.
+
+=cut
