@@ -465,6 +465,7 @@ sub setCaretPosition {    # void ($class, $x, $y)
   assert ( looks_like_number $y );
   assert ( $initialized );
   tb_set_cursor( $x, $y );
+  tb_present();
   return;
 }
 
