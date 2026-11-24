@@ -37,6 +37,7 @@ use TUI::Drivers::Const qw(
   evBroadcast
   evCommand
 );
+use TUI::Drivers::Util qw( cstrlen );
 use TUI::MsgBox::Const qw(
   mfError
   mfOKButton
@@ -71,10 +72,10 @@ extends TDialog;
 # declare global variables
 our $filesText        = "~F~iles";
 our $openText         = "~O~pen";
-our $okText           = "~O~K";
+our $okText           = "O~K~";
 our $replaceText      = "~R~eplace";
 our $clearText        = "~C~lear";
-our $cancelText       = "~C~ancel";
+our $cancelText       = "Cancel";
 our $helpText         = "~H~elp";
 our $invalidDriveText = "Invalid drive or directory";
 our $invalidFileText  = "Invalid file name.";
@@ -129,8 +130,8 @@ sub BUILD {    # void (\%args)
   
   $self->insert( TLabel->new(
     bounds => TRect->new(
-      ax => 2,                                ay => 2,
-      bx => 3 + length( $args->{inputName} ), by => 3,
+      ax => 2,                                 ay => 2,
+      bx => 3 + cstrlen( $args->{inputName} ), by => 3,
     ),
     text => $args->{inputName},
     link => $self->{fileName},
@@ -150,8 +151,8 @@ sub BUILD {    # void (\%args)
   ));
   $self->insert( TLabel->new(
     bounds => TRect->new( ax => 2, ay => 5, bx => 8, by => 6 ),
-    text   => $args->{inputName},
-    link   => $self->{fileName},
+    text   => $filesText,
+    link   => $self->{fileList},
   ));
 
   my $opt = bfDefault;
