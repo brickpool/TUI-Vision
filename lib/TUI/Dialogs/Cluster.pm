@@ -668,9 +668,9 @@ TUI::Dialogs::Cluster - base class for clustered dialog controls
 
 =head1 DESCRIPTION
 
-C<TCluster> provides the common base implementation for all cluster-style dialog
-controls. It manages selection state, navigation, enable masks, and the visual
-layout of clustered items.
+C<TCluster> provides the common base implementation for all cluster-style 
+dialog controls. It manages selection state, navigation, enable masks, and the 
+visual layout of clustered items.
 
 The class handles keyboard and mouse input for navigating and activating
 individual entries. Subclasses specialize the marking and activation behavior
@@ -691,10 +691,11 @@ interactions.
 TCluster provides a common interface for cluster-type controls: manage
 selection via keyboard and mouse, track enabled/disabled items via an enable
 mask, and exchange selection state with dialogs using L<getData()|/getData> and
-L<setData()|/setData>. Typical workflow is to build a L<TSItem|TUI::Dialogs::StrItem> 
-linked-list, pass it to a subclass constructor, insert the resulting control 
-into a L<TDialog|TUI::Dialogs::Dialog>, then retrieve the final selection via 
-L<getData()|/getData> after the dialog is closed.
+L<setData()|/setData>. Typical workflow is to build a 
+L<TSItem|TUI::Dialogs::StrItem> linked-list, pass it to a subclass constructor, 
+insert the resulting control into a L<TDialog|TUI::Dialogs::Dialog>, then 
+retrieve the final selection via L<getData()|/getData> after the dialog is 
+closed.
 
 =head1 ATTRIBUTES
 
