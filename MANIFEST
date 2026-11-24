@@ -9,6 +9,7 @@ examples/tvdemo.pl
 examples/tvdir.pl
 examples/tvedit.pl
 examples/tvshell.pl
+examples/vinputline.pl
 lib/PerlX/Assert/PP.pm
 lib/TUI/App.pm
 lib/TUI/App/Application.pm
@@ -212,6 +213,9 @@ lib/TUI/Views/View/Write.pm
 lib/TUI/Views/Window.pm
 lib/TUI/Views/WindowInit.pm
 lib/TUI/Vision.pm
+lib/TUI/Visuals.pm
+lib/TUI/Visuals/Button.pm
+lib/TUI/Visuals/InputLine.pm
 LICENSE
 Makefile.PL
 MANIFEST
@@ -438,6 +442,10 @@ t/20Gadgets/25TCalendar.t
 t/20Gadgets/26TPuzzle.t
 t/20Gadgets/91Storable.t
 t/20Gadgets/99Gadgets.t
+t/30Visuals/01load.t
+t/30Visuals/11VButton.t
+t/30Visuals/12VInputLine.t
+t/30Visuals/99Visuals.t
 t/99Vision.t
 xt/01Intro/05FirstDesktop.t
 xt/01Intro/10HelloWorld.t
