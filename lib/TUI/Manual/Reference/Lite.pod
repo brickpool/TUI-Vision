@@ -1,0 +1,513 @@
+=encoding utf8
+
+=head1 NAME
+
+TUI::Lite::Design - Proposed KISS entry point to TUI::Vision
+
+=head1 STATUS
+
+This document is a design draft. It describes the intended public surface of
+C<TUI::Lite>; it does not claim that the listed functions are implemented.
+
+=head1 SYNOPSIS
+
+    use TUI::Lite;
+
+    my $dialog = dialog(
+        title  => 'Login',
+        width  => 40,
+        height => 11,
+    );
+
+    label(
+        $dialog,
+        x    => 2,
+        y    => 2,
+        text => '~N~ame:',
+    );
+
+    my $name = inputLine(
+        $dialog,
+        x     => 12,
+        y     => 2,
+        width => 22,
+    );
+
+    button(
+        $dialog,
+        x       => 11,
+        y       => 7,
+        text    => '~O~K',
+        command => cmOK,
+    );
+
+    button(
+        $dialog,
+        x       => 21,
+        y       => 7,
+        text    => '~C~ancel',
+        command => cmCancel,
+    );
+
+    if ( run($dialog) == cmOK ) {
+        my $user = $name->data;
+        # Process the entered value.
+    }
+
+=head1 DESCRIPTION
+
+C<TUI::Lite> is the KISS entry point to C<TUI::Vision>. It is intended for
+quick tools, small forms, prototypes, and automatically ported OOP2PROC
+programs.
+
+The module provides convenient camelCase factories and ready-made dialogs.
+Factories return native C<TUI::Vision> objects rather than introducing a
+parallel widget hierarchy. Applications that need more control can therefore
+continue directly with the normal C<TUI::Vision> API.
+
+C<TUI::Lite> is not intended to replace C<TUI::Vision>, hide every framework
+concept, provide a backend-neutral UI abstraction, or reproduce the complete
+OOP2PROC API. It removes construction ceremony while preserving the underlying
+Turbo Vision object model.
+
+=head1 DESIGN PRINCIPLES
+
+=over
+
+=item * One module
+
+A quick application starts with C<use TUI::Lite>. The module imports the
+required C<TUI::Vision> facilities internally.
+
+=item * Small public API
+
+The public API consists mainly of factories, one execution function, and a
+small set of ready-made dialogs.
+
+=item * Native objects
+
+Factories return native objects such as C<TDialog>, C<TButton>, and
+C<TInputLine>. There are no C<TUI::Lite::Button> or C<TUI::Lite::Dialog>
+wrapper classes.
+
+=item * No second widget API
+
+C<TUI::Lite> does not add generic C<getValue>, C<setValue>, C<onEvent>, or
+C<enableControl> layers over existing C<TUI::Vision> methods.
+
+=item * camelCase naming
+
+Function names follow the established C<TUI::Vision> naming style.
+
+=item * Coordinates remain visible
+
+Version 1 uses the existing Turbo Vision coordinate model. It does not
+introduce a competing row/column layout engine.
+
+=item * Standard commands remain standard commands
+
+Existing commands such as C<cmQuit>, C<cmMenu>, C<cmClose>, C<cmZoom>,
+C<cmResize>, C<cmNext>, C<cmPrev>, and C<cmHelp> are used directly instead of
+being wrapped in additional Lite functions.
+
+=item * Easy migration to TUI::Vision
+
+When Lite is no longer sufficient, the application already holds native
+C<TUI::Vision> objects and can use their documented methods directly.
+
+=back
+
+=head1 PROPOSED API
+
+=head2 Runtime
+
+=over
+
+=item C<application(%options)>
+
+Creates a native application object while accepting compact definitions for
+menu, status line, help configuration, and application callbacks.
+
+=item C<run($object)>
+
+Runs an application, window, or dialog using the appropriate native
+C<TUI::Vision> lifecycle. For a dialog, the return value is its terminating
+command.
+
+=back
+
+=head2 Containers
+
+=over
+
+=item C<window(%options)>
+
+Creates and returns a native C<TWindow>.
+
+=item C<dialog(%options)>
+
+Creates and returns a native C<TDialog>.
+
+=item C<form($file, %options)>
+
+Loads an ASCII C<.FRM> definition and returns the resulting native form or
+dialog object. The exact C<.FRM> contract is outside this initial API draft.
+
+=back
+
+=head2 Controls
+
+=over
+
+=item C<label($owner, %options)>
+
+Creates a native label and inserts it into C<$owner>.
+
+=item C<text($owner, %options)>
+
+Creates a native static text view and inserts it into C<$owner>.
+
+=item C<button($owner, %options)>
+
+Creates a native button and inserts it into C<$owner>.
+
+=item C<inputLine($owner, %options)>
+
+Creates a native input line and inserts it into C<$owner>.
+
+=item C<passwordLine($owner, %options)>
+
+Creates a password input control and inserts it into C<$owner>.
+
+=item C<checkBox($owner, %options)>
+
+Creates a native checkbox control and inserts it into C<$owner>.
+
+=item C<radioButtons($owner, %options)>
+
+Creates a native radio-button group and inserts it into C<$owner>.
+
+=item C<listBox($owner, %options)>
+
+Creates a native list box and inserts it into C<$owner>.
+
+=item C<comboBox($owner, %options)>
+
+Creates a compact selection control and inserts it into C<$owner>.
+
+=item C<viewer($owner, %options)>
+
+Creates a read-only viewer and inserts it into C<$owner>.
+
+=item C<editor($owner, %options)>
+
+Creates an editable text view and inserts it into C<$owner>.
+
+=back
+
+=head2 Ready-made dialogs
+
+=over
+
+=item C<messageBox(%options)>
+
+Displays a modal message with an OK action.
+
+=item C<yesNoBox(%options)>
+
+Displays a modal Yes/No question and returns the selected command.
+
+=item C<okCancelBox(%options)>
+
+Displays a modal OK/Cancel question and returns the selected command.
+
+=item C<inputBox(%options)>
+
+Displays a compact text-entry dialog.
+
+=item C<selectBox(%options)>
+
+Displays a compact selection dialog.
+
+=item C<openFileBox(%options)>
+
+Displays the native file-open dialog through a compact interface.
+
+=back
+
+=head1 APPLICATION DEFINITIONS
+
+C<application> may collect menu and status definitions as data rather than
+exposing a procedural C<addMenu>/C<addMenuItem>/C<addStatus> API.
+
+A possible application definition is:
+
+    my $app = application(
+        menu => [
+            '~F~ile' => [
+                '~O~pen...' => \&openFile,
+                undef,
+                'E~x~it'    => cmQuit,
+            ],
+        ],
+
+        status => [
+            '~F1~ Help'     => [ kbF1,   cmHelp ],
+            '~F10~ Menu'    => [ kbF10,  cmMenu ],
+            '~Alt-X~ Exit'  => [ kbAltX, cmQuit ],
+        ],
+
+        onIdle  => \&idle,
+        onKey   => \&key,
+        onMouse => \&mouse,
+    );
+
+This syntax is illustrative. The final data contract should be fixed only when
+the implementation and conversion tests exist.
+
+=head1 OOP2PROC PORTING
+
+The OOP2PROC conversion is structural rather than a line-by-line replacement.
+The converter first builds an application model containing menus, status
+items, callbacks, help configuration, startup behavior, commands, and dialogs.
+It then generates compact C<TUI::Lite> code.
+
+=head2 Direct Lite mappings
+
+=over
+
+=item C<StartProgram>
+
+Maps to C<run($app)>.
+
+=item C<DefineStartMessage>
+
+Maps to a C<messageBox> call before C<run>, unless the original behavior
+requires a persistent startup view.
+
+=item C<DefineHelpFile>
+
+Maps to an C<application> option.
+
+=back
+
+=head2 Procedures converted into application data
+
+=over
+
+=item C<AddMenu>
+
+Begins a submenu in the generated C<menu> application definition.
+
+=item C<AddMenuItem>
+
+Adds a command item to the current submenu in the generated C<menu>
+definition.
+
+=item C<AddItem>
+
+Adds a directly executable menu-bar command to the generated menu model.
+
+=item C<AddMenuLine>
+
+Adds a separator, represented by C<undef> or an internal separator node.
+
+=item C<AddStatus>
+
+Adds an entry to the generated C<status> definition.
+
+=item C<DefineIdleProc>
+
+Maps to the C<onIdle> application option.
+
+=item C<DefineKeyProc>
+
+Maps to the C<onKey> application option.
+
+=item C<DefineMouseProc>
+
+Maps to the C<onMouse> application option.
+
+=back
+
+=head2 Procedures mapped to native commands
+
+=over
+
+=item C<Help>
+
+Maps to C<cmHelp>.
+
+=item C<Quit>
+
+Maps to C<cmQuit>.
+
+=item C<MainMenu>
+
+Maps to C<cmMenu>.
+
+=item C<CloseWindow>
+
+Maps to C<cmClose>.
+
+=item C<ZoomWindow>
+
+Maps to C<cmZoom>.
+
+=item C<ResizeWindow>
+
+Maps to C<cmResize>.
+
+=item C<NextWindow>
+
+Maps to C<cmNext>.
+
+=item C<PrevWindow>
+
+Maps to C<cmPrev>.
+
+=item C<DoNothing>
+
+Is removed when no operation is required, or maps to C<cmValid> where a
+command value is required.
+
+=item C<Enable> and C<Disable>
+
+Map to the native C<TUI::Vision> command-state mechanism rather than new Lite
+wrappers.
+
+=back
+
+=head2 XDIALOG and related mappings
+
+=over
+
+=item C<PopUp>
+
+Maps to C<messageBox>.
+
+=item C<YesNo>
+
+Maps to C<yesNoBox>.
+
+=item C<GetInput>
+
+Maps to C<inputBox>.
+
+=item C<ListBox>
+
+Maps to C<selectBox> when used as a modal selection dialog.
+
+=item C<SelectFile>
+
+Maps to C<openFileBox>.
+
+=item C<EdDialog>
+
+Maps to an C<editor> placed in a C<dialog> and executed with C<run>.
+
+=item C<PopUpStay> and C<PopUpAway>
+
+Have no provisional Lite mapping. They should remain native
+C<TUI::Vision> code until a generally useful persistent-message abstraction is
+identified.
+
+=back
+
+=head1 CONVERSION MODEL
+
+The recommended conversion pipeline is:
+
+    OOP2PROC source
+        -> parser or normalized call stream
+        -> application model
+        -> TUI::Lite Perl source
+        -> native TUI::Vision objects at runtime
+
+The intermediate application model should distinguish at least:
+
+=over
+
+=item * submenu nodes
+
+=item * command items
+
+=item * separators
+
+=item * status items
+
+=item * predefined Turbo Vision commands
+
+=item * application callbacks
+
+=item * custom callback procedures
+
+=item * modal convenience dialogs
+
+=back
+
+The converter should not perform blind regular-expression substitutions.
+OOP2PROC calls depend on implicit state, especially the current menu, and must
+therefore be normalized before Perl source is generated.
+
+=head1 NON-GOALS FOR VERSION 1
+
+=over
+
+=item * A curses-style drawing API
+
+=item * Direct key-reading or screen-buffer functions
+
+=item * A second event loop
+
+=item * A backend-neutral UI framework
+
+=item * A replacement for C<TUI::Vision>
+
+=item * A complete wrapper around every C<TUI::Vision> method
+
+=item * Widget-specific C<run> methods
+
+=item * A generic property, value, or event-registration subsystem
+
+=item * A separate Lite widget class hierarchy
+
+=back
+
+=head1 OPEN DECISIONS
+
+=over
+
+=item * Final positional versus named parameters for each factory
+
+=item * Exact menu and status data contracts
+
+=item * Ownership and destruction rules applied by C<run>
+
+=item * Whether C<application> is required in the first release
+
+=item * The final ASCII C<.FRM> grammar and control-name lookup mechanism
+
+=item * Which control factories can be implemented entirely from existing
+C<TUI::Vision> components
+
+=item * Error handling for invalid coordinates, owners, commands, and form
+files
+
+=back
+
+=head1 SEE ALSO
+
+L<TUI::Vision>, L<TUI::toolkit>, L<TUI::App>, L<TUI::Dialogs>,
+L<TUI::Menus>, L<TUI::MsgBox>, L<TUI::StdDlg>, L<Tui>
+
+=head1 AUTHORS
+
+TUI::Lite design by the TUI::Vision project contributors.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2026 the TUI::Vision project contributors.
+
+This design document is intended for use under the same license as the
+TUI::Vision distribution.
