@@ -90,6 +90,7 @@ lib/TUI/Gadgets/EventViewer.pm
 lib/TUI/Gadgets/FileViewer.pm
 lib/TUI/Gadgets/FileWindow.pm
 lib/TUI/Gadgets/HeapView.pm
+lib/TUI/Gadgets/HeapView/Haiku.pm
 lib/TUI/Gadgets/HeapView/Linux.pm
 lib/TUI/Gadgets/HeapView/Unix.pm
 lib/TUI/Gadgets/HeapView/Win32.pm
