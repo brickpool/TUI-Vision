@@ -1195,36 +1195,23 @@ $convertKeyCode = sub {    # $keyCode ($event)
   return $TB_TO_TV{$id}
     if exists $TB_TO_TV{$id};
 
-  # Some Alt/Ctrl key combinations have no dedicated Borland key code.
-  # Map them to the corresponding unmodified key.
-  if ( $mod & ( TB_MOD_CTRL | TB_MOD_ALT ) ) {
-    return kbUp    if $key == TB_KEY_ARROW_UP;
-    return kbDown  if $key == TB_KEY_ARROW_DOWN;
-    return kbIns   if $key == TB_KEY_INSERT;
-    return kbDel   if $key == TB_KEY_DELETE;
-    return kbTab   if $key == TB_KEY_TAB;
-    return kbEnter if $key == TB_KEY_ENTER;
-  }
-  if ( $mod & TB_MOD_ALT ) {
-    return kbLeft  if $key == TB_KEY_ARROW_LEFT;
-    return kbRight if $key == TB_KEY_ARROW_RIGHT;
-    return kbHome  if $key == TB_KEY_HOME;
-    return kbEnd   if $key == TB_KEY_END;
-    return kbPgUp  if $key == TB_KEY_PGUP;
-    return kbPgDn  if $key == TB_KEY_PGDN;
+  # Ctrl+Shift navigation keys keep their Ctrl key code, while Shift is
+  # reported separately via controlKeyState (e.g. for word-wise selection).
+  if ( ( $mod & TB_MOD_CTRL ) 
+    && ( $mod & TB_MOD_SHIFT ) 
+    && !( $mod & TB_MOD_ALT )
+  ) {
+    $id = join( ':', TB_MOD_CTRL, $key, $ch );
+    return $TB_TO_TV{$id} 
+      if exists $TB_TO_TV{$id};
   }
 
-  # Shift selects text in the editor through controlKeyState. Shifted
-  # navigation keys keep the unmodified key code, as in Turbo Vision.
-  if ( $mod & TB_MOD_SHIFT ) {
-    return kbUp    if $key == TB_KEY_ARROW_UP;
-    return kbDown  if $key == TB_KEY_ARROW_DOWN;
-    return kbLeft  if $key == TB_KEY_ARROW_LEFT;
-    return kbRight if $key == TB_KEY_ARROW_RIGHT;
-    return kbHome  if $key == TB_KEY_HOME;
-    return kbEnd   if $key == TB_KEY_END;
-    return kbPgUp  if $key == TB_KEY_PGUP;
-    return kbPgDn  if $key == TB_KEY_PGDN;
+  # Remaining modified navigation or editing keys have no dedicated Borland
+  # key code and fall back to their corresponding unmodified key.
+  if ( $mod ) {
+    $id = join( ':', TB_NONE, $key, $ch );
+    return $TB_TO_TV{$id} 
+      if exists $TB_TO_TV{$id};
   }
 
   return kbNoKey();
