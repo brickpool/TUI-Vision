@@ -966,11 +966,17 @@ details outside the evidence.
 
     object-block =
         control-block
+      | custom-block
       | menu-block;
 
     control-block =
         "BEGIN", control-type, object-name,
-        { property | control-block },
+        { control-block | custom-block | property},
+        "END";
+
+    custom-block =
+        "BEGIN", "Custom", object-name,
+        { control-block | custom-block | custom-property },
         "END";
 
     menu-block =
@@ -981,18 +987,32 @@ details outside the evidence.
     property =
         property-name, "=", value;
 
+    custom-property =
+        identifier, "=", value;
+    
     value =
-        integer
-      | string
-      | char-value
+        char-value
       | color-value
-      | shortcut-value;
+      | shortcut-value
+      | integer
+      | string;
 
     char-value =
         "Char", "(", integer, ")";
 
     color-value =
         "QBColor", "(", integer, ")";
+
+    shortcut-value =
+        "{", shortcut-key, "}"
+      | "^", "{", shortcut-key, "}"
+      | "^", shortcut-letter;
+
+    shortcut-key =
+        one or more word characters;
+
+    shortcut-letter =
+        one ASCII letter;
 
 The grammar describes the structure. It does not imply that arbitrary
 nesting is semantically valid. VBDOS determines which controls can contain
