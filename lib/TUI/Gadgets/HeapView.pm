@@ -81,6 +81,10 @@ sub heapSize {    # $total ()
     require TUI::Gadgets::HeapView::Linux;
     *heapSize = \&TUI::Gadgets::HeapView::Linux::heapSize;
   }
+  elsif ( $^O eq 'haiku' ) {
+    require TUI::Gadgets::HeapView::Haiku;
+    *heapSize = \&TUI::Gadgets::HeapView::Haiku::heapSize;
+  }
   else {
     require TUI::Gadgets::HeapView::Unix;
     *heapSize = \&TUI::Gadgets::HeapView::Unix::heapSize;
