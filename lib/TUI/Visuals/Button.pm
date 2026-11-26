@@ -16,14 +16,11 @@ our @EXPORT = qw(
 );
 
 use TUI::toolkit;
-use TUI::toolkit::Types qw(
-  :types
-);
+use TUI::toolkit::Types qw( :types );
 
 use TUI::Dialogs::Button;
-use TUI::Dialogs::Const qw( bfGrabFocus bfLeftJust );
-use TUI::Drivers::AttrPair;
-use TUI::Drivers::Const qw( evMouseDown evMouseMove );
+use TUI::Dialogs::Const qw( :bfXXXX );
+use TUI::Drivers::Const qw( :evXXXX );
 use TUI::Drivers::Util qw( cstrlen );
 use TUI::Views::Const qw( :sfXXXX );
 use TUI::Views::DrawBuffer;
