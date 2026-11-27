@@ -20,6 +20,8 @@ use TUI::Objects::NSSortedCollection;
 use TUI::Objects::Collection;
 use TUI::Objects::SortedCollection;
 use TUI::Objects::StringCollection;
+use TUI::Objects::StringList;
+use TUI::Objects::StrListMaker;
 use TUI::Objects::Stream;
 
 sub import {
@@ -33,6 +35,8 @@ sub import {
   TUI::Objects::Collection->import::into( $target );
   TUI::Objects::SortedCollection->import::into( $target );
   TUI::Objects::StringCollection->import::into( $target );
+  TUI::Objects::StringList->import::into( $target );
+  TUI::Objects::StrListMaker->import::into( $target );
   TUI::Objects::Stream->import::into( $target );
 }
 
@@ -47,6 +51,8 @@ sub unimport {
   TUI::Objects::Collection->unimport::out_of( $caller );
   TUI::Objects::SortedCollection->unimport::out_of( $caller );
   TUI::Objects::StringCollection->unimport::out_of( $caller );
+  TUI::Objects::StringList->unimport::out_of( $caller );
+  TUI::Objects::StrListMaker->unimport::out_of( $caller );
   TUI::Objects::Stream->unimport::out_of( $caller );
 }
 

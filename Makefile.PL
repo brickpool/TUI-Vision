@@ -26,9 +26,13 @@ WriteMakefile1(
     'Class::Struct'         => 0,
     'Devel::StrictMode'     => 0.003,
     'Encode'                => 0,
+    'FindBin'               => 0,
+    'File::Path'            => 0,
+    'File::Spec'            => 0,
     'Importer'              => 0.026,
     'Import::Into'          => 1.002005,
     'List::Util'            => 1.36,
+    'Locale::Maketext'      => 0,
     'Module::Loaded'        => 0,
     'Params::Check'         => 0,
     'Scalar::Util'          => 0,
@@ -81,6 +85,8 @@ WriteMakefile1(
         => { file => 'lib/TUI/App.pm', version => '2.0.3' },
       'TUI::ColorSel' 
         => { file => 'lib/TUI/ColorSel.pm', version => '2.0.3' },
+      'TUI::Common'
+        => { file => 'lib/TUI/Common.pm', version => '2.0.3' },
       'TUI::Dialogs'
         => { file => 'lib/TUI/Dialogs.pm', version => '2.0.3' },
       'TUI::Drivers'

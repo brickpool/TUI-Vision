@@ -13,6 +13,8 @@ BEGIN {
   use_ok 'TUI::Objects::Collection';
   use_ok 'TUI::Objects::SortedCollection';
   use_ok 'TUI::Objects::StringCollection';
+  use_ok 'TUI::Objects::StringList';
+  use_ok 'TUI::Objects::StrListMaker';
   use_ok 'TUI::Objects::Stream';
 }
 
@@ -24,6 +26,8 @@ isa_ok( TNSSortedCollection->new(), TNSSortedCollection );
 isa_ok( TCollection->new(), TCollection );
 isa_ok( TSortedCollection->new(), TSortedCollection );
 isa_ok( TStringCollection->new( limit => 0, delta => 0 ), TStringCollection );
+isa_ok( TStringList->new(), TStringList );
+isa_ok( TStrListMaker->new( strSize => 0, indexSize => 0 ), TStrListMaker );
 isa_ok( TStream->new(), TStream );
 
 done_testing();

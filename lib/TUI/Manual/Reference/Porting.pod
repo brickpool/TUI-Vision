@@ -278,15 +278,16 @@ Lists and History
  TLineCollection      TUI::Gadgets::LineCollection      [x]
  TSortedCollection    TUI::Objects::SortedCollection    [x]
  TStringCollection    TUI::Objects::StringCollection    [x]
- TStringList          (not ported)                      [-]
- TStrListMaker        (not ported)                      [-]
+ TResourceItem        (not ported)                      [-]
  TResourceCollection  (not ported)                      [-]
  TResourceFile        (not ported)                      [-]
+ TStrIndexRec         (not ported)                      [-]
+ TStringList          TUI::Objects::StringList          [x]
+ TStrListMaker        TUI::Objects::StrListMaker        [x]
 
-The resource and string-list classes from the original I<Turbo Vision>
-implementation are currently not ported. The Perl implementation uses its 
-existing storage facilities instead, and no current framework component 
-requires these compatibility classes.
+The resource classes from the original I<Turbo Vision> implementation are
+currently not ported. The string-index class is not required in the Perl port;
+no current framework component requires the unported resource classes.
 
 =head3 Editors and Text Devices
 

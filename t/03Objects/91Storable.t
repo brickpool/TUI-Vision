@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use File::Temp qw( tempdir );
 use Test::More;
 use Test::Exception;
 use Storable qw( freeze thaw );
@@ -11,7 +12,16 @@ BEGIN {
   use_ok 'TUI::Objects::Rect';
   use_ok 'TUI::Objects::NSCollection';
   use_ok 'TUI::Objects::StringCollection';
+  use_ok 'TUI::Objects::StringList';
+  use_ok 'TUI::Objects::StrListMaker';
 }
+
+my $includePath = tempdir( CLEANUP => 1 );
+local $TUI::Objects::StrListMaker::includePath = $includePath;
+local $TUI::Objects::StrListMaker::resourceClass =
+  'TUI::Objects::TestStorableStringList::L10N';
+local $TUI::Objects::StrListMaker::languageTag = 'de';
+my $tag = $TUI::Objects::StrListMaker::languageTag;
 
 {
   package ThawProbe;
@@ -72,6 +82,22 @@ subtest 'TStringCollection Storable roundtrip' => sub {
   is( $restored->at( 0 ), 'alpha', 'Storable preserves the first sorted item' );
   is( $restored->at( 1 ), 'beta', 'Storable preserves the second sorted item' );
   is( $restored->at( 2 ), 'gamma', 'Storable preserves the third sorted item' );
+};
+
+subtest 'TStringList Storable roundtrip' => sub {
+  my $maker = new_TStrListMaker( 128, 16 );
+  $maker->put( 1, 'Pass, Do not Go!' );
+  $maker->put( 2, 'Collect $500!' );
+  $maker->store($tag);
+
+  my $list = TUI::Objects::StringList->new();
+  $list->load($tag);
+
+  is( $list->get(1), 'Pass, Do not Go!', 'loads strings stored by the maker' );
+
+  my $restored = thaw( freeze($list) );
+  isa_ok( $restored, 'TUI::Objects::StringList' );
+  is( $restored->get(2), 'Collect $500!', 'Storable preserves list strings' );
 };
 
 done_testing();

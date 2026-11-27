@@ -232,6 +232,7 @@ inventory.
 
   $icon                TColorSelector         Color selector icon
   $icon                THistory               History indicator icon
+  $includePath         TStrListMaker          String resource include path
   $informationText     MsgBoxText             Information dialog title
   $initFrame           TFrame                 Frame initialization table
   $insertState         HardwareInfo::*        Insert/overwrite input mode
@@ -242,6 +243,7 @@ inventory.
   $inverse             TMonoSelector          Inverse text attribute
   $itemText            TColorDialog           Color item label
 
+  $languageTag         TStrListMaker          Initial language tag
   $lastButtons         HardwareInfo::Termbox  Previous mouse button state
   $lastDir             TDirListBox            Last directory tree element
   $lastMouse           TEventQueue            Previous mouse state
@@ -280,6 +282,7 @@ inventory.
 
   $repeatDelay         TEventQueue            Auto-repeat delay
   $replaceStr          TEditor                Last replacement text
+  $resourceClass       TStrListMaker          String resource base class
   $revertText          TChDirDialog           Revert action label
   $rightArrow          TInputLine             Right overflow indicator
 
