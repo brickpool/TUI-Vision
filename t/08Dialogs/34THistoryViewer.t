@@ -5,7 +5,7 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-  use_ok 'TUI::Const', qw( EOS );
+  use_ok 'TUI::Common::Const', qw( EOS );
   use_ok 'TUI::Objects::Rect';
   use_ok 'TUI::Dialogs::HistoryViewer';
   use_ok 'TUI::Dialogs::HistoryViewer::HistList', qw( /\S+/ );

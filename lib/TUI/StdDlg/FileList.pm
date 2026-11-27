@@ -24,7 +24,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Const qw( EOS );
+use TUI::Common::Const qw( EOS );
 use TUI::Drivers::Const qw(
   evBroadcast
   kbShift

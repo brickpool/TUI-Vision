@@ -1,4 +1,4 @@
-package TUI::Const;
+package TUI::Common::Const;
 # ABSTRACT: Miscellaneous system-wide configuration parameters.
 
 use 5.010;
@@ -46,19 +46,19 @@ __END__
 
 =head1 NAME
 
-TUI::Const - system-wide configuration constants
+TUI::Common::Const - system-wide configuration constants
 
 =head1 SYNOPSIS
 
-  use TUI::Const qw(:all);
+  use TUI::Common::Const qw(:all);
 
   # or import specific constants
-  use TUI::Const qw(INT_MAX UINT_MAX);
+  use TUI::Common::Const qw(INT_MAX UINT_MAX);
 
 =head1 DESCRIPTION
 
-C<TUI::Const> defines system-wide constants used throughout the L<TUI::Vision>
-framework.
+C<TUI::Common::Const> defines system-wide constants used throughout the
+L<TUI::Vision> framework.
 
 The constants in this module provide common limits, sentinel values, and size
 constraints that are shared across multiple subsystems such as objects,

@@ -27,7 +27,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Const qw( EOS );
+use TUI::Common::Const qw( EOS );
 use TUI::Gadgets::Const qw( maxLineLength );
 use TUI::Gadgets::LineCollection;
 use TUI::Memory qw( lowMemory );

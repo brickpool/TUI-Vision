@@ -1,9 +1,10 @@
 use strict;
 use warnings;
 
-use File::Temp qw( tempdir );
 use Test::More;
 use Test::Exception;
+
+use File::Temp qw( tempdir );
 use Storable qw( freeze thaw );
 
 BEGIN {

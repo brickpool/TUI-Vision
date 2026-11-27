@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 
-use File::Temp qw( tempdir );
 use Test::More;
+
+use File::Temp qw( tempdir );
 
 BEGIN {
   use_ok 'TUI::Objects';

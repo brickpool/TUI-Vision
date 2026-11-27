@@ -25,7 +25,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Const qw( EOS );
+use TUI::Common::Const qw( EOS );
 use TUI::Objects::NSCollection;
 use TUI::Objects::Rect;
 use TUI::Views::ListViewer;

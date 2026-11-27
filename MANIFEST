@@ -28,7 +28,8 @@ lib/TUI/ColorSel/ColorItemList.pm
 lib/TUI/ColorSel/ColorSelector.pm
 lib/TUI/ColorSel/Const.pm
 lib/TUI/ColorSel/MonoSelector.pm
-lib/TUI/Const.pm
+lib/TUI/Common.pm
+lib/TUI/Common/Const.pm
 lib/TUI/Dialogs.pm
 lib/TUI/Dialogs/Button.pm
 lib/TUI/Dialogs/CheckBoxes.pm
@@ -154,6 +155,8 @@ lib/TUI/Objects/SortedCollection.pm
 lib/TUI/Objects/Stream.pm
 lib/TUI/Objects/Streamable.pm
 lib/TUI/Objects/StringCollection.pm
+lib/TUI/Objects/StringList.pm
+lib/TUI/Objects/StrListMaker.pm
 lib/TUI/Outline.pm
 lib/TUI/Outline/Const.pm
 lib/TUI/Outline/Node.pm
@@ -220,6 +223,7 @@ README.pod
 t/00-begin.t
 t/01Common/01load.t
 t/01Common/02Const.t
+t/01Common/99Common.t
 t/02toolkit/01load.t
 t/02toolkit/02assert.t
 t/02toolkit/03Types.t
@@ -240,6 +244,7 @@ t/03Objects/12TRect.t
 t/03Objects/22TCollection.t
 t/03Objects/23TSortedCollection.t
 t/03Objects/24TStringCollection.t
+t/03Objects/25TStringList.t
 t/03Objects/90Streamable.t
 t/03Objects/91Storable.t
 t/03Objects/99Objects.t

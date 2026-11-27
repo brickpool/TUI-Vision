@@ -22,7 +22,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Const qw( EOS );
+use TUI::Common::Const qw( EOS );
 use TUI::Dialogs::ListBox;
 use TUI::Drivers::Const qw(
   :evXXXX

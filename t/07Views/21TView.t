@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-  use_ok 'TUI::Const', qw( INT_MAX );
+  use_ok 'TUI::Common::Const', qw( INT_MAX );
   use_ok 'TUI::Objects::Point';
   use_ok 'TUI::Objects::Rect';
   use_ok 'TUI::Drivers::Const', qw( :evXXXX );

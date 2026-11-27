@@ -4,8 +4,8 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-use File::Temp qw( tempdir );
 use File::Spec;
+use File::Temp qw( tempdir );
 use Scalar::Util qw(
   refaddr
   weaken

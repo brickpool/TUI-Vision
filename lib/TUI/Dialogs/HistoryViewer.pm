@@ -23,7 +23,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Const qw( EOS );
+use TUI::Common::Const qw( EOS );
 use TUI::Dialogs::Const qw( cpHistoryViewer );
 use TUI::Dialogs::HistoryViewer::HistList qw(
   historyCount

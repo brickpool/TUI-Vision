@@ -32,7 +32,7 @@ our %EXPORT_TAGS = (
 }
 
 use Config;
-use TUI::Const qw( UINT_MAX );
+use TUI::Common::Const qw( UINT_MAX );
 
 use constant {
   ccNotFound => -1

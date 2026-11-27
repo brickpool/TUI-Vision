@@ -1,9 +1,10 @@
 use strict;
 use warnings;
 
-use File::Temp qw( tempfile );
 use Test::More;
 use Test::Exception;
+
+use File::Temp qw( tempfile );
 
 BEGIN {
   use_ok 'TUI::Views::Window';

@@ -1,9 +1,10 @@
 use strict;
 use warnings;
 
+use Test::More;
+
 use File::Temp qw( tempfile );
 use Storable qw( freeze thaw );
-use Test::More;
 
 BEGIN {
   use_ok 'TUI::Objects::Rect';

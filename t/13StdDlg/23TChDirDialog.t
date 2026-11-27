@@ -1,10 +1,11 @@
 use strict;
 use warnings;
 
-use Cwd ();
-use File::Temp ();
 use Test::More;
 use Test::Exception;
+
+use Cwd ();
+use File::Temp ();
 
 BEGIN {
   use_ok 'TUI::Objects::Rect';

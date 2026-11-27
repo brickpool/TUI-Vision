@@ -22,7 +22,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Const qw( INT_MAX );
+use TUI::Common::Const qw( INT_MAX );
 use TUI::Help::HelpBase;
 use TUI::Objects::Object;
 use TUI::Objects::Stream;

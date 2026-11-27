@@ -11,7 +11,7 @@ our $AUTHORITY = 'cpan:BRICKPOOL';
 
 use Import::Into;
 
-use TUI::Const;
+use TUI::Common;
 use TUI::Objects;
 use TUI::App;
 use TUI::Views;
@@ -32,7 +32,7 @@ use TUI::toolkit;
 
 sub import {
   my $target = caller;
-  TUI::Const->import::into( $target, qw( :all ) );
+  TUI::Common->import::into( $target );
   TUI::Objects->import::into( $target );
   TUI::App->import::into( $target );
   TUI::Views->import::into( $target );
@@ -54,7 +54,7 @@ sub import {
 
 sub unimport {
   my $caller = caller;
-  TUI::Const->unimport::out_of( $caller );
+  TUI::Common->unimport::out_of( $caller );
   TUI::Objects->unimport::out_of( $caller );
   TUI::App->unimport::out_of( $caller );
   TUI::Views->unimport::out_of( $caller );
@@ -99,15 +99,14 @@ C<TUI::Vision> is the top-level umbrella module of the framework.
 
 It aggregates and re-exports the main subsystem modules through
 C<Import::Into>, so applications can import the common surface via a single
-C<use TUI::Vision;> statement. C<import> also imports the constants of
-L<TUI::Const> (all tags, C<:all>); C<no TUI::Vision;> removes the imports
-again via C<unimport>.
+C<use TUI::Vision;> statement. C<import> also imports all constants; 
+C<no TUI::Vision;> removes the imports again via C<unimport>.
 
-The re-exported modules are L<TUI::Objects>, L<TUI::App>, L<TUI::Views>,
-L<TUI::Dialogs>, L<TUI::Menus>, L<TUI::Drivers>, L<TUI::Gadgets>,
-L<TUI::StdDlg>, L<TUI::MsgBox>, L<TUI::TextView>, L<TUI::Memory>,
-L<TUI::Validate>, L<TUI::ColorSel>, L<TUI::Editors>, L<TUI::Outline>,
-L<TUI::Help>, and L<TUI::toolkit>.
+The re-exported modules are L<TUI::Common>, L<TUI::Objects>, L<TUI::App>, 
+L<TUI::Views>, L<TUI::Dialogs>, L<TUI::Menus>, L<TUI::Drivers>, 
+L<TUI::Gadgets>, L<TUI::StdDlg>, L<TUI::MsgBox>, L<TUI::TextView>, 
+L<TUI::Memory>, L<TUI::Validate>, L<TUI::ColorSel>, L<TUI::Editors>, 
+L<TUI::Outline>, L<TUI::Help>, and L<TUI::toolkit>.
 
 =head1 AUTHORS
 
