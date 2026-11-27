@@ -16,7 +16,6 @@ our @EXPORT = qw(
   new_THistory
 );
 
-use Encode qw( encode );
 use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
@@ -24,6 +23,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Dialogs::Const qw( 
   cmRecordHistory
   cpHistory
@@ -54,8 +54,7 @@ sub new_THistory { __PACKAGE__->from(@_) }
 extends TView;
 
 # declare global variables
-our $icon = "\xDE~\x19~\xDD";    # cp437: "▐~↓~▌"
-# our $icon = encode( cp437 => "▐~↓~▌" );
+our $icon;
 
 # protected attributes
 has link      => ( is => 'ro', default => sub { die 'required' } );

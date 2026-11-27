@@ -24,6 +24,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( 
   :evXXXX
   :kbXXXX
@@ -51,10 +52,8 @@ sub new_TScrollBar { __PACKAGE__->from(@_) }
 extends TView;
 
 # declare global variables
-our $vChars = "\x1E\x1F\xB1\xFE\xB2";    # cp437: "▲▼░■▒"
-our $hChars = "\x11\x10\xB1\xFE\xB2";    # cp437: "◄►░■▒"
-# our $hChars = encode( cp437 => "◄►░■▒" );
-# our $vChars = encode( cp437 => "▲▼░■▒" );
+our $vChars;
+our $hChars;
 
 # public attributes
 has value  => ( is => 'rw', default => 0 );

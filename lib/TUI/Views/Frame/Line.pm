@@ -13,21 +13,13 @@ use PerlX::Assert::PP;
 use List::Util qw( min max );
 use TUI::toolkit::Types qw( :is );
 
+use TUI::Common::Text;
 use TUI::Views::Const qw(
   cpFrame
   ofFramed
   sfVisible
 );
 require TUI::Views::Frame;
-
-use vars qw( 
-  $initFrame
-  $frameChars
-);
-{
-  *initFrame = \$TUI::Views::Frame::initFrame;
-  *frameChars = \$TUI::Views::Frame::frameChars;
-}
 
 sub TUI::Views::Frame::frameLine {
   my ( $self, $frameBuf, $y, $n, $color ) = @_;
@@ -38,9 +30,11 @@ sub TUI::Views::Frame::frameLine {
   assert ( is_Int $n );
   assert ( is_PositiveOrZeroInt $color );
 
-  my @FrameMask = ( ord substr( $initFrame, $n + 1, 1 ) ) x $self->{size}{x};
-  $FrameMask[0] = ord substr( $initFrame, $n, 1 );
-  $FrameMask[$self->{size}{x} - 1] = ord substr( $initFrame, $n + 2, 1 );
+  my @FrameMask = ( ord substr( $TUI::Views::Frame::initFrame, $n + 1, 1 ) )
+    x $self->{size}{x};
+  $FrameMask[0] = ord substr( $TUI::Views::Frame::initFrame, $n, 1 );
+  $FrameMask[$self->{size}{x} - 1] =
+    ord substr( $TUI::Views::Frame::initFrame, $n + 2, 1 );
 
   my $v = $self->{owner}{last}{next};
   for ( ; $v != $self ; $v = $v->{next} ) {
@@ -77,7 +71,8 @@ sub TUI::Views::Frame::frameLine {
   } #/ for ( ; $v != $self ; $v...)
 
   for my $x ( 0 .. $self->{size}{x} -1 ) {
-    $frameBuf->putChar( $x, substr( $frameChars, $FrameMask[$x], 1 ) );
+    $frameBuf->putChar( $x,
+      substr( $TUI::Views::Frame::frameChars, $FrameMask[$x], 1 ) );
     $frameBuf->putAttribute( $x, $color );
   }
 } #/ sub TUI::Views::Frame::frameLine

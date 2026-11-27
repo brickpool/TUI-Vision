@@ -20,6 +20,7 @@ use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw( :types );
 
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( evBroadcast );
 use TUI::Dialogs::Cluster;
 use TUI::Dialogs::StrItem;
@@ -34,11 +35,11 @@ sub new_TMonoSelector { __PACKAGE__->from( @_ ) }
 extends TCluster;
 
 # declare global variables
-our $button    = " ( ) ";
-our $normal    = "Normal";
-our $highlight = "Highlight";
-our $underline = "Underline";
-our $inverse   = "Inverse";
+our $button;
+our $normal;
+our $highlight;
+our $underline;
+our $inverse;
 
 # lookup table of monochrome color values
 my @monoColors = ( 0x07, 0x0f, 0x01, 0x70, 0x09 );

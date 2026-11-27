@@ -56,8 +56,8 @@ our $resourceClass = "MyApp::L10N";
 our $languageTag   = I18N::LangTags::Detect::detect() || 'en';
 
 # private attributes
-has strSize   => ( is => 'bare' );
-has indexSize => ( is => 'bare' );
+has strSize   => ( is => 'bare', default => sub { die 'required' } );
+has indexSize => ( is => 'bare', default => sub { die 'required' } );
 
 has tag     => ( is => 'bare', default => sub { $languageTag } );
 has lexicon => ( is => 'bare', default => sub { {} } );

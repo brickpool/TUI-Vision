@@ -38,6 +38,7 @@ use TUI::App::Const qw(
 );
 use TUI::App::DeskTop;
 use TUI::App::ProgInit;
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( 
   :evXXXX
   :kbXXXX
@@ -78,7 +79,7 @@ if ( TUI::toolkit::is_Moo ) {
 }
 
 # declare global variables
-our $exitText = "~Alt-X~ Exit";
+our $exitText;
 our $application;
 our $statusLine;
 our $menuBar;

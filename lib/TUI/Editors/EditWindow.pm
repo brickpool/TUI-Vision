@@ -25,6 +25,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( :evXXXX );
 use TUI::Drivers::Event;
 use TUI::Editors::Const qw( :cmXXXX );
@@ -43,8 +44,8 @@ sub new_TEditWindow { __PACKAGE__->from(@_) }
 extends TWindow;
 
 # declare global variables
-our $clipboardTitle = 'Clipboard';
-our $untitled       = 'Untitled';
+our $clipboardTitle;
+our $untitled;
 
 # public attributes
 has editor => ( is => 'rw' );

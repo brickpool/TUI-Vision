@@ -24,6 +24,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( evBroadcast );
 use TUI::Drivers::ColorAttr;
 use TUI::Dialogs::Const qw(
@@ -60,15 +61,15 @@ sub new_TColorDialog { __PACKAGE__->from(@_) }
 extends TDialog;
 
 # declare global variables
-our $colors     = "Colors";
-our $groupText  = "~G~roup";
-our $itemText   = "~I~tem";
-our $forText    = "~F~oreground";
-our $bakText    = "~B~ackground";
-our $textText   = "Text ";
-our $colorText  = "Color";
-our $okText     = "O~K~";
-our $cancelText = "Cancel";
+our $colors;
+our $groupText;
+our $itemText;
+our $forText;
+our $bakText;
+our $textText;
+our $colorText;
+our $okText;
+our $cancelText;
 
 # import global variables
 use vars qw(

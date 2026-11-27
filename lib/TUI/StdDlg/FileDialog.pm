@@ -25,6 +25,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Dialogs::Const qw(
   bfDefault
   bfNormal
@@ -70,15 +71,15 @@ sub new_TFileDialog { __PACKAGE__->from(@_) }
 extends TDialog;
 
 # declare global variables
-our $filesText        = "~F~iles";
-our $openText         = "~O~pen";
-our $okText           = "O~K~";
-our $replaceText      = "~R~eplace";
-our $clearText        = "~C~lear";
-our $cancelText       = "Cancel";
-our $helpText         = "~H~elp";
-our $invalidDriveText = "Invalid drive or directory";
-our $invalidFileText  = "Invalid file name.";
+our $filesText;
+our $openText;
+our $okText;
+our $replaceText;
+our $clearText;
+our $cancelText;
+our $helpText;
+our $invalidDriveText;
+our $invalidFileText;
 
 # public attributes
 has fileName  => ( is => 'rw' );

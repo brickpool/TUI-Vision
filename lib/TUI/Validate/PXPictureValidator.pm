@@ -24,6 +24,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::MsgBox::Const qw(
   mfError
   mfOKButton
@@ -43,7 +44,7 @@ sub new_TPXPictureValidator { __PACKAGE__->from(@_) }
 extends TValidator;
 
 # declare global variables
-our $errorMsg = "Error in picture format.\n %s";
+our $errorMsg;
 
 # private attributes
 has index => ( is => 'bare' );
@@ -722,7 +723,7 @@ underlying L<TPicResult|TUI::Validate::Const> status codes.
 
 =head2 $errorMsg
 
-Message template used by C<error>.
+Message template used by L</error>.
 
 =head1 ATTRIBUTES
 

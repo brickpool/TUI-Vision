@@ -161,6 +161,7 @@ inventory.
   $autoDelay           TEventQueue            Auto-repeat start delay
   $autoTicks           TEventQueue            Auto-repeat tick counter
 
+  $backupExt           TFileEditor            Backup file extension
   $bakText             TColorDialog           Color dialog background label
   $button              TCheckBoxes            Checkbox item pattern
   $button              TMonoSelector          Button item pattern
@@ -207,6 +208,7 @@ inventory.
   $errorMsg            TPXPictureValidator    Picture validation error message
   $errorMsg            TRangeValidator        Range validation error message
   $errorMsg            TStringLookupValidator String lookup validation message
+  $errorString         TSystemError           Legacy DOS error message list
   $errorText           MsgBoxText             Error dialog title
   $exitText            TProgram               Exit command label text
 
@@ -222,6 +224,7 @@ inventory.
 
   $handlerInstalled    THWMouse               Mouse handler installed flag
   $helpText            TChDirDialog           Help label
+  $helpWinTitle        THelpWindow            Help window title
   $hChars              TScrollBar             Horizontal scrollbar characters
   $highlight           TMonoSelector          Highlighted text attribute
   $hintSeparator       TStatusLine            Hint separator text
@@ -296,6 +299,7 @@ inventory.
   $shadows             TButton                Button shadow characters
   $showMarkers         TView                  Marker visibility flag
   $specialChars        TView                  Special navigation characters
+  $sRetryOrCancel      TSystemError           Legacy DOS retry/cancel prompt
   $startupCursor       TScreen                Startup cursor state
   $startupMode         TScreen                Startup screen mode
   $statusLine          TProgram               Status line reference

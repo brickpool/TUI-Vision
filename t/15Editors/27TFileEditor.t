@@ -97,14 +97,14 @@ subtest 'valid() asks before discarding modified text' => sub {
 
   $e->insertText( "x", 1, false );
   my @asked;
-  local $TUI::Editors::FileEditor::editorDialog = sub {
+  local $TUI::Editors::Editor::editorDialog = sub {
     push @asked, $_[0];
     return cmCancel;
   };
   ok( !$e->valid( cmYes ), 'cmCancel rejects closing a modified editor' );
   is_deeply( \@asked, [ edSaveModify ], 'user is asked to save the changes' );
 
-  $TUI::Editors::FileEditor::editorDialog = sub { cmNo };
+  $TUI::Editors::Editor::editorDialog = sub { cmNo };
   ok( $e->valid( cmYes ), 'cmNo discards the changes' );
   ok( !$e->{modified}, 'discarding clears the modified flag' );
   is( read_file( $path ), "keep\n", 'file is unchanged after discarding' );

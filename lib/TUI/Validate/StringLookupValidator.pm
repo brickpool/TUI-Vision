@@ -23,6 +23,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::MsgBox::Const qw(
   mfError
   mfOKButton
@@ -37,7 +38,7 @@ sub new_TStringLookupValidator { __PACKAGE__->from(@_) }
 extends TLookupValidator;
 
 # declare global variables
-our $errorMsg = "Input is not in list of valid strings";
+our $errorMsg;
 
 # protected attributes
 has strings => ( is => 'ro', default => sub { die 'required' } );

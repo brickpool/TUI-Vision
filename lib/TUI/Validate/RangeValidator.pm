@@ -22,6 +22,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::MsgBox::Const qw(
   mfError
   mfOKButton
@@ -41,9 +42,9 @@ sub new_TRangeValidator { __PACKAGE__->from(@_) }
 extends TFilterValidator;
 
 # declare global variables
-our $errorMsg           = "Value not in the range %d to %d";
-our $validUnsignedChars = "+0123456789";
-our $validSignedChars   = "+-0123456789";
+our $errorMsg;
+our $validUnsignedChars;
+our $validSignedChars;
 
 # protected attributes
 has min => ( is => 'ro', default => sub { die 'required' } );
@@ -68,7 +69,7 @@ sub BUILD {    # void (\%args)
   assert ( is_Object $self );
   assert ( $self->{min} <= $self->{max} );
   $self->{validChars} = $self->{min} >= 0
-                      ? $validUnsignedChars 
+                      ? $validUnsignedChars
                       : $validSignedChars;
   return;
 }
@@ -88,7 +89,8 @@ sub error {    # void ()
     pos    => [],
   );
   my ( $self ) = $sig->( @_ );
-  messageBox( mfError | mfOKButton, $errorMsg, $self->{min}, $self->{max} );
+  messageBox( mfError | mfOKButton, $errorMsg,
+    $self->{min}, $self->{max} );
   return;
 }
 

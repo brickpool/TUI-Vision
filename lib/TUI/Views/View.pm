@@ -30,6 +30,7 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Common::Const qw( INT_MAX );
+use TUI::Common::Text;
 use TUI::Objects::Object;
 use TUI::Objects::Point;
 use TUI::Objects::Rect;
@@ -74,7 +75,7 @@ with: *DOES = TStreamable->can('DOES');
 our $shadowSize        = TPoint->new( x => 2, y => 1 );
 our $shadowAttr        = 0x08;
 our $showMarkers       = false;
-our $specialChars      = [ "\xAF", "\xAE", "\x1A", "\x1B", ' ', ' ' ];
+our $specialChars;
 our $errorAttr         = 0xcf;
 our $commandSetChanged = false;
 our $curCommandSet     = do {    # initCommands
@@ -89,14 +90,6 @@ our $curCommandSet     = do {    # initCommands
   $temp->disableCmd( cmPrev );
   $temp;
 };
-
-# import global variables
-use vars qw(
-  $TheTopView
-); 
-{
-  *TheTopView = \$TUI::Views::Group::TheTopView;
-}
 
 # public attributes
 has next      => ( is => 'bare' );
@@ -1273,8 +1266,8 @@ sub TopView {    # $view ()
     pos    => [],
   );
   my ( $self ) = $sig->( @_ );
-  return $TheTopView
-    if $TheTopView;
+  return $TUI::Views::Group::TheTopView
+    if $TUI::Views::Group::TheTopView;
 
   my $p = $self;
   while ( $p && !( $p->{state} & sfModal ) ) {

@@ -24,6 +24,7 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Common::Const qw( EOS );
+use TUI::Common::Text;
 use TUI::Drivers::Const qw(
   :evXXXX
   kbUp
@@ -61,22 +62,10 @@ sub TListViewer() { __PACKAGE__ }
 sub name() { 'TListViewer' }
 sub new_TListViewer { __PACKAGE__->from(@_) }
 
-# import global variables
-use vars qw(
-  $showMarkers
-  $specialChars
-  $emptyText
-);
-{
-  no strict 'refs';
-  *showMarkers  = \${ TView . '::showMarkers'  };
-  *specialChars = \${ TView . '::specialChars' };
-}
-
 extends TView;
 
 # declare global variables
-our $emptyText = "<empty>";
+our $emptyText;
 
 # declare attributes
 has hScrollBar => ( is => 'rw' );
@@ -221,9 +210,10 @@ sub draw {    # void ()
         $self->getText( \$text, $item, $colWidth + $indent );
         my $buf = substr( $text, $indent, $colWidth );
         $b->moveStr( $curCol + 1, $buf, $color );
-        if ( $showMarkers ) {
-          $b->putChar( $curCol, $specialChars->[$scOff] );
-          $b->putChar( $curCol + $colWidth - 2, $specialChars->[ $scOff + 1 ] );
+        if ( $TUI::Views::View::showMarkers ) {
+          $b->putChar( $curCol, $TUI::Views::View::specialChars->[$scOff] );
+          $b->putChar( $curCol + $colWidth - 2,
+            $TUI::Views::View::specialChars->[ $scOff + 1 ] );
         }
       } #/ if ( $item < $self->{range...})
       elsif ( $i == 0 && $j == 0 ) {

@@ -23,6 +23,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Drivers::Const qw(
   :evXXXX
   kbLeft
@@ -53,8 +54,7 @@ sub new_TColorSelector { __PACKAGE__->from(@_) }
 extends TView;
 
 # declare global variables
-our $icon = "\xDB";    # cp437: "█"
-# our $icon = encode( cp437 => "█" );
+our $icon;
 
 # protected attributes
 has color   => ( is => 'ro', default => 0 );

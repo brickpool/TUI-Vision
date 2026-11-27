@@ -28,6 +28,7 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Common::Const qw( EOS );
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( :evXXXX );
 use TUI::Drivers::Event;
 use TUI::Editors::Const qw(
@@ -55,21 +56,11 @@ sub new_TFileEditor { __PACKAGE__->from(@_) }
 
 extends TEditor;
 
-# import global variables
-use vars qw(
-  $editorDialog
-  $editorFlags
-); 
-{
-  *editorDialog = \$TUI::Editors::Editor::editorDialog;
-  *editorFlags  = \$TUI::Editors::Editor::editorFlags;
-}
+# declare global variables
+our $backupExt;
 
 # public attributes
 has fileName => ( is => 'rw', default => '' );
-
-# declare local variables
-my $backupExt = '.BAK';
 
 sub BUILDARGS {    # \%args (%args)
   state $sig = signature(
@@ -167,7 +158,7 @@ sub loadFile {    # $bool ()
   my $read  = read $fh, $data, $fSize;
   if ( !defined $read || $read != $fSize ) {
     close $fh;
-    &$editorDialog( edReadError, $self->{fileName} );
+    &$TUI::Editors::Editor::editorDialog( edReadError, $self->{fileName} );
     return false;
   }
   close $fh;
@@ -195,7 +186,7 @@ sub saveAs {    # $bool ()
   );
   my ( $self ) = $sig->( @_ );
   my $res = false;
-  if ( &$editorDialog( edSaveAs, $self->{fileName} ) != cmCancel ) {
+  if ( &$TUI::Editors::Editor::editorDialog( edSaveAs, $self->{fileName} ) != cmCancel ) {
     fexpand( $self->{fileName} );
     message( $self->{owner}, evBroadcast, cmUpdateTitle, undef );
     $res = $self->saveFile();
@@ -212,7 +203,7 @@ sub saveFile {    # $bool ()
   );
   my ( $self ) = $sig->( @_ );
 
-  if ( $editorFlags & efBackupFiles ) {
+  if ( $TUI::Editors::Editor::editorFlags & efBackupFiles ) {
     my ( $file, $dir, $ext ) = fileparse( $self->{fileName}, qr/\.[^.]*/ );
     my $backupName = $dir . $file . $backupExt;
     unlink $backupName;
@@ -221,14 +212,14 @@ sub saveFile {    # $bool ()
 
   my $fh;
   if ( !open $fh, '>:raw', $self->{fileName} ) {
-    &$editorDialog( edCreateError, $self->{fileName} );
+    &$TUI::Editors::Editor::editorDialog( edCreateError, $self->{fileName} );
     return false;
   }
 
   my $written = print {$fh} $self->{buffer};
   my $closed  = close $fh;
   if ( !$written || !$closed ) {
-    &$editorDialog( edWriteError, $self->{fileName} );
+    &$TUI::Editors::Editor::editorDialog( edWriteError, $self->{fileName} );
     return false;
   }
 
@@ -271,7 +262,7 @@ sub valid {    # $bool ($command)
 
   if ( $self->{modified} ) {
     my $d = length $self->{fileName} ? edSaveModify : edSaveUntitled;
-    my $result = &$editorDialog( $d, $self->{fileName} );
+    my $result = &$TUI::Editors::Editor::editorDialog( $d, $self->{fileName} );
     SWITCH: for ( $result ) {
       cmYes == $_ and return $self->save();
       cmNo  == $_ and do {
@@ -370,14 +361,20 @@ file. It loads the file into the editor buffer when it is created and writes
 the buffer back to the file when it is saved.
 
 The editor handles the C<cmSave> and C<cmSaveAs> commands and asks the user
-before discarding modified text through the C<$editorDialog> callback of
-L<TEditor|TUI::Editors::Editor>. When the global C<$editorFlags> contain
+before discarding modified text through the C<$TUI::Editors::Editor::editorDialog> callback of
+L<TEditor|TUI::Editors::Editor>. When the global C<$TUI::Editors::Editor::editorFlags> contain
 C<efBackupFiles>, the previous version of the file is renamed to a file with
 the extension C<.BAK> before it is overwritten.
 
 The text buffer of L<TEditor|TUI::Editors::Editor> is a plain Perl string, so
 the buffer allocation methods of I<Turbo Vision> (C<initBuffer>, C<doneBuffer>
 and C<setBufSize>) are inherited unchanged.
+
+=head1 VARIABLES
+
+=head2 $backupExt
+
+Extension used for backup files (I<Str>). Defaults to C<'.BAK'>.
 
 =head1 ATTRIBUTES
 
@@ -454,7 +451,7 @@ C<cmSaveAs> command calls L</saveAs>. Both commands clear the event.
 
 Loads the file named by L</fileName> into the buffer and returns true. A file
 that cannot be opened is treated as a new, empty file. If the file cannot be
-read completely, the C<edReadError> message is passed to C<$editorDialog> and
+read completely, the C<edReadError> message is passed to C<$TUI::Editors::Editor::editorDialog> and
 false is returned.
 
 =head2 save
@@ -467,7 +464,7 @@ Saves the buffer to L</fileName>. Calls L</saveAs> if the editor is untitled.
 
   my $bool = $editor->saveAs();
 
-Asks the user for a new file name through C<$editorDialog> with the
+Asks the user for a new file name through C<$TUI::Editors::Editor::editorDialog> with the
 C<edSaveAs> message and saves the buffer to it. The file name is expanded to a
 full path. Returns false if the user cancels.
 
@@ -476,9 +473,9 @@ full path. Returns false if the user cancels.
   my $bool = $editor->saveFile();
 
 Writes the buffer to L</fileName>. If C<efBackupFiles> is set in
-C<$editorFlags>, the existing file is first renamed to the backup name with the 
+C<$TUI::Editors::Editor::editorFlags>, the existing file is first renamed to the backup name with the 
 C<.BAK> extension. Returns false and passes the C<edCreateError> or 
-C<edWriteError> to C<$editorDialog> on failure.
+C<edWriteError> to C<$TUI::Editors::Editor::editorDialog> on failure.
 
 =head2 shutDown
 
@@ -499,7 +496,7 @@ commands.
 
 For C<cmValid>, returns the validity of the editor attribute (C<isValid>). For 
 any other command, a modified buffer triggers the C<edSaveModify> or
-C<edSaveUntitled> message through C<$editorDialog>. C<cmYes> saves the file,
+C<edSaveUntitled> message through C<$TUI::Editors::Editor::editorDialog>. C<cmYes> saves the file,
 C<cmNo> discards the changes and C<cmCancel> rejects the command.
 
 =head1 SEE ALSO

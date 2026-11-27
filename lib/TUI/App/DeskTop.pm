@@ -17,7 +17,6 @@ our @EXPORT = qw(
 );
 
 use Carp ();
-use Encode qw( encode );
 use Scalar::Util qw( weaken );
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
@@ -27,6 +26,7 @@ use TUI::toolkit::Types qw(
 
 use TUI::App::Background;
 use TUI::App::DeskInit;
+use TUI::Common::Text;
 use TUI::Drivers::Const qw(
   evCommand
 );
@@ -46,14 +46,14 @@ sub new_TDeskTop { __PACKAGE__->from(@_) }
 
 extends ( TGroup, TDeskInit );
 
+# declare global variables
+our $defaultBkgrnd;
+
 # Moo does not inherit attributes from secondary extends() classes.
 # Redeclare attribute provided by TDeskInit.
 if ( TUI::toolkit::is_Moo ) {
   has createBackground => ( is => 'bare', default => sub { die 'required' } );
 }
-
-# declare global variables
-our $defaultBkgrnd = encode( cp437 => "░" );
 
 # protected attributes
 has background        => ( is => 'ro' );

@@ -23,6 +23,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Dialogs::Const qw( cpLabel );
 use TUI::Dialogs::StaticText;
 use TUI::Dialogs::Util qw( hotKey );
@@ -50,17 +51,6 @@ sub name() { 'TLabel' }
 sub new_TLabel { __PACKAGE__->from(@_) }
 
 extends TStaticText;
-
-# import global variables
-use vars qw(
-  $showMarkers
-  $specialChars
-);
-{
-  no strict 'refs';
-  *showMarkers  = \${ TView . '::showMarkers' };
-  *specialChars = \${ TView . '::specialChars' };
-}
 
 # protected attributes
 has link  => ( is => 'ro', default => sub { die 'required' } );
@@ -137,8 +127,8 @@ sub draw {    # void ()
   if ( $self->{text} ) {
     $b->moveCStr( 1, $self->{text}, $color );
   }
-  if ( $showMarkers ) {
-    $b->putChar( 0, $specialChars->[$scOff] );
+  if ( $TUI::Views::View::showMarkers ) {
+    $b->putChar( 0, $TUI::Views::View::specialChars->[$scOff] );
   }
   $self->writeLine( 0, 0, $self->{size}{x}, 1, $b );
   return;

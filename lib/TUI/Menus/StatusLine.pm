@@ -23,9 +23,10 @@ use TUI::toolkit::Types qw(
   :types
 );
 
-use TUI::Menus::Const qw( cpStatusLine );
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( :evXXXX );
 use TUI::Drivers::Util qw( cstrlen );
+use TUI::Menus::Const qw( cpStatusLine );
 use TUI::Objects::Rect;
 use TUI::Views::DrawBuffer;
 use TUI::Views::Const qw(
@@ -46,7 +47,7 @@ sub new_TStatusLine { __PACKAGE__->from(@_) }
 extends TView;
 
 # declare global variables
-our $hintSeparator = "\xB3 ";
+our $hintSeparator;
 
 # protected attributes
 has items => ( is => 'ro' );

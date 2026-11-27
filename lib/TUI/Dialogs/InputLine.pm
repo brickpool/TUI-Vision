@@ -25,6 +25,7 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Common::Const qw( EOS );
+use TUI::Common::Text;
 use TUI::Dialogs::Const qw( cpInputLine );
 use TUI::Drivers::Const qw(
   :evXXXX
@@ -61,8 +62,8 @@ extends TView;
 use constant CONTROL_Y => 25;
 
 # declare global variables
-our $rightArrow = "\x10";
-our $leftArrow  = "\x11";
+our $rightArrow;
+our $leftArrow;
 
 # public attributes
 has data        => ( is => 'rw', default => '' );

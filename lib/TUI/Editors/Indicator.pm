@@ -16,13 +16,13 @@ our @EXPORT = qw(
   new_TIndicator
 );
 
-use Encode qw( encode );
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
   is_Object
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Editors::Const qw( cpIndicator );
 use TUI::Objects::Point;
 use TUI::Views::Const qw(
@@ -41,8 +41,10 @@ sub new_TIndicator { __PACKAGE__->from(@_) }
 extends TView;
 
 # declare global variables
-our $dragFrame   = encode( cp437 => "═" );
-our $normalFrame = encode( cp437 => "─" );
+use vars qw(
+  $dragFrame
+  $normalFrame
+);
 
 # protected attributes
 has location => ( is => 'ro', default => sub { TPoint->new } );
@@ -66,11 +68,11 @@ sub draw {    # void ()
   my ( $color, $frame );
   if ( ( $self->{state} & sfDragging ) == 0 ) {
     $color = $self->getColor( 1 );
-    $frame = $dragFrame;
+    $frame = $TUI::Editors::Indicator::dragFrame;
   }
   else {
     $color = $self->getColor( 2 );
-    $frame = $normalFrame;
+    $frame = $TUI::Editors::Indicator::normalFrame;
   }
 
   my $b = TDrawBuffer->new();

@@ -21,6 +21,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( evBroadcast );
 use TUI::StdDlg::Const qw(
   cmFileFocused
@@ -39,12 +40,9 @@ sub new_TFileInfoPane { __PACKAGE__->from(@_) }
 extends TView;
 
 # declare global variables
-our $pmText = "p";
-our $amText = "a";
-our $months = [ '', qw(
-  Jan Feb Mar Apr May Jun
-  Jul Aug Sep Oct Nov Dec
-)];
+our $pmText;
+our $amText;
+our $months;
 
 # private attributes
 has file_block => ( 

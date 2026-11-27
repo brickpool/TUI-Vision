@@ -22,6 +22,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Dialogs::Const qw(
   :bfXXXX
   :cmXXXX
@@ -54,19 +55,8 @@ sub new_TButton { __PACKAGE__->from(@_) }
 extends TView;
 
 # declare global variables
-our $shadows = "\xDC\xDB\xDF";
-our $markers = "[]";
-
-# import global variables
-use vars qw(
-  $showMarkers
-  $specialChars
-);
-{
-  no strict 'refs';
-  *showMarkers  = \${ TView . '::showMarkers' };
-  *specialChars = \${ TView . '::specialChars' };
-}
+our $shadows;
+our $markers;
 
 # public attributes
 has title     => ( is => 'ro', default => sub { die 'required' } );
@@ -181,7 +171,7 @@ sub drawState {    # void ($down)
     }
     else {
       $b->putAttribute( $s, $cShadow );
-      if ( $showMarkers ) {
+      if ( $TUI::Views::View::showMarkers ) {
         $ch = ' ';
       }
       else {
@@ -200,7 +190,7 @@ sub drawState {    # void ($down)
       $self->$drawTitle( $b, $s, $i, $cButton, $down );
     }
 
-    if ( $showMarkers && !$down ) {
+    if ( $TUI::Views::View::showMarkers && !$down ) {
       $b->putChar( 1,      substr( $markers, 0, 1 ) );
       $b->putChar( $s - 1, substr( $markers, 1, 1 ) );
     }
@@ -415,7 +405,7 @@ $drawTitle = sub {    # void ($b, $s, $i, $cButton, $down)
 
   $b->moveCStr( $i + $l, $self->{title}, $cButton );
 
-  if ( $showMarkers && !$down ) {
+  if ( $TUI::Views::View::showMarkers && !$down ) {
     if ( $self->{state} & sfSelected ) {
       $scOff = 0;
     }
@@ -425,8 +415,8 @@ $drawTitle = sub {    # void ($b, $s, $i, $cButton, $down)
     else {
       $scOff = 4;
     }
-    $b->putChar( 0,  $specialChars->[$scOff] );
-    $b->putChar( $s, $specialChars->[$scOff + 1] );
+    $b->putChar( 0,  $TUI::Views::View::specialChars->[$scOff] );
+    $b->putChar( $s, $TUI::Views::View::specialChars->[$scOff + 1] );
   } #/ if ( $self->{showMarkers...})
   return;
 }; #/ sub drawTitle

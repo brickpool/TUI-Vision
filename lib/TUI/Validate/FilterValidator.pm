@@ -22,6 +22,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::MsgBox::Const qw(
   mfError
   mfOKButton
@@ -36,7 +37,7 @@ sub new_TFilterValidator { __PACKAGE__->from(@_) }
 extends TValidator;
 
 # declare global variables
-our $errorMsg = "Invalid character in input";
+our $errorMsg;
 
 # protected attributes
 has validChars => ( is => 'ro', default => '' );

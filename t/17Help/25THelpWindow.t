@@ -32,6 +32,11 @@ subtest 'construction creates a centered 50x18 help window' => sub {
   ok( $window->options & ofCentered, 'ofCentered is set' );
 };
 
+subtest 'the help window title can be customized' => sub {
+  local $TUI::Help::HelpWindow::helpWinTitle = 'Assistance';
+  is( new_window()->title, 'Assistance', 'window uses the customized title' );
+};
+
 subtest 'window hosts a viewer with both scroll bars' => sub {
   my $window = new_window();
   my $viewer = $window->firstThat( sub {

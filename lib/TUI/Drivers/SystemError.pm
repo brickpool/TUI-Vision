@@ -18,13 +18,16 @@ use Devel::StrictMode;
 use PerlX::Assert::PP;
 use TUI::toolkit::boolean;
 
+use TUI::Common::Text;
 use TUI::Drivers::HardwareInfo;
 
 sub TSystemError() { __PACKAGE__ }
 
 # Global variables
+our $errorString;
 our $ctrlBreakHit  = false;
 our $saveCtrlBreak = false;
+our $sRetryOrCancel;
 
 INIT {
   TSystemError->resume();
@@ -96,6 +99,13 @@ intentionally skipped.
 
 =head1 VARIABLES
 
+=head2 $errorString
+
+Compatibility variable (I<ArrayRef[Str]>) from the original I<Turbo Vision> DOS 
+implementation.
+
+Historically it contained the system error messages from C<0x00..0x15>.
+
 =head2 $ctrlBreakHit
 
 Indicates whether a Ctrl-Break event has occurred (I<Bool>).
@@ -112,6 +122,15 @@ Historically it stored the previous DOS Ctrl-Break flag so that the system
 state could be restored when I<Turbo Vision> released control of the terminal. 
 The Perl port does not use this mechanism and the variable is retained only for 
 compatibility.
+
+=head2 $sRetryOrCancel
+
+Compatibility variable (I<Str>) from the original I<Turbo Vision> DOS
+implementation.
+
+Historically it showed on status line whether the system should retry an 
+operation or cancel it after a system error. The Perl port does not use this 
+mechanism and the variable is retained only for compatibility.
 
 =head1 METHODS
 

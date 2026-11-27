@@ -22,6 +22,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Help::Const qw( cHelpWindow );
 use TUI::Help::HelpFile;
 use TUI::Help::HelpViewer;
@@ -42,11 +43,14 @@ sub new_THelpWindow { __PACKAGE__->from(@_) }
 
 extends TWindow;
 
+# declare global variables
+our $helpWinTitle;
+
 sub BUILDARGS {    # \%args (%args)
   state $sig = signature(
     method => 1,
     named  => [
-      hFile   => Object,              { alias => 'aHelpFile' },
+      hFile   => Object, { alias => 'aHelpFile' },
       context => PositiveOrZeroInt,
     ],
     caller_level => +1,
@@ -55,7 +59,7 @@ sub BUILDARGS {    # \%args (%args)
   local $Carp::CarpLevel = $Carp::CarpLevel + 1;
   my $args2 = TWindow->BUILDARGS(
     bounds => TRect->new( ax => 0, ay => 0, bx => 50, by => 18 ),
-    title  => 'Help',
+    title  => $helpWinTitle,
     number => wnNoNumber,
   );
   return { %$args1, %$args2 };

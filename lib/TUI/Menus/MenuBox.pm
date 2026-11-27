@@ -24,6 +24,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Menus::MenuView;
 use TUI::Objects::Rect;
 use TUI::Views::Const qw(
@@ -39,9 +40,7 @@ sub new_TMenuBox { __PACKAGE__->from(@_) }
 extends TMenuView;
 
 # declare global variables
-our $frameChars =
-  # for UnitedStates code page
-  " \332\304\277  \300\304\331  \263 \263  \303\304\264 ";
+our $frameChars;
 
 # predeclare private methods
 my (

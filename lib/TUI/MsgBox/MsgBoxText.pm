@@ -26,6 +26,7 @@ use TUI::toolkit qw(
 );
 use TUI::toolkit::Types qw( :types );
 
+use TUI::Common::Text;
 use TUI::App::Program qw(
   $application
   $deskTop
@@ -52,14 +53,14 @@ use TUI::Views::Const qw(
 );
 
 # declare global variables
-our $yesText         = "~Y~es";
-our $noText          = "~N~o";
-our $okText          = "O~K~";
-our $cancelText      = "Cancel";
-our $warningText     = "Warning";
-our $errorText       = "Error";
-our $informationText = "Information";
-our $confirmText     = "Confirm";
+our $yesText;
+our $noText;
+our $okText;
+our $cancelText;
+our $warningText;
+our $errorText;
+our $informationText;
+our $confirmText;
 
 # Button caption texts
 my @buttonName = (

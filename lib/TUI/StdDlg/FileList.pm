@@ -25,6 +25,7 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Common::Const qw( EOS );
+use TUI::Common::Text;
 use TUI::Drivers::Const qw(
   evBroadcast
   kbShift
@@ -59,7 +60,7 @@ sub new_TFileList { __PACKAGE__->from( @_ ) }
 extends TSortedListBox;
 
 # declare global variables
-our $tooManyFiles = "Too many files.";
+our $tooManyFiles;
 
 sub BUILDARGS {    # \%args (%args)
   state $sig = signature(

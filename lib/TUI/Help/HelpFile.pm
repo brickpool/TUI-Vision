@@ -22,6 +22,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Help::Const qw(
   MAXHELPTOPICID
   :wrapXXXX
@@ -38,10 +39,10 @@ use TUI::Objects::Object;
 sub THelpFile() { __PACKAGE__ }
 sub new_THelpFile { __PACKAGE__->from(@_) }
 
-# global variables
-our $invalidContext = "\n No help available in this context.";
-
 extends TObject;
+
+# declare global variables
+our $invalidContext;
 
 # public attributes
 has stream   => ( is => 'rw', default => undef );

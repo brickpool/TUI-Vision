@@ -17,7 +17,6 @@ our @EXPORT = qw(
   new_TDirListBox
 );
 
-use Encode qw( encode );
 use Storable;
 use TUI::toolkit;
 use TUI::toolkit::Types qw(
@@ -26,6 +25,7 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Common::Const qw( EOS );
+use TUI::Common::Text;
 use TUI::Drivers::Const qw( evBroadcast );
 use TUI::Objects::Rect;
 use TUI::Dialogs::ListBox;
@@ -52,12 +52,12 @@ sub new_TDirListBox { __PACKAGE__->from( @_ ) }
 extends TListBox;
 
 # declare global variables
-our $pathDir   = encode( cp437 => "└─┬"   );
-our $firstDir  = encode( cp437 =>   "└┬─" );
-our $middleDir = encode( cp437 =>   " ├─" );
-our $lastDir   = encode( cp437 =>   " └─" );
-our $drives    = "Drives";
-our $graphics  = encode( cp437 => "└├─"   );
+our $pathDir;
+our $firstDir;
+our $middleDir;
+our $lastDir;
+our $drives;
+our $graphics;
 
 # private attributes
 has dir => ( is => 'bare', default => EOS );

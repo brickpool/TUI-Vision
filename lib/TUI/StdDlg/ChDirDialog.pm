@@ -25,6 +25,7 @@ use TUI::toolkit::Types qw(
 );
 
 use TUI::Common::Const qw( EOS );
+use TUI::Common::Text;
 use TUI::Dialogs::Const qw(
   bfDefault
   bfNormal
@@ -70,15 +71,15 @@ sub new_TChDirDialog { __PACKAGE__->from(@_) }
 extends TDialog;
 
 # declare global variables
-our $changeDirTitle = "Change Directory";
-our $dirNameText    = "Directory ~n~ame";
-our $dirTreeText    = "Directory ~t~ree";
-our $okText         = "O~K~";
-our $chdirText      = "~C~hdir";
-our $revertText     = "~R~evert";
-our $helpText       = "Help";
-our $drivesText     = "Drives";
-our $invalidText    = "Invalid directory";
+our $changeDirTitle;
+our $dirNameText;
+our $dirTreeText;
+our $okText;
+our $chdirText;
+our $revertText;
+our $helpText;
+our $drivesText;
+our $invalidText;
 
 # private attributes
 has dirInput    => ( is => 'bare' );
@@ -104,7 +105,7 @@ sub BUILDARGS {    # \%args (%args)
   local $Carp::CarpLevel = $Carp::CarpLevel + 1;
   my $args2 = $class->SUPER::BUILDARGS(
     bounds => TRect->new( ax => 16, ay => 2, bx => 64, by => 20 ), 
-    title  => $changeDirTitle, 
+    title  => $changeDirTitle,
   );
   return { %$args1, %$args2 };
 }

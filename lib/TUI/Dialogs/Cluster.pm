@@ -24,6 +24,7 @@ use TUI::toolkit::Types qw(
   :types
 );
 
+use TUI::Common::Text;
 use TUI::Dialogs::Const qw( cpCluster );
 use TUI::Dialogs::Util qw( hotKey );
 use TUI::Drivers::Const qw(
@@ -55,17 +56,6 @@ sub name() { 'TCluster' }
 sub new_TCluster { __PACKAGE__->from(@_) }
 
 extends TView;
-
-# import global variables
-use vars qw(
-  $showMarkers
-  $specialChars
-);
-{
-  no strict 'refs';
-  *showMarkers  = \${ TView . '::showMarkers' };
-  *specialChars = \${ TView . '::specialChars' };
-}
 
 # protected attributes
 has value      => ( is => 'ro', default => 0 );
@@ -202,13 +192,13 @@ sub drawMultiBox {    # void ($icon, $marker)
 
       $b->putChar( $col + 2, substr( $marker, $self->multiMark( $cur ), 1 ) );
       $b->moveCStr( $col + 5, $self->{strings}->at( $cur ), $color );
-      if ( $showMarkers
+      if ( $TUI::Views::View::showMarkers
         && ( $self->{state} & sfSelected )
         && $cur == $self->{sel}
       ) {
-        $b->putChar( $col, $specialChars->[0] );
+        $b->putChar( $col, $TUI::Views::View::specialChars->[0] );
         $b->putChar( $self->$column( $cur + $self->{size}{y} ) - 1, 
-          $specialChars->[1] );
+          $TUI::Views::View::specialChars->[1] );
       }
     } #/ for ( my $j = 0 ; $j <=...)
     $self->writeBuf( 0, $i, $self->{size}{x}, 1, $b );

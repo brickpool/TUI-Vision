@@ -19,6 +19,7 @@ our @EXPORT = qw(
 use TUI::toolkit;
 use TUI::toolkit::Types qw( :types );
 
+use TUI::Common::Text;
 use TUI::Dialogs::Cluster;
 
 sub TRadioButtons() { __PACKAGE__ }
@@ -28,7 +29,7 @@ sub new_TRadioButtons { __PACKAGE__->from( @_ ) }
 extends TCluster;
 
 # declare global variables
-our $button = " ( ) ";
+our $button;
 
 sub draw {    # void ()
   state $sig = signature(

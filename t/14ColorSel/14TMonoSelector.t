@@ -42,6 +42,13 @@ subtest 'Initial state' => sub {
   is ( $sel->{strings}->getCount(), 4, 'strings list has 4 items' );
 };
 
+subtest 'custom text is used by new selectors' => sub {
+  local $TUI::ColorSel::MonoSelector::normal = 'Custom';
+  my $custom = TMonoSelector->new( bounds => $bounds );
+  is( $custom->strings->at( 0 ), 'Custom',
+    'the selector uses the qualified text variable' );
+};
+
 subtest 'draw()' => sub {
   can_ok( $sel, 'draw' );
   lives_ok { $sel->draw() } 'draw() does not die';
